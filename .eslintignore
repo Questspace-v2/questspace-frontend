@@ -15,5 +15,6 @@
 *.scss
 *.md
 **/out/*
+**/components/dev/*
 next-env.d.ts
 # next.config.js
