@@ -1,6 +1,7 @@
 import API_URL from './settings';
+import { BadRequestError, HttpError, NotFoundError, TooManyRequestsError } from './custom-errors';
 
-enum HttpMethod {
+export enum HttpMethod {
     GET = 'GET',
     POST = 'POST',
     PUT = 'PUT',
@@ -8,47 +9,52 @@ enum HttpMethod {
 }
 
 class Client {
-    private apiUrl: string;
+    private readonly apiUrl: string;
 
     constructor() {
         this.apiUrl = API_URL;
     }
 
-    async invoke(
+    async invoke<TRequest, TResponse>(
         endpoint = '/',
         method: HttpMethod = HttpMethod.GET,
-        data: Record<string, string> = {},
+        data: TRequest = {} as TRequest,
         headers: Record<string, string> = {}
-    ) {
-        if (!endpoint || endpoint.charAt(0) !== '/') {
+    ): Promise<TResponse> {
+        if (!endpoint || !endpoint.startsWith('/')) {
             endpoint = `/${endpoint}`;
         }
 
-        const url = (method === HttpMethod.GET && Object.keys(data).length > 0)
-            ? this.formatQueryString(endpoint, data)
-            : `${this.apiUrl}${endpoint}`;
+        const url = `${this.apiUrl}${endpoint}`;
 
-        try {
-            const response = await fetch(url, this.buildInit(method, data, headers));
-            if (response.ok) {
-                return await response.json();
-            } else {
-                console.error(`Request failed with status ${response.status}`);
-            }
-        } catch(error) {
-            console.error(error);
-        }
+        return fetch(url, this.buildInit(method, data, headers))
+            .then((resp) => {
+                if (resp.ok) {
+                    return resp.json();
+                }
 
+                switch (resp.status) {
+                    case 400:
+                        throw new BadRequestError();
+                    case 404:
+                        throw new NotFoundError();
+                    case 429:
+                        throw new TooManyRequestsError();
+                    default:
+                        throw new HttpError(resp.status);
+                }
+
+            })
+            .catch(reason => console.error(`Error while fetching: ${reason}`));
     }
 
-    buildInit(method: HttpMethod, data: Record<string, string>, headers: Record<string, string>): RequestInit {
+    private buildInit<TRequest>(method: HttpMethod, data: TRequest, headers: Record<string, string>): RequestInit {
         const baseInit: RequestInit = {
-            method: method,
+            method,
             headers: {
                 'Content-Type': 'application/json',
                 ...headers,
             },
-            redirect: 'follow',
         };
 
         if (method !== HttpMethod.GET) {
@@ -56,16 +62,6 @@ class Client {
         }
 
         return baseInit;
-
-    }
-
-    formatQueryString(endpoint: string, data: Record<string, string>): string {
-        const querystringParams: string[] = [];
-        for (const [key, value] of Object.entries(data)) {
-            querystringParams.push(`${key}=${value}`);
-        }
-
-        return `${this.apiUrl}${endpoint}?${querystringParams.join('&')}`;
     }
 }
 
