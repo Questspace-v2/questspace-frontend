@@ -1,9 +1,12 @@
 import client, { HttpMethod } from "./client";
 
-interface IUser {
+interface IUserAuth {
     id: string;
     username: string;
     password: string;
+}
+
+interface IUser extends IUserAuth {
     firstName?: string;
     lastName?: string;
     avatarUrl?: string;
@@ -14,46 +17,36 @@ export const clientHandler = {
         return client.invoke(`/user/${userId}`, HttpMethod.GET);
     },
 
-    createUser: async function createUser( // Втф что тут с параметрами и реквестом
-        username: string,
-        password: string,
-        firstName?: string,
-        lastName?: string,
-        avatarUrl?: string
-    ): Promise<IUser> {
-        const request: IUser = Object.assign({},
-            username && { username },
-            password && { password },
-            firstName && { first_name: firstName },
-            lastName && { last_name: lastName },
-            avatarUrl && { avatar_url: avatarUrl }
-        );
+    createUser: async function createUser({username, password}: IUserAuth): Promise<IUserAuth> {
+        const request: IUserAuth = {
+            id: '',
+            username,
+            password
+        };
 
-        return client.invoke(
+        const response = await client.invoke(
             `/user`,
             HttpMethod.POST,
             request
-        )
+        );
+
+        return response as IUserAuth;
     },
 
-    updateUser: async function updateUser(
-        userId: string,
-        username?: string,
-        password?: string,
-        avatarUrl?: string
-    ): Promise<IUser> {
-        return client.invoke(
+    updateUser: async function updateUser(userId: string, {username, password, avatarUrl}: IUser): Promise<IUser> {
+        const request: IUser = {
+            id: userId,
+            username,
+            password,
+            avatarUrl
+        };
+
+        const response = await client.invoke(
             `/user/${userId}`,
             HttpMethod.POST,
-            {
-                'username': username,
-                'password': password,
-                'avatar_url': avatarUrl
-            }
-        )
-    },
+            request
+        );
 
-    hello: async function hello() {
-        return client.invoke(`/hello`, HttpMethod.GET);
+        return response as IUser;
     },
 }
