@@ -17,6 +17,7 @@
   "rules": {
     "eslint/prefer-promise-reject-errors": "off",
     "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-explicit-any": "error"
+    "@typescript-eslint/no-explicit-any": "error",
+    "import/no-named-as-default": "off"
   }
 }

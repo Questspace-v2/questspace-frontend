@@ -2,6 +2,10 @@
   "name": "questspace-frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "^21.1.0",
+    "npm": "^10.2.1"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,8 +15,6 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.17.0",
     "@ant-design/icons": "^5.2.6",
-    "@react-buddy/ide-toolbox-next": "^2.4.1",
-    "@react-buddy/palette-antd": "^5.3.0",
     "antd": "^5.9.4",
     "next": "^13.5.4",
     "react": "latest",
