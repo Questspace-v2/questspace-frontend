@@ -1,23 +1,28 @@
 {
-  "plugins": ["promise", "@typescript-eslint"],
-  "extends": [
-    "eslint:recommended",
-    "airbnb",
-    "airbnb-typescript",
-    "airbnb/hooks",
-    "next/core-web-vitals",
-    "plugin:promise/recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
-    "prettier"
-  ],
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "rules": {
-    "eslint/prefer-promise-reject-errors": "off",
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-explicit-any": "error",
-    "import/no-named-as-default": "off"
-  }
+    "plugins": [
+        "promise",
+        "@typescript-eslint"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "airbnb",
+        "airbnb-typescript",
+        "airbnb/hooks",
+        "next/core-web-vitals",
+        "plugin:promise/recommended",
+        "plugin:@typescript-eslint/recommended-type-checked",
+        "plugin:@typescript-eslint/stylistic-type-checked",
+        "prettier"
+    ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "eslint/prefer-promise-reject-errors": "off",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "import/no-named-as-default": "off",
+        "react/jsx-curly-brace-presence": "off",
+        "jsx-a11y/no-noninteractive-tabindex": "off"
+    }
 }

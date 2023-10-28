@@ -1,20 +1,11 @@
-**/node_modules/*
-**/.next/*
+node_modules/*
+.next/*
 *.png
-*.gif
 *.svg
 *.json
 *.xml
-*.ico
-*.txt
-*.webmanifest
-*.lock
-*.jpg
-*.jpeg
-*.mjs
-*.scss
 *.md
-**/out/*
-**/components/dev/*
+public
+lib/utils
 next-env.d.ts
 # next.config.js
