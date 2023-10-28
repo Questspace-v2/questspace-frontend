@@ -1,0 +1,17 @@
+.background-wrapper {
+    display: flex;
+    width: 100vw;
+    justify-content: center;
+    flex-grow: 0;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.background-wrapper >img {
+    user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

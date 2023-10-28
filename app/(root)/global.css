@@ -1,0 +1,26 @@
+:root {
+    --background-color: #F5F5F5;
+    --quit-color: #FF4D4F;
+    --side-margins-24: 24px;
+    --main-gap: 16px;
+    --max-items-width: 1250px;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+    margin: 0;
+    overscroll-behavior: none;
+}
+
+.App {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background: var(--background-color);
+    width: 100%;
+    min-height: 100%;
+    gap: var(--main-gap);
+}

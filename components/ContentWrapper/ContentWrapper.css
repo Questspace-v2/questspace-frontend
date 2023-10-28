@@ -1,0 +1,9 @@
+.content-wrapper {
+    display: flex;
+    background: white;
+    max-width: var(--max-items-width);
+    width: 100vw;
+    height: auto;
+    box-sizing: border-box;
+    border-radius: 16px;
+}
