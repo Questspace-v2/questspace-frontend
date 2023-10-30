@@ -1,0 +1,27 @@
+.header-avatar__frame {
+    cursor: pointer;
+}
+
+.header-avatar__image >img {
+    background-color: aqua;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.header-dropdown {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    width: auto;
+    padding: 0 8px;
+    gap: 4px;
+    transition: background-color .2s ease;
+}
+
+.header-dropdown_open {
+    background-color: #E6F7FF;
+    transition: background-color .2s ease;
+}
