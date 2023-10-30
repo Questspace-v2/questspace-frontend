@@ -4,10 +4,7 @@ import { BackgroundProps } from '@/components/Background/Background.types';
 
 import './Background.css';
 
-export default function Background({
-    type,
-    className = undefined,
-}: BackgroundProps) {
+export default function Background({ type, className = '' }: BackgroundProps) {
     switch (type) {
         case 'page':
             return (

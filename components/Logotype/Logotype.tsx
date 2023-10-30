@@ -18,7 +18,7 @@ export default function Logotype({
     width,
     type,
     style = {},
-    className = undefined,
+    className = '',
 }: LogotypeProps) {
     switch (type) {
         case 'text':
