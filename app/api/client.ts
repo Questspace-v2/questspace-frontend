@@ -8,6 +8,15 @@ export enum HttpMethod {
     DELETE = 'DELETE',
 }
 
+export type Data = {[key: string]: JSONValue}
+
+export type JSONValue =
+    | string
+    | number
+    | boolean
+    | { [x: string]: JSONValue }
+    | Array<JSONValue>;
+
 class Client {
     private readonly apiUrl: string;
 
@@ -15,12 +24,12 @@ class Client {
         this.apiUrl = API_URL;
     }
 
-    async invoke<TRequest, TResponse>(
+    async invoke<TRequest>(
         endpoint = '/',
         method: HttpMethod = HttpMethod.GET,
         data: TRequest = {} as TRequest,
         headers: Record<string, string> = {}
-    ): Promise<TResponse> {
+    ): Promise<Data> {
         if (!endpoint || !endpoint.startsWith('/')) {
             endpoint = `/${endpoint}`;
         }
@@ -45,7 +54,10 @@ class Client {
                 }
 
             })
-            .catch(reason => console.error(`Error while fetching: ${reason}`));
+            .catch(reason => {
+                console.error(`Error while fetching: ${reason}`)
+                throw reason;
+            });
     }
 
     private buildInit<TRequest>(method: HttpMethod, data: TRequest, headers: Record<string, string>): RequestInit {

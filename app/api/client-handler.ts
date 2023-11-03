@@ -1,52 +1,72 @@
 import client, { HttpMethod } from "./client";
 
-interface IUserAuth {
+interface IUser {
     id: string;
     username: string;
     password: string;
-}
-
-interface IUser extends IUserAuth {
-    firstName?: string;
-    lastName?: string;
-    avatarUrl?: string;
+    newPassword?: string;
+    avatarUrl?: string
 }
 
 export const clientHandler = {
     getUser: async function getUser(userId: string): Promise<IUser> {
-        return client.invoke(`/user/${userId}`, HttpMethod.GET);
+        const jsonResponse = await client.invoke(`/user/${userId}`, HttpMethod.GET);
+        const response: IUser = {
+            id: jsonResponse.id as string,
+            username: jsonResponse.username as string,
+            password: '',
+            avatarUrl: jsonResponse.avatar_url as string
+        };
+
+        return response;
     },
 
-    createUser: async function createUser({username, password}: IUserAuth): Promise<IUserAuth> {
-        const request: IUserAuth = {
+    createUser: async function createUser({ username, password }: IUser): Promise<IUser> {
+        const request: IUser = {
             id: '',
             username,
             password
         };
 
-        const response = await client.invoke(
-            `/user`,
+        const jsonResponse = await client.invoke(
+            '/user',
             HttpMethod.POST,
             request
         );
 
-        return response as IUserAuth;
+        const response: IUser = {
+            id: jsonResponse.id as string,
+            username: jsonResponse.username as string,
+            password: '',
+            avatarUrl: jsonResponse.avatar_url as string
+        };
+
+        return response;
     },
 
-    updateUser: async function updateUser(userId: string, {username, password, avatarUrl}: IUser): Promise<IUser> {
+    updateUser: async function updateUser(userId: string, avatarUrl = '',
+        newPassword = '', { username, password }: IUser): Promise<IUser> {
         const request: IUser = {
             id: userId,
             username,
             password,
+            newPassword,
             avatarUrl
         };
 
-        const response = await client.invoke(
+        const jsonResponse = await client.invoke(
             `/user/${userId}`,
             HttpMethod.POST,
             request
         );
 
-        return response as IUser;
+        const response: IUser = {
+            id: jsonResponse.id as string,
+            username: jsonResponse.username as string,
+            password: '',
+            avatarUrl: jsonResponse.avatar_url as string
+        };
+
+        return response;
     },
 }
