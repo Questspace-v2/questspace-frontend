@@ -1,4 +1,5 @@
 .content-wrapper {
+    position: relative;
     display: flex;
     background: white;
     max-width: var(--max-items-width);
@@ -6,4 +7,8 @@
     height: auto;
     box-sizing: border-box;
     border-radius: 16px;
+}
+
+.page-auth {
+    background: #FF4D4F;
 }

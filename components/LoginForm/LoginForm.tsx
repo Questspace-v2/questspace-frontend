@@ -6,7 +6,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 export default function LoginForm() {
     return (
-        <ContentWrapper>
+        <ContentWrapper className={'page-auth'}>
             <Form>
                 <Form.Item name={'input'}>
                     <Input type={'text'} placeholder={'логин'} />
@@ -16,8 +16,9 @@ export default function LoginForm() {
                     rules={[
                         {
                             required: true,
+                            message: 'не, реально долбоеб',
                         },
-                        { min: 6 },
+                        { min: 6, message: 'ты долбоеб' },
                         {
                             // переписать валидатор, поместив функцию валидации с сервера в api
                             validator: (_, value) =>
@@ -30,7 +31,6 @@ export default function LoginForm() {
                                       ),
                         },
                     ]}
-                    hasFeedback
                 >
                     <Input type={'password'} placeholder={'пароль'} />
                 </Form.Item>

@@ -6,3 +6,7 @@ body {
     margin: 0;
     overscroll-behavior: none;
 }
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}

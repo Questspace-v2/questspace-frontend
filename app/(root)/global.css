@@ -6,6 +6,10 @@
     --max-items-width: 1250px;
 }
 
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
 html,
 body {
     width: 100%;
