@@ -16,7 +16,7 @@
     "@ant-design/cssinjs": "^1.17.0",
     "@ant-design/icons": "^5.2.6",
     "@reduxjs/toolkit": "1.9.7",
-    "antd": "^5.9.4",
+    "antd": "5.6.2-alpha.0",
     "next": "^13.5.4",
     "react": "latest",
     "react-dom": "latest",
