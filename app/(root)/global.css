@@ -1,10 +1,4 @@
-:root {
-    --background-color: #F5F5F5;
-    --quit-color: #FF4D4F;
-    --side-margins-24: 24px;
-    --main-gap: 16px;
-    --max-items-width: 1250px;
-}
+@import "@/lib/utils/constants.css";
 
 * {
     -webkit-tap-highlight-color: transparent;
@@ -17,6 +11,7 @@ body {
     height: 100%;
     margin: 0;
     overscroll-behavior: none;
+    font-family: var(--font-manrope);
 }
 
 .App {
@@ -27,4 +22,27 @@ body {
     width: 100%;
     min-height: 100%;
     gap: var(--main-gap);
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-roboto-flex);
+    font-weight: 700;
+}
+
+h1 {
+    font-size: var(--large-font-size);
+}
+
+h2 {
+    font-size: var(--medium-font-size);
+}
+
+@media (max-width: 1279px) {
+    h1 {
+        font-size: var(--medium-font-size);
+    }
+
+    h2 {
+        font-size: var(--small-font-size);
+    }
 }

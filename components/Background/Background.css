@@ -1,4 +1,4 @@
-.background-wrapper {
+.background__wrapper {
     display: flex;
     width: 100vw;
     justify-content: center;
@@ -7,7 +7,7 @@
     overflow: hidden;
 }
 
-.background-wrapper >img {
+.background__wrapper >img {
     user-drag: none;
     user-select: none;
     -moz-user-select: none;

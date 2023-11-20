@@ -13,6 +13,7 @@
 
 .header-dropdown {
     display: flex;
+    flex: 50px;
     align-items: center;
     height: 48px;
     width: auto;

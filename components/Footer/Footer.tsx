@@ -5,7 +5,7 @@ import './Footer.css';
 
 export default function Footer() {
     return (
-        <div className={'page-footer-wrapper'}>
+        <div className={'page-footer__wrapper'}>
             <Background className={'footer-background'} type={'footer'} />
             <div className={'page-footer'}>
                 <div className={'page-footer__items'}>

@@ -3,7 +3,7 @@
     --footer-height-md: 192px;
 }
 
-.page-footer-wrapper {
+.page-footer__wrapper {
     display: flex;
     width: 100vw;
     height: var(--footer-height-lg);
@@ -54,7 +54,7 @@
 }
 
 @media (max-width: 1279px) {
-    .page-footer-wrapper {
+    .page-footer__wrapper {
         height: var(--footer-height-md);
     }
 

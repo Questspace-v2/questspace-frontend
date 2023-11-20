@@ -1,0 +1,13 @@
+.signup-form {
+    transition:  1.5s ease-out;
+}
+
+.hidden {
+    display: none;
+
+}
+
+.showed {
+    display: block;
+    transition: all 1.5s ease-in;
+}
