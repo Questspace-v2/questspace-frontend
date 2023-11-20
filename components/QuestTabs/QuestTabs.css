@@ -1,0 +1,11 @@
+.quest-tabs .ant-tabs-content-holder {
+    min-height: 250px;
+}
+
+.quest-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    text-shadow: none;
+}
+
+.create-quest-button:hover * {
+    color: #4096ff;
+}

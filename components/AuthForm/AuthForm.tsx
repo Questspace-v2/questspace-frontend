@@ -1,65 +1,51 @@
 'use client';
 
-import { Form, Input, Space } from 'antd';
-import Button from 'antd/es/button';
+import { useState } from 'react';
+import { Button, Form, Input } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
+import { Auth, AuthFormTypes } from '@/components/AuthForm/AuthForm.types';
+import FormItem from 'antd/lib/form/FormItem';
 
-export default function LoginForm() {
+import './AuthForm.css';
+import { UserOutlined } from '@ant-design/icons';
+
+export default function AuthForm() {
+    const [isSignupForm, setIsSignupForm] = useState(false);
+    const [formType, setFormType] = useState<AuthFormTypes>(Auth.LOGIN);
+    const handleClick = () => {
+        setIsSignupForm(!isSignupForm);
+        setFormType(formType === Auth.LOGIN ? Auth.SIGNUP : Auth.LOGIN);
+    };
+
     return (
-        <ContentWrapper className={'page-auth'}>
-            <Form>
-                <Form.Item name={'input'}>
-                    <Input type={'text'} placeholder={'логин'} />
-                </Form.Item>
-                <Form.Item
-                    name={'password'}
-                    rules={[
-                        {
-                            required: true,
-                            message: 'не, реально долбоеб',
-                        },
-                        { min: 6, message: 'ты долбоеб' },
-                        {
-                            // переписать валидатор, поместив функцию валидации с сервера в api
-                            validator: (_, value) =>
-                                value?.includes('A')
-                                    ? Promise.resolve()
-                                    : Promise.reject(
-                                          Error(
-                                              'Мы вас не узнали. Проверьте правильно ли вы ввели логин и пароль',
-                                          ),
-                                      ),
-                        },
-                    ]}
+        <ContentWrapper className={'page-auth__wrapper'}>
+            <Form
+                title={formType === Auth.LOGIN ? 'Вход' : 'Регистрация'}
+                style={{ width: '100%' }}
+            >
+                <FormItem name={'login'}>
+                    <Input
+                        prefix={<UserOutlined />}
+                        size={'small'}
+                        bordered
+                        placeholder={'логин'}
+                    />
+                </FormItem>
+                <FormItem
+                    name={'password-again'}
+                    className={`signup-form ${
+                        formType === Auth.LOGIN ? 'hidden' : 'showed'
+                    }`}
+                    // hidden={formType === Auth.LOGIN}
+                    // className={'password-again'}
                 >
-                    <Input type={'password'} placeholder={'пароль'} />
-                </Form.Item>
-                <Form.Item
-                    dependencies={['password']}
-                    rules={[
-                        {
-                            required: true,
-                        },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (
-                                    !value ||
-                                    getFieldValue('password') === value
-                                ) {
-                                    return Promise.resolve();
-                                }
-
-                                return Promise.reject(
-                                    Error('Пароли не совпадают'),
-                                );
-                            },
-                        }),
-                    ]}
-                    hasFeedback
-                >
-                    <Button htmlType={'submit'}>Войти</Button>
-                </Form.Item>
-                <Space />
+                    <Input
+                        size={'small'}
+                        bordered
+                        placeholder={'снова пароль'}
+                    />
+                </FormItem>
+                <Button onClick={handleClick} />
             </Form>
         </ContentWrapper>
     );

@@ -8,7 +8,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
     switch (type) {
         case 'page':
             return (
-                <div className={'background-wrapper'}>
+                <div className={'background__wrapper'}>
                     <Image
                         className={className}
                         alt={'Yekaterinburg background'}
@@ -21,7 +21,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
             );
         case 'footer':
             return (
-                <div className={'background-wrapper'}>
+                <div className={'background__wrapper'}>
                     <Image
                         className={className}
                         alt={'Yekaterinburg footer'}
