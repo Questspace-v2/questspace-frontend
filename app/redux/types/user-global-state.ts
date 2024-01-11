@@ -1,4 +1,4 @@
 export interface IUserGlobalState {
-    userName: string,
+    username: string,
     avatarUrl: string,
 }

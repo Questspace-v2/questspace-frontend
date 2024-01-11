@@ -1,6 +1,6 @@
 import client, { HttpMethod } from "./client";
 
-interface IUser {
+export interface IUser {
     id: string;
     username: string;
     password: string;
