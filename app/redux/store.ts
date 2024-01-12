@@ -1,8 +1,11 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { userGlobalStateSlice } from './user-slice';
 
 
 export const store = configureStore({
-    reducer: {},
+    reducer: {
+        [userGlobalStateSlice.name]: userGlobalStateSlice.reducer,
+    },
     devTools: process.env.NODE_ENV !== 'production'
 });
 

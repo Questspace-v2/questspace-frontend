@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { IUser } from '../api/client-handler';
 import { AppDispatch, RootState } from './store';
 import { AxiosInstance } from 'axios';
+import { IUser, IUserUpdate } from './types/user-interfaces';
 
 export const getUser = createAsyncThunk<IUser, string, {
     dispatch: AppDispatch;
@@ -9,38 +9,39 @@ export const getUser = createAsyncThunk<IUser, string, {
     extra: AxiosInstance;
 }>(
     'getUser',
-    async (id: string, {extra: api}) => {
+    async (id: string, {extra: api}) => { // Тут надо будет разобраться с землей из джсона
         const {data} = await api.get<IUser>(`/user/${id}`);
         return data;
     }
 );
 
-export const createUser = createAsyncThunk<void, IUser, {
+export const createUser = createAsyncThunk<IUser, IUser, {
     dispatch: AppDispatch;
     state: RootState;
     extra: AxiosInstance;
 }>(
     'createUser',
-    async ({username, password}, {extra: api}) => {
-        await api.post('/user', {username, password});
+    async (user: IUser, {extra: api}) => {
+        const {data} = await api.post<IUser>('/user', user);
+        return data;
     }
 );
 
-export const updateUser = createAsyncThunk<void, IUser, {
+export const updateUser = createAsyncThunk<IUser, IUserUpdate, {
     dispatch: AppDispatch;
     state: RootState;
     extra: AxiosInstance;
 }>(
     'updateUser',
-    async ({id, password, username}: IUser, {extra: api}, avatarUrl = '', newPassword = '') => {
-        const request: IUser = {
-            id,
-            username,
-            password,
-            newPassword,
-            avatarUrl
+    async (user: IUserUpdate, {extra: api}) => {
+        const request: Omit<IUserUpdate, 'id'> = {
+            username: user.username,
+            avatarUrl: user.avatarUrl,
+            oldPassword: user.oldPassword,
+            newPassword: user.newPassword
         };
 
-        await api.post(`/user/${id}`, request);
+        const {data} = await api.post<IUser>(`/user/${user.id}`, request);
+        return data;
     }
 );
