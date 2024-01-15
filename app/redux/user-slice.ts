@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IUserState } from './types/user-interfaces';
-import { createUser, getUser } from './api-actions';
+import { createUser } from './api-actions';
 
 export const initialState: IUserState = {
-    username: 'svayp11',
-    avatarUrl: 'https://api.dicebear.com/7.x/thumbs/svg',
+    username: 'unknown name',
+    avatarUrl: 'some url',
 };
 
 export const userGlobalStateSlice = createSlice({
@@ -13,9 +13,9 @@ export const userGlobalStateSlice = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder
-        .addCase(getUser.fulfilled, (state, action) => {
+        .addCase(createUser.fulfilled, (state, action) => {
             state.username = action.payload.username;
-            state.avatarUrl = action.payload.avatarUrl ?? 'haha';
+            state.avatarUrl = action.payload.avatarUrl;
         });
     }
 });

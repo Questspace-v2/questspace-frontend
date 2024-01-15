@@ -3,7 +3,7 @@ import { BadRequestError, HttpError, NotFoundError, TooManyRequestsError } from 
 
 export const BACKEND_URL = 'https://millionaire-web.ru';
 
-const onResponseError = (error: AxiosError): Promise<AxiosError> => {
+const onResponseError = (error: AxiosError): Promise<HttpError> => {
     switch (error.response?.status) {
         case 400:
             console.error('Bad request error');

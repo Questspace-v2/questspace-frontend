@@ -14,4 +14,6 @@ export type IUserUpdate = {
     oldPassword: string,
 } & IUser
 
-
+export type IUserCreate = {
+    password: string,
+} & IUserState
