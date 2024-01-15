@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { IUserState } from './types/user-interfaces';
-import { createUser } from './api-actions';
+import { getUser } from './api-actions';
 
 export const initialState: IUserState = {
     username: 'unknown name',
     avatarUrl: 'some url',
+    error: null,
 };
 
 export const userGlobalStateSlice = createSlice({
@@ -13,9 +14,10 @@ export const userGlobalStateSlice = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder
-        .addCase(createUser.fulfilled, (state, action) => {
+        .addCase(getUser.fulfilled, (state, action) => {
             state.username = action.payload.username;
             state.avatarUrl = action.payload.avatarUrl;
+            state.error = null;
         });
     }
 });

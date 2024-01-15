@@ -8,22 +8,17 @@ import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import Footer from '@/components/Footer/Footer';
 import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks';
-import { IUserCreate } from '../redux/types/user-interfaces';
-import { createUser } from '../redux/api-actions';
+import { getUser } from '../redux/api-actions';
 
 function HomePage() {
     const dispatch = useAppDispatch();
-    const mockUser: IUserCreate = {
-        avatarUrl: 'https://api.dicebear.com/7.x/thumbs/svg',
-        password: '12345',
-        username: 'svayp11',
-    };
+    const testId = '855db36b-b217-4db5-baf0-3370fda3e74e';
 
     useEffect(() => {
-        dispatch(createUser(mockUser));
+        dispatch(getUser(testId));
     }, [dispatch]);
 
-    // Проверка работы глобального хранилища
+    // Проверка работы глобального хранилища - добавить после кнопки <div>{username}</div>
     // const username = useAppSelector((state) => state.userSlice.username);
 
     return (

@@ -1,6 +1,7 @@
 export interface IUserState {
     username: string,
     avatarUrl: string,
+    error: string | null,
 }
 
 export interface IUser {
@@ -16,4 +17,4 @@ export type IUserUpdate = {
 
 export type IUserCreate = {
     password: string,
-} & IUserState
+} & Omit<IUserState, 'error'>
