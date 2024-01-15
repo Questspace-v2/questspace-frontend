@@ -1,6 +1,7 @@
 import React from 'react';
 import StyledComponentsRegistry from '@/lib/AntdRegistry';
-import { manrope } from '@/theme/themeConfig';
+import { manrope, robotoFlex } from '@/lib/fonts';
+
 import './global.css';
 
 export const metadata = {
@@ -11,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
         <html lang="en">
-            <body className={manrope.className}>
+        <body className={`${manrope.variable} ${robotoFlex.variable}`}>
                 <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
             </body>
         </html>

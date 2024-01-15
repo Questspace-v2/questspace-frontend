@@ -1,6 +1,6 @@
 import React from 'react';
 import StyledComponentsRegistry from '@/lib/AntdRegistry';
-import { manrope } from '@/theme/themeConfig';
+import { manrope, robotoFlex } from '@/lib/fonts';
 import { Metadata } from 'next';
 
 import './global.css';
@@ -14,10 +14,10 @@ export const metadata: Metadata = {
         apple: '/favicon.ico',
     },
 };
-function RootLayout({ children }: React.PropsWithChildren) {
+export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
         <html lang="en">
-            <body className={manrope.className}>
+            <body className={`${manrope.variable} ${robotoFlex.variable}`}>
                 <Providers>
                     <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
                 </Providers>
@@ -25,4 +25,3 @@ function RootLayout({ children }: React.PropsWithChildren) {
         </html>
     );
 }
-export default RootLayout;

@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { Button, ConfigProvider } from 'antd';
-import theme from '@/theme/themeConfig';
-import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
+import { ConfigProvider } from 'antd';
+import theme from '@/lib/theme/themeConfig';
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import Footer from '@/components/Footer/Footer';
 import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks';
 import { getUser } from '../redux/api-actions';
+import Profile from '@/components/Profile/Profile';
+import QuestTabs from '@/components/QuestTabs/QuestTabs';
 
 function HomePage() {
     const dispatch = useAppDispatch();
@@ -26,9 +27,8 @@ function HomePage() {
             <div className={'App'}>
                 <Header />
                 <Body>
-                    <ContentWrapper>
-                        <Button type={'primary'}>Button</Button>
-                    </ContentWrapper>
+                    <Profile />
+                    <QuestTabs />
                 </Body>
                 <Footer />
             </div>

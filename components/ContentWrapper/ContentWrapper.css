@@ -1,4 +1,4 @@
-.content-wrapper {
+.content__wrapper {
     position: relative;
     display: flex;
     background: white;
@@ -7,8 +7,28 @@
     height: auto;
     box-sizing: border-box;
     border-radius: 16px;
+
+    padding-left: var(--side-margins-32);
+    padding-right: var(--side-margins-32);
 }
 
-.page-auth {
+.page-auth__wrapper {
     background: #FF4D4F;
+    max-width: 320px;
+    box-sizing: border-box;
+    padding: 32px 24px 24px 24px;
+}
+
+@media (max-width: 639px) {
+    .content__wrapper {
+        padding-left: var(--side-margins-24);
+        padding-right: var(--side-margins-24);
+    }
+}
+
+@media (max-width: 525px) {
+    .content__wrapper {
+        padding-left: var(--side-margins-16);
+        padding-right: var(--side-margins-16);
+    }
 }
