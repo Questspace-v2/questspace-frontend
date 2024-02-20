@@ -6,10 +6,10 @@ import theme from '@/lib/theme/themeConfig';
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import Footer from '@/components/Footer/Footer';
-import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks';
-import { getUser } from '../redux/api-actions';
 import Profile from '@/components/Profile/Profile';
 import QuestTabs from '@/components/QuestTabs/QuestTabs';
+import { useAppDispatch, useAppSelector } from '../redux/hooks/hooks';
+import { getUser } from '../redux/api-actions';
 
 function HomePage() {
     const dispatch = useAppDispatch();

@@ -1,10 +1,11 @@
 import React from 'react';
-import StyledComponentsRegistry from '@/lib/AntdRegistry';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { manrope, robotoFlex } from '@/lib/fonts';
 import { Metadata } from 'next';
 
 import './global.css';
 import { Providers } from '../redux/provider/provider';
+
 
 export const metadata: Metadata = {
     title: 'Questspace',
@@ -19,7 +20,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
         <html lang="en">
             <body className={`${manrope.variable} ${robotoFlex.variable}`}>
                 <Providers>
-                    <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+                    <AntdRegistry>{children}</AntdRegistry>
                 </Providers>
             </body>
         </html>

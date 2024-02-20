@@ -1,5 +1,5 @@
 import React from 'react';
-import StyledComponentsRegistry from '@/lib/AntdRegistry';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { manrope, robotoFlex } from '@/lib/fonts';
 
 import './global.css';
@@ -13,7 +13,7 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
         <html lang="en">
         <body className={`${manrope.variable} ${robotoFlex.variable}`}>
-                <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+                <AntdRegistry>{children}</AntdRegistry>
             </body>
         </html>
     );
