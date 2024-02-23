@@ -1,7 +1,6 @@
 // theme/themeConfig.ts
 import type { ThemeConfig } from 'antd';
 import { manrope, robotoFlex } from '@/lib/fonts';
-import { Tabs } from 'antd';
 
 const theme: ThemeConfig = {
     token: {

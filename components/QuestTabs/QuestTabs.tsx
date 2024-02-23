@@ -1,4 +1,6 @@
-import { ConfigProvider, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
+'use client'
+
+import { ConfigProvider, Empty, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './QuestTabs.css';
@@ -10,7 +12,7 @@ import {
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 
 export default function QuestTabs() {
-    const { sm } = useBreakpoint();
+    const { xs} = useBreakpoint();
 
     const selectTheme: ThemeConfig = {
         components: {
@@ -30,17 +32,17 @@ export default function QuestTabs() {
         {
             key: 'all-quests',
             label: 'Все квесты',
-            children: getQuests(),
+            children: customizedEmpty,
         },
         {
             key: 'my-quests',
             label: 'Мои квесты',
-            children: getQuests(),
+            children: customizedEmpty,
         },
         {
             key: 'created-quests',
             label: 'Созданные квесты',
-            children: getQuests(),
+            children: customizedEmpty,
         },
     ];
 
@@ -50,20 +52,9 @@ export default function QuestTabs() {
         { value: 'created-quests', label: 'Созданные квесты' },
     ];
 
-    return (
-        <ContentWrapper>
-            {sm ? (
-                <Tabs
-                    className={'quest-tabs'}
-                    tabBarExtraContent={createQuestButton}
-                    items={items}
-                    style={{
-                        width: '100%',
-                        minHeight: '250px',
-                        margin: '8px 0 24px 0',
-                    }}
-                />
-            ) : (
+    if (xs) {
+        return (
+            <ContentWrapper>
                 <section
                     className={'quest-tabs'}
                     style={{
@@ -88,14 +79,28 @@ export default function QuestTabs() {
                                     width: 'max-content',
                                     color: '#1890FF',
                                 }}
-                                bordered={false}
+                                variant={'borderless'}
                                 options={selectOptions}
                             />
                         </ConfigProvider>
                         {createQuestButton}
                     </div>
                 </section>
-            )}
-        </ContentWrapper>
-    );
+            </ContentWrapper>
+        );
+    }
+    return (
+            <ContentWrapper>
+                <Tabs
+                    className={'quest-tabs'}
+                    tabBarExtraContent={createQuestButton}
+                    items={items}
+                    style={{
+                        width: '100%',
+                        minHeight: '250px',
+                        margin: '8px 0 24px 0',
+                    }}
+                />
+            </ContentWrapper>
+        )
 }

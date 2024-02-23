@@ -1,4 +1,18 @@
-@import "@/lib/utils/constants.css";
+:root {
+    --background-color: #F5F5F5;
+    --quit-color: #FF4D4F;
+    --side-margins-16: 16px;
+    --side-margins-24: 24px;
+    --side-margins-32: 32px;
+    --main-gap: 16px;
+    --max-items-width: 1250px;
+
+    /* fonts */
+    --large-font-size: 48px;
+    --medium-font-size: 32px;
+    --small-font-size: 24px;
+
+}
 
 html,
 body {

@@ -5,6 +5,7 @@ import {
 } from '@/lib/utils/constants';
 import { LogotypeProps } from '@/components/Logotype/Logotype.types';
 import { CSSProperties } from 'react';
+import * as path from 'path';
 
 const cssProperties: CSSProperties = {
     '-webkit-user-select': 'none',
@@ -32,6 +33,8 @@ export default function Logotype({
                     draggable={false}
                     unselectable={'on'}
                     style={cssProperties && style}
+                    loading={'eager'}
+                    role={''}
                 />
             );
         case 'icon':

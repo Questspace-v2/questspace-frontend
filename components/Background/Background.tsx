@@ -15,7 +15,8 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                         src={backgroundImage}
                         quality={100}
                         fill
-                        style={{ objectFit: 'cover' }}
+                        aria-disabled
+                        loading={'eager'}
                     />
                 </div>
             );
@@ -27,7 +28,8 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                         alt={'Yekaterinburg footer'}
                         src={backgroundImage}
                         quality={100}
-                        style={{ objectFit: 'contain' }}
+                        aria-disabled
+                        loading={'eager'}
                     />
                 </div>
             );

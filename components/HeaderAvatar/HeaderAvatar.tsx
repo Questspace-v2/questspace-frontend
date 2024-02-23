@@ -1,3 +1,5 @@
+'use client'
+
 import React, { CSSProperties, useState } from 'react';
 import { Avatar, ConfigProvider, Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';

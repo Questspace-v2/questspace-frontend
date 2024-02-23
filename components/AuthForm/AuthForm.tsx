@@ -27,8 +27,16 @@ export default function AuthForm() {
                     <Input
                         prefix={<UserOutlined />}
                         size={'small'}
-                        bordered
+                        variant={'outlined'}
                         placeholder={'логин'}
+                    />
+                </FormItem>
+                <FormItem name={'password'}>
+                    <Input
+                        prefix={<UserOutlined />}
+                        size={'small'}
+                        variant={'outlined'}
+                        placeholder={'пароль'}
                     />
                 </FormItem>
                 <FormItem
@@ -41,7 +49,7 @@ export default function AuthForm() {
                 >
                     <Input
                         size={'small'}
-                        bordered
+                        variant={'outlined'}
                         placeholder={'снова пароль'}
                     />
                 </FormItem>

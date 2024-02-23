@@ -24,6 +24,7 @@ export const customizedEmpty = (
                 Попробуйте{' '}
                 <a
                     className={'create-quest-button'}
+                    href={'/'}
                     style={{ color: '#1890FF' }}
                 >
                     создать квест

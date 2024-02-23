@@ -8,8 +8,8 @@ import { Providers } from '../redux/provider/provider';
 
 
 export const metadata: Metadata = {
-    title: 'Questspace',
-    description: 'Developed and designed by mathmech',
+    title: 'Квестспейс',
+    description: 'Разработано и спроектировано МатМехом',
     icons: {
         icon: '/favicon.ico',
         apple: '/favicon.ico',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
-        <html lang="en">
+        <html lang="ru">
             <body className={`${manrope.variable} ${robotoFlex.variable}`}>
                 <Providers>
                     <AntdRegistry>{children}</AntdRegistry>

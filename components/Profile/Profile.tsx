@@ -1,3 +1,5 @@
+'use client'
+
 import React, { CSSProperties } from 'react';
 import { Avatar, Button, ConfigProvider } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
@@ -9,8 +11,8 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 export default function Profile() {
     const defaultUsername = 'prikotletka';
     const greetings = `Привет, @${defaultUsername}!`;
-    const { sm } = useBreakpoint();
-    const avatarSize = !sm ? '96px' : '160px';
+    const { xs } = useBreakpoint();
+    const avatarSize = xs ? '96px' : '160px';
     const avatarStyle: CSSProperties = {
         flexShrink: 0,
         width: avatarSize,

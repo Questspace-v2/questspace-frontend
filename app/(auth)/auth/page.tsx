@@ -1,5 +1,3 @@
-'use client';
-
 import { ConfigProvider } from 'antd';
 import theme from '@/lib/theme/themeConfig';
 import AuthForm from '@/components/AuthForm/AuthForm';
