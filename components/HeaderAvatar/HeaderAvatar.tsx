@@ -47,6 +47,7 @@ export default function HeaderAvatar() {
                     placement={'bottomRight'}
                     openClassName={openClassName}
                 >
+                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
                     <a onClick={e => e.preventDefault()}>
                         <Avatar
                             className={'header-avatar__image'}

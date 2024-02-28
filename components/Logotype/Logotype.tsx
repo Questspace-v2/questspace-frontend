@@ -4,16 +4,6 @@ import {
     ICON_LOGO_PATH as questspaceIconLogo,
 } from '@/lib/utils/constants';
 import { LogotypeProps } from '@/components/Logotype/Logotype.types';
-import { CSSProperties } from 'react';
-import * as path from 'path';
-
-const cssProperties: CSSProperties = {
-    '-webkit-user-select': 'none',
-    '-khtml-user-select': 'none',
-    '-moz-user-select': 'none',
-    '-o-user-select': 'none',
-    'user-select': 'none',
-};
 
 export default function Logotype({
     width,
@@ -32,9 +22,8 @@ export default function Logotype({
                     quality={100}
                     draggable={false}
                     unselectable={'on'}
-                    style={cssProperties && style}
+                    style={style}
                     loading={'eager'}
-                    role={''}
                 />
             );
         case 'icon':
@@ -47,7 +36,7 @@ export default function Logotype({
                     quality={100}
                     draggable={false}
                     unselectable={'on'}
-                    style={cssProperties && style}
+                    style={style}
                 />
             );
         default:
