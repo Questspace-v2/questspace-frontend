@@ -1,13 +1,12 @@
 'use client'
 
-import { ConfigProvider, Empty, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
+import { ConfigProvider, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './QuestTabs.css';
 import {
     createQuestButton,
     customizedEmpty,
-    getQuests,
 } from '@/components/QuestTabs/QuestTabs.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 
