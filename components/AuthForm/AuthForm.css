@@ -4,10 +4,40 @@
 
 .hidden {
     display: none;
-
 }
 
 .showed {
     display: block;
     transition: all 1.5s ease-in;
+}
+
+.page-auth__wrapper {
+    flex-direction: column;
+    max-width: 320px;
+    box-sizing: border-box;
+    padding: 32px 24px 24px 24px;
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:focus {
+        transition: background-color 0s 600000s, color 0s 600000s !important;
+    }
+}
+
+.auth-form__header {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.auth-form__title {
+    color: #262626;
+    font-family: var(--font-roboto-flex);
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 30px;
+    margin: 0;
+    padding: 0 0 24px;
+}
+
+.auth-form__body {
 }

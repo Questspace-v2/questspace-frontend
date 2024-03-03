@@ -33,7 +33,7 @@ export default function Profile() {
                     className={'avatar__image'}
                     alt={'avatar'}
                     shape={'circle'}
-                    src={'https://api.dicebear.com/7.x/notionists/svg'}
+                    src={'https://api.dicebear.com/7.x/thumbs/svg'}
                     draggable={false}
                     style={avatarStyle}
                 />

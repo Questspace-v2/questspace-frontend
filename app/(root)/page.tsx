@@ -1,24 +1,29 @@
-import React from 'react';
 import { ConfigProvider } from 'antd';
 import theme from '@/lib/theme/themeConfig';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
-import Profile from '@/components/Profile/Profile';
-import QuestTabs from '@/components/QuestTabs/QuestTabs';
 import dynamic from 'next/dynamic';
+import Body from '@/components/Body/Body';
+import Loading from '@/app/(root)/loading';
 
-const DynamicBody = dynamic(() => import('../../components/Body/Body'), {
+const DynamicQuestTabs = dynamic(() => import('../../components/QuestTabs/QuestTabs'), {
     ssr: false,
 })
+
+const DynamicProfile = dynamic(() => import('../../components/Profile/Profile'), {
+    ssr: false,
+    loading: () => <Loading />
+})
+
 function HomePage() {
     return (
         <ConfigProvider theme={theme}>
             <div className={'App'}>
                 <Header />
-                <DynamicBody>
-                    <Profile />
-                    <QuestTabs />
-                </DynamicBody>
+                    <Body>
+                        <DynamicProfile />
+                        <DynamicQuestTabs />
+                    </Body>
                 <Footer />
             </div>
         </ConfigProvider>

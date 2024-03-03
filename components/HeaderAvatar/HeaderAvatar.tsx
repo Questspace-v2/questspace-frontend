@@ -37,7 +37,7 @@ export default function HeaderAvatar() {
         <div className={`header-avatar__frame`}>
             <ConfigProvider theme={{ token: { borderRadius: 2 } }}>
                 <Dropdown
-                    className={'header-dropdown'}
+                    className={'header-avatar__dropdown'}
                     menu={{
                         items,
                         onClick: handleMenuClick,
@@ -47,17 +47,16 @@ export default function HeaderAvatar() {
                     placement={'bottomRight'}
                     openClassName={openClassName}
                 >
-                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid,jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
-                    <a onClick={e => e.preventDefault()}>
+                    <button type={'button'} className={'header-avatar__button'}>
                         <Avatar
                             className={'header-avatar__image'}
                             alt={'avatar'}
                             shape={'circle'}
-                            src={'https://api.dicebear.com/7.x/notionists/svg'}
+                            src={'https://api.dicebear.com/7.x/thumbs/svg'}
                             draggable={false}
                         />
                         <DownOutlined />
-                    </a>
+                    </button>
                 </Dropdown>
             </ConfigProvider>
         </div>

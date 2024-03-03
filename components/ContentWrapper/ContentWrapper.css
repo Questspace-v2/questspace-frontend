@@ -12,13 +12,6 @@
     padding-right: var(--side-margins-32);
 }
 
-.page-auth__wrapper {
-    background: #FF4D4F;
-    max-width: 320px;
-    box-sizing: border-box;
-    padding: 32px 24px 24px 24px;
-}
-
 @media (max-width: 639px) {
     .content__wrapper {
         padding-left: var(--side-margins-24);

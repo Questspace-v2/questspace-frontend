@@ -7,4 +7,13 @@
     margin: 0;
     gap: 16px;
     flex-grow: 1;
+
+    .ant-spin {
+        display: flex;
+        width: 100vw;
+        height: auto;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+    }
 }

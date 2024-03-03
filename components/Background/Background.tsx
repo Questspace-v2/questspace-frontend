@@ -15,6 +15,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                         src={backgroundImage}
                         quality={100}
                         fill
+                        objectFit={'cover'}
                         aria-disabled
                         loading={'eager'}
                     />
