@@ -12,6 +12,6 @@ export const robotoFlex = Roboto_Flex({
     style: 'normal',
     subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
     weight: ['700'],
-    variable: '--font-roboto-flex',
+    variable: '--font-robotoflex',
     display: 'swap',
 });

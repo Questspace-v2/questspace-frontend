@@ -1,14 +1,12 @@
-.signup-form {
+.ant-form-item-hidden {
     transition:  1.5s ease-out;
 }
 
-.hidden {
-    display: none;
-}
-
-.showed {
-    display: block;
-    transition: all 1.5s ease-in;
+.page-auth {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-sizing: content-box;
 }
 
 .page-auth__wrapper {
@@ -31,13 +29,35 @@
 
 .auth-form__title {
     color: #262626;
-    font-family: var(--font-roboto-flex);
     font-size: 32px;
-    font-weight: 700;
-    line-height: 30px;
+    line-height: 95.2%;
+    letter-spacing: -.01em;
     margin: 0;
     padding: 0 0 24px;
 }
 
 .auth-form__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .ant-form-item {
+        margin: 0;
+
+        &.auth-form__submit-button {
+            padding: 12px 0 0;
+        }
+    }
+
+    .ant-input-affix-wrapper {
+        border-radius: 2px;
+    }
+}
+
+
+
+.page-auth__change-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

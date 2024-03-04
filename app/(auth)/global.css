@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Roboto Flex';
+    src: url('../../lib/RobotoFlex.woff2') format('woff2-variations');
+    /*src: url('../../lib/RobotoFlex.woff2') format('woff2') tech('variations');*/
+    font-weight: 100 1000;
+    font-stretch: 25% 151%;
+}
+
 :root {
     --background-color: #F5F5F5;
     --quit-color: #FF4D4F;
@@ -7,11 +15,10 @@
     --main-gap: 16px;
     --max-items-width: 1250px;
 
-    /* fonts */
+    /* font sizes */
     --large-font-size: 48px;
     --medium-font-size: 32px;
     --small-font-size: 24px;
-
 }
 
 html,
@@ -34,4 +41,23 @@ body {
     justify-content: center;
     width: 100%;
     min-height: 100%;
+}
+
+.roboto-flex-header {
+    font-family: "Roboto Flex", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+    font-variation-settings:
+            "slnt" 0,
+            "wdth" 151,
+            "GRAD" 0,
+            "XOPQ" 96,
+            "XTRA" 468,
+            "YOPQ" 100,
+            "YTAS" 750,
+            "YTDE" -203,
+            "YTFI" 738,
+            "YTLC" 514,
+            "YTUC" 712;
 }
