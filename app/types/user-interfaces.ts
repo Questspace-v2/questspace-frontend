@@ -10,10 +10,17 @@ export interface IUser {
     username: string,
 }
 
-export type IUserUpdate = {
-    newPassword: string,
+export type IUserUpdate = Omit<IUserState, 'error'>
+
+export interface IPasswordUpdate {
     oldPassword: string,
-} & IUser
+    newPassword: string
+}
+
+export interface ISignIn {
+    username: string,
+    password: string
+}
 
 export type IUserCreate = {
     password: string,
