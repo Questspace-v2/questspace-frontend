@@ -23,7 +23,7 @@ export default function HeaderAvatar() {
 
     const items: MenuProps['items'] = [
         {
-            label: 'Мой профиль',
+            label: <a href='/'>Мой профиль</a>,
             key: '1',
         },
         {

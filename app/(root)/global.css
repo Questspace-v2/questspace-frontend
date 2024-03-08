@@ -1,3 +1,11 @@
+@font-face {
+    font-family: 'Roboto Flex';
+    src: url('../../lib/RobotoFlex.woff2') format('woff2-variations');
+    /*src: url('../../lib/RobotoFlex.woff2') format('woff2') tech('variations');*/
+    font-weight: 100 1000;
+    font-stretch: 25% 151%;
+}
+
 :root {
     --background-color: #F5F5F5;
     --quit-color: #FF4D4F;
@@ -38,6 +46,10 @@ body {
 }
 
 .roboto-flex-header {
+    color: #262626;
+    font-size: 32px;
+    line-height: 95.2%;
+    letter-spacing: -.01em;
     font-family: "Roboto Flex", sans-serif;
     font-optical-sizing: auto;
     font-weight: 700;

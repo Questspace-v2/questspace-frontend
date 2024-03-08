@@ -23,6 +23,8 @@
         "@typescript-eslint/no-explicit-any": "error",
         "import/no-named-as-default": "off",
         "react/jsx-curly-brace-presence": "off",
-        "jsx-a11y/no-noninteractive-tabindex": "off"
+        "jsx-a11y/no-noninteractive-tabindex": "off",
+        "react/prop-types": "off",
+        "react/require-default-props": "off"
     }
 }
