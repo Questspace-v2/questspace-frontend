@@ -1,12 +1,13 @@
 'use client'
 
 import React, { CSSProperties } from 'react';
-import { Avatar, Button, ConfigProvider } from 'antd';
+import { Avatar } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './Profile.css';
-import { EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import EditProfile from '@/components/EditProfile/EditProfile';
+import ExitButton from '@/components/ExitButton/ExitButton';
 
 export default function Profile() {
     const defaultUsername = 'prikotletka';
@@ -18,13 +19,6 @@ export default function Profile() {
         width: avatarSize,
         height: avatarSize,
     };
-    const borderStyle: CSSProperties = {
-        borderRadius: '2px',
-    };
-    const exitStyle: React.CSSProperties =
-        {
-            color: 'var(--quit-color)',
-        } && borderStyle;
 
     return (
         <ContentWrapper>
@@ -40,31 +34,8 @@ export default function Profile() {
                 <div className={'profile-information'}>
                     <h1 className={'profile-greetings'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>
-                        <Button
-                            className={'edit-profile-button'}
-                            size={'middle'}
-                            icon={<EditOutlined />}
-                            style={borderStyle}
-                        >
-                            Редактировать профиль
-                        </Button>
-                        <ConfigProvider
-                            theme={{
-                                token: {
-                                    colorText: 'var(--quit-color)',
-                                    colorPrimaryHover: 'var(--quit-color)',
-                                },
-                            }}
-                        >
-                            <Button
-                                className={'exit-button'}
-                                size={'middle'}
-                                icon={<LogoutOutlined />}
-                                style={exitStyle}
-                            >
-                                Выйти
-                            </Button>
-                        </ConfigProvider>
+                        <EditProfile />
+                        <ExitButton />
                     </div>
                 </div>
             </div>

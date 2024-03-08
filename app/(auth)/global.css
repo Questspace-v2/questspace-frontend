@@ -44,6 +44,10 @@ body {
 }
 
 .roboto-flex-header {
+    color: #262626;
+    font-size: 32px;
+    line-height: 95.2%;
+    letter-spacing: -.01em;
     font-family: "Roboto Flex", sans-serif;
     font-optical-sizing: auto;
     font-weight: 700;
