@@ -44,6 +44,7 @@ export default function Logotype(props: LogotypeProps) {
                     draggable={false}
                     unselectable={'on'}
                     style={style}
+                    loading={'eager'}
                 />
             );
     }

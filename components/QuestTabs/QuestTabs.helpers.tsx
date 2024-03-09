@@ -6,6 +6,7 @@ export const createQuestButton = (
         <Button
             className={'create-quest-button'}
             type={'link'}
+            href={'/quest/create'}
             icon={<PlusOutlined style={{ color: '#1890FF' }} />}
             style={{ color: '#1890FF' }}
         >
@@ -24,7 +25,7 @@ export const customizedEmpty = (
                 Попробуйте{' '}
                 <a
                     className={'create-quest-button'}
-                    href={'/'}
+                    href={'/quest/create'}
                     style={{ color: '#1890FF' }}
                 >
                     создать квест

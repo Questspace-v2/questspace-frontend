@@ -1,6 +1,5 @@
 'use client'
 
-import React, { CSSProperties } from 'react';
 import { Avatar } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
@@ -8,17 +7,11 @@ import './Profile.css';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import EditProfile from '@/components/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
+import userMock from '@/app/api/__mocks__/User.mock';
 
 export default function Profile() {
-    const defaultUsername = 'prikotletka';
-    const greetings = `Привет, @${defaultUsername}!`;
+    const greetings = `Привет, @${userMock.username}!`;
     const { xs } = useBreakpoint();
-    const avatarSize = xs ? '96px' : '160px';
-    const avatarStyle: CSSProperties = {
-        flexShrink: 0,
-        width: avatarSize,
-        height: avatarSize,
-    };
 
     return (
         <ContentWrapper>
@@ -27,10 +20,13 @@ export default function Profile() {
                     className={'avatar__image'}
                     alt={'avatar'}
                     shape={'circle'}
-                    src={'https://api.dicebear.com/7.x/thumbs/svg'}
+                    src={userMock.avatarUrl}
                     draggable={false}
-                    style={avatarStyle}
+                    /* на самом деле размер берется (size - 2) */
+                    size={xs ? 98 : 162}
+                    style={{flexShrink: 0}}
                 />
+
                 <div className={'profile-information'}>
                     <h1 className={'profile-greetings'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>

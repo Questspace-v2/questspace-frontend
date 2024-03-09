@@ -5,6 +5,7 @@ import { Avatar, ConfigProvider, Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 import './HeaderAvatar.css';
+import userMock from '@/app/api/__mocks__/User.mock';
 
 export default function HeaderAvatar() {
     const [open, setOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function HeaderAvatar() {
                             className={'header-avatar__image'}
                             alt={'avatar'}
                             shape={'circle'}
-                            src={'https://api.dicebear.com/7.x/thumbs/svg'}
+                            src={userMock.avatarUrl}
                             draggable={false}
                         />
                         <DownOutlined />
