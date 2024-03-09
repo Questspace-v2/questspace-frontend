@@ -17,6 +17,7 @@ import { LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
 import { signIn, signUp } from '@/app/api/api';
 import { useFormStatus } from 'react-dom';
+import { IUserCreate } from '@/app/types/user-interfaces';
 
 interface AuthFormItems {
     username: string,
@@ -34,7 +35,7 @@ export default function AuthForm() {
     };
 
     const onFinish = async (values: AuthFormItems) => {
-        const data = {
+        const data: IUserCreate = {
             username: values.username,
             password: values.password
         };
@@ -60,9 +61,10 @@ export default function AuthForm() {
                     title={dictionary.formTitle}
                     style={{ width: '100%' }}
                     initialValues={{ remember: true }}
-                    onFinish={() => onFinish}
+                    /* eslint-disable-next-line @typescript-eslint/no-misused-promises */
+                    onFinish={onFinish}
                 >
-                    <FormItem<AuthFormItems> name={'username'}>
+                    <FormItem<AuthFormItems> name={'username'} required>
                         <Input
                             prefix={<UserOutlined />}
                             size={'middle'}
