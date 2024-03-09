@@ -1,61 +1,69 @@
-import axios, { AxiosResponse } from 'axios';
-import { IPasswordUpdate, ISignIn, IUser, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
-import { IQuest, IQuestCreate } from '@/app/types/quest-interfaces';
+import { IPasswordUpdate, ISignIn, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
+import { IQuestCreate } from '@/app/types/quest-interfaces';
+import navigate from '@/app/actions';
 
 const BACKEND_URL = 'https://millionaire-web.ru';
 
-const getUserById = (id: string) => {
-    axios.get<IUser>(`${BACKEND_URL}/user/${id}`)
-        .then((resp: AxiosResponse<IUser, IUser>) => resp.data)
-        .catch((err) => {
+export const getUserById = (id: string) => {
+    fetch(`${BACKEND_URL}/user/${id}`)
+        .then(response => response.body)
+        .catch(err => {
             throw err;
         });
 };
 
-const getQuestById = (id: string) => {
-    axios.get<IQuest>(`${BACKEND_URL}/quest/${id}`)
-        .then((resp) => resp.data)
-        .catch((err) => {
+export const getQuestById = (id: string) => {
+    fetch(`${BACKEND_URL}/quest/${id}`)
+        .then(response => response.body)
+        .catch(err => {
             throw err;
         })
 };
 
-const authWithGoogle = async (token: string) => {
-    await axios.post(`${BACKEND_URL}/auth/google`, {token});
+export const authWithGoogle = async (token: string) => {
+    await fetch(`${BACKEND_URL}/auth/google`, {method: 'POST', credentials: 'include', body: token});
 };
 
-const signUp = async (data: IUserCreate) => {
-    await axios.post<IUserCreate>(`${BACKEND_URL}/auth/register`, data);
+export const signUp = async (data: IUserCreate) => {
+    await fetch(`${BACKEND_URL}/auth/register`, {method: 'POST', credentials: 'same-origin', body: JSON.stringify(data)})
+        .catch(reason => {
+            console.error(`Error while fetching: ${reason}`)
+            throw reason;
+        })
+        .then(response => response.status === 200 ? navigate() : console.log(response.json()));
 };
 
-const signIn = async (data: ISignIn) => {
-    await axios.post<ISignIn>(`${BACKEND_URL}/auth/sign-in`, data);
+export const signIn = async (data: ISignIn) => {
+    await fetch(`${BACKEND_URL}/auth/sign-in`, {method: 'POST', credentials: 'same-origin', body: JSON.stringify(data)})
+        .catch(reason => {
+            console.error(`Error while fetching: ${reason}`)
+            throw reason;
+        })
+        .then(response => response.status === 200 ? navigate() : console.log(response.json()));
 };
 
-const createQuest = async (data: IQuestCreate) => {
-    await axios.post<IQuestCreate>(`${BACKEND_URL}/quest`, data);
+export const createQuest = async (data: IQuestCreate) => {
+    await fetch(`${BACKEND_URL}/quest`, {method: 'POST', credentials: 'include', body: JSON.stringify(data)});
 };
 
-const updateQuest = async (id: string, data: IQuestCreate) => {
-    await axios.post<IQuestCreate>(`${BACKEND_URL}/quest/${id}`, data);
+export const updateQuest = async (id: string, data: IQuestCreate) => {
+    await fetch(`${BACKEND_URL}/quest/${id}`, {method: 'POST', credentials: 'include', body: JSON.stringify(data)});
 };
 
-const updateUser = async (id: string, data: IUserUpdate) => {
-    await axios.post<IUserUpdate>(`${BACKEND_URL}/user/${id}`, data);
+export const updateUser = async (id: string, data: IUserUpdate) => {
+    await fetch(`${BACKEND_URL}/user/${id}`, {method: 'POST', credentials: 'include', body: JSON.stringify(data)});
 };
 
-const updatePassword = async (id: string, data: IPasswordUpdate) => {
-    await axios.post<IPasswordUpdate>(`${BACKEND_URL}/user/${id}/password`, data);
+export const updatePassword = async (id: string, data: IPasswordUpdate) => {
+    await fetch(`${BACKEND_URL}/user/${id}/password`, {method: 'POST', credentials: 'include', body: JSON.stringify(data)});
 };
 
-const deleteQuest = async (id: string) => {
-    await axios.delete(`${BACKEND_URL}/quest/${id}`);
+export const deleteQuest = async (id: string) => {
+    await fetch(`${BACKEND_URL}/quest/${id}`, {method: 'DELETE', credentials: 'include'})
+        .then(response => response.json());
 };
 
-const deleteUser = async (id: string) => {
-    await axios.delete(`${BACKEND_URL}/user/${id}`);
+export const deleteUser = async (id: string) => {
+    await fetch(`${BACKEND_URL}/user/${id}`, {method: 'DELETE', credentials: 'include'})
+        .then(response => response.json());
 };
-
-export {getUserById, getQuestById, authWithGoogle,
-    signUp, signIn, createQuest, updateQuest, updateUser,
-    updatePassword, deleteQuest, deleteUser};

@@ -15,13 +15,35 @@ import FormItem from 'antd/lib/form/FormItem';
 import './AuthForm.css';
 import { LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
+import { signIn, signUp } from '@/app/api/api';
+import { useFormStatus } from 'react-dom';
+
+interface AuthFormItems {
+    username: string,
+    password: string,
+    passwordAgain: string,
+}
 
 export default function AuthForm() {
+    const {pending} = useFormStatus();
     const [formType, setFormType] = useState<AuthFormTypes>(Auth.LOGIN);
     const [dictionary, setDictionary] = useState<TitleDictionary>(LoginDictionary)
     const handleClick = () => {
         setFormType(prevState => prevState === Auth.LOGIN ? Auth.SIGNUP : Auth.LOGIN);
         setDictionary((prevState) => prevState === LoginDictionary ? SignupDictionary : LoginDictionary)
+    };
+
+    const onFinish = async (values: AuthFormItems) => {
+        const data = {
+            username: values.username,
+            password: values.password
+        };
+
+        if (formType === Auth.SIGNUP) {
+            await signUp(data);
+        } else {
+            await signIn(data);
+        }
     };
 
     return (
@@ -33,12 +55,14 @@ export default function AuthForm() {
                 </div>
 
                 <Form
+                    name={'auth-form'}
                     className={'auth-form__body'}
                     title={dictionary.formTitle}
                     style={{ width: '100%' }}
-                    method={'post'}
+                    initialValues={{ remember: true }}
+                    onFinish={() => onFinish}
                 >
-                    <FormItem name={'login'}>
+                    <FormItem<AuthFormItems> name={'username'}>
                         <Input
                             prefix={<UserOutlined />}
                             size={'middle'}
@@ -55,9 +79,25 @@ export default function AuthForm() {
                             placeholder={'пароль'}
                         />
                     </FormItem>
-                    <FormItem
-                        name={'password-again'}
-                        hidden={formType === Auth.LOGIN}
+                    {formType === Auth.SIGNUP &&
+                    <FormItem<AuthFormItems>
+                        name={'passwordAgain'}
+                        dependencies={['password']}
+                        hasFeedback
+                        rules={[
+                                {
+                                    required: true,
+                                    message: 'Please confirm your password!',
+                                },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('password') === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error('The new password that you entered do not match!'));
+                                    },
+                                })
+                        ]}
                     >
                         <Input
                             type={'password'}
@@ -67,8 +107,9 @@ export default function AuthForm() {
                             placeholder={'снова пароль'}
                         />
                     </FormItem>
+                    }
                     <FormItem className={'auth-form__submit-button'}>
-                        <Button type="primary" htmlType="submit" block style={{
+                        <Button type="primary" htmlType="submit" disabled={pending} block style={{
                             borderRadius: '2px',
                             fontWeight: 500,
                         }}>
