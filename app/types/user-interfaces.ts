@@ -24,4 +24,5 @@ export interface ISignIn {
 
 export type IUserCreate = {
     password: string,
-} & Omit<IUserState, 'error'>
+    avatarUrl?: string,
+} & Omit<IUserState, 'error' | 'avatarUrl'>
