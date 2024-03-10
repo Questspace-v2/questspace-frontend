@@ -18,6 +18,7 @@ import Logotype from '@/components/Logotype/Logotype';
 import { signIn, signUp } from '@/app/api/api';
 import { useFormStatus } from 'react-dom';
 import { IUserCreate } from '@/app/types/user-interfaces';
+import { useSession } from 'next-auth/react';
 
 interface AuthFormItems {
     username: string,
@@ -46,6 +47,9 @@ export default function AuthForm() {
             await signIn(data);
         }
     };
+
+    const {data: session, status} = useSession();
+    console.log(session, status);
 
     return (
         <section className={'page-auth'}>
