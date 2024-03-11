@@ -1,11 +1,11 @@
 export interface IUserState {
     username: string,
-    avatarUrl: string,
+    avatar_url: string,
     error: string | null,
 }
 
 export interface IUser {
-    avatarUrl: string,
+    avatar_url: string,
     id: string,
     username: string,
 }
@@ -13,8 +13,8 @@ export interface IUser {
 export type IUserUpdate = Omit<IUserState, 'error'>
 
 export interface IPasswordUpdate {
-    oldPassword: string,
-    newPassword: string
+    old_password: string,
+    new_password: string
 }
 
 export interface ISignIn {
@@ -24,5 +24,5 @@ export interface ISignIn {
 
 export type IUserCreate = {
     password: string,
-    avatarUrl?: string,
-} & Omit<IUserState, 'error' | 'avatarUrl'>
+    avatar_url?: string,
+} & Omit<IUserState, 'error' | 'avatar_url'>
