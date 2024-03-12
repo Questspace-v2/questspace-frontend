@@ -15,10 +15,10 @@ import FormItem from 'antd/lib/form/FormItem';
 import './AuthForm.css';
 import { LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
-import { signIn, signUp } from '@/app/api/api';
+import { authSignIn, authSignUp } from '@/app/api/api';
 import { useFormStatus } from 'react-dom';
 import { IUserCreate } from '@/app/types/user-interfaces';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 
 interface AuthFormItems {
     username: string,
@@ -41,10 +41,18 @@ export default function AuthForm() {
             password: values.password
         };
 
+        const res = await signIn('credentials', {
+            ...data,
+            redirect: false
+        });
+
+        console.log(res);
+
         if (formType === Auth.SIGNUP) {
-            await signUp(data);
+            const result = await authSignUp(data);
+            console.log(result);
         } else {
-            await signIn(data);
+            await authSignIn(data);
         }
     };
 

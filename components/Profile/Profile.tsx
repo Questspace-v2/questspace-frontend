@@ -20,7 +20,7 @@ export default function Profile() {
                     className={'avatar__image'}
                     alt={'avatar'}
                     shape={'circle'}
-                    src={userMock.avatarUrl}
+                    src={userMock.avatar_url}
                     draggable={false}
                     /* на самом деле размер берется (size - 2) */
                     size={xs ? 98 : 162}
