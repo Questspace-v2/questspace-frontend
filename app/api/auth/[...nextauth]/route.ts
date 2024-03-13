@@ -17,7 +17,11 @@ const authOptions: NextAuthOptions = {
                     if (!username || !password) {
                         return null;
                     }
-                    return await authSignIn({username, password});
+                    const user = await authSignIn({username, password});
+                    if (user) {
+                        return user;
+                    }
+                    return null;
                 } catch (error) {
                     return null;
                 }
@@ -25,10 +29,24 @@ const authOptions: NextAuthOptions = {
         }),
     ],
     pages: {
-        signIn: '/auth'
+        signIn: '/auth',
     },
-    callbacks: {},
+    callbacks: {
+        // eslint-disable-next-line @typescript-eslint/require-await
+        async jwt({token, user}) {
+            return { ...token, ...user };
+        },
+        // eslint-disable-next-line @typescript-eslint/require-await
+        async session({ session, token }) {
+            // eslint-disable-next-line no-param-reassign
+            session.user = token;
+            return session;
+        }
+    },
     secret: "big-secret",
-}
+};
 
-export default NextAuth(authOptions);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const handler = NextAuth(authOptions);
+
+export {handler as GET, handler as POST};

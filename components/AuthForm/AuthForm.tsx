@@ -52,7 +52,8 @@ export default function AuthForm() {
             const result = await authSignUp(data);
             console.log(result);
         } else {
-            await authSignIn(data);
+            const result = await authSignIn(data);
+            console.log(result);
         }
     };
 

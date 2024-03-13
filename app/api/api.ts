@@ -9,6 +9,7 @@ import {
     UnprocessableEntity,
     UnsupportedMediaType,
 } from 'http-errors';
+import navigate from '@/app/actions';
 
 const BACKEND_URL = 'https://millionaire-web.ru';
 
@@ -106,7 +107,8 @@ export const authSignIn = async (data: ISignIn) => {
             body: JSON.stringify(data)
         });
 
-        if (response.ok) { // Тут еще navigate() зачем-то был
+        if (response.ok) {
+            await navigate();
             return await response.json() as IUser;
         }
 

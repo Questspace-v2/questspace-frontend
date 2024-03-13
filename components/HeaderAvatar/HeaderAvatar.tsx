@@ -53,7 +53,7 @@ export default function HeaderAvatar() {
                             className={'header-avatar__image'}
                             alt={'avatar'}
                             shape={'circle'}
-                            src={userMock.avatarUrl}
+                            src={userMock.avatar_url}
                             draggable={false}
                         />
                         <DownOutlined />
