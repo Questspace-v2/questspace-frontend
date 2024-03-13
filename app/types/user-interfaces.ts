@@ -1,16 +1,13 @@
-export interface IUserState {
-    username: string,
-    avatar_url: string,
-    error: string | null,
-}
-
 export interface IUser {
-    avatar_url: string,
+    avatar_url?: string,
     id: string,
     username: string,
 }
 
-export type IUserUpdate = Omit<IUserState, 'error'>
+export interface IUserUpdate {
+    avatar_url?: string,
+    username?: string
+}
 
 export interface IPasswordUpdate {
     old_password: string,
@@ -23,6 +20,5 @@ export interface ISignIn {
 }
 
 export type IUserCreate = {
-    password: string,
-    avatar_url?: string,
-} & Omit<IUserState, 'error' | 'avatar_url'>
+    avatar_url?: string
+} & ISignIn
