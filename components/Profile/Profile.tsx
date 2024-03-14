@@ -8,10 +8,14 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import EditProfile from '@/components/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import userMock from '@/app/api/__mocks__/User.mock';
+import { useSession } from 'next-auth/react';
 
 export default function Profile() {
     const greetings = `Привет, @${userMock.username}!`;
     const { xs } = useBreakpoint();
+    const session = useSession();
+
+    console.log(session);
 
     return (
         <ContentWrapper>

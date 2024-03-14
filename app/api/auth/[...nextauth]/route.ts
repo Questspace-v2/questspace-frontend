@@ -12,19 +12,15 @@ const authOptions: NextAuthOptions = {
             type: 'credentials',
             credentials: {},
             async authorize(credentials) {
-                try {
-                    const {username, password} = credentials as ISignIn;
-                    if (!username || !password) {
-                        return null;
-                    }
-                    const user = await authSignIn({username, password});
-                    if (user) {
-                        return user;
-                    }
-                    return null;
-                } catch (error) {
+                const {username, password} = credentials as ISignIn;
+                if (!username || !password) {
                     return null;
                 }
+                const user = await authSignIn({username, password});
+                if (user) {
+                    return user;
+                }
+                return null;
             },
         }),
     ],
@@ -33,13 +29,10 @@ const authOptions: NextAuthOptions = {
     },
     callbacks: {
         // eslint-disable-next-line @typescript-eslint/require-await
-        async jwt({token, user}) {
-            return { ...token, ...user };
-        },
-        // eslint-disable-next-line @typescript-eslint/require-await
         async session({ session, token }) {
             // eslint-disable-next-line no-param-reassign
             session.user = token;
+            console.log(session, token);
             return session;
         }
     },

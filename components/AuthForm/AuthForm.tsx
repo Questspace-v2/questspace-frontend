@@ -35,16 +35,15 @@ export default function AuthForm() {
         setDictionary((prevState) => prevState === LoginDictionary ? SignupDictionary : LoginDictionary)
     };
 
+    const {data: session} = useSession();
+
     const onFinish = async (values: AuthFormItems) => {
         const data: IUserCreate = {
             username: values.username,
             password: values.password
         };
 
-        const res = await signIn('credentials', {
-            ...data,
-            redirect: false
-        });
+        const res = await signIn();
 
         console.log(res);
 
@@ -56,9 +55,6 @@ export default function AuthForm() {
             console.log(result);
         }
     };
-
-    const {data: session, status} = useSession();
-    console.log(session, status);
 
     return (
         <section className={'page-auth'}>
