@@ -11,11 +11,9 @@ import userMock from '@/app/api/__mocks__/User.mock';
 import { useSession } from 'next-auth/react';
 
 export default function Profile() {
-    const greetings = `Привет, @${userMock.username}!`;
+    const {data: session} = useSession();
+    const greetings = `Привет, @${session?.user.isLoggedIn}!`;
     const { xs } = useBreakpoint();
-    const session = useSession();
-
-    console.log(session);
 
     return (
         <ContentWrapper>

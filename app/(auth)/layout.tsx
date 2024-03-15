@@ -4,7 +4,6 @@ import { manrope, robotoFlex } from '@/lib/fonts';
 
 import './global.css';
 import { Metadata } from 'next';
-import Providers from '@/components/Providers/Providers';
 
 export const metadata: Metadata = {
     title: 'Квестспейс',
@@ -18,10 +17,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
         <html lang="ru">
-        <body className={`${manrope.variable} ${robotoFlex.variable}`}>
-            <Providers>
+            <body className={`${manrope.variable} ${robotoFlex.variable}`}>
                 <AntdRegistry>{children}</AntdRegistry>
-            </Providers>
             </body>
         </html>
     );

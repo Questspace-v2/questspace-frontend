@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { authSignIn } from '@/app/api/api';
+import { authSignIn, authSignUp } from '@/app/api/api';
 import { ISignIn } from '@/app/types/user-interfaces';
 
 const authOptions: NextAuthOptions = {
@@ -9,6 +9,7 @@ const authOptions: NextAuthOptions = {
     },
     providers: [
         CredentialsProvider({
+            id: 'sign-in',
             type: 'credentials',
             credentials: {},
             async authorize(credentials) {
@@ -23,16 +24,36 @@ const authOptions: NextAuthOptions = {
                 return null;
             },
         }),
+        CredentialsProvider({
+            id: 'sign-up',
+            type: 'credentials',
+            credentials: {},
+            async authorize(credentials) {
+                const {username, password} = credentials as ISignIn;
+                if (!username || !password) {
+                    return null;
+                }
+                const user = await authSignUp({username, password});
+                if (user) {
+                    return user;
+                }
+                return null;
+            }
+        })
     ],
     pages: {
-        signIn: '/auth',
+        signIn: '/auth'
     },
     callbacks: {
-        // eslint-disable-next-line @typescript-eslint/require-await
-        async session({ session, token }) {
+        jwt({token}) {
+            return token;
+        },
+        signIn({user}) {
+            return !!user;
+        },
+        session({ session }) {
             // eslint-disable-next-line no-param-reassign
-            session.user = token;
-            console.log(session, token);
+            session.user.isLoggedIn = true;
             return session;
         }
     },

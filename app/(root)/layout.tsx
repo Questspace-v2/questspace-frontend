@@ -18,11 +18,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
         <html lang="ru">
-            <body className={`${manrope.variable} ${robotoFlex.variable}`}>
-                <Providers>
-                    <AntdRegistry>{children}</AntdRegistry>
-                </Providers>
-            </body>
+            <Providers>
+                <body className={`${manrope.variable} ${robotoFlex.variable}`}>
+                        <AntdRegistry>{children}</AntdRegistry>
+                </body>
+            </Providers>
         </html>
     );
 }
