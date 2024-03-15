@@ -4,13 +4,13 @@ export interface IQuest {
     access: string,
     creator: IUser,
     description: string,
-    finishTime: string,
+    finish_time: string,
     id: string,
-    maxTeamCap: 0,
-    mediaLink: string,
+    max_team_cap: number,
+    media_link: string,
     name: string,
-    registrationDeadline: string,
-    startTime: string
+    registration_deadline: string,
+    start_time: string
 }
 
 export type IQuestCreate = {

@@ -1,6 +1,13 @@
 import { Button, ConfigProvider, Empty } from 'antd';
 import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
 
+const selectTab = ['all-quests', 'my-quests', 'created-quests'] as const;
+export type SelectTab = (typeof selectTab)[number];
+
+
+// @ts-expect-error мы точно знаем, что в SelectTab string
+export const isSelectTab = (x: string): x is SelectTab => selectTab.includes(x);
+
 export const createQuestButton = (
     <ConfigProvider>
         <Button
@@ -43,6 +50,8 @@ export const customizedEmpty = (
     />
 );
 
-export function getQuests() {
+let count = 0;
+export function getQuests(tab: SelectTab) {
+    console.log(++count, tab);
     return customizedEmpty;
 }

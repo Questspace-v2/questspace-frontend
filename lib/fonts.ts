@@ -1,4 +1,5 @@
-import { Manrope, Roboto_Flex } from 'next/font/google';
+import { Manrope } from 'next/font/google';
+import localFont from 'next/font/local';
 
 export const manrope = Manrope({
     style: 'normal',
@@ -8,10 +9,10 @@ export const manrope = Manrope({
     display: 'swap',
 });
 
-export const robotoFlex = Roboto_Flex({
+export const robotoFlex = localFont({
+    src: './RobotoFlex.woff2',
     style: 'normal',
-    subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
-    weight: ['700'],
+    weight: '700',
     variable: '--font-robotoflex',
     display: 'swap',
 });

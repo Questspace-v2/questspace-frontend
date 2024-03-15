@@ -28,14 +28,14 @@ export default function HeaderAvatar() {
             key: '1',
         },
         {
-            label: 'Выйти',
+            label: <a href='/auth'>Выйти</a>,
             key: '2',
             style: exitStyle,
         },
     ];
 
     return (
-        <div className={`header-avatar__frame`}>
+        <div className={`header-avatar__frame`} aria-disabled={false}>
             <ConfigProvider theme={{ token: { borderRadius: 2 } }}>
                 <Dropdown
                     className={'header-avatar__dropdown'}

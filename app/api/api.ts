@@ -2,7 +2,7 @@ import { IPasswordUpdate, ISignIn, IUserCreate, IUserUpdate } from '@/app/types/
 import { IQuestCreate } from '@/app/types/quest-interfaces';
 import navigate from '@/app/actions';
 
-const BACKEND_URL = 'https://millionaire-web.ru';
+export const BACKEND_URL = 'https://millionaire-web.ru';
 
 export const getUserById = (id: string) => {
     fetch(`${BACKEND_URL}/user/${id}`)
@@ -51,7 +51,7 @@ export const updateQuest = async (id: string, data: IQuestCreate) => {
 };
 
 export const updateUser = async (id: string, data: IUserUpdate) => {
-    await fetch(`${BACKEND_URL}/user/${id}`, {method: 'POST', credentials: 'include', body: JSON.stringify(data)});
+    await fetch(`${BACKEND_URL}/user/${id}`, {method: 'POST', credentials: 'include', body: JSON.stringify(data)}).then(response => response.status);
 };
 
 export const updatePassword = async (id: string, data: IPasswordUpdate) => {

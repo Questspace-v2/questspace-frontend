@@ -28,7 +28,7 @@ export default function Profile() {
                 />
 
                 <div className={'profile-information'}>
-                    <h1 className={'profile-greetings'}>{greetings}</h1>
+                    <h1 className={'roboto-flex-greeting'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>
                         <EditProfile />
                         <ExitButton />

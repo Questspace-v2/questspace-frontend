@@ -6,6 +6,18 @@
     text-shadow: none;
 }
 
-.create-quest-button:hover * {
-    color: #4096ff;
+.ant-select-selection-item, .ant-select-arrow span {
+    color: var(--primary-color);
+}
+
+.ant-select-open {
+    width: min-content;
+}
+
+.quest-tabs__header {
+    display: flex;
+    width: 100%;
+    padding: 0 0 4px;
+    justify-content: space-between;
+    border-bottom: 1px inset #f0f0f0;
 }

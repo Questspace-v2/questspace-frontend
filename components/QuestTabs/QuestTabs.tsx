@@ -5,15 +5,18 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './QuestTabs.css';
 import {
-    createQuestButton,
-    customizedEmpty,
+    createQuestButton, customizedEmpty,
+    getQuests, isSelectTab, SelectTab,
 } from '@/components/QuestTabs/QuestTabs.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import { useState } from 'react';
 
 export default function QuestTabs() {
     const { xs} = useBreakpoint();
+    const [selectedTab, setSelectedTab] = useState<SelectTab>('all-quests');
+    const [tabContent, setTabContent] = useState<JSX.Element>(customizedEmpty);
 
-    const selectTheme: ThemeConfig = {
+    const themeConfig: ThemeConfig = {
         components: {
             Select: {
                 colorTextPlaceholder: '#1890FF',
@@ -23,7 +26,7 @@ export default function QuestTabs() {
                 fontWeightStrong: 400,
                 colorIcon: '#1890FF',
                 colorIconHover: '#1890FF',
-            },
+            }
         },
     };
 
@@ -31,25 +34,34 @@ export default function QuestTabs() {
         {
             key: 'all-quests',
             label: 'Все квесты',
-            children: customizedEmpty,
+            children: selectedTab === 'all-quests' ? tabContent : undefined,
         },
         {
             key: 'my-quests',
             label: 'Мои квесты',
-            children: customizedEmpty,
+            children: selectedTab === 'my-quests' ? tabContent : undefined,
         },
         {
             key: 'created-quests',
             label: 'Созданные квесты',
-            children: customizedEmpty,
+            children: selectedTab === 'created-quests' ? tabContent : undefined,
         },
     ];
 
-    const selectOptions = [
+    const selectOptions: {value: SelectTab, label: string}[] = [
         { value: 'all-quests', label: 'Все квесты' },
         { value: 'my-quests', label: 'Мои квесты' },
         { value: 'created-quests', label: 'Созданные квесты' },
     ];
+
+    const handleSelectTab = (value: string) => {
+        if (!isSelectTab(value) || value === selectedTab) {
+            return;
+        }
+
+        setSelectedTab(value);
+        setTabContent(getQuests(value));
+    }
 
     if (xs) {
         return (
@@ -62,44 +74,49 @@ export default function QuestTabs() {
                     }}
                 >
                     <div
-                        className={'quest-tabs-header'}
-                        style={{
-                            display: 'flex',
-                            width: '100%',
-                            padding: '0 0 4px',
-                            justifyContent: 'space-between',
-                            borderBottom: '1px #D9D9D9',
-                        }}
+                        className={'quest-tabs__header'}
                     >
-                        <ConfigProvider theme={selectTheme}>
+                        <ConfigProvider theme={themeConfig}>
                             <Select
-                                defaultValue={'all-quests'}
+                                tabIndex={0}
+                                defaultValue={selectedTab}
+                                defaultActiveFirstOption={false}
                                 style={{
                                     width: 'max-content',
                                     color: '#1890FF',
                                 }}
+                                dropdownStyle={{width: 'max-content'}}
                                 variant={'borderless'}
                                 options={selectOptions}
+                                onSelect={handleSelectTab}
                             />
                         </ConfigProvider>
                         {createQuestButton}
                     </div>
+                    {tabContent}
                 </section>
             </ContentWrapper>
         );
     }
     return (
             <ContentWrapper>
+                <ConfigProvider theme={themeConfig}>
                 <Tabs
                     className={'quest-tabs'}
                     tabBarExtraContent={createQuestButton}
+                    tabBarStyle={{color: 'red'}}
                     items={items}
+                    activeKey={selectedTab}
                     style={{
                         width: '100%',
                         minHeight: '250px',
                         margin: '8px 0 24px 0',
                     }}
+
+                    onTabClick={handleSelectTab}
+                    destroyInactiveTabPane
                 />
+                </ConfigProvider>
             </ContentWrapper>
         )
 }

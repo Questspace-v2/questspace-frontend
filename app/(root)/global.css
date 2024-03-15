@@ -1,11 +1,3 @@
-@font-face {
-    font-family: 'Roboto Flex';
-    src: url('../../lib/RobotoFlex.woff2') format('woff2-variations');
-    /*src: url('../../lib/RobotoFlex.woff2') format('woff2') tech('variations');*/
-    font-weight: 100 1000;
-    font-stretch: 25% 151%;
-}
-
 :root {
     --background-color: #F5F5F5;
     --quit-color: #FF4D4F;
@@ -34,6 +26,7 @@ body {
     height: 100%;
     margin: 0;
     font-family: var(--font-manrope);
+    color: #262626;
 }
 
 .App {
@@ -47,14 +40,16 @@ body {
 }
 
 .roboto-flex-header {
+    margin: 0;
     color: #262626;
     font-size: 32px;
     line-height: 95.2%;
     letter-spacing: -.01em;
-    font-family: "Roboto Flex", sans-serif;
+    font-family: var(--font-robotoflex);
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
+    user-select: none;
     font-variation-settings:
             "slnt" 0,
             "wdth" 151,

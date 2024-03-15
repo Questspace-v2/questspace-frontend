@@ -10,7 +10,10 @@ export interface IUser {
     username: string,
 }
 
-export type IUserUpdate = Omit<IUserState, 'error'>
+export interface IUserUpdate {
+    username?: string,
+    avatarUrl?: string
+}
 
 export interface IPasswordUpdate {
     oldPassword: string,
