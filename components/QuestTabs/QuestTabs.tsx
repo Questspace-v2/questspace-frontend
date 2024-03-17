@@ -5,7 +5,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './QuestTabs.css';
 import {
-    createQuestButton, customizedEmpty,
+    createQuestButton,
     getQuests, isSelectTab, SelectTab,
 } from '@/components/QuestTabs/QuestTabs.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
@@ -14,7 +14,7 @@ import { useState } from 'react';
 export default function QuestTabs() {
     const { xs} = useBreakpoint();
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all-quests');
-    const [tabContent, setTabContent] = useState<JSX.Element>(customizedEmpty);
+    const [tabContent, setTabContent] = useState<JSX.Element[] | JSX.Element>(getQuests(selectedTab));
 
     const themeConfig: ThemeConfig = {
         components: {
@@ -93,7 +93,9 @@ export default function QuestTabs() {
                         </ConfigProvider>
                         {createQuestButton}
                     </div>
-                    {tabContent}
+                    <div className={'quest-tabpane'}>
+                        {tabContent}
+                    </div>
                 </section>
             </ContentWrapper>
         );

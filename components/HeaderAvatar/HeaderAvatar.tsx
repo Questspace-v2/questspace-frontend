@@ -1,11 +1,12 @@
 'use client'
 
 import React, { CSSProperties, useState } from 'react';
-import { Avatar, ConfigProvider, Dropdown, MenuProps } from 'antd';
+import { ConfigProvider, Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 import './HeaderAvatar.css';
 import userMock from '@/app/api/__mocks__/User.mock';
+import Image from 'next/image';
 
 export default function HeaderAvatar() {
     const [open, setOpen] = useState(false);
@@ -36,7 +37,7 @@ export default function HeaderAvatar() {
 
     return (
         <div className={`header-avatar__frame`} aria-disabled={false}>
-            <ConfigProvider theme={{ token: { borderRadius: 2 } }}>
+            <ConfigProvider theme={{ token: { borderRadius: 2 }, components: { Dropdown: {paddingBlock: 0} }}}>
                 <Dropdown
                     className={'header-avatar__dropdown'}
                     menu={{
@@ -49,12 +50,13 @@ export default function HeaderAvatar() {
                     openClassName={openClassName}
                 >
                     <button type={'button'} className={'header-avatar__button'}>
-                        <Avatar
+                        <Image
                             className={'header-avatar__image'}
                             alt={'avatar'}
-                            shape={'circle'}
-                            src={userMock.avatarUrl}
-                            draggable={false}
+                            width={32}
+                            height={32}
+                            style={{borderRadius: '16px'}}
+                            src={userMock.avatar_url}
                         />
                         <DownOutlined />
                     </button>

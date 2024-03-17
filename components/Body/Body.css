@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100vw;
+    width: 100%;
     height: auto;
     margin: 0;
     gap: 16px;
@@ -10,7 +10,7 @@
 
     .ant-spin {
         display: flex;
-        width: 100vw;
+        width: 100%;
         height: auto;
         flex-grow: 1;
         align-items: center;

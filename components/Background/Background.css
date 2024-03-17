@@ -1,6 +1,8 @@
 .background__wrapper {
+    position: absolute;
     display: flex;
-    width: 100vw;
+    width: 100%;
+    height: 100%;
     justify-content: center;
     flex-grow: 0;
     flex-shrink: 0;
@@ -14,4 +16,9 @@
     -webkit-user-drag: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+
+.background_footer {
+    height: inherit;
+    width: 100%;
 }

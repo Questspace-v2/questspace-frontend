@@ -2,6 +2,9 @@
     --background-color: #F5F5F5;
     --quit-color: #FF4D4F;
     --primary-color: #1890FF;
+    --base-text-color: #262626;
+    --secondary-text-color: #1F1F1F;
+    --tertiary-text-color: #434343;
     --side-margins-16: 16px;
     --side-margins-24: 24px;
     --side-margins-32: 32px;
@@ -13,6 +16,13 @@
     --medium-font-size: 32px;
     --small-font-size: 24px;
 
+    /* columns */
+    --grid-column-640: 1fr 1fr;
+    --grid-column-960: 1fr 1fr 1fr;
+    --grid-column-1280: 1fr 1fr 1fr 1fr;
+
+    /* status color */
+    --status-color-registration: #1890FF;
 }
 
 * {
@@ -21,6 +31,7 @@
 
 html,
 body {
+    max-width: 100%;
     width: 100%;
     min-height: 100%;
     height: 100%;
@@ -41,8 +52,7 @@ body {
 
 .roboto-flex-header {
     margin: 0;
-    color: #262626;
-    font-size: 32px;
+    color: var(--base-text-color);
     line-height: 95.2%;
     letter-spacing: -.01em;
     font-family: var(--font-robotoflex);
@@ -64,20 +74,34 @@ body {
             "YTUC" 712;
 }
 
+
+
 h1 {
-    font-size: var(--large-font-size);
+    &.responsive-header-h1 {
+        font-size: var(--large-font-size);
+    }
 }
 
 h2 {
-    font-size: var(--medium-font-size);
+    &.responsive-header-h2 {
+        font-size: var(--medium-font-size);
+    }
+}
+
+h3 {
+    font-size: 20px;
 }
 
 @media (max-width: 1279px) {
     h1 {
-        font-size: var(--medium-font-size);
+        &.responsive-header-h1 {
+            font-size: var(--medium-font-size);
+        }
     }
 
     h2 {
-        font-size: var(--small-font-size);
+        &.responsive-header-h2 {
+            font-size: var(--small-font-size);
+        }
     }
 }

@@ -13,33 +13,6 @@
     gap: 16px;
 }
 
-.roboto-flex-greeting {
-    color: #262626;
-    font-size: 48px;
-    line-height: 95.2%;
-    letter-spacing: -.01em;
-    font-family: var(--font-robotoflex);
-    font-optical-sizing: auto;
-    font-weight: 700;
-    font-style: normal;
-    user-select: none;
-    font-variation-settings:
-            "slnt" 0,
-            "wdth" 151,
-            "GRAD" 0,
-            "XOPQ" 96,
-            "XTRA" 468,
-            "YOPQ" 100,
-            "YTAS" 750,
-            "YTDE" -203,
-            "YTFI" 738,
-            "YTLC" 514,
-            "YTUC" 712;
-    margin: 0;
-    word-break: break-word;
-    -ms-word-wrap: break-word;
-}
-
 .profile-information__buttons {
     display: flex;
     flex-direction: row;
@@ -61,11 +34,5 @@
     .profile__wrapper {
         flex-direction: column;
         gap: 8px;
-    }
-}
-
-@media (max-width: 525px) {
-    .profile__wrapper {
-
     }
 }

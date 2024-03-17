@@ -15,4 +15,5 @@ export const robotoFlex = localFont({
     weight: '700',
     variable: '--font-robotoflex',
     display: 'swap',
+    fallback: ['Helvetica'],
 });

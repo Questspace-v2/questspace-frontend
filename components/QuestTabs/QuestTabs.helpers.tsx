@@ -1,5 +1,6 @@
 import { Button, ConfigProvider, Empty } from 'antd';
 import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
+import QuestCard from '@/components/QuestCard/QuestCard';
 
 const selectTab = ['all-quests', 'my-quests', 'created-quests'] as const;
 export type SelectTab = (typeof selectTab)[number];
@@ -45,13 +46,20 @@ export const customizedEmpty = (
             justifyContent: 'center',
             alignItems: 'center',
             padding: '48px 0',
+            gridColumn: '1/5'
         }}
         imageStyle={{ height: 'auto' }}
     />
 );
 
-let count = 0;
 export function getQuests(tab: SelectTab) {
-    console.log(++count, tab);
+    const result : JSX.Element[] = [];
+
+    if (tab === 'all-quests') {
+        for (let i = 0; i < 10; i++) {
+            result.push(<div key={i}><QuestCard mode={'preview'}/></div>)
+        }
+        return result;
+    }
     return customizedEmpty;
 }

@@ -1,0 +1,109 @@
+.quest-card {
+    .quest-card__name {
+        margin: 0;
+        color: var(--secondary-text-color);
+    }
+
+    .quest-card__status_registration {
+        color: var(--status-color-registration);
+
+        circle {
+            fill: var(--status-color-registration);
+        }
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
+.quest-card__anchor {
+    display: flex;
+    box-sizing: content-box;
+    text-decoration: none;
+
+    .ant-card-cover {
+        height: 128px;
+    }
+
+    .ant-card {
+        width: 100%;
+        box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.016);
+        border: 1px solid #F5F5F5;
+
+        .ant-card-body {
+            padding: 8px 12px 12px;
+        }
+    }
+
+    .quest-card__start {
+        font-size: 12px;
+        font-weight: 400;
+        color: var(--tertiary-text-color);
+    }
+
+    .status__wrapper {
+        display: flex;
+        align-items: center;
+        padding-top: 6px;
+        gap: 6px;
+    }
+}
+
+.quest-card__wrapper {
+    padding: 0;
+    border-radius: 16px;
+    background: transparent;
+
+    .ant-card:not(.ant-card-bordered) {
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .ant-card {
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 500;
+
+        .ant-card-cover {
+            position: relative;
+            aspect-ratio: 2 / 1;
+        }
+
+        .ant-card-cover img {
+            border-radius: 16px 16px 0 0;
+        }
+
+        .ant-card-body {
+            padding: 24px 32px;
+            background: white;
+            border-radius: 0 0 16px 16px;
+        }
+    }
+
+    .quest-card__information {
+        display: flex;
+        gap: 24px;
+        padding-top: 12px;
+
+        .information__block {
+            display: flex;
+            gap: 8px;
+
+            img {
+                align-self: center;
+            }
+        }
+    }
+}
+
+@media (max-width: 525px) {
+    .quest-card {
+        .quest-card__information {
+            flex-direction: column;
+            gap: 4px;
+            padding-top: 16px;
+        }
+    }
+}

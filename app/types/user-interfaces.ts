@@ -5,7 +5,7 @@ export interface IUserState {
 }
 
 export interface IUser {
-    avatarUrl: string,
+    avatar_url: string,
     id: string,
     username: string,
 }

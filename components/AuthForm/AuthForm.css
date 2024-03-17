@@ -1,7 +1,3 @@
-.ant-form-item-hidden {
-    transition:  1.5s ease-out;
-}
-
 .page-auth {
     display: flex;
     flex-direction: column;
