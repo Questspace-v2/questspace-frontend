@@ -26,21 +26,20 @@ function getTimeDiff(startDate: Date, finishDate: Date) {
     const hours = Math.abs(startDate.getTime() - finishDate.getTime()) / 36e5;
     if (hours >= 24) {
         const days = Math.floor(hours / 24);
-        return `${days} ${declOfNum(days, ['день', 'дня', 'дней'])}`;
+        return `${days}\u00A0${declOfNum(days, ['день', 'дня', 'дней'])}`;
     }
-    return `${hours} ${declOfNum(hours, ['час', 'часа', 'часов'])}`;
+    return `${hours}\u00A0${declOfNum(hours, ['час', 'часа', 'часов'])}`;
 }
 
 export default function QuestCard({mode, props} : {mode: 'full' | 'preview', props?: QuestHeaderProps}) {
-    if (mode === 'preview') {
+    if (mode === 'preview' && props) {
         return (
             <a href={'/'} className={'quest-card__anchor'}>
                 <Card
                     className={'quest-card quest-card__mode_preview'}
                     cover={<Image
-                        src={'https://api.dicebear.com/7.x/thumbs/svg?seed=591f6fe1-d6cd-479b-a327-35f6b12a08fc'}
-                        width={1 / 4}
-                        height={128} style={{ objectFit: 'cover' }} alt={'quest avatar'} />}
+                        src={`https://source.unsplash.com/random/${props.name}`}
+                        fill style={{ objectFit: 'cover' }} alt={'quest avatar'} loading={'lazy'} placeholder={'empty'}/>}
                 >
                     <h3 className={'quest-card__name'}>Городской квест ДПММ</h3>
                     <p className={'quest-card__start'}>25 сентября в 10:00</p>
@@ -83,11 +82,11 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                             <p>{username !== '' ? username : userMock.username}</p>
                         </div>
                         <div className={'information__block'}>
-                            <HourglassOutlined size={14} width={14} height={22}/>
+                            <CalendarOutlined />
                             <p className={'quest-card__start'}>{`${dayMonth} в ${time}`}</p>
                         </div>
                         <div className={'information__block'}>
-                            <CalendarOutlined />
+                            <HourglassOutlined />
                             <p className={'quest-card__start'}>{timeDiffLabel}</p>
                         </div>
                     </div>

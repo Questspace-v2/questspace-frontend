@@ -114,7 +114,6 @@ export default function QuestTabs() {
                         minHeight: '250px',
                         margin: '8px 0 24px 0',
                     }}
-
                     onTabClick={handleSelectTab}
                     destroyInactiveTabPane
                 />

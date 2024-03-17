@@ -37,7 +37,7 @@ export default function HeaderAvatar() {
 
     return (
         <div className={`header-avatar__frame`} aria-disabled={false}>
-            <ConfigProvider theme={{ token: { borderRadius: 2 }, components: { Dropdown: {paddingBlock: 0} }}}>
+            <ConfigProvider theme={{ token: { borderRadius: 2 }}}>
                 <Dropdown
                     className={'header-avatar__dropdown'}
                     menu={{

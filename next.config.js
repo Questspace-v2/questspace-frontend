@@ -15,6 +15,12 @@ const nextConfig = {
                 hostname: "storage.yandexcloud.net",
                 port: "",
                 pathname: "/questspace-img/**",
+            },
+            {
+                protocol: 'https',
+                hostname: 'source.unsplash.com',
+                port: '',
+                pathname: '/**'
             }
         ],
     },

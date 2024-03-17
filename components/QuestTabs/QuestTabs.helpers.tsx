@@ -12,11 +12,11 @@ export const isSelectTab = (x: string): x is SelectTab => selectTab.includes(x);
 export const createQuestButton = (
     <ConfigProvider>
         <Button
-            className={'create-quest-button'}
+            className={'create-quest__button'}
             type={'link'}
             href={'/quest/create'}
-            icon={<PlusOutlined style={{ color: '#1890FF' }} />}
-            style={{ color: '#1890FF' }}
+            icon={<PlusOutlined style={{ color: 'var(--primary-color)'}}/>}
+            style={{ color: 'var(--primary-color)' }}
         >
             Создать квест
         </Button>
@@ -57,7 +57,7 @@ export function getQuests(tab: SelectTab) {
 
     if (tab === 'all-quests') {
         for (let i = 0; i < 10; i++) {
-            result.push(<div key={i}><QuestCard mode={'preview'}/></div>)
+            result.push(<div key={i}><QuestCard mode={'preview'} props={{name: i.toString()}}/></div>)
         }
         return result;
     }

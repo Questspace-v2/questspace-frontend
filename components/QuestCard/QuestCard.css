@@ -23,6 +23,7 @@
     text-decoration: none;
 
     .ant-card-cover {
+        position: relative;
         height: 128px;
     }
 
@@ -98,7 +99,7 @@
     }
 }
 
-@media (max-width: 525px) {
+@media (max-width: 639px) {
     .quest-card {
         .quest-card__information {
             flex-direction: column;

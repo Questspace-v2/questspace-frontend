@@ -2,12 +2,12 @@
 
 import { useMemo } from 'react';
 import Markdown from 'react-markdown';
-import { ClockCircleTwoTone } from '@ant-design/icons';
+import { ClockCircleTwoTone, CopyOutlined, LogoutOutlined } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { IQuest } from '@/app/types/quest-interfaces';
 
 import './Quest.css';
-import { Skeleton } from 'antd';
+import { Button, message, Skeleton } from 'antd';
 import QuestCard, { QuestHeaderProps } from '@/components/QuestCard/QuestCard';
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
@@ -26,7 +26,7 @@ function QuestHeader({props}: {props?: QuestHeaderProps}) {
 
 function QuestResults() {
     return (
-        <ContentWrapper className={'quest-page__results'}>
+        <ContentWrapper className={'content-wrapper__quest-page quest-page__results'}>
             <h2 className={'roboto-flex-header'}>Результаты квеста</h2>
             <div className={'results__content_waiting'}>
                 <ClockCircleTwoTone />
@@ -36,11 +36,49 @@ function QuestResults() {
     );
 }
 
-function QuestContent({description} : QuestContentProps) {
+function QuestTeam() {
+    const teamName = 'Швейцария еще как существует';
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'Скопировано!',
+        });
+    };
+
+    return (
+        <ContentWrapper className={'content-wrapper__quest-page quest-page__team'}>
+            {contextHolder}
+            <div className={'team__header'}>
+                <h2 className={'roboto-flex-header'}>{`Твоя команда — ${teamName}`}</h2>
+                <Button
+                    className={'exit-team__button'}
+                    type={'text'}
+                    icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }} />}
+                    style={{ color: 'var(--quit-color)' }}
+                >
+                    Выйти из команды
+                </Button>
+            </div>
+            <div className={'invite-link__wrapper'}>
+                <p className={'invite-link__text'}>Пригласи друзей в свою команду — поделись ссылкой:</p>
+                <Button className={'invite-link__link'} type={'link'} onClick={() => {
+                    navigator.clipboard.writeText('хуй').then(() => success());
+                }}>questspace.app/invites/BROLDY</Button>
+                <CopyOutlined onClick={() => {
+                    navigator.clipboard.writeText('хуй').then(() => success());
+                }} style={{ color: 'var(--primary-color)' }} />
+            </div>
+        </ContentWrapper>
+    );
+}
+
+function QuestContent({ description }: QuestContentProps) {
     const afterParse = useMemo(() => parseToMarkdown(description), [description]);
 
     return (
-        <ContentWrapper className={'quest-page__content'}>
+        <ContentWrapper className={'content-wrapper__quest-page quest-page__content'}>
             <h2 className={'roboto-flex-header'}>О квесте</h2>
             <Skeleton paragraph loading={!afterParse}>
             <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>
@@ -55,6 +93,7 @@ export default function Quest({props}: {props: IQuest}) {
             <QuestHeader props={props} />
             <QuestResults />
             <QuestContent description={props.description}/>
+            <QuestTeam />
         </>
     );
 }

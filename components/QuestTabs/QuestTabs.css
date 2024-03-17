@@ -18,10 +18,6 @@
         color: var(--primary-color);
     }
 
-    .ant-select-open {
-        width: min-content;
-    }
-
     .quest-tabpane {
         display: flex;
         flex-direction: column;
