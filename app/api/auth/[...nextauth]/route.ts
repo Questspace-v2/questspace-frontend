@@ -1,12 +1,10 @@
+/* eslint-disable no-param-reassign */
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authSignIn, authSignUp } from '@/app/api/api';
-import { ISignIn } from '@/app/types/user-interfaces';
+import { ISignIn, IUserCreate } from '@/app/types/user-interfaces';
 
-const authOptions: NextAuthOptions = {
-    session: {
-        strategy: 'jwt'
-    },
+export const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             id: 'sign-in',
@@ -29,7 +27,7 @@ const authOptions: NextAuthOptions = {
             type: 'credentials',
             credentials: {},
             async authorize(credentials) {
-                const {username, password} = credentials as ISignIn;
+                const {username, password} = credentials as IUserCreate;
                 if (!username || !password) {
                     return null;
                 }
@@ -42,19 +40,25 @@ const authOptions: NextAuthOptions = {
         })
     ],
     pages: {
-        signIn: '/auth'
+        signIn: '/auth',
+        signOut: '/auth'
     },
     callbacks: {
-        jwt({token}) {
-            return token;
+        jwt({token, user}) { // Тут бы делать запрос, существует ли юзер
+            if (user) {
+                token.id = user?.id;
+            }
+            return token
         },
-        signIn({user}) {
-            return !!user;
-        },
-        session({ session }) {
-            // eslint-disable-next-line no-param-reassign
-            session.user.isLoggedIn = true;
-            return session;
+        session({ session, token }) {
+            if (token) {
+                session.user.id = token.id
+                session.user.name = token.name
+                session.user.email = token.email
+                session.user.image = token.picture
+            }
+
+            return session
         }
     },
     secret: "big-secret",

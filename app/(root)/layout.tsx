@@ -4,8 +4,6 @@ import { manrope, robotoFlex } from '@/lib/fonts';
 import { Metadata } from 'next';
 
 import './global.css';
-import Providers from '@/components/Providers/Providers';
-
 
 export const metadata: Metadata = {
     title: 'Квестспейс',
@@ -15,14 +13,13 @@ export const metadata: Metadata = {
         apple: '/favicon.ico',
     },
 };
+
 export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
         <html lang="ru">
-            <Providers>
-                <body className={`${manrope.variable} ${robotoFlex.variable}`}>
-                        <AntdRegistry>{children}</AntdRegistry>
-                </body>
-            </Providers>
+            <body className={`${manrope.variable} ${robotoFlex.variable}`}>
+                <AntdRegistry>{children}</AntdRegistry>
+            </body>
         </html>
     );
 }

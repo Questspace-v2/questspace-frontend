@@ -18,7 +18,6 @@ import Logotype from '@/components/Logotype/Logotype';
 import { authSignIn, authSignUp } from '@/app/api/api';
 import { useFormStatus } from 'react-dom';
 import { IUserCreate } from '@/app/types/user-interfaces';
-import { signIn} from 'next-auth/react';
 import navigate from '@/app/actions';
 
 interface AuthFormItems {
@@ -44,14 +43,14 @@ export default function AuthForm() {
 
         if (formType === Auth.SIGNUP) {
             const result = await authSignUp(data);
-            console.log(result);
+            if (result) {
+                await navigate();
+            }
         } else {
             const result = await authSignIn(data);
-            const res = await signIn('credentials');
-
-            console.log(res);
-            console.log(result);
-            await navigate();
+            if (result) {
+                await navigate();
+            }
         }
     };
 

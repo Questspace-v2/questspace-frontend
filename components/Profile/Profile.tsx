@@ -8,11 +8,18 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import EditProfile from '@/components/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import userMock from '@/app/api/__mocks__/User.mock';
-import { useSession } from 'next-auth/react';
+import { User } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 
-export default function Profile() {
-    const {data: session} = useSession();
-    const greetings = `Привет, @${session?.user.isLoggedIn}!`;
+interface ProfileProps {
+    user: User & {
+        id: string,
+        accessToken: JWT
+    } | undefined
+}
+
+export default function Profile({user}: ProfileProps) {
+    const greetings = `Привет, @${user?.name}!`;
     const { xs } = useBreakpoint();
 
     return (
