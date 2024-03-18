@@ -5,7 +5,7 @@
 
 .page-footer__wrapper {
     display: flex;
-    width: 100vw;
+    width: 100%;
     height: var(--footer-height-lg);
     box-sizing: content-box;
     overflow: hidden;
@@ -18,7 +18,7 @@
     position: absolute;
     display: flex;
     justify-content: center;
-    width: 100vw;
+    width: 100%;
     height: var(--footer-height-lg);
     box-sizing: border-box;
     flex-shrink: 0;
@@ -34,7 +34,7 @@
     margin: 0 var(--side-margins-24);
     flex-shrink: 0;
     flex-grow: 0;
-    transition: ease all .5s;
+    transition: ease gap .5s;
 }
 
 .footer-text {
@@ -68,7 +68,7 @@
         align-items: flex-start;
         gap: 8px;
         flex-shrink: unset;
-        transition: ease all .5s;
+        transition: ease gap .5s;
     }
 
     .footer-logo {
@@ -78,5 +78,12 @@
 
     .footer-background {
         transform: translateY(-15%);
+    }
+}
+
+@media (min-width: 1921px) {
+    .footer-background {
+        object-fit: cover;
+        width: 100%;
     }
 }

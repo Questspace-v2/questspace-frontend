@@ -1,0 +1,79 @@
+.content-wrapper__quest-page {
+    padding: 24px var(--side-margins-32);
+    gap: 16px;
+}
+
+.quest-page__content {
+    .line-break {
+        white-space: pre-wrap;
+    }
+    p {
+        margin: 0;
+    }
+}
+
+.results__title {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0;
+}
+
+.results__content_waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    .anticon-clock-circle > svg{
+        width: 112px;
+        height: 112px;
+        padding: 16px;
+    }
+}
+
+.invite-link__wrapper {
+    display: flex;
+    padding: 16px 0 0;
+    gap: 4px;
+    align-items: baseline;
+
+    .invite-link__link, .invite-link__text {
+        border: none;
+        height: auto;
+        padding: 0;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .invite-link__link {
+        font-size: 16px;
+    }
+
+}
+
+.team__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ant-btn-text:not(:disabled):not(.ant-btn-disabled).exit-team__button:hover {
+    background: var(--quit-color);
+    transition: ease background-color .2s;
+
+    span {
+        color: white;
+        transition: ease color .2s;
+    }
+
+    path {
+        fill: white;
+        transition: ease fill .2s;
+    }
+}
+
+
+@media (max-width: 639px) {
+
+}

@@ -10,7 +10,7 @@ import {
     UnsupportedMediaType,
 } from 'http-errors';
 
-const BACKEND_URL = 'https://millionaire-web.ru';
+export const BACKEND_URL = 'https://millionaire-web.ru';
 
 export const getUserById = async (id: string) => {
     try {

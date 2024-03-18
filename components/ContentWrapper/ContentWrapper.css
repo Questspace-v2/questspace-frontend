@@ -1,9 +1,10 @@
 .content__wrapper {
     position: relative;
     display: flex;
+    flex-direction: column;
     background: white;
     max-width: var(--max-items-width);
-    width: 100vw;
+    width: 100%;
     height: auto;
     box-sizing: border-box;
     border-radius: 16px;

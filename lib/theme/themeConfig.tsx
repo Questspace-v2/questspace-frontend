@@ -1,12 +1,13 @@
 // theme/themeConfig.ts
 import type { ThemeConfig } from 'antd';
-import { manrope, robotoFlex } from '@/lib/fonts';
+import { manrope } from '@/lib/fonts';
 
 const theme: ThemeConfig = {
     token: {
         fontFamily: manrope.style.fontFamily,
         fontSize: 14,
         colorPrimary: '#1890FF',
+        colorTextBase: '#262626',
         screenXSMin: 320,
         screenXS: 320,
         screenXSMax: 639,
@@ -20,9 +21,6 @@ const theme: ThemeConfig = {
         screenXLMin: 1280,
     },
     components: {
-        Typography: {
-            fontFamily: robotoFlex.style.fontFamily,
-        },
         Input: {
             borderRadiusSM: 2,
             borderRadiusXS: 2,

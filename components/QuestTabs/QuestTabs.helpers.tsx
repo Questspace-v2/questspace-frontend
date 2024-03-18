@@ -1,14 +1,22 @@
 import { Button, ConfigProvider, Empty } from 'antd';
 import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
+import QuestCard from '@/components/QuestCard/QuestCard';
+
+const selectTab = ['all-quests', 'my-quests', 'created-quests'] as const;
+export type SelectTab = (typeof selectTab)[number];
+
+
+// @ts-expect-error мы точно знаем, что в SelectTab string
+export const isSelectTab = (x: string): x is SelectTab => selectTab.includes(x);
 
 export const createQuestButton = (
     <ConfigProvider>
         <Button
-            className={'create-quest-button'}
+            className={'create-quest__button'}
             type={'link'}
             href={'/quest/create'}
-            icon={<PlusOutlined style={{ color: '#1890FF' }} />}
-            style={{ color: '#1890FF' }}
+            icon={<PlusOutlined style={{ color: 'var(--primary-color)'}}/>}
+            style={{ color: 'var(--primary-color)' }}
         >
             Создать квест
         </Button>
@@ -38,11 +46,20 @@ export const customizedEmpty = (
             justifyContent: 'center',
             alignItems: 'center',
             padding: '48px 0',
+            gridColumn: '1/5'
         }}
         imageStyle={{ height: 'auto' }}
     />
 );
 
-export function getQuests() {
+export function getQuests(tab: SelectTab) {
+    const result : JSX.Element[] = [];
+
+    if (tab === 'all-quests') {
+        for (let i = 0; i < 10; i++) {
+            result.push(<div key={i}><QuestCard mode={'preview'} props={{name: i.toString()}}/></div>)
+        }
+        return result;
+    }
     return customizedEmpty;
 }

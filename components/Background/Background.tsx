@@ -15,7 +15,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                         src={backgroundImage}
                         quality={100}
                         fill
-                        objectFit={'cover'}
+                        style={{objectFit: 'cover'}}
                         aria-disabled
                         loading={'eager'}
                     />
@@ -23,7 +23,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
             );
         case 'footer':
             return (
-                <div className={'background__wrapper'}>
+                <div className={'background__wrapper background_footer'}>
                     <Image
                         className={className}
                         alt={'Yekaterinburg footer'}

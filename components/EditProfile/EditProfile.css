@@ -1,0 +1,60 @@
+.edit-profile__modal, .img-crop-modal {
+    .ant-modal-content {
+        padding: 32px 32px 40px 32px !important;
+
+        .ant-modal-close {
+            width: 24px;
+            height: 24px;
+
+            svg {
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}
+
+.img-crop-modal {
+    .ant-modal-header {
+        display: none;
+    }
+
+    .ant-modal-body {
+        margin-top: 24px;
+    }
+}
+
+.edit-profile__avatar {
+    display: flex;
+    flex-direction: column;
+    box-sizing: content-box;
+
+    .ant-upload {
+        width: 130px;
+    }
+}
+
+.edit-profile-header {
+    margin: 0 0 24px;
+}
+
+.edit-profile-subheader {
+    padding: 16px 0 0;
+    margin: 0;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.edit-profile-paragraph {
+    margin: 0;
+}
+
+.edit-profile__change-button {
+    &.ant-btn {
+        padding: 0;
+    }
+
+    span {
+        color: var(--primary-color);
+    }
+}

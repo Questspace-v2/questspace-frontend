@@ -37,7 +37,7 @@ export default function Profile({user}: ProfileProps) {
                 />
 
                 <div className={'profile-information'}>
-                    <h1 className={'profile-greetings'}>{greetings}</h1>
+                    <h1 className={'roboto-flex-header responsive-header-h1'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>
                         <EditProfile />
                         <ExitButton />
