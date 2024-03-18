@@ -8,6 +8,7 @@ import './global.css';
 export const metadata: Metadata = {
     title: 'Квестспейс',
     description: 'Разработано и спроектировано МатМехом',
+    icons: [{ rel: "icon", url: `/favicon.ico` }]
 };
 
 export default function RootLayout({ children }: React.PropsWithChildren) {

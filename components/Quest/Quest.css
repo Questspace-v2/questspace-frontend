@@ -1,4 +1,4 @@
-.content-wrapper__quest-page {
+.quest-page__content-wrapper {
     padding: 24px var(--side-margins-32);
     gap: 16px;
 }
@@ -6,6 +6,7 @@
 .quest-page__content {
     .line-break {
         white-space: pre-wrap;
+        user-select: text;
     }
     p {
         margin: 0;

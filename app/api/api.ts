@@ -10,7 +10,8 @@ import {
     UnsupportedMediaType,
 } from 'http-errors';
 
-export const BACKEND_URL = 'https://millionaire-web.ru';
+export const BACKEND_URL = 'https://api-new.questspace.app';
+export const FRONTEND_URL = process.env.NODE_ENV === 'development' ? 'https://new.questspace.app:3000' : 'https://new.questspace.app';
 
 export const getUserById = async (id: string) => {
     try {
@@ -46,7 +47,7 @@ export const authWithGoogle = async (token: string) => {
     try {
         const response = await fetch(`${BACKEND_URL}/auth/google`, {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'same-origin',
             body: token
         });
 
@@ -130,7 +131,7 @@ export const createQuest = async (data: IQuestCreate) => {
     try {
         const response = await fetch(`${BACKEND_URL}/quest`, {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'same-origin',
             body: JSON.stringify(data)
         });
 
@@ -158,7 +159,7 @@ export const updateQuest = async (id: string, data: IQuestCreate) => {
     try {
         const response = await fetch(`${BACKEND_URL}/quest/${id}`, {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'same-origin',
             body: JSON.stringify(data)
         });
 
@@ -188,7 +189,7 @@ export const updateUser = async (id: string, data: IUserUpdate) => {
     try {
         const response = await fetch(`${BACKEND_URL}/user/${id}`, {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'same-origin',
             body: JSON.stringify(data)
         });
 
@@ -218,7 +219,7 @@ export const updatePassword = async (id: string, data: IPasswordUpdate) => {
     try {
         const response = await fetch(`${BACKEND_URL}/user/${id}/password`, {
             method: 'POST',
-            credentials: 'include',
+            credentials: 'same-origin',
             body: JSON.stringify(data)
         });
 
@@ -244,7 +245,7 @@ export const deleteQuest = async (id: string) => {
     try {
         const response = await fetch(`${BACKEND_URL}/quest/${id}`, {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'same-origin'
         });
 
         switch (response.status) {
@@ -269,7 +270,7 @@ export const deleteUser = async (id: string) => {
     try {
         const response = await fetch(`${BACKEND_URL}/user/${id}`, {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'same-origin'
         });
 
         switch (response.status) {

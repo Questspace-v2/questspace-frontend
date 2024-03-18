@@ -1,0 +1,7 @@
+.ant-dropdown-menu-title-content .exit__button {
+    display: contents;
+
+    .ant-btn-icon {
+        display: none;
+    }
+}

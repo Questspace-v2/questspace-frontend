@@ -31,6 +31,10 @@ const theme: ThemeConfig = {
             boxShadowSecondary: '0',
             boxShadowTertiary: '0',
         },
+        Button: {
+            borderRadius: 2,
+            borderRadiusLG: 2,
+        }
     },
 };
 

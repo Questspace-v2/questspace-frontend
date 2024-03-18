@@ -7,7 +7,7 @@
     "npm": "^10.2.4"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H new.questspace.app --experimental-https --experimental-https-key ./certificates/private_key.pem --experimental-https-cert ./certificates/questspace_cert.pem",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -25,7 +25,7 @@
     "next-auth": "4.24.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-markdown": "9.0.1",
+    "react-markdown": "9.0.1"
   },
   "devDependencies": {
     "@types/node": "latest",

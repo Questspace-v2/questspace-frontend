@@ -1,4 +1,4 @@
-import { Avatar, Card } from 'antd';
+import { Button, Card } from 'antd';
 import Image from 'next/image';
 import { IUser } from '@/app/types/user-interfaces';
 
@@ -39,7 +39,7 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                     className={'quest-card quest-card__mode_preview'}
                     cover={<Image
                         src={`https://source.unsplash.com/random/${props.name}`}
-                        fill style={{ objectFit: 'cover' }} alt={'quest avatar'} loading={'lazy'} placeholder={'empty'}/>}
+                        fill sizes={'100% 128px'} style={{ objectFit: 'cover' }} alt={'quest avatar'} loading={'lazy'} placeholder={'empty'}/>}
                 >
                     <h3 className={'quest-card__name'}>Городской квест ДПММ</h3>
                     <p className={'quest-card__start'}>25 сентября в 10:00</p>
@@ -56,13 +56,22 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
     }
 
     if (mode === 'full' && props) {
-        const { name, start_time: startTime, creator , finish_time: finishTime, media_link: mediaLink} = props;
+        const {
+            name,
+            start_time: startTime,
+            creator ,
+            registration_deadline: registrationDeadline,
+            finish_time: finishTime,
+            media_link: mediaLink
+        } = props;
         const {username, avatar_url: avatarUrl} = creator;
         const startDate = new Date(startTime);
-        const finishDate = new Date(finishTime);
-        const timeDiffLabel = getTimeDiff(startDate, finishDate);
-        const dayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'});
-        const time = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'})
+        const registrationDate = new Date(registrationDeadline);
+        const timeDiffLabel = getTimeDiff(startDate, new Date(finishTime));
+        const startDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'});
+        const startHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+        const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
+        const registrationHourMinute = registrationDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
 
 
         return (
@@ -75,20 +84,27 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                     />}
                     bordered={false}
                 >
-                    <h1 className={'quest-card__name roboto-flex-header responsive-header-h1'}>{name}</h1>
-                    <div className={'quest-card__information'}>
-                        <div className={'information__block'}>
-                            <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16} height={16} style={{borderRadius: '8px'}}/>
-                            <p>{username !== '' ? username : userMock.username}</p>
+                    <div className={'quest-card__text-content'}>
+                        <h1 className={'quest-card__name roboto-flex-header responsive-header-h1'}>{name}</h1>
+                        <div className={'quest-card__information'}>
+                            <div className={'information__block'}>
+                                <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
+                                       height={16} style={{ borderRadius: '8px' }} />
+                                <p>{username !== '' ? username : userMock.username}</p>
+                            </div>
+                            <div className={'information__block'}>
+                                <CalendarOutlined />
+                                <p className={'quest-card__start'}>{`${startDayMonth} в ${startHourMinute}`}</p>
+                            </div>
+                            <div className={'information__block'}>
+                                <HourglassOutlined />
+                                <p className={'quest-card__start'}>{timeDiffLabel}</p>
+                            </div>
                         </div>
-                        <div className={'information__block'}>
-                            <CalendarOutlined />
-                            <p className={'quest-card__start'}>{`${dayMonth} в ${time}`}</p>
-                        </div>
-                        <div className={'information__block'}>
-                            <HourglassOutlined />
-                            <p className={'quest-card__start'}>{timeDiffLabel}</p>
-                        </div>
+                    </div>
+                    <div className={'quest-card__join-content'}>
+                        <Button type={'primary'} size={'large'} block>Зарегистрироваться</Button>
+                        <p>{`Регистрация до ${registrationHourMinute}\u00A0${registrationDayMonth}`}</p>
                     </div>
                 </Card>
             </ContentWrapper>

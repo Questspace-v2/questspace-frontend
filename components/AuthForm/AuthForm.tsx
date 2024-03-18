@@ -15,7 +15,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import './AuthForm.css';
 import { LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
-import { authSignIn, authSignUp } from '@/app/api/api';
+import { authSignIn, authSignUp, FRONTEND_URL } from '@/app/api/api';
 import { useFormStatus } from 'react-dom';
 import { IUserCreate } from '@/app/types/user-interfaces';
 import navigate from '@/app/actions';
@@ -27,10 +27,11 @@ interface AuthFormItems {
 }
 
 export default function AuthForm() {
+    const [form] = Form.useForm<AuthFormItems>();
     const {pending} = useFormStatus();
     const [formType, setFormType] = useState<AuthFormTypes>(Auth.LOGIN);
     const [dictionary, setDictionary] = useState<TitleDictionary>(LoginDictionary)
-    const handleClick = () => {
+    const handleChangeClick = () => {
         setFormType(prevState => prevState === Auth.LOGIN ? Auth.SIGNUP : Auth.LOGIN);
         setDictionary((prevState) => prevState === LoginDictionary ? SignupDictionary : LoginDictionary)
     };
@@ -56,7 +57,7 @@ export default function AuthForm() {
 
     return (
         <section className={'page-auth'}>
-            <ContentWrapper className={'page-auth__wrapper'}>
+            <ContentWrapper className={'page-auth__content-wrapper'}>
                 <div className={'auth-form__header'}>
                     <Logotype width={64} type={'icon'}/>
                     <h1 className={'auth-form__title roboto-flex-header'}>{dictionary.pageHeader}</h1>
@@ -68,42 +69,41 @@ export default function AuthForm() {
                     title={dictionary.formTitle}
                     style={{ width: '100%' }}
                     initialValues={{ remember: true }}
-                    /* eslint-disable-next-line @typescript-eslint/no-misused-promises */
+                    form={form}
                     onFinish={onFinish}
                 >
-                    <FormItem<AuthFormItems> name={'username'} required>
+                    <Form.Item<AuthFormItems>
+                        name={'username'} required>
                         <Input
                             prefix={<UserOutlined />}
                             size={'middle'}
                             variant={'outlined'}
                             placeholder={'логин'}
+                            autoComplete={'username'}
                         />
-                    </FormItem>
-                    <FormItem name={'password'}>
+                    </Form.Item>
+                    <Form.Item<AuthFormItems> name={'password'} rules={[{required: true}]}>
                         <Input
                             type={'password'}
                             prefix={<LockOutlined />}
                             size={'middle'}
                             variant={'outlined'}
                             placeholder={'пароль'}
+                            autoComplete={formType === Auth.SIGNUP ? 'new-password' : 'current-password'}
                         />
-                    </FormItem>
+                    </Form.Item>
                     {formType === Auth.SIGNUP &&
-                    <FormItem<AuthFormItems>
+                    <Form.Item
                         name={'passwordAgain'}
                         dependencies={['password']}
-                        hasFeedback
                         rules={[
-                                {
-                                    required: true,
-                                    message: 'Please confirm your password!',
-                                },
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
-                                        if (!value || getFieldValue('password') === value) {
+                                        const pswValue = getFieldValue('password');
+                                        if ((!value && !pswValue)|| pswValue === value) {
                                             return Promise.resolve();
                                         }
-                                        return Promise.reject(new Error('The new password that you entered do not match!'));
+                                        return Promise.reject(new Error('Пароли не совпадают'));
                                     },
                                 })
                         ]}
@@ -113,21 +113,25 @@ export default function AuthForm() {
                             prefix={<LockOutlined />}
                             size={'middle'}
                             variant={'outlined'}
-                            placeholder={'снова пароль'}
+                            placeholder={'повтори пароль'}
+                            autoComplete={'new-password'}
                         />
-                    </FormItem>
+                    </Form.Item>
                     }
                     <FormItem className={'auth-form__submit-button'}>
-                        <Button type="primary" htmlType="submit" disabled={pending} block style={{
-                            borderRadius: '2px',
-                            fontWeight: 500,
-                        }}>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            disabled={pending}
+                            block
+                            style={{ borderRadius: '2px', fontWeight: 500, }}
+                        >
                             {dictionary.submitButton}
                         </Button>
                     </FormItem>
                 </Form>
             </ContentWrapper>
-            <Button className={'page-auth__change-button'} shape={'round'} onClick={handleClick} block style={{
+            <Button className={'page-auth__change-button'} shape={'round'} onClick={handleChangeClick} block style={{
                 border: 'none',
                 boxShadow: 'unset',
                 fontWeight: 500,

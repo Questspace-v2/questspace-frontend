@@ -5,9 +5,10 @@
     box-sizing: content-box;
 }
 
-.page-auth__wrapper {
+.page-auth__content-wrapper {
     flex-direction: column;
     max-width: 320px;
+    width: 320px;
     box-sizing: border-box;
     padding: 32px 24px 24px 24px;
 
@@ -44,6 +45,16 @@
 
     .ant-input-affix-wrapper {
         border-radius: 2px;
+
+        svg {
+            fill: var(--base-text-color);
+        }
+    }
+
+    .ant-input-status-error {
+        svg {
+            fill: var(--base-text-color);
+        }
     }
 }
 

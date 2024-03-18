@@ -7,6 +7,7 @@ import { DownOutlined } from '@ant-design/icons';
 import './HeaderAvatar.css';
 import userMock from '@/app/api/__mocks__/User.mock';
 import Image from 'next/image';
+import ExitButton from '@/components/ExitButton/ExitButton';
 
 export default function HeaderAvatar() {
     const [open, setOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function HeaderAvatar() {
             key: '1',
         },
         {
-            label: <a href='/auth'>Выйти</a>,
+            label: <ExitButton />,
             key: '2',
             style: exitStyle,
         },

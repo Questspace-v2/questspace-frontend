@@ -24,7 +24,7 @@ export default function Profile({user}: ProfileProps) {
 
     return (
         <ContentWrapper>
-            <div className={'profile__wrapper'}>
+            <div className={'profile__content-wrapper'}>
                 <Avatar
                     className={'avatar__image'}
                     alt={'avatar'}

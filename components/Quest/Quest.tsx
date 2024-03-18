@@ -26,7 +26,7 @@ function QuestHeader({props}: {props?: QuestHeaderProps}) {
 
 function QuestResults() {
     return (
-        <ContentWrapper className={'content-wrapper__quest-page quest-page__results'}>
+        <ContentWrapper className={'quest-page__content-wrapper quest-page__results'}>
             <h2 className={'roboto-flex-header'}>Результаты квеста</h2>
             <div className={'results__content_waiting'}>
                 <ClockCircleTwoTone />
@@ -48,7 +48,7 @@ function QuestTeam() {
     };
 
     return (
-        <ContentWrapper className={'content-wrapper__quest-page quest-page__team'}>
+        <ContentWrapper className={'quest-page__content-wrapper quest-page__team'}>
             {contextHolder}
             <div className={'team__header'}>
                 <h2 className={'roboto-flex-header'}>{`Твоя команда — ${teamName}`}</h2>
@@ -78,7 +78,7 @@ function QuestContent({ description }: QuestContentProps) {
     const afterParse = useMemo(() => parseToMarkdown(description), [description]);
 
     return (
-        <ContentWrapper className={'content-wrapper__quest-page quest-page__content'}>
+        <ContentWrapper className={'quest-page__content-wrapper quest-page__content'}>
             <h2 className={'roboto-flex-header'}>О квесте</h2>
             <Skeleton paragraph loading={!afterParse}>
             <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>

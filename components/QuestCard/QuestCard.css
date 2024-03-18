@@ -77,9 +77,16 @@
         }
 
         .ant-card-body {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
             padding: 24px 32px;
             background: white;
             border-radius: 0 0 16px 16px;
+        }
+
+        .ant-card-body:after, .ant-card-body:before {
+            display: none;
         }
     }
 
@@ -87,6 +94,7 @@
         display: flex;
         gap: 24px;
         padding-top: 12px;
+        text-wrap: nowrap;
 
         .information__block {
             display: flex;
@@ -97,6 +105,17 @@
             }
         }
     }
+
+    .quest-card__join-content {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 4px;
+
+        p {
+            text-wrap: nowrap;
+        }
+    }
 }
 
 @media (max-width: 639px) {
@@ -104,6 +123,14 @@
         .quest-card__information {
             flex-direction: column;
             gap: 4px;
+            padding-top: 16px;
+        }
+    }
+
+    .quest-card__wrapper .ant-card .ant-card-body {
+        flex-direction: column;
+
+        .quest-card__join-content {
             padding-top: 16px;
         }
     }

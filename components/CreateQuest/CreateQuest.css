@@ -1,0 +1,33 @@
+.create-quest__content-wrapper {
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.create-quest__header__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ant-btn.main-menu__button {
+    color: var(--primary-color);
+    display: flex;
+    border: none;
+    padding: 4px 15px 4px 0;
+    gap: 10px;
+    width: min-content;
+    align-items: center;
+
+    &.ant-btn >.anticon+span {
+        margin-inline-start: 0;
+    }
+
+    &.ant-btn > span {
+        display: inline-flex;
+    }
+
+    svg {
+        fill: var(--primary-color);
+    }
+
+}
