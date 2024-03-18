@@ -2,6 +2,7 @@ import { Button, ConfigProvider } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import React from 'react';
 import navigate from '@/app/actions';
+import { signOut } from 'next-auth/react';
 
 interface ExitButtonProps {
     block?: boolean;
@@ -12,7 +13,7 @@ export default function ExitButton(props: ExitButtonProps) {
 
     // должен чиститься state и совершаться signOut
     const handleClick = async () => {
-        // signOut
+        await signOut();
         await navigate('/auth');
     }
 

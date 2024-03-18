@@ -5,11 +5,11 @@ import { Metadata } from 'next';
 
 import './global.css';
 
-
 export const metadata: Metadata = {
     title: 'Квестспейс',
     description: 'Разработано и спроектировано МатМехом',
 };
+
 export default function RootLayout({ children }: React.PropsWithChildren) {
     return (
         <html lang="ru">

@@ -15,9 +15,10 @@ import FormItem from 'antd/lib/form/FormItem';
 import './AuthForm.css';
 import { LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
-import { signIn, signUp } from '@/app/api/api';
+import { authSignIn, authSignUp } from '@/app/api/api';
 import { useFormStatus } from 'react-dom';
 import { IUserCreate } from '@/app/types/user-interfaces';
+import navigate from '@/app/actions';
 
 interface AuthFormItems {
     username: string,
@@ -41,9 +42,15 @@ export default function AuthForm() {
         };
 
         if (formType === Auth.SIGNUP) {
-            await signUp(data);
+            const result = await authSignUp(data);
+            if (result) {
+                await navigate();
+            }
         } else {
-            await signIn(data);
+            const result = await authSignIn(data);
+            if (result) {
+                await navigate();
+            }
         }
     };
 
