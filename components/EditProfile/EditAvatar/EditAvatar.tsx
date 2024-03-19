@@ -40,7 +40,7 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
         if (s3Response.ok) {
             await updateUser(
                 '855db36b-b217-4db5-baf0-3370fda3e74e',
-                {avatarUrl: `https://storage.yandexcloud.net/questspace-img/users/${key}`})
+                {avatar_url: `https://storage.yandexcloud.net/questspace-img/users/${key}`})
                 .catch((error) => {
                     throw error;
                 });
