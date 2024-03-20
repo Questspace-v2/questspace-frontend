@@ -9,6 +9,8 @@ import {
     UnsupportedMediaType,
 } from 'http-errors';
 import { Data } from '@/app/types/json-data';
+import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
+import { IQuestTaskGroups } from '@/app/types/quest-interfaces';
 
 class Client {
     backendUrl: string;
@@ -49,7 +51,11 @@ class Client {
         }
     }
 
-    static buildConfig(method: string, data: Data | string, credentials: string) {
+    static buildConfig(
+        method: string,
+        data: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IPasswordUpdate| string,
+        credentials: string
+    ) {
         const baseInit = {
             method,
             credentials,
@@ -66,7 +72,7 @@ class Client {
     async handleServerRequest(
         endpoint = '/',
         method = 'GET',
-        data: Data | string = {},
+        data: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IPasswordUpdate| string = {}, // Жесть, потом придумаю получше
         credentials = 'same-origin'
     ) {
         const url = `${this.backendUrl}${endpoint}`;
@@ -83,8 +89,32 @@ class Client {
             });
     }
 
-    async handleS3Request() {
+    async handleS3Request(
+        key: string,
+        fileType: string,
+        method = 'PUT'
+    ) {
+        const headers: Record<string, string> = {
+            'Content-Type': fileType
+        };
 
+        const s3Config = {
+            method,
+            headers
+        };
+
+        return fetch(
+            `https://storage.yandexcloud.net/questspace-img/users/${key}`,
+            s3Config
+        )
+            .then(res => res)
+            .catch((err: HttpError) => {
+                this.handleError(err);
+                if (this.error) {
+                    throw this.error;
+                }
+                throw HttpError('Unknown error');
+            });
     }
 }
 

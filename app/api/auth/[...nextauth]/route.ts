@@ -16,10 +16,10 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
                 const user = await authSignIn({username, password});
-                if (user) {
-                    return user;
+                if (!user) {
+                    return null;
                 }
-                return null;
+                return user;
             },
         }),
         CredentialsProvider({
@@ -32,10 +32,10 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
                 const user = await authSignUp({username, password});
-                if (user) {
-                    return user;
+                if (!user) {
+                    return null;
                 }
-                return null;
+                return user;
             }
         })
     ],
@@ -52,10 +52,9 @@ export const authOptions: NextAuthOptions = {
         },
         session({ session, token }) {
             if (token) {
-                session.user.id = token.id
-                session.user.name = token.name
-                session.user.email = token.email
-                session.user.image = token.picture
+                session.user.id = token.id;
+                session.user.name = token.name;
+                session.user.image = token.picture;
             }
 
             return session
