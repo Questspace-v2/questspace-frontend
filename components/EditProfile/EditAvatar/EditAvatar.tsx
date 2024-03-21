@@ -4,6 +4,7 @@ import ImgCrop from 'antd-img-crop';
 import { updateUser } from '@/app/api/api';
 import { ModalEnum, ModalType } from '@/components/EditProfile/EditProfile.types';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import client from '@/app/api/client/client';
 
 interface SubModalProps {
     children: JSX.Element,
@@ -26,21 +27,12 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
         const fileType = file.type;
         const key = `users/${uid()}`;
 
-        const s3Response = await fetch(`https://storage.yandexcloud.net/questspace-img/users/${key}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': fileType,
-            },
-        })
-            .then((response) => response)
-            .catch((error) => {
-                throw error;
-            });
+        const s3Response = await client.handleS3Request(key, fileType);
 
         if (s3Response.ok) {
             await updateUser(
                 '855db36b-b217-4db5-baf0-3370fda3e74e',
-                {avatarUrl: `https://storage.yandexcloud.net/questspace-img/users/${key}`})
+                {avatar_url: `https://storage.yandexcloud.net/questspace-img/users/${key}`})
                 .catch((error) => {
                     throw error;
                 });

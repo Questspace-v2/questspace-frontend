@@ -16,32 +16,32 @@ export const authOptions: NextAuthOptions = {
                     return null;
                 }
                 const user = await authSignIn({username, password});
-                if (user) {
-                    return user;
-                }
-                return null;
-            },
-        }),
-        CredentialsProvider({
-            id: 'sign-up',
-            type: 'credentials',
-            credentials: {},
-            async authorize(credentials) {
-                const {username, password} = credentials as IUserCreate;
-                if (!username || !password) {
+                if (!user) {
                     return null;
                 }
-                const user = await authSignUp({username, password});
-                if (user) {
-                    return user;
-                }
-                return null;
-            }
-        })
+                return user;
+            },
+        }),
+         CredentialsProvider({
+             id: 'sign-up',
+             type: 'credentials',
+             credentials: {},
+             async authorize(credentials) {
+                 const {username, password} = credentials as IUserCreate;
+                 if (!username || !password) {
+                     return null;
+                 }
+                 const user = await authSignUp({username, password});
+                 if (!user) {
+                     return null;
+                 }
+                 return user;
+             }
+         })
     ],
     pages: {
-        signIn: '/auth',
-        signOut: '/auth'
+        signIn: 'https://new.questspace.app:3000/auth',
+        signOut: 'https://new.questspace.app:3000/auth'
     },
     callbacks: {
         jwt({token, user}) { // Тут бы делать запрос, существует ли юзер
@@ -52,10 +52,9 @@ export const authOptions: NextAuthOptions = {
         },
         session({ session, token }) {
             if (token) {
-                session.user.id = token.id
-                session.user.name = token.name
-                session.user.email = token.email
-                session.user.image = token.picture
+                session.user.id = token.id;
+                session.user.name = token.name;
+                session.user.image = token.picture;
             }
 
             return session

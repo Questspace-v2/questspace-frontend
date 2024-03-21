@@ -15,10 +15,9 @@ import FormItem from 'antd/lib/form/FormItem';
 import './AuthForm.css';
 import { LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
-import { authSignIn, authSignUp, FRONTEND_URL } from '@/app/api/api';
+import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useFormStatus } from 'react-dom';
-import { IUserCreate } from '@/app/types/user-interfaces';
-import navigate from '@/app/actions';
+import { signIn, SignInAuthorizationParams, useSession } from 'next-auth/react';
 
 interface AuthFormItems {
     username: string,
@@ -37,23 +36,22 @@ export default function AuthForm() {
     };
 
     const onFinish = async (values: AuthFormItems) => {
-        const data: IUserCreate = {
+        const data: SignInAuthorizationParams = {
             username: values.username,
             password: values.password
         };
 
         if (formType === Auth.SIGNUP) {
-            const result = await authSignUp(data);
-            if (result) {
-                await navigate();
-            }
+            console.log('Ugh');
         } else {
-            const result = await authSignIn(data);
-            if (result) {
-                await navigate();
-            }
+            await signIn('credentials', {
+                callbackUrl: 'https://new.questspace.app:3000',
+            }, data);
         }
     };
+
+    const session = useSession();
+    console.log(session);
 
     return (
         <section className={'page-auth'}>

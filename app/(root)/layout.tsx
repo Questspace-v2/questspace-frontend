@@ -4,6 +4,8 @@ import { manrope, robotoFlex } from '@/lib/fonts';
 import { Metadata } from 'next';
 
 import './global.css';
+import { getServerSession } from 'next-auth';
+import SessionProvider from '@/components/SessionProvider/SessionProvider';
 
 export const metadata: Metadata = {
     title: 'Квестспейс',
@@ -11,11 +13,14 @@ export const metadata: Metadata = {
     icons: [{ rel: "icon", url: `/favicon.ico` }]
 };
 
-export default function RootLayout({ children }: React.PropsWithChildren) {
+export default async function RootLayout({ children }: React.PropsWithChildren) {
+    const session = await getServerSession();
     return (
         <html lang="ru">
             <body className={`${manrope.variable} ${robotoFlex.variable}`}>
-                <AntdRegistry>{children}</AntdRegistry>
+                <SessionProvider session={session}>
+                    <AntdRegistry>{children}</AntdRegistry>
+                </SessionProvider>
             </body>
         </html>
     );
