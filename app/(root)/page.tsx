@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import Body from '@/components/Body/Body';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 const DynamicQuestTabs = dynamic(() => import('../../components/QuestTabs/QuestTabs'), {
     ssr: false,
@@ -18,7 +17,7 @@ const DynamicProfile = dynamic(() => import('../../components/Profile/Profile'),
 })
 
 async function HomePage() {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession();
     if (!session) {
         redirect('https://new.questspace.app:3000/auth'); // Временно захардкожено
     }

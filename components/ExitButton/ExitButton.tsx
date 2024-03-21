@@ -14,7 +14,7 @@ export default function ExitButton(props: ExitButtonProps) {
 
     // должен чиститься state и совершаться signOut
     const handleClick = async () => {
-        await signOut({callbackUrl: '/auth'});
+        await signOut();
     }
 
     return (
