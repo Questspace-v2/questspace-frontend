@@ -3,8 +3,6 @@ import { LogoutOutlined } from '@ant-design/icons';
 import React from 'react';
 import { signOut } from 'next-auth/react';
 
-import './ExitButton.css';
-
 interface ExitButtonProps {
     block?: boolean;
 }

@@ -1,5 +1,5 @@
 import { BACKEND_URL } from '@/app/api/client/constants';
-import {
+import createHttpError, {
     BadRequest,
     Forbidden,
     HttpError,
@@ -47,7 +47,7 @@ class Client {
                 this.error = new UnprocessableEntity('Unprocessable entity');
                 break;
             default:
-                this.error = new HttpError('Unknown error');
+                this.error = createHttpError('Unknown error');
         }
     }
 
@@ -85,7 +85,7 @@ class Client {
                 if (this.error) {
                     throw this.error;
                 }
-                throw HttpError('Unknown error');
+                throw createHttpError('Unknown error');
             });
     }
 
@@ -113,7 +113,7 @@ class Client {
                 if (this.error) {
                     throw this.error;
                 }
-                throw HttpError('Unknown error');
+                throw createHttpError('Unknown error');
             });
     }
 }

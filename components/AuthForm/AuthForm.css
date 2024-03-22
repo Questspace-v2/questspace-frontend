@@ -3,6 +3,9 @@
     flex-direction: column;
     gap: 16px;
     box-sizing: content-box;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
 }
 
 .page-auth__content-wrapper {
@@ -64,4 +67,5 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    max-width: 320px;
 }

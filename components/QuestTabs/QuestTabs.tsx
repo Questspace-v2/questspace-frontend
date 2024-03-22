@@ -16,6 +16,8 @@ export default function QuestTabs() {
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all-quests');
     const [tabContent, setTabContent] = useState<JSX.Element[] | JSX.Element>(getQuests(selectedTab));
 
+
+
     const themeConfig: ThemeConfig = {
         components: {
             Select: {

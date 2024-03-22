@@ -5,18 +5,18 @@ import React, { useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import userMock from '@/app/api/__mocks__/User.mock';
 
 import './EditProfile.css';
 import { ModalEnum, ModalType } from '@/components/EditProfile/EditProfile.types';
 import EditAvatar from '@/components/EditProfile/EditAvatar/EditAvatar';
+import { IUser } from '@/app/types/user-interfaces';
 
-export default function EditProfile() {
+export default function EditProfile({user}: {user: IUser}) {
+    const {username, avatar_url: avatarUrl} = user;
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
 
     const showModal = () => {
-        console.log(`showModal`)
         setCurrentModal(ModalEnum.EDIT_PROFILE);
     };
 
@@ -66,7 +66,7 @@ export default function EditProfile() {
                         className={'avatar__image'}
                         alt={'avatar'}
                         shape={'circle'}
-                        src={userMock.avatar_url}
+                        src={avatarUrl}
                         draggable={false}
                         /* на самом деле размер берется (size - 2) */
                         size={130}
@@ -81,7 +81,7 @@ export default function EditProfile() {
                     </EditAvatar>
                 </div>
                 <h4 className={'edit-profile-subheader'}>Логин</h4>
-                <p className={'edit-profile-paragraph'}>{userMock.username}</p>
+                <p className={'edit-profile-paragraph'}>{username}</p>
                 <Button className={'edit-profile__change-button'} type={'link'}>
                     Изменить логин
                 </Button>

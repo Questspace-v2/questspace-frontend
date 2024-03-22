@@ -6,6 +6,8 @@ import { Metadata } from 'next';
 import './global.css';
 import { getServerSession } from 'next-auth';
 import SessionProvider from '@/components/SessionProvider/SessionProvider';
+import { ConfigProvider } from 'antd';
+import theme from '@/lib/theme/themeConfig';
 
 export const metadata: Metadata = {
     title: 'Квестспейс',
@@ -19,7 +21,13 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         <html lang="ru">
             <body className={`${manrope.variable} ${robotoFlex.variable}`}>
                 <SessionProvider session={session}>
-                    <AntdRegistry>{children}</AntdRegistry>
+                    <AntdRegistry>
+                        <ConfigProvider theme={theme}>
+                            <div className={'App'}>
+                                {children}
+                            </div>
+                        </ConfigProvider>
+                    </AntdRegistry>
                 </SessionProvider>
             </body>
         </html>

@@ -77,6 +77,8 @@ body {
 
 
 h1 {
+    font-size: 32px;
+
     &.responsive-header-h1 {
         font-size: var(--large-font-size);
     }

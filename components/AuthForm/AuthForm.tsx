@@ -18,6 +18,7 @@ import Logotype from '@/components/Logotype/Logotype';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useFormStatus } from 'react-dom';
 import { signIn, SignInAuthorizationParams, useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 interface AuthFormItems {
     username: string,
@@ -44,9 +45,11 @@ export default function AuthForm() {
         if (formType === Auth.SIGNUP) {
             console.log('Ugh');
         } else {
-            await signIn('credentials', {
-                callbackUrl: 'https://new.questspace.app:3000',
-            }, data);
+            await signIn('sign-in', {
+                callbackUrl: FRONTEND_URL,
+                redirect: false,
+                ...data
+            });
         }
     };
 
@@ -97,7 +100,7 @@ export default function AuthForm() {
                         rules={[
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
-                                        const pswValue = getFieldValue('password');
+                                        const pswValue = getFieldValue('password') as string;
                                         if ((!value && !pswValue)|| pswValue === value) {
                                             return Promise.resolve();
                                         }

@@ -39,7 +39,7 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                     className={'quest-card quest-card__mode_preview'}
                     cover={<Image
                         src={`https://source.unsplash.com/random/${props.name}`}
-                        fill sizes={'100% 128px'} style={{ objectFit: 'cover' }} alt={'quest avatar'} loading={'lazy'} placeholder={'empty'}/>}
+                        fill sizes={'100% 128px'} style={{ objectFit: 'cover' }} alt={'quest avatar'} placeholder={'empty'}/>}
                 >
                     <h3 className={'quest-card__name'}>Городской квест ДПММ</h3>
                     <p className={'quest-card__start'}>25 сентября в 10:00</p>

@@ -7,10 +7,11 @@ import './Profile.css';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import EditProfile from '@/components/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
-import userMock from '@/app/api/__mocks__/User.mock';
+import { IUser } from '@/app/types/user-interfaces';
 
-export default function Profile({userName}: {userName: string}) {
-    const greetings = `Привет, @${userName}!`;
+export default function Profile({user} : {user: IUser}) {
+    const {username, avatar_url: avatarUrl} = user;
+    const greetings = `Привет, @${username}!`;
     const { xs } = useBreakpoint();
 
     return (
@@ -20,7 +21,7 @@ export default function Profile({userName}: {userName: string}) {
                     className={'avatar__image'}
                     alt={'avatar'}
                     shape={'circle'}
-                    src={userMock.avatar_url}
+                    src={avatarUrl}
                     draggable={false}
                     /* на самом деле размер берется (size - 2) */
                     size={xs ? 98 : 162}
@@ -30,7 +31,7 @@ export default function Profile({userName}: {userName: string}) {
                 <div className={'profile-information'}>
                     <h1 className={'roboto-flex-header responsive-header-h1'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>
-                        <EditProfile />
+                        <EditProfile user={user}/>
                         <ExitButton />
                     </div>
                 </div>

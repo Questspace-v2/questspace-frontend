@@ -1,11 +1,10 @@
-import { ConfigProvider, Spin } from 'antd';
-import theme from '@/lib/theme/themeConfig';
+import { Spin } from 'antd';
+import dynamic from 'next/dynamic';
+import { redirect } from 'next/navigation';
+import Body from '@/components/Body/Body';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
-import dynamic from 'next/dynamic';
-import Body from '@/components/Body/Body';
-import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth';
+import { getCurrentIUser } from '@/lib/session';
 
 const DynamicQuestTabs = dynamic(() => import('../../components/QuestTabs/QuestTabs'), {
     ssr: false,
@@ -17,21 +16,21 @@ const DynamicProfile = dynamic(() => import('../../components/Profile/Profile'),
 })
 
 async function HomePage() {
-    const session = await getServerSession();
-    if (!session) {
-        redirect('https://new.questspace.app:3000/auth'); // Временно захардкожено
+    const currentIUser = await getCurrentIUser();
+
+    if (!currentIUser) {
+        redirect('/auth');
     }
+
     return (
-        <ConfigProvider theme={theme}>
-            <div className={'App'}>
-                <Header />
-                    <Body>
-                        <DynamicProfile userName='hahaha'/>
-                        <DynamicQuestTabs />
-                    </Body>
-                <Footer />
-            </div>
-        </ConfigProvider>
+        <>
+            <Header user={currentIUser}/>
+            <Body>
+                <DynamicProfile user={currentIUser}/>
+                <DynamicQuestTabs />
+            </Body>
+            <Footer />
+        </>
     );
 }
 

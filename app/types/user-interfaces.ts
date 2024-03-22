@@ -19,6 +19,11 @@ export interface ISignIn {
     password: string
 }
 
+export interface ISignInResponse {
+    user: IUser,
+    access_token: string
+}
+
 export type IUserCreate = {
     avatar_url?: string
 } & ISignIn

@@ -8,8 +8,11 @@ import './HeaderAvatar.css';
 import userMock from '@/app/api/__mocks__/User.mock';
 import Image from 'next/image';
 import ExitButton from '@/components/ExitButton/ExitButton';
+import { IUser } from '@/app/types/user-interfaces';
+import { signOut } from 'next-auth/react';
 
-export default function HeaderAvatar() {
+export default function HeaderAvatar({user}: {user: IUser}) {
+    const {avatar_url: avatarUrl} = user;
     const [open, setOpen] = useState(false);
     const exitStyle: CSSProperties = {
         color: 'var(--quit-color)',
@@ -30,7 +33,12 @@ export default function HeaderAvatar() {
             key: '1',
         },
         {
-            label: <ExitButton />,
+
+            label: <a href='/' onClick={
+                async (event) => {
+                    event.preventDefault();
+                    await signOut()}
+            }>Выйти</a>,
             key: '2',
             style: exitStyle,
         },
@@ -57,7 +65,8 @@ export default function HeaderAvatar() {
                             width={32}
                             height={32}
                             style={{borderRadius: '16px'}}
-                            src={userMock.avatar_url}
+                            src={avatarUrl}
+                            priority
                         />
                         <DownOutlined />
                     </button>
