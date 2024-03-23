@@ -2,17 +2,18 @@
 
 import { Avatar, Button, Modal } from 'antd';
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { EditOutlined } from '@ant-design/icons';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-
-import './EditProfile.css';
 import { ModalEnum, ModalType } from '@/components/EditProfile/EditProfile.types';
 import EditAvatar from '@/components/EditProfile/EditAvatar/EditAvatar';
-import { IUser } from '@/app/types/user-interfaces';
 
-export default function EditProfile({user}: {user: IUser}) {
-    const {username, avatar_url: avatarUrl} = user;
+import './EditProfile.css';
+
+export default function EditProfile() {
+    const {name: username, image: avatarUrl, id} = useSession().data!.user;
+    const {accessToken} = (useSession().data!);
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
 
@@ -71,7 +72,7 @@ export default function EditProfile({user}: {user: IUser}) {
                         /* на самом деле размер берется (size - 2) */
                         size={130}
                     />
-                    <EditAvatar setCurrentModal={setCurrentModal}>
+                    <EditAvatar setCurrentModal={setCurrentModal} id={id} accessToken={accessToken}>
                         <Button className={'edit-profile__change-button'}
                                 type={'link'}
                                 block

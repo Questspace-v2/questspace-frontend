@@ -3,19 +3,19 @@ import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import Footer from '@/components/Footer/Footer';
 import React from 'react';
-import { getCurrentIUser } from '@/lib/session';
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
 
 export default async function CreateQuestPage() {
-    const currentIUser = await getCurrentIUser();
+    const session = await getServerSession();
 
-    if (!currentIUser) {
+    if (!session || !session.user) {
         redirect('/auth');
     }
 
     return (
         <>
-            <Header user={currentIUser}/>
+            <Header isAuthorized/>
             <Body>
                 <CreateQuest />
             </Body>

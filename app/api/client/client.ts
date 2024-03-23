@@ -11,6 +11,7 @@ import createHttpError, {
 import { Data } from '@/app/types/json-data';
 import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
 import { IQuestTaskGroups } from '@/app/types/quest-interfaces';
+import { RcFile } from 'antd/es/upload';
 
 class Client {
     backendUrl: string;
@@ -54,9 +55,11 @@ class Client {
     static buildConfig(
         method: string,
         data: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IPasswordUpdate| string,
-        credentials: string
+        credentials: string,
+        headers?: Record<string, string>
     ) {
         const baseInit = {
+            headers,
             method,
             credentials,
             body: {}
@@ -73,10 +76,11 @@ class Client {
         endpoint = '/',
         method = 'GET',
         data: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IPasswordUpdate| string = {}, // Жесть, потом придумаю получше
-        credentials = 'same-origin'
+        credentials = 'same-origin',
+        headers: Record<string, string> = {}
     ) {
         const url = `${this.backendUrl}${endpoint}`;
-        const config = Client.buildConfig(method, data, credentials);
+        const config = Client.buildConfig(method, data, credentials, headers);
 
         return fetch(url, config)
             .then(res => res.json())
@@ -92,6 +96,7 @@ class Client {
     async handleS3Request(
         key: string,
         fileType: string,
+        body: string | Blob | RcFile,
         method = 'PUT'
     ) {
         const headers: Record<string, string> = {
@@ -100,12 +105,13 @@ class Client {
 
         const s3Config = {
             method,
-            headers
+            headers,
+            body
         };
 
         return fetch(
-            `https://storage.yandexcloud.net/questspace-img/users/${key}`,
-            s3Config
+            `https://storage.yandexcloud.net/questspace-img/${key}`,
+            {...s3Config}
         )
             .then(res => res)
             .catch((err: HttpError) => {

@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import NextAuth, { NextAuthOptions, Session } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authSignUp } from '@/app/api/api';
 import { ISignIn, ISignInResponse, IUserCreate } from '@/app/types/user-interfaces';
@@ -61,31 +61,44 @@ export const authOptions: NextAuthOptions = {
     ],
     pages: {
         signIn: '/auth',
-        signOut: '/auth'
+        signOut: '/auth',
     },
     callbacks: {
         // @ts-expect-error мы точно знаем, что приходит
-        jwt({token, user} : {token: JWT, user: ISignInResponse}) { // Тут бы делать запрос, существует ли юзер
+        jwt({token, user, session, trigger} : {
+            token: JWT,
+            user: ISignInResponse,
+            session?: {
+                name?: string,
+                image?: string
+            },
+            trigger: unknown
+        }) {
             if (user) {
                 token.accessToken = user.access_token;
                 token.id = user.user.id;
                 token.name = user.user.username;
                 token.picture = user.user.avatar_url;
             }
+            if (trigger === 'update' && session) {
+                if (session.name !== token.name) {
+                    token.name = session.name;
+                }
+                if (session.image !== token.picture) {
+                    token.picture = session.image;
+                }
+            }
             return token
         },
         session({ session, token }) {
-            if (token) {
-                session.accessToken = token.accessToken as string;
-                session.user.id = token.id;
-                session.user.name = token.name;
-                session.user.image = token.picture;
+            return {
+                expires: session.expires,
+                accessToken: token.accessToken as string,
+                user: {...session.user, id: token.id}
             }
-
-            return session
         }
     },
-    debug: process.env.NODE_ENV === 'development',
+    debug: process.env.NODE_ENV !== 'production',
     useSecureCookies: true,
 };
 

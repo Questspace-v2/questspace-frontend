@@ -8,9 +8,13 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import EditProfile from '@/components/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import { IUser } from '@/app/types/user-interfaces';
+import { useSession } from 'next-auth/react';
 
-export default function Profile({user} : {user: IUser}) {
-    const {username, avatar_url: avatarUrl} = user;
+export default function Profile() {
+    const {name: username, image: avatarUrl, id} = useSession().data!.user;
+    const user: IUser = {
+        username: username!, avatar_url: avatarUrl!, id
+    };
     const greetings = `Привет, @${username}!`;
     const { xs } = useBreakpoint();
 
@@ -31,7 +35,7 @@ export default function Profile({user} : {user: IUser}) {
                 <div className={'profile-information'}>
                     <h1 className={'roboto-flex-header responsive-header-h1'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>
-                        <EditProfile user={user}/>
+                        <EditProfile />
                         <ExitButton />
                     </div>
                 </div>

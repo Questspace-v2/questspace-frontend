@@ -1,8 +1,4 @@
 import Image from 'next/image';
-import {
-    TEXT_LOGO_PATH as questspaceTextLogo,
-    ICON_LOGO_PATH as questspaceIconLogo,
-} from '@/lib/utils/constants';
 import { CSSProperties } from 'react';
 
 interface LogotypeProps {
@@ -22,8 +18,9 @@ export default function Logotype(props: LogotypeProps) {
             <Image
                 className={className}
                 alt={'questspace logotype'}
-                src={questspaceTextLogo}
+                src={'/Questspace-Text.svg'}
                 width={width}
+                height={100}
                 quality={100}
                 draggable={false}
                 unselectable={'on'}
@@ -38,8 +35,9 @@ export default function Logotype(props: LogotypeProps) {
                 <Image
                     className={className}
                     alt={'questspace logotype'}
-                    src={questspaceIconLogo}
+                    src={'/Questspace-Icon.svg'}
                     width={width}
+                    height={100}
                     quality={100}
                     draggable={false}
                     unselectable={'on'}

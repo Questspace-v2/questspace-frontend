@@ -3,16 +3,14 @@
 import React, { CSSProperties, useState } from 'react';
 import { ConfigProvider, Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import Image from 'next/image';
+import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 import './HeaderAvatar.css';
-import userMock from '@/app/api/__mocks__/User.mock';
-import Image from 'next/image';
-import ExitButton from '@/components/ExitButton/ExitButton';
-import { IUser } from '@/app/types/user-interfaces';
-import { signOut } from 'next-auth/react';
 
-export default function HeaderAvatar({user}: {user: IUser}) {
-    const {avatar_url: avatarUrl} = user;
+export default function HeaderAvatar() {
+    const {image: avatarUrl} = useSession().data!.user;
     const [open, setOpen] = useState(false);
     const exitStyle: CSSProperties = {
         color: 'var(--quit-color)',
@@ -29,7 +27,7 @@ export default function HeaderAvatar({user}: {user: IUser}) {
 
     const items: MenuProps['items'] = [
         {
-            label: <a href='/'>Мой профиль</a>,
+            label: <Link href='/'>Мой профиль</Link>,
             key: '1',
         },
         {
@@ -65,7 +63,7 @@ export default function HeaderAvatar({user}: {user: IUser}) {
                             width={32}
                             height={32}
                             style={{borderRadius: '16px'}}
-                            src={avatarUrl}
+                            src={avatarUrl!}
                             priority
                         />
                         <DownOutlined />

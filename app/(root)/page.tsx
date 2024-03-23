@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import Body from '@/components/Body/Body';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
-import { getCurrentIUser } from '@/lib/session';
+import { getServerSession } from 'next-auth';
 
 const DynamicQuestTabs = dynamic(() => import('../../components/QuestTabs/QuestTabs'), {
     ssr: false,
@@ -16,17 +16,17 @@ const DynamicProfile = dynamic(() => import('../../components/Profile/Profile'),
 })
 
 async function HomePage() {
-    const currentIUser = await getCurrentIUser();
+    const session = await getServerSession();
 
-    if (!currentIUser) {
+    if (!session || !session.user) {
         redirect('/auth');
     }
 
     return (
         <>
-            <Header user={currentIUser}/>
+            <Header isAuthorized/>
             <Body>
-                <DynamicProfile user={currentIUser}/>
+                <DynamicProfile />
                 <DynamicQuestTabs />
             </Body>
             <Footer />

@@ -23,8 +23,8 @@ export const createQuest = async (data: IQuestCreate) =>
 export const updateQuest = async (id: string, data: IQuestCreate) =>
     await client.handleServerRequest(`/quest/${id}`, 'POST', data) as IQuest;
 
-export const updateUser = async (id: string, data: IUserUpdate) =>
-    await client.handleServerRequest(`/user/${id}`, 'POST', data) as IUser;
+export const updateUser = async (id: string, data: IUserUpdate, accessToken: string) =>
+    await client.handleServerRequest(`/user/${id}`, 'POST', data, 'same-origin', {'Authorization': `Bearer ${accessToken}`}) as IUser;
 
 export const updatePassword = async (id: string, data: IPasswordUpdate) =>
     await client.handleServerRequest(`/user/${id}/password`, 'POST', data) as IUser;

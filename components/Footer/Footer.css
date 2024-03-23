@@ -75,10 +75,6 @@
         width: 245px;
         height: auto;
     }
-
-    .footer-background {
-        transform: translateY(-15%);
-    }
 }
 
 @media (min-width: 1921px) {
