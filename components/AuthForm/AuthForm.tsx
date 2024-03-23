@@ -8,7 +8,7 @@ import {
     AuthFormTypes,
     LoginDictionary,
     SignupDictionary,
-    TitleDictionary,
+    TitleDictionary, ValidationStatus,
 } from '@/components/AuthForm/AuthForm.types';
 import FormItem from 'antd/lib/form/FormItem';
 
@@ -18,7 +18,6 @@ import Logotype from '@/components/Logotype/Logotype';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useFormStatus } from 'react-dom';
 import { signIn, SignInAuthorizationParams, useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 
 interface AuthFormItems {
     username: string,
@@ -30,30 +29,69 @@ export default function AuthForm() {
     const [form] = Form.useForm<AuthFormItems>();
     const {pending} = useFormStatus();
     const [formType, setFormType] = useState<AuthFormTypes>(Auth.LOGIN);
-    const [dictionary, setDictionary] = useState<TitleDictionary>(LoginDictionary)
+    const [dictionary, setDictionary] = useState<TitleDictionary>(LoginDictionary);
+
+    const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
+    const [errorMsg, setErrorMsg] = useState<string>('');
     const handleChangeClick = () => {
         setFormType(prevState => prevState === Auth.LOGIN ? Auth.SIGNUP : Auth.LOGIN);
-        setDictionary((prevState) => prevState === LoginDictionary ? SignupDictionary : LoginDictionary)
+        setDictionary((prevState) => prevState === LoginDictionary ? SignupDictionary : LoginDictionary);
+        setErrorMsg('');
+        setValidationStatus('success');
     };
 
-    const onFinish = async (values: AuthFormItems) => {
+    const handleFieldChange = () => {
+        setValidationStatus('success');
+        setErrorMsg('');
+    };
+
+    const handleError = () => {
+        if (formType === Auth.LOGIN) {
+            setErrorMsg('Мы вас не узнали. Проверьте, правильно ли вы ввели логин и пароль');
+        } else {
+            setErrorMsg('Логин уже занят');
+        }
+        setValidationStatus('error');
+    };
+
+    const onFinish = (values: AuthFormItems) => {
         const data: SignInAuthorizationParams = {
             username: values.username,
             password: values.password
         };
 
-        if (formType === Auth.SIGNUP) {
-            console.log('Ugh');
-        } else {
-            await signIn('sign-in', {
-                callbackUrl: FRONTEND_URL,
+        if (formType === Auth.SIGNUP) { // Тут нужно писать тесты на клиента и чинить его
+            signIn('sign-up', {
                 redirect: false,
                 ...data
+            }).then((response) => {
+                if (!response?.error) {
+                    window.location.replace(`${FRONTEND_URL}`);
+                } else {
+                    throw new Error('Auth error');
+                }
+                return response;
+            }).catch(() => {
+                handleError();
+            })
+        } else {
+            signIn('sign-in', {
+                redirect: false,
+                ...data
+            }).then((response) => {
+                if (!response?.error) {
+                    window.location.replace(`${FRONTEND_URL}`);
+                } else {
+                    throw new Error('Auth error');
+                }
+                return response;
+            }).catch(() => {
+                handleError();
             });
         }
     };
 
-    const session = useSession();
+    const session = useSession(); // data.accessToken - кука
     console.log(session);
 
     return (
@@ -74,13 +112,16 @@ export default function AuthForm() {
                     onFinish={onFinish}
                 >
                     <Form.Item<AuthFormItems>
-                        name={'username'} required>
+                        name={'username'} required
+                        validateStatus={validationStatus}
+                        help={errorMsg}>
                         <Input
                             prefix={<UserOutlined />}
                             size={'middle'}
                             variant={'outlined'}
                             placeholder={'логин'}
                             autoComplete={'username'}
+                            onChange={handleFieldChange}
                         />
                     </Form.Item>
                     <Form.Item<AuthFormItems> name={'password'} rules={[{required: true}]}>
@@ -91,6 +132,7 @@ export default function AuthForm() {
                             variant={'outlined'}
                             placeholder={'пароль'}
                             autoComplete={formType === Auth.SIGNUP ? 'new-password' : 'current-password'}
+                            onChange={handleFieldChange}
                         />
                     </Form.Item>
                     {formType === Auth.SIGNUP &&
@@ -116,6 +158,7 @@ export default function AuthForm() {
                             variant={'outlined'}
                             placeholder={'повтори пароль'}
                             autoComplete={'new-password'}
+                            onChange={handleFieldChange}
                         />
                     </Form.Item>
                     }

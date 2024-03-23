@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
     },
     callbacks: {
         // @ts-expect-error мы точно знаем, что приходит
-        jwt({token, user} : {token: JWT, user: ISignInResponse}) { // Тут бы делать запрос, существует ли юзер
+        jwt({token, user} : {token: JWT, user: ISignInResponse}) {
             if (user) {
                 token.accessToken = user.access_token;
                 token.id = user.user.id;
