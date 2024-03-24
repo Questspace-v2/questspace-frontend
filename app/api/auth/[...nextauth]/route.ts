@@ -81,10 +81,10 @@ export const authOptions: NextAuthOptions = {
                 token.picture = user.user.avatar_url;
             }
             if (trigger === 'update' && session) {
-                if (session.name !== token.name) {
+                if (session.name) {
                     token.name = session.name;
                 }
-                if (session.image !== token.picture) {
+                if (session.image) {
                     token.picture = session.image;
                 }
             }
@@ -93,7 +93,7 @@ export const authOptions: NextAuthOptions = {
         session({ session, token }) {
             return {
                 expires: session.expires,
-                accessToken: token.accessToken as string,
+                accessToken: token.accessToken,
                 user: {...session.user, id: token.id}
             }
         }

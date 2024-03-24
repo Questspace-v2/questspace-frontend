@@ -10,7 +10,8 @@ export interface IQuest {
     media_link: string,
     name: string,
     registration_deadline: string,
-    start_time: string
+    start_time: string,
+    status: string
 }
 
 export type IQuestCreate = {

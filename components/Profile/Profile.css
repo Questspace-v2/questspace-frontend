@@ -21,7 +21,7 @@
     gap: 8px;
 }
 
-.avatar__image >img {
+.avatar__image {
     user-select: none;
 }
 

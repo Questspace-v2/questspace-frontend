@@ -14,17 +14,18 @@ export default function Logotype(props: LogotypeProps) {
         className = ''} = props;
 
     if (type === 'text') {
+        const aspectRatio = 809/104;
         return (
             <Image
                 className={className}
                 alt={'questspace logotype'}
                 src={'/Questspace-Text.svg'}
                 width={width}
-                height={100}
+                height={width / aspectRatio}
                 quality={100}
                 draggable={false}
                 unselectable={'on'}
-                style={style}
+                style={style && {height: 'auto'}}
                 loading={'eager'}
             />
         );
@@ -37,7 +38,7 @@ export default function Logotype(props: LogotypeProps) {
                     alt={'questspace logotype'}
                     src={'/Questspace-Icon.svg'}
                     width={width}
-                    height={100}
+                    height={width}
                     quality={100}
                     draggable={false}
                     unselectable={'on'}
