@@ -79,7 +79,12 @@ class Client {
         const config = Client.buildConfig(method, data, credentials);
 
         return fetch(url, config)
-            .then(res => res.json())
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return null;
+            })
             .catch((err: HttpError) => {
                 this.handleError(err);
                 if (this.error) {

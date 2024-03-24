@@ -1,33 +1,38 @@
-import { IPasswordUpdate, ISignIn, IUser, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
-import { IQuest, IQuestCreate, IQuestTaskGroups, IQuestTaskGroupsResponse } from '@/app/types/quest-interfaces';
+import {
+    IPasswordUpdate,
+    ISignIn,
+    IUserCreate,
+    IUserUpdate,
+} from '@/app/types/user-interfaces';
+import { IQuestCreate, IQuestTaskGroups } from '@/app/types/quest-interfaces';
 import client from '@/app/api/client/client';
 
 export const getUserById = async (id: string) =>
-    await client.handleServerRequest(`/user/${id}`) as IUser;
+    client.handleServerRequest(`/user/${id}`);
 
 export const getQuestById = async (id: string) =>
-    await client.handleServerRequest(`/quest/${id}`) as IQuest;
+    client.handleServerRequest(`/quest/${id}`);
 
 export const authWithGoogle = async (token: string) =>
-    await client.handleServerRequest('/auth/google', 'POST', token) as IUser;
+    client.handleServerRequest('/auth/google', 'POST', token);
 
 export const authSignUp = async (data: IUserCreate) =>
-    await client.handleServerRequest('/auth/register', 'POST', data) as IUser;
+    client.handleServerRequest('/auth/register', 'POST', data);
 
 export const authSignIn = async (data: ISignIn) =>
-    await client.handleServerRequest('/auth/sign-in', 'POST', data) as IUser;
+    client.handleServerRequest('/auth/sign-in', 'POST', data);
 
 export const createQuest = async (data: IQuestCreate) =>
-    await client.handleServerRequest('/quest', 'POST', data) as IQuest;
+    client.handleServerRequest('/quest', 'POST', data);
 
 export const updateQuest = async (id: string, data: IQuestCreate) =>
-    await client.handleServerRequest(`/quest/${id}`, 'POST', data) as IQuest;
+    client.handleServerRequest(`/quest/${id}`, 'POST', data);
 
 export const updateUser = async (id: string, data: IUserUpdate) =>
-    await client.handleServerRequest(`/user/${id}`, 'POST', data) as IUser;
+    client.handleServerRequest(`/user/${id}`, 'POST', data);
 
 export const updatePassword = async (id: string, data: IPasswordUpdate) =>
-    await client.handleServerRequest(`/user/${id}/password`, 'POST', data) as IUser;
+    client.handleServerRequest(`/user/${id}/password`, 'POST', data);
 
 export const deleteQuest = async (id: string) =>
     client.handleServerRequest(`/quest/${id}`, 'DELETE');
@@ -36,4 +41,4 @@ export const deleteUser = async (id: string) =>
     client.handleServerRequest(`/user/${id}`, 'DELETE');
 
 export const patchTaskGroups = async (id: string, data: IQuestTaskGroups) =>
-    await client.handleServerRequest(`/quest/${id}/task-groups/bulk`, 'PATCH', data) as IQuestTaskGroupsResponse;
+    client.handleServerRequest(`/quest/${id}/task-groups/bulk`, 'PATCH', data);

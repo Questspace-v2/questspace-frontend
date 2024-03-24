@@ -53,6 +53,22 @@ export default function AuthForm() {
         }
         setValidationStatus('error');
     };
+    
+    const handleAuth = (providerType: string, data: Record<string, string>) => {
+        signIn(`${providerType}`, {
+            redirect: false,
+            ...data
+        }).then((response) => {
+            if (!response?.error) {
+                window.location.replace(`${FRONTEND_URL}`);
+            } else {
+                throw new Error('Auth error');
+            }
+            return response;
+        }).catch(() => {
+            handleError();
+        })
+    };
 
     const onFinish = (values: AuthFormItems) => {
         const data: SignInAuthorizationParams = {
@@ -60,38 +76,14 @@ export default function AuthForm() {
             password: values.password
         };
 
-        if (formType === Auth.SIGNUP) { // Тут нужно писать тесты на клиента и чинить его
-            signIn('sign-up', {
-                redirect: false,
-                ...data
-            }).then((response) => {
-                if (!response?.error) {
-                    window.location.replace(`${FRONTEND_URL}`);
-                } else {
-                    throw new Error('Auth error');
-                }
-                return response;
-            }).catch(() => {
-                handleError();
-            })
+        if (formType === Auth.SIGNUP) {
+            handleAuth('sign-up', data);
         } else {
-            signIn('sign-in', {
-                redirect: false,
-                ...data
-            }).then((response) => {
-                if (!response?.error) {
-                    window.location.replace(`${FRONTEND_URL}`);
-                } else {
-                    throw new Error('Auth error');
-                }
-                return response;
-            }).catch(() => {
-                handleError();
-            });
+            handleAuth('sign-in', data);
         }
     };
 
-    const session = useSession(); // data.accessToken - кука
+    const session = useSession();
     console.log(session);
 
     return (
