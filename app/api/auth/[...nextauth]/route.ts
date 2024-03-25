@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { authSignIn, authSignUp } from '@/app/api/api';
+import { authSignIn, authRegister } from '@/app/api/api';
 import { ISignIn, ISignInResponse, IUserCreate } from '@/app/types/user-interfaces';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { JWT } from 'next-auth/jwt';
@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
                  if (!username || !password) {
                      return null;
                  }
-                 const user = await authSignUp({username, password})
+                 const user = await authRegister({username, password})
                      .then(response => response as ISignInResponse)
                      .catch(() => null);
 
