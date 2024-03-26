@@ -55,7 +55,7 @@ class Client {
     static buildConfig(
         method: string,
         data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate| IPasswordUpdate| string,
-        credentials?: string
+        credentials?: string,
         headers?: Record<string, string>
     ) {
         const baseInit = {
