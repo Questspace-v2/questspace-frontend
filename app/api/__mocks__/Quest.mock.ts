@@ -16,7 +16,8 @@ const questMock: IQuest = {
     media_link: "https://s3-alpha-sig.figma.com/img/8013/4f88/48cf6395a79537ed2057405c511d6cd9?Expires=1710720000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=iIVP1qa2YpJ0mQBAbmhraRJOxMkiwNVbVXnLWLHkAU~tF~tnBj62H~NhrOri1aYxsvmqyU2QjoL7~lvxTgF2ZqXpyPGX35s6BTgPBr7tb4jjh2AdfLBLIFwjrgRokEZQP4qGYhmgluRxoHMQr6a7-qXDRKuBknGGyXzzq7v7LliH~8CqPMU-4WyLttPQPtIOS3TpaI23g50GlczgHvnQFDW1Peqwgq0UU2hgAOImP3oT4qIldjkrQ7CntcsCGRvkA1RN~STCMrLPg7mTy466mnu8wEP2jcujuVXoaFqDlFZ~~bq6e6s5qpaDn4J2EBdJKk5p2~p~zAL-w0Z7RlRZ7g__",
     name: "Городской квест ДПММ",
     registration_deadline: "2021-02-11T21:54:42.123Z",
-    start_time: "2021-02-18T11:54:42.123Z"
+    start_time: "2021-02-18T11:54:42.123Z",
+    status: "Завершен"
 }
 
 export default questMock;

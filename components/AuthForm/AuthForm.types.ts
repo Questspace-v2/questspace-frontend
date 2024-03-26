@@ -4,6 +4,7 @@ export enum Auth {
 }
 
 export type AuthFormTypes = Auth.LOGIN | Auth.SIGNUP;
+export type ValidationStatus = '' | 'success' | 'error' | 'warning' | 'validating' | undefined;
 export interface TitleDictionary {
     pageHeader: string;
     formTitle: string;

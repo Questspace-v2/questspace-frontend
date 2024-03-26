@@ -14,9 +14,9 @@ export interface IQuest {
     status: string
 }
 
-export type IQuestCreate = {
+export interface IQuestCreate extends Omit<IQuest, 'creator'> {
     creator_name: string
-} & Omit<IQuest, 'creator'>
+}
 
 export interface ITaskGroupsCreate {
     name: string,
@@ -28,7 +28,9 @@ export interface ITaskGroupsDelete {
     id: string
 }
 
-export type ITaskGroupsUpdate = ITaskGroupsCreate & ITaskGroupsDelete
+export interface ITaskGroupsUpdate extends ITaskGroupsCreate {
+    id: string
+}
 
 export interface IQuestTaskGroups {
     create?: ITaskGroupsCreate[],
@@ -36,6 +38,17 @@ export interface IQuestTaskGroups {
     update?: ITaskGroupsUpdate[]
 }
 
-export type IQuestTaskGroupsResponse = {
+export interface IQuestTaskGroupsResponse extends ITaskGroupsUpdate {
     quest: IQuest
-} & ITaskGroupsUpdate
+}
+
+export interface IFilteredQuests {
+    next_page_id: string,
+    quests: IQuest[]
+}
+
+export interface IFilteredQuestsResponse {
+    all?: IFilteredQuests,
+    owned?: IFilteredQuests,
+    registered?: IFilteredQuests
+}

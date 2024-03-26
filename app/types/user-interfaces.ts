@@ -24,6 +24,15 @@ export interface ISignInResponse {
     access_token: string
 }
 
-export type IUserCreate = {
+export interface IUserCreate extends ISignIn {
     avatar_url?: string
-} & ISignIn
+}
+
+export interface ITeam {
+    captain: IUser,
+    id: string,
+    invite_link: string,
+    members: IUser[],
+    name: string,
+    score: 0
+}

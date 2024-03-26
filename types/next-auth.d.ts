@@ -1,13 +1,17 @@
 import { DefaultSession } from 'next-auth';
-import { JWT } from 'next-auth/jwt';
+import { IUser } from '@/app/types/user-interfaces';
 
 declare module "next-auth" {
     interface Session {
         accessToken: string,
         user: {
             id: string,
-            accessToken: JWT
         } & DefaultSession["user"]
+    }
+
+    interface User {
+        user: IUser,
+        access_token: string
     }
 }
 

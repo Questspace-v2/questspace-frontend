@@ -1,9 +1,8 @@
 /* eslint-disable no-param-reassign */
 import NextAuth, { NextAuthOptions, Session } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { authSignUp } from '@/app/api/api';
+import { authSignIn, authRegister } from '@/app/api/api';
 import { ISignIn, ISignInResponse, IUserCreate } from '@/app/types/user-interfaces';
-import { BACKEND_URL } from '@/app/api/client/constants';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { JWT } from 'next-auth/jwt';
 
@@ -24,14 +23,10 @@ export const authOptions: NextAuthOptions = {
                 if (!username || !password) {
                     return null;
                 }
-                const user = await fetch(`${BACKEND_URL}/auth/sign-in`,{
-                    method: 'POST',
-                    body: JSON.stringify({username, password})
-                })
-                    .then(response => {
-                        if (response.ok) {
-                            return response.json();
-                        } return null}) as ISignInResponse;
+
+                const user = await authSignIn({username, password})
+                    .then(response => response as ISignInResponse)
+                    .catch(() => null);
                 if (!user) {
                     return null;
                 }
@@ -46,12 +41,16 @@ export const authOptions: NextAuthOptions = {
                  username: {type: 'text'},
                  password: {type: 'password'}
              },
+             // @ts-expect-error все нормально, все под контролем
              async authorize(credentials) {
                  const {username, password} = credentials as IUserCreate;
                  if (!username || !password) {
                      return null;
                  }
-                 const user = await authSignUp({username, password});
+                 const user = await authRegister({username, password})
+                     .then(response => response as ISignInResponse)
+                     .catch(() => null);
+
                  if (!user) {
                      return null;
                  }
@@ -64,7 +63,6 @@ export const authOptions: NextAuthOptions = {
         signOut: '/auth',
     },
     callbacks: {
-        // @ts-expect-error мы точно знаем, что приходит
         jwt({token, user, session, trigger} : {
             token: JWT,
             user: ISignInResponse,

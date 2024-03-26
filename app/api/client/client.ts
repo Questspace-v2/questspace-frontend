@@ -10,7 +10,7 @@ import createHttpError, {
 } from 'http-errors';
 import { Data } from '@/app/types/json-data';
 import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
-import { IQuestTaskGroups } from '@/app/types/quest-interfaces';
+import { IQuestCreate, IQuestTaskGroups } from '@/app/types/quest-interfaces';
 import { RcFile } from 'antd/es/upload';
 
 class Client {
@@ -54,8 +54,8 @@ class Client {
 
     static buildConfig(
         method: string,
-        data: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IPasswordUpdate| string,
-        credentials: string,
+        data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate| IPasswordUpdate| string,
+        credentials?: string
         headers?: Record<string, string>
     ) {
         const baseInit = {
@@ -72,18 +72,30 @@ class Client {
         return baseInit as RequestInit;
     }
 
+    static buildQueryString(params = {}) {
+        const searchParams = new URLSearchParams(params);
+        return searchParams.toString();
+    }
+
     async handleServerRequest(
         endpoint = '/',
         method = 'GET',
-        data: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IPasswordUpdate| string = {}, // Жесть, потом придумаю получше
+        data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate | IPasswordUpdate| string, // Жесть, потом придумаю получше
+        queryParams = {},
         credentials = 'same-origin',
         headers: Record<string, string> = {}
     ) {
-        const url = `${this.backendUrl}${endpoint}`;
+        const paramsString = Client.buildQueryString(queryParams);
+        const url = paramsString ? `${this.backendUrl}${endpoint}?${paramsString}` : `${this.backendUrl}${endpoint}`;
         const config = Client.buildConfig(method, data, credentials, headers);
 
         return fetch(url, config)
-            .then(res => res.json())
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return null;
+            })
             .catch((err: HttpError) => {
                 this.handleError(err);
                 if (this.error) {
