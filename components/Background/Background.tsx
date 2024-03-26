@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { BACKGROUND_PATH as backgroundImage } from '@/lib/utils/constants';
 import { BackgroundProps } from '@/components/Background/Background.types';
 
 import './Background.css';
@@ -12,7 +11,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                     <Image
                         className={className}
                         alt={'Yekaterinburg background'}
-                        src={backgroundImage}
+                        src={'/Questspace-Background.svg'}
                         quality={100}
                         fill
                         style={{objectFit: 'cover'}}
@@ -27,7 +26,10 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                     <Image
                         className={className}
                         alt={'Yekaterinburg footer'}
-                        src={backgroundImage}
+                        src={'/Questspace-Background.svg'}
+                        width={1920}
+                        height={1080}
+                        style={{objectFit: 'cover', aspectRatio: 0}}
                         quality={100}
                         aria-disabled
                         loading={'eager'}

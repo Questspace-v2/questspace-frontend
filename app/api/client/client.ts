@@ -11,6 +11,7 @@ import createHttpError, {
 import { Data } from '@/app/types/json-data';
 import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
 import { IQuestCreate, IQuestTaskGroups } from '@/app/types/quest-interfaces';
+import { RcFile } from 'antd/es/upload';
 
 class Client {
     backendUrl: string;
@@ -55,8 +56,10 @@ class Client {
         method: string,
         data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate| IPasswordUpdate| string,
         credentials?: string
+        headers?: Record<string, string>
     ) {
         const baseInit = {
+            headers,
             method,
             credentials,
             body: {}
@@ -79,11 +82,12 @@ class Client {
         method = 'GET',
         data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate | IPasswordUpdate| string, // Жесть, потом придумаю получше
         queryParams = {},
-        credentials = 'same-origin'
+        credentials = 'same-origin',
+        headers: Record<string, string> = {}
     ) {
         const paramsString = Client.buildQueryString(queryParams);
         const url = paramsString ? `${this.backendUrl}${endpoint}?${paramsString}` : `${this.backendUrl}${endpoint}`;
-        const config = Client.buildConfig(method, data, credentials);
+        const config = Client.buildConfig(method, data, credentials, headers);
 
         return fetch(url, config)
             .then(res => {
@@ -104,6 +108,7 @@ class Client {
     async handleS3Request(
         key: string,
         fileType: string,
+        body: string | Blob | RcFile,
         method = 'PUT'
     ) {
         const headers: Record<string, string> = {
@@ -112,12 +117,13 @@ class Client {
 
         const s3Config = {
             method,
-            headers
+            headers,
+            body
         };
 
         return fetch(
-            `https://storage.yandexcloud.net/questspace-img/users/${key}`,
-            s3Config
+            `https://storage.yandexcloud.net/questspace-img/${key}`,
+            {...s3Config}
         )
             .then(res => res)
             .catch((err: HttpError) => {

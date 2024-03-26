@@ -23,6 +23,7 @@
 
     /* status color */
     --status-color-registration: #1890FF;
+    --status-color-running: #389E0D;
 }
 
 * {

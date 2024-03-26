@@ -8,12 +8,22 @@ import { IQuest } from '@/app/types/quest-interfaces';
 
 import './Quest.css';
 import { Button, message, Skeleton } from 'antd';
-import QuestCard, { QuestHeaderProps } from '@/components/QuestCard/QuestCard';
+import QuestCard from '@/components/QuestCard/QuestCard';
+import { QuestHeaderProps } from '@/components/QuestCard/QuestCard.helpers';
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
 interface QuestContentProps {
     description?: string;
+}
+
+export const enum QuestStatus {
+    StatusUnspecified = '',
+    StatusOnRegistration = 'ON_REGISTRATION',
+    StatusRegistrationDone = 'REGISTRATION_DONE',
+    StatusRunning = 'RUNNING',
+    StatusWaitResults = 'WAIT_RESULTS',
+    StatusFinished = 'FINISHED',
 }
 
 function QuestHeader({props}: {props?: QuestHeaderProps}) {
@@ -24,16 +34,22 @@ function QuestHeader({props}: {props?: QuestHeaderProps}) {
     return <QuestCard mode={'full'} props={props} />;
 }
 
-function QuestResults() {
-    return (
-        <ContentWrapper className={'quest-page__content-wrapper quest-page__results'}>
-            <h2 className={'roboto-flex-header'}>Результаты квеста</h2>
-            <div className={'results__content_waiting'}>
-                <ClockCircleTwoTone />
-                <h6 className={'results__title'}>Ждем результаты</h6>
-            </div>
-        </ContentWrapper>
-    );
+function QuestResults({status} : {status: QuestStatus | string}) {
+    if (status === QuestStatus.StatusWaitResults || status === QuestStatus.StatusFinished) {
+        return (
+            <ContentWrapper className={'quest-page__content-wrapper quest-page__results'}>
+                <h2 className={'roboto-flex-header responsive-header-h2'}>Результаты квеста</h2>
+                {status === QuestStatus.StatusWaitResults && (
+                    <div className={'results__content_waiting'}>
+                        <ClockCircleTwoTone />
+                        <h6 className={'results__title'}>Ждем результаты</h6>
+                    </div>
+                )}
+            </ContentWrapper>
+        );
+    }
+
+    return null;
 }
 
 function QuestTeam() {
@@ -51,7 +67,7 @@ function QuestTeam() {
         <ContentWrapper className={'quest-page__content-wrapper quest-page__team'}>
             {contextHolder}
             <div className={'team__header'}>
-                <h2 className={'roboto-flex-header'}>{`Твоя команда — ${teamName}`}</h2>
+                <h2 className={'roboto-flex-header responsive-header-h2'}>{`Твоя команда — ${teamName}`}</h2>
                 <Button
                     className={'exit-team__button'}
                     type={'text'}
@@ -65,10 +81,8 @@ function QuestTeam() {
                 <p className={'invite-link__text'}>Пригласи друзей в свою команду — поделись ссылкой:</p>
                 <Button className={'invite-link__link'} type={'link'} onClick={() => {
                     navigator.clipboard.writeText('хуй').then(() => success());
-                }}>questspace.app/invites/BROLDY</Button>
-                <CopyOutlined onClick={() => {
-                    navigator.clipboard.writeText('хуй').then(() => success());
-                }} style={{ color: 'var(--primary-color)' }} />
+                }}>questspace.app/invites/BROLDY <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
+
             </div>
         </ContentWrapper>
     );
@@ -79,7 +93,7 @@ function QuestContent({ description }: QuestContentProps) {
 
     return (
         <ContentWrapper className={'quest-page__content-wrapper quest-page__content'}>
-            <h2 className={'roboto-flex-header'}>О квесте</h2>
+            <h2 className={'roboto-flex-header responsive-header-h2'}>О квесте</h2>
             <Skeleton paragraph loading={!afterParse}>
             <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>
             </Skeleton>
@@ -91,8 +105,8 @@ export default function Quest({props}: {props: IQuest}) {
     return (
         <>
             <QuestHeader props={props} />
-            <QuestResults />
-            <QuestContent description={props.description}/>
+            <QuestResults status={props.status} />
+            <QuestContent description={props.description} />
             <QuestTeam />
         </>
     );

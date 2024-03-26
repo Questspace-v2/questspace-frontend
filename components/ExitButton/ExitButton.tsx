@@ -3,6 +3,8 @@ import { LogoutOutlined } from '@ant-design/icons';
 import React from 'react';
 import { signOut } from 'next-auth/react';
 
+import './ExitButton.css';
+
 interface ExitButtonProps {
     block?: boolean;
 }
@@ -28,12 +30,12 @@ export default function ExitButton(props: ExitButtonProps) {
             <Button
                 className={'exit__button'}
                 size={'middle'}
-                icon={<LogoutOutlined />}
                 style={{borderRadius: '2px'}}
                 block={block}
                 /* eslint-disable-next-line @typescript-eslint/no-misused-promises */
                 onClick={handleClick}
             >
+                <LogoutOutlined />
                 Выйти
             </Button>
         </ConfigProvider>

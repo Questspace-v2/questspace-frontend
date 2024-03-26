@@ -1,35 +1,10 @@
-import { Button, Card } from 'antd';
+import { Card } from 'antd';
 import Image from 'next/image';
-import { IUser } from '@/app/types/user-interfaces';
 
 import './QuestCard.css';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import userMock from '@/app/api/__mocks__/User.mock';
 import { CalendarOutlined, HourglassOutlined } from '@ant-design/icons';
-
-
-export interface QuestHeaderProps {
-    creator: IUser,
-    start_time: string,
-    finish_time: string,
-    media_link: string,
-    name: string,
-    registration_deadline: string,
-}
-
-function declOfNum(number: number, titles: string[]) {
-    const cases: number[] = [2, 0, 1, 1, 1, 2];
-    return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
-}
-
-function getTimeDiff(startDate: Date, finishDate: Date) {
-    const hours = Math.abs(startDate.getTime() - finishDate.getTime()) / 36e5;
-    if (hours >= 24) {
-        const days = Math.floor(hours / 24);
-        return `${days}\u00A0${declOfNum(days, ['день', 'дня', 'дней'])}`;
-    }
-    return `${hours}\u00A0${declOfNum(hours, ['час', 'часа', 'часов'])}`;
-}
+import { getQuestCardStatusButton, getTimeDiff, QuestHeaderProps } from '@/components/QuestCard/QuestCard.helpers';
 
 export default function QuestCard({mode, props} : {mode: 'full' | 'preview', props?: QuestHeaderProps}) {
     if (mode === 'preview' && props) {
@@ -62,17 +37,16 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
             creator ,
             registration_deadline: registrationDeadline,
             finish_time: finishTime,
-            media_link: mediaLink
+            media_link: mediaLink,
+            status
         } = props;
         const {username, avatar_url: avatarUrl} = creator;
         const startDate = new Date(startTime);
         const registrationDate = new Date(registrationDeadline);
+        const finishDate = new Date(finishTime);
         const timeDiffLabel = getTimeDiff(startDate, new Date(finishTime));
         const startDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'});
         const startHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
-        const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
-        const registrationHourMinute = registrationDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
-
 
         return (
             <ContentWrapper className={'quest-card__wrapper'}>
@@ -90,7 +64,7 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                             <div className={'information__block'}>
                                 <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
                                        height={16} style={{ borderRadius: '8px' }} />
-                                <p>{username !== '' ? username : userMock.username}</p>
+                                <p>{username}</p>
                             </div>
                             <div className={'information__block'}>
                                 <CalendarOutlined />
@@ -102,10 +76,7 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                             </div>
                         </div>
                     </div>
-                    <div className={'quest-card__join-content'}>
-                        <Button type={'primary'} size={'large'} block>Зарегистрироваться</Button>
-                        <p>{`Регистрация до ${registrationHourMinute}\u00A0${registrationDayMonth}`}</p>
-                    </div>
+                    {getQuestCardStatusButton(startDate, registrationDate, finishDate, status)}
                 </Card>
             </ContentWrapper>
         );

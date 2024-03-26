@@ -1,3 +1,13 @@
+.ant-btn.edit-profile__button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &.ant-btn >.anticon+span {
+        margin-inline-start: 0;
+    }
+}
+
 .edit-profile__modal, .img-crop-modal {
     .ant-modal-content {
         padding: 32px 32px 40px 32px !important;
@@ -14,6 +24,20 @@
     }
 }
 
+.edit-name__modal, .edit-password__modal {
+    &.ant-modal .ant-modal-footer {
+        display: none;
+    }
+
+    .ant-form-item {
+        margin: 0;
+    }
+
+    .ant-form-item:not(.ant-form-item:first-child) {
+        margin-top: 16px;
+    }
+}
+
 .img-crop-modal {
     .ant-modal-header {
         display: none;
@@ -27,7 +51,7 @@
 .edit-profile__avatar {
     display: flex;
     flex-direction: column;
-    box-sizing: content-box;
+    width: min-content;
 
     .ant-upload {
         width: 130px;
@@ -36,6 +60,10 @@
 
 .edit-profile-header {
     margin: 0 0 24px;
+
+    &.responsive-header-h2 {
+        font-size: 32px;
+    }
 }
 
 .edit-profile-subheader {
@@ -56,5 +84,16 @@
 
     span {
         color: var(--primary-color);
+    }
+}
+
+@media (max-width: 639px) {
+    .ant-modal-root .ant-modal.edit-profile__modal {
+        margin: 0;
+        max-width: unset;
+    }
+
+    .edit-profile-header.responsive-header-h2 {
+        font-size: 24px;
     }
 }

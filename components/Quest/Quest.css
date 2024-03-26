@@ -48,6 +48,7 @@
 
     .invite-link__link {
         font-size: 16px;
+        color: var(--primary-color);
     }
 
 }
@@ -75,6 +76,8 @@
 }
 
 
-@media (max-width: 639px) {
-
+@media (max-width: 799px) {
+    .invite-link__wrapper {
+        flex-direction: column;
+    }
 }

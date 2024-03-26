@@ -1,0 +1,10 @@
+.ant-btn.exit__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    &.ant-btn >.anticon+span {
+        margin-inline-start: 1px;
+    }
+}

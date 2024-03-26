@@ -24,7 +24,7 @@
     border: none;
 }
 
-.header-avatar__image >img {
+.header-avatar__image {
     user-select: none;
 }
 

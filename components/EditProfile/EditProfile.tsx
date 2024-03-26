@@ -1,18 +1,24 @@
-'use client'
+'use client';
 
-import { Avatar, Button, Modal } from 'antd';
-import React, { useState } from 'react';
+import { Button, Modal } from 'antd';
+import React, { useMemo, useState } from 'react';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { EditOutlined } from '@ant-design/icons';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import { getCenter, ModalEnum, ModalType } from '@/components/EditProfile/EditProfile.helpers';
+import EditAvatar from '@/components/EditProfile/EditAvatar/EditAvatar';
+import EditName from '@/components/EditProfile/EditName/EditName';
+import EditPassword from '@/components/EditProfile/EditPassword/EditPassword';
 
 import './EditProfile.css';
-import { ModalEnum, ModalType } from '@/components/EditProfile/EditProfile.types';
-import EditAvatar from '@/components/EditProfile/EditAvatar/EditAvatar';
-import { IUser } from '@/app/types/user-interfaces';
 
-export default function EditProfile({user}: {user: IUser}) {
-    const {username, avatar_url: avatarUrl} = user;
+export default function EditProfile() {
+    const {clientWidth, clientHeight} = document.body;
+    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
+    const {name: username, image: avatarUrl, id} = useSession().data!.user;
+    const {accessToken} = (useSession().data!);
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
 
@@ -41,10 +47,10 @@ export default function EditProfile({user}: {user: IUser}) {
             <Button
                 className={'edit-profile__button'}
                 size={'middle'}
-                icon={<EditOutlined />}
                 style={{borderRadius: '2px'}}
                 onClick={showModal}
             >
+                <EditOutlined />
                 Редактировать профиль
             </Button>
             <Modal className={'edit-profile__modal'}
@@ -54,24 +60,24 @@ export default function EditProfile({user}: {user: IUser}) {
                    onCancel={handleCancel}
                    width={xs ? '100%' : 400}
                    footer={<ExitButton block />}
-                   style={xs ? { margin: 0, maxWidth: 'unset', } : {}}
+                   centered
+                   title={<h2 className={'edit-profile-header roboto-flex-header responsive-header-h2'}
+                   >
+                       Редактирование<br />профиля
+                   </h2>}
+                   mousePosition={centerPosition}
             >
-                <h1 className={'edit-profile-header roboto-flex-header'}
-                    style={xs ? { fontSize: '24px' } : {}}
-                >
-                    Редактирование<br />профиля
-                </h1>
+
                 <div className={'edit-profile__avatar'}>
-                    <Avatar
-                        className={'avatar__image'}
-                        alt={'avatar'}
-                        shape={'circle'}
-                        src={avatarUrl}
-                        draggable={false}
-                        /* на самом деле размер берется (size - 2) */
-                        size={130}
+                    <Image className={'avatar__image'}
+                           src={avatarUrl!}
+                           alt={'avatar'}
+                           width={128}
+                           height={128}
+                           draggable={false}
+                           style={{borderRadius: '64px'}}
                     />
-                    <EditAvatar setCurrentModal={setCurrentModal}>
+                    <EditAvatar setCurrentModal={setCurrentModal} id={id} accessToken={accessToken}>
                         <Button className={'edit-profile__change-button'}
                                 type={'link'}
                                 block
@@ -82,17 +88,16 @@ export default function EditProfile({user}: {user: IUser}) {
                 </div>
                 <h4 className={'edit-profile-subheader'}>Логин</h4>
                 <p className={'edit-profile-paragraph'}>{username}</p>
-                <Button className={'edit-profile__change-button'} type={'link'}>
+                <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_NAME)}>
                     Изменить логин
                 </Button>
-                <Modal destroyOnClose>
-                    Хуй
-                </Modal>
                 <h4 className={'edit-profile-subheader'}>Пароль</h4>
-                <Button className={'edit-profile__change-button'} type={'link'}>
+                <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_PASSWORD)}>
                     Изменить пароль
                 </Button>
             </Modal>
+            <EditName setCurrentModal={setCurrentModal} currentModal={currentModal} id={id} accessToken={accessToken} />
+            <EditPassword setCurrentModal={setCurrentModal} currentModal={currentModal} id={id} accessToken={accessToken} />
         </>
     );
 }
