@@ -108,7 +108,6 @@ export default function QuestTabs() {
                 <Tabs
                     className={'quest-tabs'}
                     tabBarExtraContent={createQuestButton}
-                    tabBarStyle={{color: 'red'}}
                     items={items}
                     activeKey={selectedTab}
                     style={{

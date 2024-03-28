@@ -60,7 +60,7 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                 >
                     <div className={'quest-card__text-content'}>
                         <h1 className={'quest-card__name roboto-flex-header responsive-header-h1'}>{name}</h1>
-                        <div className={'quest-card__information'}>
+                        <div className={'quest-preview__information'}>
                             <div className={'information__block'}>
                                 <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
                                        height={16} style={{ borderRadius: '8px' }} />

@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import NextAuth, { NextAuthOptions, Session } from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { authSignIn, authRegister } from '@/app/api/api';
 import { ISignIn, ISignInResponse, IUserCreate } from '@/app/types/user-interfaces';
@@ -70,7 +70,7 @@ export const authOptions: NextAuthOptions = {
                 name?: string,
                 image?: string
             },
-            trigger: unknown
+            trigger?: unknown
         }) {
             if (user) {
                 token.accessToken = user.access_token;

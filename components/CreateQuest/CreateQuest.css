@@ -1,6 +1,24 @@
 .create-quest__content-wrapper {
     padding-top: 24px;
     padding-bottom: 24px;
+    gap: 32px;
+
+    .create-quest__body__content {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 32px;
+    }
+
+    section {
+        width: calc((100% - 65px) / 2);
+    }
+
+    .content__separator {
+        min-width: 1px;
+        height: auto;
+        background-color: #BFBFBF;
+    }
 }
 
 .create-quest__header__content {
@@ -25,9 +43,10 @@
     &.ant-btn > span {
         display: inline-flex;
     }
+}
 
-    svg {
-        fill: var(--primary-color);
+@media (max-width: 639px) {
+    .create-quest__content-wrapper {
+        gap: 16px;
     }
-
 }

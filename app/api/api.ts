@@ -1,6 +1,6 @@
 import {
     IPasswordUpdate,
-    ISignIn,
+    ISignIn, IUser,
     IUserCreate,
     IUserUpdate,
 } from '@/app/types/user-interfaces';
@@ -28,11 +28,12 @@ export const createQuest = async (data: IQuestCreate) =>
 export const updateQuest = async (questId: string, data: IQuestCreate) =>
     client.handleServerRequest(`/quest/${questId}`, 'POST', data);
 
-export const updateUser = async (userId: string, data: IUserUpdate) =>
-    client.handleServerRequest(`/user/${userId}`, 'POST', data);
 
-export const updatePassword = async (userId: string, data: IPasswordUpdate) =>
-    client.handleServerRequest(`/user/${userId}/password`, 'POST', data);
+export const updateUser = async (id: string, data: IUserUpdate, accessToken: string) =>
+    await client.handleServerRequest(`/user/${id}`, 'POST', data, {},'same-origin', {'Authorization': `Bearer ${accessToken}`}) as IUser;
+
+export const updatePassword = async (id: string, data: IPasswordUpdate, accessToken: string) =>
+    await client.handleServerRequest(`/user/${id}/password`, 'POST', data, {},'same-origin', {'Authorization': `Bearer ${accessToken}`}) as IUser;
 
 export const deleteQuest = async (questId: string) =>
     client.handleServerRequest(`/quest/${questId}`, 'DELETE');

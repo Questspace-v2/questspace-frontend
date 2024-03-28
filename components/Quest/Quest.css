@@ -75,9 +75,37 @@
     }
 }
 
+.quest-page__admin-panel {
+    background-color: #E6F7FF;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 24px 17px 24px 32px;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+        margin: 0;
+    }
+}
+
+@media (max-width: 959px) {
+    .quest-page__admin-panel {
+        padding: 24px 9px 24px 24px;
+    }
+}
 
 @media (max-width: 799px) {
     .invite-link__wrapper {
         flex-direction: column;
+    }
+
+    .quest-page__admin-panel {
+        padding: 24px;
+
+        button span {
+            position: relative;
+            left: -15px;
+        }
     }
 }

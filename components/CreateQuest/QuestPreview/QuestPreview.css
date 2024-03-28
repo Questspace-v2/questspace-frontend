@@ -1,0 +1,52 @@
+.quest-preview__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 16px;
+
+    .line-break {
+        white-space: pre-wrap;
+        user-select: text;
+    }
+    p {
+        margin: 0;
+    }
+
+    .quest-preview__information {
+        display: flex;
+        gap: 24px;
+        text-wrap: nowrap;
+
+        .information__block {
+            display: flex;
+            gap: 8px;
+
+            img {
+                align-self: center;
+            }
+        }
+    }
+}
+
+.quest-preview_default {
+    height: 100%;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    p {
+        margin: 0;
+        width: 168px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 525px) {
+    .quest-preview__wrapper {
+        .quest-preview__information {
+            flex-direction: column;
+            gap: 4px;
+        }
+    }
+}

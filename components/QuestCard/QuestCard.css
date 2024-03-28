@@ -52,7 +52,7 @@
 }
 
 .quest-card__wrapper {
-    padding: 0;
+    padding: 0 !important;
     border-radius: 16px;
     background: transparent;
 
@@ -90,7 +90,7 @@
         }
     }
 
-    .quest-card__information {
+    .quest-preview__information {
         display: flex;
         gap: 24px;
         padding-top: 12px;
@@ -124,7 +124,7 @@
 
 @media (max-width: 639px) {
     .quest-card {
-        .quest-card__information {
+        .quest-preview__information {
             flex-direction: column;
             gap: 4px;
             padding-top: 16px;

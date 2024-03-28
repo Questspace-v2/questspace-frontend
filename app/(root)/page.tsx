@@ -6,11 +6,11 @@ import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
 import { getServerSession } from 'next-auth';
 
-const DynamicQuestTabs = dynamic(() => import('../../components/QuestTabs/QuestTabs'), {
+const DynamicQuestTabs = dynamic(() => import('@/components/QuestTabs/QuestTabs'), {
     ssr: false,
 })
 
-const DynamicProfile = dynamic(() => import('../../components/Profile/Profile'), {
+const DynamicProfile = dynamic(() => import('@/components/Profile/Profile'), {
     ssr: false,
     loading: () => <Spin size={'large'} />
 })

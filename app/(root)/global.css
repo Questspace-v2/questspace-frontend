@@ -61,6 +61,7 @@ body {
     font-weight: 700;
     font-style: normal;
     user-select: none;
+    overflow-wrap: break-word;
     font-variation-settings:
             "slnt" 0,
             "wdth" 151,
@@ -78,7 +79,7 @@ body {
 
 
 h1 {
-    font-size: 32px;
+    font-size: var(--large-font-size);
 
     &.responsive-header-h1 {
         font-size: var(--large-font-size);
@@ -86,6 +87,8 @@ h1 {
 }
 
 h2 {
+    font-size: var(--medium-font-size);
+
     &.responsive-header-h2 {
         font-size: var(--medium-font-size);
     }

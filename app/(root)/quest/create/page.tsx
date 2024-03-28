@@ -1,10 +1,12 @@
-import CreateQuest from '@/components/CreateQuest/CreateQuest';
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import Footer from '@/components/Footer/Footer';
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
+import dynamic from 'next/dynamic';
+
+const DynamicCreateQuest = dynamic(() => import('@/components/CreateQuest/CreateQuest'), {ssr: false})
 
 export default async function CreateQuestPage() {
     const session = await getServerSession();
@@ -17,7 +19,7 @@ export default async function CreateQuestPage() {
         <>
             <Header isAuthorized/>
             <Body>
-                <CreateQuest />
+                <DynamicCreateQuest />
             </Body>
             <Footer />
 

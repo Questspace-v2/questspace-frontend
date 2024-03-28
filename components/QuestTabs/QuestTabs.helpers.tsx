@@ -1,6 +1,7 @@
 import { Button, ConfigProvider, Empty } from 'antd';
 import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
 import QuestCard from '@/components/QuestCard/QuestCard';
+import Link from 'next/link';
 
 const selectTab = ['all-quests', 'my-quests', 'created-quests'] as const;
 export type SelectTab = (typeof selectTab)[number];
@@ -31,13 +32,13 @@ export const customizedEmpty = (
                 Квесты не найдены
                 <br />
                 Попробуйте{' '}
-                <a
+                <Link
                     className={'create-quest-button'}
                     href={'/quest/create'}
                     style={{ color: '#1890FF' }}
                 >
                     создать квест
-                </a>
+                </Link>
             </span>
         }
         style={{

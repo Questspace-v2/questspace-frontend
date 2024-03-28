@@ -8,6 +8,7 @@ import './ContentWrapper.css';
 export default function ContentWrapper({
     children,
     className = '',
+    style = {}
 }: ContentWrapperProps) {
-    return <div className={`content__wrapper ${className}`}>{children}</div>;
+    return <div className={`content__wrapper ${className}`} style={style}>{children}</div>;
 }

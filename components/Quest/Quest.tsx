@@ -2,14 +2,15 @@
 
 import { useMemo } from 'react';
 import Markdown from 'react-markdown';
-import { ClockCircleTwoTone, CopyOutlined, LogoutOutlined } from '@ant-design/icons';
+import { ClockCircleTwoTone, CopyOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { IQuest } from '@/app/types/quest-interfaces';
 
 import './Quest.css';
 import { Button, message, Skeleton } from 'antd';
+import { QuestHeaderProps, QuestStatus } from '@/components/QuestCard/QuestCard.helpers';
 import QuestCard from '@/components/QuestCard/QuestCard';
-import { QuestHeaderProps } from '@/components/QuestCard/QuestCard.helpers';
+import { useSession } from 'next-auth/react';
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
@@ -17,13 +18,13 @@ interface QuestContentProps {
     description?: string;
 }
 
-export const enum QuestStatus {
-    StatusUnspecified = '',
-    StatusOnRegistration = 'ON_REGISTRATION',
-    StatusRegistrationDone = 'REGISTRATION_DONE',
-    StatusRunning = 'RUNNING',
-    StatusWaitResults = 'WAIT_RESULTS',
-    StatusFinished = 'FINISHED',
+function QuestAdminPanel() {
+    return (
+        <ContentWrapper className={'quest-page__admin-panel'}>
+            <p>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
+            <Button type={'link'} size={'large'}><EditOutlined/>Редактировать квест</Button>
+        </ContentWrapper>
+    );
 }
 
 function QuestHeader({props}: {props?: QuestHeaderProps}) {
@@ -35,11 +36,12 @@ function QuestHeader({props}: {props?: QuestHeaderProps}) {
 }
 
 function QuestResults({status} : {status: QuestStatus | string}) {
-    if (status === QuestStatus.StatusWaitResults || status === QuestStatus.StatusFinished) {
+    const statusQuest = status as QuestStatus;
+    if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
         return (
             <ContentWrapper className={'quest-page__content-wrapper quest-page__results'}>
                 <h2 className={'roboto-flex-header responsive-header-h2'}>Результаты квеста</h2>
-                {status === QuestStatus.StatusWaitResults && (
+                {statusQuest === QuestStatus.StatusWaitResults && (
                     <div className={'results__content_waiting'}>
                         <ClockCircleTwoTone />
                         <h6 className={'results__title'}>Ждем результаты</h6>
@@ -57,7 +59,8 @@ function QuestTeam() {
     const [messageApi, contextHolder] = message.useMessage();
 
     const success = () => {
-        messageApi.open({
+        // eslint-disable-next-line no-void
+        void messageApi.open({
             type: 'success',
             content: 'Скопировано!',
         });
@@ -80,7 +83,7 @@ function QuestTeam() {
             <div className={'invite-link__wrapper'}>
                 <p className={'invite-link__text'}>Пригласи друзей в свою команду — поделись ссылкой:</p>
                 <Button className={'invite-link__link'} type={'link'} onClick={() => {
-                    navigator.clipboard.writeText('хуй').then(() => success());
+                    navigator.clipboard.writeText('хуй').then(() => success()).catch(err => {throw err});
                 }}>questspace.app/invites/BROLDY <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
 
             </div>
@@ -102,8 +105,12 @@ function QuestContent({ description }: QuestContentProps) {
 }
 
 export default function Quest({props}: {props: IQuest}) {
+    const {data} = useSession();
     return (
         <>
+            {props.creator.id === data?.user.id && (
+                <QuestAdminPanel />
+            )}
             <QuestHeader props={props} />
             <QuestResults status={props.status} />
             <QuestContent description={props.description} />
