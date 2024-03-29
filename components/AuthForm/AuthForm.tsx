@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import {
     Auth,
@@ -25,6 +25,7 @@ interface AuthFormItems {
     passwordAgain: string,
 }
 
+const { Text } = Typography;
 export default function AuthForm() {
     const [form] = Form.useForm<AuthFormItems>();
     const {pending} = useFormStatus();
@@ -103,10 +104,13 @@ export default function AuthForm() {
                     form={form}
                     onFinish={onFinish}
                 >
+                    {errorMsg &&
+                        errorMsg === 'Мы вас не узнали. Проверьте, правильно ли вы ввели логин и пароль' &&
+                        <Text type={'danger'}>{errorMsg}</Text>}
                     <Form.Item<AuthFormItems>
                         name={'username'} required
                         validateStatus={validationStatus}
-                        help={errorMsg}>
+                        help={errorMsg === 'Логин уже занят' ? errorMsg : ''}>
                         <Input
                             prefix={<UserOutlined />}
                             size={'middle'}
