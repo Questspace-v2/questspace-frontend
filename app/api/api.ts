@@ -1,6 +1,6 @@
 import {
     IPasswordUpdate,
-    ISignIn, IUser,
+    ISignIn,
     IUserCreate,
     IUserUpdate,
 } from '@/app/types/user-interfaces';
@@ -28,12 +28,13 @@ export const createQuest = async (data: IQuestCreate) =>
 export const updateQuest = async (questId: string, data: IQuestCreate) =>
     client.handleServerRequest(`/quest/${questId}`, 'POST', data);
 
+export const updateUser = async (userId: string, data: IUserUpdate, accessToken: string) =>
+    client.handleServerRequest(`/user/${userId}`, 'POST', data,
+        {}, 'same-origin', {Authorization: `Bearer ${accessToken}`});
 
-export const updateUser = async (id: string, data: IUserUpdate, accessToken: string) =>
-    await client.handleServerRequest(`/user/${id}`, 'POST', data, {},'same-origin', {'Authorization': `Bearer ${accessToken}`}) as IUser;
-
-export const updatePassword = async (id: string, data: IPasswordUpdate, accessToken: string) =>
-    await client.handleServerRequest(`/user/${id}/password`, 'POST', data, {},'same-origin', {'Authorization': `Bearer ${accessToken}`}) as IUser;
+export const updatePassword = async (userId: string, data: IPasswordUpdate, accessToken: string) =>
+    client.handleServerRequest(`/user/${userId}/password`, 'POST', data,
+        {}, 'same-origin', {Authorization: `Bearer ${accessToken}`});
 
 export const deleteQuest = async (questId: string) =>
     client.handleServerRequest(`/quest/${questId}`, 'DELETE');
@@ -44,7 +45,7 @@ export const deleteUser = async (userId: string) =>
 export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups) =>
     client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data);
 
-export const getFilteredQuests = async (fields: string[], page_id?: string, page_size = 50) =>
+export const getFilteredQuests = async (fields: string[], page_id?: string, page_size = '50') =>
     client.handleServerRequest('/quest', 'GET', undefined, {
         ...fields,
         page_size,
