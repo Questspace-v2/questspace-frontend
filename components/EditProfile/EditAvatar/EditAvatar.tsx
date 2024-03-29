@@ -9,7 +9,7 @@ import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { useSession } from 'next-auth/react';
 import { RcFile } from 'antd/es/upload';
 
-const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
 export default function EditAvatar({children, setCurrentModal, id, accessToken}: SubModalProps) {
     const [messageApi, contextHolder] = message.useMessage();

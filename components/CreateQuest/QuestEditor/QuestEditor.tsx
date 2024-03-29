@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
     Button,
@@ -10,15 +10,22 @@ import {
     Input,
     InputNumber,
     ThemeConfig,
-    Upload, UploadFile,
+    Upload,
+    UploadFile,
 } from 'antd';
 
 import './QuestEditor.css';
 import React, { useState } from 'react';
 import { FileImageOutlined, MinusOutlined, PlusOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
-import ru_RU from "antd/lib/locale/ru_RU";
+import ru_RU from 'antd/lib/locale/ru_RU';
 import 'dayjs/locale/ru';
+import Link from 'next/link';
+import { IQuest, IQuestCreate } from '@/app/types/quest-interfaces';
+import { createQuest } from '@/app/api/api';
+import client from '@/app/api/client/client';
+import { uid } from '@/components/EditProfile/EditAvatar/EditAvatar';
+import { UploadRequestOption } from 'rc-upload/lib/interface';
 
 dayjs.locale('ru')
 
@@ -27,6 +34,7 @@ interface QuestEditorProps {
     form: FormInstance<QuestAboutForm>,
     fileList: UploadFile[],
     setFileList: React.Dispatch<React.SetStateAction<UploadFile<any>[]>>,
+    accessToken: string
 }
 
 export interface QuestAboutForm {
@@ -56,7 +64,7 @@ const theme: ThemeConfig = {
     }
 };
 
-export default function QuestEditor({form, fileList, setFileList}: QuestEditorProps) {
+export default function QuestEditor({form, fileList, setFileList, accessToken}: QuestEditorProps) {
     const [teamCapacity, setTeamCapacity] = useState(3);
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
     const expandTeamCapacity = () => {
@@ -65,6 +73,36 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
 
     const shrinkTeamCapacity = () => {
         if (teamCapacity > 1) setTeamCapacity((prev) => prev - 1);
+    };
+
+    const customRequest = async ({file}: UploadRequestOption) => {
+        const fileType = (file as File).type;
+        if (!fileType.startsWith('image/')) {
+            return;
+        }
+
+        const key = `users/${uid()}`;
+        return await client.handleS3Request(key, fileType, file);
+    };
+
+    const onFinish = async (values: QuestAboutForm) => {
+        const data: IQuestCreate = {
+            name: values.name,
+            description: values.description,
+            media_link: values.image,
+            registration_deadline: values.registrationDeadline,
+            start_time: values.startTime,
+            finish_time: values.finishTime,
+            max_team_cap: values.maxTeamCap
+        };
+
+        const resp = await createQuest(data, accessToken)
+            .then(quest => quest as IQuest)
+            .catch(error => {
+                throw error;
+            });
+
+        console.log(resp);
     };
 
     return (
@@ -82,6 +120,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                         }
                     ]}
                     autoComplete={'off'}
+                    onFinish={onFinish}
                 >
                     <Form.Item<QuestAboutForm>
                         name={'name'}
@@ -187,20 +226,24 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                             style={{width: '128px', textAlignLast: 'center'}}
                         />
                     </Form.Item>
+                    <Form.Item>
+                        <div className={'quest-editor__buttons'}>
+                            <Button htmlType={'submit'} type={'primary'}>Создать квест</Button>
+                            <ConfigProvider theme={{
+                                token: {
+                                    colorText: '#FF4D4F',
+                                    colorPrimaryHover: '#FF4D4F',
+                                    colorPrimaryActive: '#FF4D4F'
+                                },
+                            }}
+                            >
+                                <Link href={'/'}>
+                                    <Button>Отменить</Button>
+                                </Link>
+                            </ConfigProvider>
+                        </div>
+                    </Form.Item>
                 </Form>
-                <div className={'quest-editor__buttons'}>
-                    <Button htmlType={'submit'} type={'primary'}>Создать квест</Button>
-                    <ConfigProvider theme={{
-                        token: {
-                            colorText: '#FF4D4F',
-                            colorPrimaryHover: '#FF4D4F',
-                            colorPrimaryActive: '#FF4D4F'
-                        },
-                    }}
-                    >
-                        <Button>Отменить</Button>
-                    </ConfigProvider>
-                </div>
             </ConfigProvider>
         </div>
     );

@@ -22,8 +22,9 @@ export const authRegister = async (data: IUserCreate) =>
 export const authSignIn = async (data: ISignIn) =>
     client.handleServerRequest('/auth/sign-in', 'POST', data);
 
-export const createQuest = async (data: IQuestCreate) =>
-    client.handleServerRequest('/quest', 'POST', data);
+export const createQuest = async (data: IQuestCreate, accessToken: string) =>
+    client.handleServerRequest('/quest', 'POST', data,
+        {}, 'same-origin', {Authorization: `Bearer ${accessToken}`});
 
 export const updateQuest = async (questId: string, data: IQuestCreate) =>
     client.handleServerRequest(`/quest/${questId}`, 'POST', data);
