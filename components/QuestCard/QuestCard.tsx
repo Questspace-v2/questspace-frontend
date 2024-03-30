@@ -5,11 +5,12 @@ import './QuestCard.css';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { CalendarOutlined, HourglassOutlined } from '@ant-design/icons';
 import { getQuestCardStatusButton, getTimeDiff, QuestHeaderProps } from '@/components/QuestCard/QuestCard.helpers';
+import Link from 'next/link';
 
 export default function QuestCard({mode, props} : {mode: 'full' | 'preview', props?: QuestHeaderProps}) {
     if (mode === 'preview' && props) {
         return (
-            <a href={'/'} className={'quest-card__anchor'}>
+            <Link href={'/'} className={'quest-card__anchor'}>
                 <Card
                     className={'quest-card quest-card__mode_preview'}
                     cover={<Image
@@ -26,7 +27,7 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                             сентября</p>
                     </div>
                 </Card>
-            </a>
+            </Link>
         );
     }
 

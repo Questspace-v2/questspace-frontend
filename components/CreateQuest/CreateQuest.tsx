@@ -11,8 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import QuestPreview from '@/components/CreateQuest/QuestPreview/QuestPreview';
 import QuestEditor, { QuestAboutForm } from '@/components/CreateQuest/QuestEditor/QuestEditor';
 import { SelectTab } from '@/components/QuestTabs/QuestTabs.helpers';
-
-
+import { useSession } from 'next-auth/react';
 
 export default function CreateQuest() {
     const [selectedTab, setSelectedTab] = useState<string>('editor');
@@ -21,6 +20,7 @@ export default function CreateQuest() {
     const {xs, sm, md} = useBreakpoint();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const fileListRef = useRef(fileList[0]);
+    const {accessToken} = (useSession().data!);
 
     useEffect(() => {
         // eslint-disable-next-line prefer-destructuring
@@ -31,7 +31,7 @@ export default function CreateQuest() {
         {
             key: 'editor',
             label: 'Редактор',
-            children: <QuestEditor form={form} fileList={fileList} setFileList={setFileList}/>,
+            children: <QuestEditor form={form} fileList={fileList} setFileList={setFileList} accessToken={accessToken}/>,
         },
         {
             key: 'preview',
@@ -68,7 +68,7 @@ export default function CreateQuest() {
                     </Link>
                     <h1 className={'roboto-flex-header responsive-header-h1'}>Создание квеста</h1>
                 </div>
-                    <Tabs items={items} />
+                <Tabs items={items} />
             </ContentWrapper>
         );
     }
@@ -86,7 +86,7 @@ export default function CreateQuest() {
             <div className={'create-quest__body__content'}>
                 <section>
                     <h2 className={'roboto-flex-header'} style={{marginBottom: '16px'}}>Редактор</h2>
-                    <QuestEditor form={form} fileList={fileList} setFileList={setFileList}/>
+                    <QuestEditor form={form} fileList={fileList} setFileList={setFileList} accessToken={accessToken}/>
                 </section>
                 <div className={'content__separator'}/>
                 <section>

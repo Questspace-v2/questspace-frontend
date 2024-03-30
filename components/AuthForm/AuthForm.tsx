@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import {
     Auth,
@@ -25,6 +25,7 @@ interface AuthFormItems {
     passwordAgain: string,
 }
 
+const { Text } = Typography;
 export default function AuthForm() {
     const [form] = Form.useForm<AuthFormItems>();
     const {pending} = useFormStatus();
@@ -53,7 +54,7 @@ export default function AuthForm() {
         }
         setValidationStatus('error');
     };
-    
+
     const handleAuth = (providerType: string, data: Record<string, string>) => {
         signIn(`${providerType}`, {
             redirect: false,
@@ -103,10 +104,13 @@ export default function AuthForm() {
                     form={form}
                     onFinish={onFinish}
                 >
+                    {errorMsg &&
+                        errorMsg === 'Мы вас не узнали. Проверьте, правильно ли вы ввели логин и пароль' &&
+                        <Text type={'danger'}>{errorMsg}</Text>}
                     <Form.Item<AuthFormItems>
                         name={'username'} required
                         validateStatus={validationStatus}
-                        help={errorMsg}>
+                        help={errorMsg === 'Логин уже занят' ? errorMsg : ''}>
                         <Input
                             prefix={<UserOutlined />}
                             size={'middle'}
@@ -128,10 +132,10 @@ export default function AuthForm() {
                         />
                     </Form.Item>
                     {formType === Auth.SIGNUP &&
-                    <Form.Item
-                        name={'passwordAgain'}
-                        dependencies={['password']}
-                        rules={[
+                        <Form.Item
+                            name={'passwordAgain'}
+                            dependencies={['password']}
+                            rules={[
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
                                         const pswValue = getFieldValue('password') as string;
@@ -141,18 +145,18 @@ export default function AuthForm() {
                                         return Promise.reject(new Error('Пароли не совпадают'));
                                     },
                                 })
-                        ]}
-                    >
-                        <Input
-                            type={'password'}
-                            prefix={<LockOutlined />}
-                            size={'middle'}
-                            variant={'outlined'}
-                            placeholder={'повтори пароль'}
-                            autoComplete={'new-password'}
-                            onChange={handleFieldChange}
-                        />
-                    </Form.Item>
+                            ]}
+                        >
+                            <Input
+                                type={'password'}
+                                prefix={<LockOutlined />}
+                                size={'middle'}
+                                variant={'outlined'}
+                                placeholder={'повтори пароль'}
+                                autoComplete={'new-password'}
+                                onChange={handleFieldChange}
+                            />
+                        </Form.Item>
                     }
                     <FormItem className={'auth-form__submit-button'}>
                         <Button
@@ -177,6 +181,6 @@ export default function AuthForm() {
                 {dictionary.changeFormButton}
                 <RightOutlined style={{marginInlineStart: '4px'}}/>
             </Button>
-    </section>
+        </section>
     );
 }
