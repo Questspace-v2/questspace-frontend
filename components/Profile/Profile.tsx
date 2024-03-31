@@ -12,6 +12,7 @@ import Image from 'next/image';
 
 export default function Profile() {
     const {name: username, image: avatarUrl, id} = useSession().data!.user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const user: IUser = {
         username: username!, avatar_url: avatarUrl!, id
     };

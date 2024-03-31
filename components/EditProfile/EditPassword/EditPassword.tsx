@@ -1,16 +1,28 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { getCenter, ModalEnum, SubModalProps } from '@/components/EditProfile/EditProfile.helpers';
 import { Button, Form, Input, Modal } from 'antd';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updatePassword } from '@/app/api/api';
 
 import '../EditProfile.css';
+import { IUser } from '@/app/types/user-interfaces';
+import { ValidationStatus } from '@/components/AuthForm/AuthForm.types';
 
 export default function EditPassword({currentModal, setCurrentModal, id, accessToken}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
+
+    const [errorMsg, setErrorMsg] = useState('');
+    const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
+
+    const handleError = (msg = 'Проверьте, правильно ли введен старый пароль') => {
+        setErrorMsg(msg);
+        setValidationStatus('error');
+    };
 
     const handleSubmit = async () => {
         form.validateFields().catch(err => {throw err});
@@ -20,10 +32,16 @@ export default function EditPassword({currentModal, setCurrentModal, id, accessT
             id,
             {old_password: oldPassword, new_password: newPassword},
             accessToken)
+            .then(response => response as IUser)
             .catch((error) => {
+                handleError();
                 throw error;
             });
-        setCurrentModal!(ModalEnum.EDIT_PROFILE);
+        if (resp) {
+            setCurrentModal!(ModalEnum.EDIT_PROFILE);
+        } else {
+            handleError();
+        }
     }
 
     return (

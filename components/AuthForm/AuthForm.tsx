@@ -8,7 +8,8 @@ import {
     AuthFormTypes,
     LoginDictionary,
     SignupDictionary,
-    TitleDictionary, ValidationStatus,
+    TitleDictionary,
+    ValidationStatus,
 } from '@/components/AuthForm/AuthForm.types';
 import FormItem from 'antd/lib/form/FormItem';
 
@@ -53,7 +54,7 @@ export default function AuthForm() {
         }
         setValidationStatus('error');
     };
-    
+
     const handleAuth = (providerType: string, data: Record<string, string>) => {
         signIn(`${providerType}`, {
             redirect: false,
@@ -83,8 +84,8 @@ export default function AuthForm() {
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const session = useSession();
-    console.log(session);
 
     return (
         <section className={'page-auth'}>
@@ -103,10 +104,13 @@ export default function AuthForm() {
                     form={form}
                     onFinish={onFinish}
                 >
+                    {errorMsg &&
+                        errorMsg === 'Мы вас не узнали. Проверьте, правильно ли вы ввели логин и пароль' &&
+                        <p style={{color: 'red'}}>{errorMsg}</p>}
                     <Form.Item<AuthFormItems>
                         name={'username'} required
                         validateStatus={validationStatus}
-                        help={errorMsg}>
+                        help={errorMsg === 'Логин уже занят' ? errorMsg : ''}>
                         <Input
                             prefix={<UserOutlined />}
                             size={'middle'}
@@ -128,10 +132,10 @@ export default function AuthForm() {
                         />
                     </Form.Item>
                     {formType === Auth.SIGNUP &&
-                    <Form.Item
-                        name={'passwordAgain'}
-                        dependencies={['password']}
-                        rules={[
+                        <Form.Item
+                            name={'passwordAgain'}
+                            dependencies={['password']}
+                            rules={[
                                 ({ getFieldValue }) => ({
                                     validator(_, value) {
                                         const pswValue = getFieldValue('password') as string;
@@ -141,18 +145,18 @@ export default function AuthForm() {
                                         return Promise.reject(new Error('Пароли не совпадают'));
                                     },
                                 })
-                        ]}
-                    >
-                        <Input
-                            type={'password'}
-                            prefix={<LockOutlined />}
-                            size={'middle'}
-                            variant={'outlined'}
-                            placeholder={'повтори пароль'}
-                            autoComplete={'new-password'}
-                            onChange={handleFieldChange}
-                        />
-                    </Form.Item>
+                            ]}
+                        >
+                            <Input
+                                type={'password'}
+                                prefix={<LockOutlined />}
+                                size={'middle'}
+                                variant={'outlined'}
+                                placeholder={'повтори пароль'}
+                                autoComplete={'new-password'}
+                                onChange={handleFieldChange}
+                            />
+                        </Form.Item>
                     }
                     <FormItem className={'auth-form__submit-button'}>
                         <Button
@@ -163,6 +167,13 @@ export default function AuthForm() {
                             style={{ borderRadius: '2px', fontWeight: 500, }}
                         >
                             {dictionary.submitButton}
+                        </Button>
+                    </FormItem>
+                    <FormItem>
+                        <Button
+                            htmlType='button'
+                            onClick={() => signIn('google', {callbackUrl: `${FRONTEND_URL}`})}>
+                            {formType === Auth.LOGIN ? 'Войти через Google' : 'Регистрация через Google'}
                         </Button>
                     </FormItem>
                 </Form>
@@ -177,6 +188,6 @@ export default function AuthForm() {
                 {dictionary.changeFormButton}
                 <RightOutlined style={{marginInlineStart: '4px'}}/>
             </Button>
-    </section>
+        </section>
     );
 }

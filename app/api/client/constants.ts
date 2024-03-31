@@ -1,2 +1,2 @@
-export const BACKEND_URL = 'https://api-new.questspace.app';
-export const FRONTEND_URL = process.env.NODE_ENV === 'development' ? 'https://new.questspace.app:3000' : 'https://new.questspace.app';
+export const BACKEND_URL = 'https://api.questspace.fun';
+export const FRONTEND_URL = process.env.NODE_ENV === 'development' ? 'https://questspace.fun:3000' : 'https://questspace.fun';

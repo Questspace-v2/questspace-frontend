@@ -10,9 +10,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useEffect, useRef, useState } from 'react';
 import QuestPreview from '@/components/CreateQuest/QuestPreview/QuestPreview';
 import QuestEditor, { QuestAboutForm } from '@/components/CreateQuest/QuestEditor/QuestEditor';
-import { SelectTab } from '@/components/QuestTabs/QuestTabs.helpers';
-
-
+import { useSession } from 'next-auth/react';
 
 export default function CreateQuest() {
     const [selectedTab, setSelectedTab] = useState<string>('editor');
@@ -21,6 +19,8 @@ export default function CreateQuest() {
     const {xs, sm, md} = useBreakpoint();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const fileListRef = useRef(fileList[0]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {accessToken} = (useSession().data!);
 
     useEffect(() => {
         // eslint-disable-next-line prefer-destructuring
@@ -68,7 +68,7 @@ export default function CreateQuest() {
                     </Link>
                     <h1 className={'roboto-flex-header responsive-header-h1'}>Создание квеста</h1>
                 </div>
-                    <Tabs items={items} />
+                <Tabs items={items} />
             </ContentWrapper>
         );
     }
