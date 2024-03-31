@@ -10,8 +10,7 @@ export default async function EditQuestPage() {
     return (
         <>
             <Header isAuthorized={Boolean(session)}/>
-            <Body>
-            </Body>
+            <Body />
             <Footer />
         </>
     );

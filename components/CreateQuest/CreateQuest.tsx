@@ -10,7 +10,6 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useEffect, useRef, useState } from 'react';
 import QuestPreview from '@/components/CreateQuest/QuestPreview/QuestPreview';
 import QuestEditor, { QuestAboutForm } from '@/components/CreateQuest/QuestEditor/QuestEditor';
-import { SelectTab } from '@/components/QuestTabs/QuestTabs.helpers';
 import { useSession } from 'next-auth/react';
 
 export default function CreateQuest() {
@@ -20,6 +19,7 @@ export default function CreateQuest() {
     const {xs, sm, md} = useBreakpoint();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const fileListRef = useRef(fileList[0]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const {accessToken} = (useSession().data!);
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export default function CreateQuest() {
         {
             key: 'editor',
             label: 'Редактор',
-            children: <QuestEditor form={form} fileList={fileList} setFileList={setFileList} accessToken={accessToken}/>,
+            children: <QuestEditor form={form} fileList={fileList} setFileList={setFileList}/>,
         },
         {
             key: 'preview',
@@ -86,7 +86,7 @@ export default function CreateQuest() {
             <div className={'create-quest__body__content'}>
                 <section>
                     <h2 className={'roboto-flex-header'} style={{marginBottom: '16px'}}>Редактор</h2>
-                    <QuestEditor form={form} fileList={fileList} setFileList={setFileList} accessToken={accessToken}/>
+                    <QuestEditor form={form} fileList={fileList} setFileList={setFileList}/>
                 </section>
                 <div className={'content__separator'}/>
                 <section>

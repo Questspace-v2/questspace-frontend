@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { getCenter, ModalEnum, SubModalProps } from '@/components/EditProfile/EditProfile.helpers';
 import { Button, Form, Input, Modal } from 'antd';
 import React, { useMemo, useState } from 'react';

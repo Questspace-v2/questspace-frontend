@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Form, Input } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import {
     Auth,
     AuthFormTypes,
     LoginDictionary,
     SignupDictionary,
-    TitleDictionary, ValidationStatus,
+    TitleDictionary,
+    ValidationStatus,
 } from '@/components/AuthForm/AuthForm.types';
 import FormItem from 'antd/lib/form/FormItem';
 
@@ -25,7 +26,6 @@ interface AuthFormItems {
     passwordAgain: string,
 }
 
-const { Text } = Typography;
 export default function AuthForm() {
     const [form] = Form.useForm<AuthFormItems>();
     const {pending} = useFormStatus();
@@ -84,8 +84,8 @@ export default function AuthForm() {
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const session = useSession();
-    console.log(session);
 
     return (
         <section className={'page-auth'}>
@@ -106,7 +106,7 @@ export default function AuthForm() {
                 >
                     {errorMsg &&
                         errorMsg === 'Мы вас не узнали. Проверьте, правильно ли вы ввели логин и пароль' &&
-                        <Text type={'danger'}>{errorMsg}</Text>}
+                        <p style={{color: 'red'}}>{errorMsg}</p>}
                     <Form.Item<AuthFormItems>
                         name={'username'} required
                         validateStatus={validationStatus}
@@ -167,6 +167,13 @@ export default function AuthForm() {
                             style={{ borderRadius: '2px', fontWeight: 500, }}
                         >
                             {dictionary.submitButton}
+                        </Button>
+                    </FormItem>
+                    <FormItem>
+                        <Button
+                            htmlType='button'
+                            onClick={() => signIn('google', {callbackUrl: `${FRONTEND_URL}`})}>
+                            {formType === Auth.LOGIN ? 'Войти через Google' : 'Регистрация через Google'}
                         </Button>
                     </FormItem>
                 </Form>

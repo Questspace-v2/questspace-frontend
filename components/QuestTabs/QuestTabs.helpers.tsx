@@ -57,7 +57,9 @@ export function getQuests(tab: SelectTab) {
     const result : JSX.Element[] = [];
 
     if (tab === 'all-quests') {
+        // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 10; i++) {
+            // @ts-expect-error Ыа, тут не только имя квеста нужно передавать
             result.push(<div key={i}><QuestCard mode={'preview'} props={{name: i.toString()}}/></div>)
         }
         return result;

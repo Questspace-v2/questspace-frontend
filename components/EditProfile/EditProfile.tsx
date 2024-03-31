@@ -32,13 +32,11 @@ export default function EditProfile() {
         }
 
         if (currentModal === ModalEnum.EDIT_PROFILE) {
-            console.log(`до handleCancel1`)
             setCurrentModal(null);
             return;
         }
 
         if (currentModal !== ModalEnum.EDIT_AVATAR) {
-            console.log(`до handleCancel3`);
             setCurrentModal(ModalEnum.EDIT_PROFILE);
         }
     };

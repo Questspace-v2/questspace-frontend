@@ -24,7 +24,8 @@ import Link from 'next/link';
 import { IQuest, IQuestCreate } from '@/app/types/quest-interfaces';
 import { createQuest } from '@/app/api/api';
 import client from '@/app/api/client/client';
-import { uid } from '@/components/EditProfile/EditAvatar/EditAvatar';
+import { uid } from '@/lib/utils/utils';
+import { useSession } from 'next-auth/react';
 
 dayjs.locale('ru')
 
@@ -32,8 +33,7 @@ const {TextArea}= Input;
 interface QuestEditorProps {
     form: FormInstance<QuestAboutForm>,
     fileList: UploadFile[],
-    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
-    accessToken: string
+    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>
 }
 
 export interface QuestAboutForm {
@@ -63,9 +63,13 @@ const theme: ThemeConfig = {
     }
 };
 
-export default function QuestEditor({form, fileList, setFileList, accessToken}: QuestEditorProps) {
+export default function QuestEditor({form, fileList, setFileList}: QuestEditorProps) {
     const [teamCapacity, setTeamCapacity] = useState(3);
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
+
+    const {data: sessionData} = useSession();
+    const accessToken = sessionData?.accessToken;
+
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
     };
@@ -81,12 +85,11 @@ export default function QuestEditor({form, fileList, setFileList, accessToken}: 
             return;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const key = `users/${uid()}`;
+        // eslint-disable-next-line consistent-return
         return client.handleS3Request(key, fileType, file)
-            .then(res => {
-                console.log(res);
-                return res;
-            })
+            .then(res => res)
             .catch(error => {
                 throw error;
             });
@@ -98,22 +101,18 @@ export default function QuestEditor({form, fileList, setFileList, accessToken}: 
             return;
         }
 
+        // eslint-disable-next-line consistent-return
         return form.validateFields()
-            .then(values => {
-                console.log(values);
-                return {
+            .then(values => ({
                     ...values,
                     media_link: s3Response.url
-                };
-            })
+                }))
             .catch(error => {
-                console.log(error);
                 throw error;
             });
     };
 
-    const handleRequest = () => {
-        return handleValidation()
+    const handleRequest = () => handleValidation()
             .then(result => {
                 const data: IQuestCreate = {
                     description: result!.description,
@@ -130,15 +129,11 @@ export default function QuestEditor({form, fileList, setFileList, accessToken}: 
             .catch(error => {
                 throw error;
             });
-    };
 
     const handleSubmit = async () => {
         const data = await handleRequest();
-        await createQuest(data, accessToken)
-            .then(resp => {
-                console.log(resp);
-                return resp as IQuest
-            })
+        await createQuest(data, accessToken!)
+            .then(resp => resp as IQuest)
             .catch(error => {
                 throw error;
             });

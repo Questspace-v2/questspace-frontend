@@ -1,7 +1,6 @@
 import { IUser } from '@/app/types/user-interfaces';
 
 export interface IQuest {
-    access: string,
     creator: IUser,
     description: string,
     finish_time: string | Date,
@@ -14,7 +13,7 @@ export interface IQuest {
     status: string
 }
 
-export interface IQuestCreate extends Omit<IQuest, 'creator' | 'status' | 'id' | 'access'> { }
+export type IQuestCreate = Omit<IQuest, 'creator' | 'status' | 'id'>
 
 export interface ITaskGroupsCreate {
     name: string,
