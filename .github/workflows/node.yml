@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - .github/**
+      - infra/**
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - .github/**
+      - infra/**
+  workflow_dispatch:
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: npm install eslint@8.57.0
+
+      - name: Run ESLint
+        run: npx eslint .
+          --config .eslintrc.json
+          --ext .js,.jsx,.ts,.tsx
+
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm test
