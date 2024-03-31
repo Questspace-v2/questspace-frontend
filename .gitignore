@@ -39,3 +39,5 @@ next-env.d.ts
 
 certificates
 /server.js
+
+infra/k8s/**/*-secret.yaml
