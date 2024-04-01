@@ -1,0 +1,39 @@
+name: Deploy Frontend
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: frontend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to Yandex Cloud Container Registry
+        id: login-cr
+        uses: yc-actions/yc-cr-login@v1
+        with:
+          yc-sa-json-credentials: ${{ secrets.CI_REGISTRY_KEY }}
+
+      - name: Build, tag, and push image to Yandex Cloud Container Registry
+        run: |
+          docker build -t ${{ secrets.CI_REGISTRY }}/${{ env.IMAGE_NAME }}:0${{ github.run_number }} .
+          docker push ${{ secrets.CI_REGISTRY }}/${{ env.IMAGE_NAME }}:0${{ github.run_number }}
+  deploy:
+    runs-on: ubuntu-latest
+    container: gcr.io/cloud-builders/kubectl:latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update deployment image
+        run: |
+          kubectl config set-cluster k8s --server="${{ secrets.KUBE_URL }}" --insecure-skip-tls-verify=true
+          kubectl config set-credentials admin --token="${{ secrets.KUBE_TOKEN }}"
+          kubectl config set-context default --cluster=k8s --user=admin
+          kubectl config use-context default
+          sed -i "s,__VERSION__,${{ secrets.CI_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}," ./infra/k8s/questspace/questspace-frontend.yaml
+          kubectl apply -f ./infra/k8s/questspace/questspace-frontend.yaml

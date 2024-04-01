@@ -10,7 +10,7 @@ import Link from 'next/link';
 export default function QuestCard({mode, props} : {mode: 'full' | 'preview', props?: QuestHeaderProps}) {
     if (mode === 'preview' && props) {
         return (
-            <Link href={`/quest/${props.id}`} className={'quest-card__anchor'}>
+            <Link href={`/quest/${props.id}`} className={'quest-card__anchor'} prefetch={false}>
                 <Card
                     className={'quest-card quest-card__mode_preview'}
                     cover={<Image

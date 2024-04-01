@@ -20,7 +20,7 @@ spec:
           image: __VERSION__
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           env:
             - name: NEXTAUTH_URL
               value: questspace.fun
