@@ -35,5 +35,5 @@ jobs:
           kubectl config set-credentials admin --token="${{ secrets.KUBE_TOKEN }}"
           kubectl config set-context default --cluster=k8s --user=admin
           kubectl config use-context default
-          sed -i "s,__VERSION__,${{ secrets.CI_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }}," ./infra/k8s/questspace/questspace-frontend.yaml
+          sed -i "s,__VERSION__,${{ secrets.CI_REGISTRY }}/${{ env.IMAGE_NAME }}:0${{ github.run_number }}," ./infra/k8s/questspace/questspace-frontend.yaml
           kubectl apply -f ./infra/k8s/questspace/questspace-frontend.yaml
