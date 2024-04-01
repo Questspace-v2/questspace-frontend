@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 
 import '../EditProfile.css';
 import { ValidationStatus } from '@/components/AuthForm/AuthForm.types';
-import { IUser } from '@/app/types/user-interfaces';
+import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 
 export default function EditName({currentModal, setCurrentModal, id, accessToken}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
@@ -32,12 +32,12 @@ export default function EditName({currentModal, setCurrentModal, id, accessToken
             return;
         }
         const resp = await updateUser(id, { username }, accessToken)
-            .then(response => response as IUser)
+            .then(response => response as IUserUpdateResponse)
             .catch((error) => {
                 throw error;
             });
         if (resp) {
-            await update({name: resp.username}).then(() => setCurrentModal!(ModalEnum.EDIT_PROFILE));
+            await update({name: resp.user.username, accessToken: resp.access_token}).then(() => setCurrentModal!(ModalEnum.EDIT_PROFILE));
         } else {
             handleError();
         }

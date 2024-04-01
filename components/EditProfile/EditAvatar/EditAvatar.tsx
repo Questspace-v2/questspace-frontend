@@ -9,6 +9,7 @@ import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { useSession } from 'next-auth/react';
 import { RcFile } from 'antd/es/upload';
 import { uid } from '@/lib/utils/utils';
+import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 
 export default function EditAvatar({children, setCurrentModal, id, accessToken}: SubModalProps) {
     const [messageApi, contextHolder] = message.useMessage();
@@ -44,22 +45,20 @@ export default function EditAvatar({children, setCurrentModal, id, accessToken}:
         if (!fileType.startsWith('image/')) {
             return;
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
         const key = `users/${uid()}`;
 
         const s3Response = await client.handleS3Request(key, fileType, file);
 
         if (s3Response.ok) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const resp = await updateUser(
                 id,
                 {avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}`},
                 accessToken)
                 .catch((err) => {
                     throw err;
-                });
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
-            await update({image: resp.avatar_url});
+                }) as IUserUpdateResponse;
+            await update({image: resp.user.avatar_url, accessToken: resp.access_token});
         }
 
     }
