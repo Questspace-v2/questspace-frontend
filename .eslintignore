@@ -5,6 +5,8 @@ node_modules/*
 *.json
 *.xml
 *.md
+# NOTE: we are using .js-files only for configs, so no need for linters
+*.js
 public
 lib/utils
 next-env.d.ts
