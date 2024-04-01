@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+  namespace: questspace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: questspace-frontend
+  template:
+    metadata:
+      labels:
+        app: questspace-frontend
+    spec:
+      imagePullSecrets:
+        - name: docker-registry-secret
+      containers:
+        - name: frontend-container
+          image: __VERSION__
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: NEXTAUTH_URL
+              value: questspace.fun
+            - name: NODE_ENV
+              value: production
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: questspace-nextauth-secret
+                  key: nextauth-secret

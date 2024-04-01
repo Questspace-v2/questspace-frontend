@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-package-lock.json
 
 # testing
 /coverage
@@ -39,3 +38,5 @@ next-env.d.ts
 
 certificates
 /server.js
+
+infra/k8s/**/*-secret.yaml
