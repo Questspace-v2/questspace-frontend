@@ -75,7 +75,7 @@
     }
 }
 
-.quest-page__admin-panel {
+.content__wrapper.quest-page__admin-panel {
     background-color: #E6F7FF;
     display: flex;
     flex-wrap: wrap;

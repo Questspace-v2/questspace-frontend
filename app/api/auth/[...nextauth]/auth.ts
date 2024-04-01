@@ -72,7 +72,8 @@ const authOptions: NextAuthOptions = {
             user: ISignInResponse,
             session?: {
                 name?: string,
-                image?: string
+                image?: string,
+                accessToken?: string
             },
             trigger?: unknown
         }) {
@@ -91,6 +92,9 @@ const authOptions: NextAuthOptions = {
                 }
                 if (session.image) {
                     token.picture = session.image;
+                }
+                if (session.accessToken) {
+                    token.accessToken = session.accessToken;
                 }
             }
             return token

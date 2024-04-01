@@ -10,7 +10,8 @@ import './Quest.css';
 import { Button, message, Skeleton } from 'antd';
 import { QuestHeaderProps, QuestStatus } from '@/components/QuestCard/QuestCard.helpers';
 import QuestCard from '@/components/QuestCard/QuestCard';
-import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
@@ -19,10 +20,15 @@ interface QuestContentProps {
 }
 
 function QuestAdminPanel() {
+    const currentPath = usePathname();
+
     return (
         <ContentWrapper className={'quest-page__admin-panel'}>
             <p>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
-            <Button type={'link'} size={'large'}><EditOutlined/>Редактировать квест</Button>
+            <Link shallow href={`${currentPath}/edit`}>
+                <Button type={'link'} size={'large'} style={{color: '#1890FF'}}><EditOutlined/>Редактировать квест</Button>
+            </Link>
+
         </ContentWrapper>
     );
 }
@@ -104,11 +110,10 @@ function QuestContent({ description }: QuestContentProps) {
     );
 }
 
-export default function Quest({props}: {props: IQuest}) {
-    const {data} = useSession();
+export default function Quest({props, isCreator}: {props: IQuest, isCreator: boolean}) {
     return (
         <>
-            {props.creator.id === data?.user.id && (
+            {isCreator && (
                 <QuestAdminPanel />
             )}
             <QuestHeader props={props} />

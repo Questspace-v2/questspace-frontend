@@ -10,6 +10,11 @@ export interface IUserUpdate {
     username?: string
 }
 
+export interface IUserUpdateResponse {
+    user: IUser,
+    access_token: string
+}
+
 export interface IPasswordUpdate {
     old_password: string,
     new_password: string

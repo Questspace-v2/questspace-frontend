@@ -48,15 +48,19 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
         const timeDiffLabel = getTimeDiff(startDate, new Date(finishTime));
         const startDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'});
         const startHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+        const imageNode = <Image
+            src={mediaLink}
+            width={1000}
+            height={1000}
+            style={{ maxWidth: '100%', objectFit: 'contain', height: 'auto' }}
+            alt={'quest avatar'}
+        />;
 
         return (
             <ContentWrapper className={'quest-card__wrapper'}>
                 <Card
                     className={'quest-card quest-card__mode_full'}
-                    cover={<Image
-                        src={mediaLink}
-                        fill style={{objectFit: 'cover'}} alt={'quest avatar'}
-                    />}
+                    cover={imageNode}
                     bordered={false}
                 >
                     <div className={'quest-card__text-content'}>

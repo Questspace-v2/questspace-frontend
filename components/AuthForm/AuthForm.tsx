@@ -14,11 +14,11 @@ import {
 import FormItem from 'antd/lib/form/FormItem';
 
 import './AuthForm.css';
-import { LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
+import { GoogleOutlined, LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useFormStatus } from 'react-dom';
-import { signIn, SignInAuthorizationParams, useSession } from 'next-auth/react';
+import { signIn, SignInAuthorizationParams } from 'next-auth/react';
 
 interface AuthFormItems {
     username: string,
@@ -84,9 +84,6 @@ export default function AuthForm() {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const session = useSession();
-
     return (
         <section className={'page-auth'}>
             <ContentWrapper className={'page-auth__content-wrapper'}>
@@ -106,7 +103,7 @@ export default function AuthForm() {
                 >
                     {errorMsg &&
                         errorMsg === 'Мы вас не узнали. Проверьте, правильно ли вы ввели логин и пароль' &&
-                        <p style={{color: 'red'}}>{errorMsg}</p>}
+                        <p className={'error-message_unauthorized'}>{errorMsg}</p>}
                     <Form.Item<AuthFormItems>
                         name={'username'} required
                         validateStatus={validationStatus}
@@ -169,10 +166,13 @@ export default function AuthForm() {
                             {dictionary.submitButton}
                         </Button>
                     </FormItem>
-                    <FormItem>
+                    <FormItem className={'auth-form__google-button'}>
                         <Button
                             htmlType='button'
-                            onClick={() => signIn('google', {callbackUrl: `${FRONTEND_URL}`})}>
+                            onClick={() => signIn('google', {callbackUrl: `${FRONTEND_URL}`})}
+                            block
+                        >
+                            <GoogleOutlined />
                             {formType === Auth.LOGIN ? 'Войти через Google' : 'Регистрация через Google'}
                         </Button>
                     </FormItem>

@@ -72,6 +72,18 @@
             aspect-ratio: 2 / 1;
         }
 
+        &.quest-card__mode_full {
+            .ant-card-cover {
+                aspect-ratio: 2 / 1;
+                width: 100%;
+                height: auto;
+                display: flex;
+                align-items: center;
+                overflow: hidden;
+                border-radius: 16px 16px 0 0;
+            }
+        }
+
         .ant-card-cover img {
             border-radius: 16px 16px 0 0;
         }
