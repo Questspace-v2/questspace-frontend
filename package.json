@@ -29,7 +29,8 @@
     "rc-upload": "4.5.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-markdown": "9.0.1"
+    "react-markdown": "9.0.1",
+    "sharp": "0.33.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.4.2",
