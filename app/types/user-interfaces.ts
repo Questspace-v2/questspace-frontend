@@ -2,7 +2,6 @@ export interface IUser {
     avatar_url: string,
     id: string,
     username: string,
-    email?: string
 }
 
 export interface IUserUpdate {

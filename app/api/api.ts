@@ -10,8 +10,9 @@ import client from '@/app/api/client/client';
 export const getUserById = async (userId: string) =>
     client.handleServerRequest(`/user/${userId}`);
 
-export const getQuestById = async (questId: string) =>
-    client.handleServerRequest(`/quest/${questId}`);
+export const getQuestById = async (questId: string, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}`, 'GET', undefined,
+        {}, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
 export const authWithGoogle = async (token: string) =>
     client.handleServerRequest('/auth/google', 'POST', token);
