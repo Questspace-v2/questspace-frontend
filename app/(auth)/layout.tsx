@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
     const session = await getServerSession(authOptions);
+
     return (
         <html lang="ru">
             <body className={`${manrope.variable} ${robotoFlex.variable}`}>
