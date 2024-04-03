@@ -11,10 +11,14 @@ import { RcFile } from 'antd/es/upload';
 import { uid } from '@/lib/utils/utils';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 
-export default function EditAvatar({children, setCurrentModal, id, accessToken}: SubModalProps) {
+export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
     const [messageApi, contextHolder] = message.useMessage();
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
+    const {data, update} = useSession();
+    const {id} = data!.user;
+    const {accessToken} = data!;
+    const { xs } = useBreakpoint();
 
     const error = () => {
         // eslint-disable-next-line no-void
@@ -24,8 +28,6 @@ export default function EditAvatar({children, setCurrentModal, id, accessToken}:
         });
     };
 
-    const {update} = useSession();
-    const { xs } = useBreakpoint();
     const handleEditAvatarClose = () => {
         setCurrentModal!(ModalEnum.EDIT_PROFILE)
     };
