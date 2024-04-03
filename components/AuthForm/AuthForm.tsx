@@ -57,6 +57,7 @@ export default function AuthForm() {
 
     const handleAuth = (providerType: string, data: Record<string, string>) => {
         signIn(`${providerType}`, {
+            callbackUrl: FRONTEND_URL,
             redirect: false,
             ...data
         }).then((response) => {
