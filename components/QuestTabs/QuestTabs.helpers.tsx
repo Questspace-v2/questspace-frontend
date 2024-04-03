@@ -2,8 +2,10 @@ import { Button, ConfigProvider, Empty } from 'antd';
 import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
 import QuestCard from '@/components/QuestCard/QuestCard';
 import Link from 'next/link';
+import { getFilteredQuests } from '@/app/api/api';
+import { IFilteredQuestsResponse, IQuest } from '@/app/types/quest-interfaces';
 
-const selectTab = ['all-quests', 'my-quests', 'created-quests'] as const;
+const selectTab = ['all', 'registered', 'owned'] as const;
 export type SelectTab = (typeof selectTab)[number];
 
 
@@ -53,10 +55,28 @@ export const customizedEmpty = (
     />
 );
 
+export function wrapInCard(quest: IQuest) {
+    return (
+        <QuestCard mode={'preview'} props={quest}/>
+    );
+}
+
+export function getQuestsFromBackend(tab: SelectTab) {
+    getFilteredQuests(
+        [`${tab}`],
+        undefined,
+        '10'
+    )
+        .then(result => result as IFilteredQuestsResponse)
+        .catch(err => {
+            throw err;
+        });
+}
+
 export function getQuests(tab: SelectTab) {
     const result : JSX.Element[] = [];
 
-    if (tab === 'all-quests') {
+    if (tab === 'all') {
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 10; i++) {
             // @ts-expect-error Ыа, тут не только имя квеста нужно передавать

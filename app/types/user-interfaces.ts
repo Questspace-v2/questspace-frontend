@@ -39,5 +39,5 @@ export interface ITeam {
     invite_link: string,
     members: IUser[],
     name: string,
-    score: 0
+    score: number
 }

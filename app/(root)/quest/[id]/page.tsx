@@ -6,18 +6,18 @@ import React from 'react';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { notFound } from 'next/navigation';
-import { IQuest } from '@/app/types/quest-interfaces';
+import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import { getQuestById } from '@/app/api/api';
 
 export default async function QuestPage({params}: {params: {id: string}}) {
     const session = await getServerSession(authOptions);
-    const questData = await getQuestById(params.id, session?.accessToken) as IQuest;
+    const questData = await getQuestById(params.id, session?.accessToken) as IGetQuestResponse;
 
     if (!questData) {
         notFound();
     }
 
-    const isCreator = (session && session.user.id === questData.creator.id) ?? false;
+    const isCreator = (session && session.user.id === questData.quest.creator.id) ?? false;
 
     return (
         <>

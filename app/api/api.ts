@@ -15,7 +15,7 @@ export const getQuestById = async (questId: string, accessToken?: string) =>
         {}, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
 export const authWithGoogle = async (token: string) =>
-    client.handleServerRequest('/auth/google', 'POST', token);
+    client.handleServerRequest('/auth/google', 'POST', {id_token: token});
 
 export const authRegister = async (data: IUserCreate) =>
     client.handleServerRequest('/auth/register', 'POST', data);

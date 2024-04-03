@@ -74,17 +74,20 @@ const authOptions: NextAuthOptions = {
             session?: {
                 name?: string,
                 image?: string,
-                accessToken?: string
+                accessToken?: string,
             },
             trigger?: unknown
         }) {
             if (account?.provider === 'google') {
-                const googleToken = account.access_token;
+                token.isOAuthProvider = true;
+                const googleToken = account.id_token;
                 if (googleToken) {
                     const backendResponse = await authWithGoogle(googleToken) as ISignInResponse;
                     if (backendResponse) {
-                        user.access_token = backendResponse.access_token;
-                        token.accessToken = user.access_token;
+                        token.accessToken = backendResponse.access_token;
+                        token.id = backendResponse.user.id;
+                        token.name = backendResponse.user.username;
+                        token.picture = backendResponse.user.avatar_url;
                     }
                 }
                 return token;
@@ -112,6 +115,7 @@ const authOptions: NextAuthOptions = {
             return {
                 expires: session.expires,
                 accessToken: token.accessToken,
+                isOAuthProvider: token.isOAuthProvider,
                 user: {...session.user, id: token.id}
             }
         }

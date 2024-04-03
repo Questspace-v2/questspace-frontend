@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 export default function QuestTabs() {
     const { xs} = useBreakpoint();
-    const [selectedTab, setSelectedTab] = useState<SelectTab>('all-quests');
+    const [selectedTab, setSelectedTab] = useState<SelectTab>('all');
     const [tabContent, setTabContent] = useState<JSX.Element[] | JSX.Element>(getQuests(selectedTab));
 
 
@@ -34,26 +34,26 @@ export default function QuestTabs() {
 
     const items: TabsProps['items'] = [
         {
-            key: 'all-quests',
+            key: 'all',
             label: 'Все квесты',
-            children: selectedTab === 'all-quests' ? tabContent : undefined,
+            children: selectedTab === 'all' ? tabContent : undefined,
         },
         {
-            key: 'my-quests',
+            key: 'registered',
             label: 'Мои квесты',
-            children: selectedTab === 'my-quests' ? tabContent : undefined,
+            children: selectedTab === 'registered' ? tabContent : undefined,
         },
         {
-            key: 'created-quests',
+            key: 'owned',
             label: 'Созданные квесты',
-            children: selectedTab === 'created-quests' ? tabContent : undefined,
+            children: selectedTab === 'owned' ? tabContent : undefined,
         },
     ];
 
     const selectOptions: {value: SelectTab, label: string}[] = [
-        { value: 'all-quests', label: 'Все квесты' },
-        { value: 'my-quests', label: 'Мои квесты' },
-        { value: 'created-quests', label: 'Созданные квесты' },
+        { value: 'all', label: 'Все квесты' },
+        { value: 'registered', label: 'Мои квесты' },
+        { value: 'owned', label: 'Созданные квесты' },
     ];
 
     const handleSelectTab = (value: string) => {

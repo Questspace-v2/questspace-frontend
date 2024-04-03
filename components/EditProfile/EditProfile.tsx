@@ -17,7 +17,9 @@ import './EditProfile.css';
 export default function EditProfile() {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
-    const {name: username, image: avatarUrl, id} = useSession().data!.user;
+    const {data} = useSession();
+    const isOAuth = data?.isOAuthProvider;
+    const {name: username, image: avatarUrl, id} = data!.user;
     const {accessToken} = (useSession().data!);
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
@@ -90,9 +92,12 @@ export default function EditProfile() {
                     Изменить логин
                 </Button>
                 <h4 className={'edit-profile-subheader'}>Пароль</h4>
-                <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_PASSWORD)}>
-                    Изменить пароль
-                </Button>
+                {isOAuth ?
+                    <div>Учетная запись привязана к аккаунту Google, для авторизации не нужен пароль</div> :
+                    <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_PASSWORD)}>
+                        Изменить пароль
+                    </Button>
+                }
             </Modal>
             <EditName setCurrentModal={setCurrentModal} currentModal={currentModal} id={id} accessToken={accessToken} />
             <EditPassword setCurrentModal={setCurrentModal} currentModal={currentModal} id={id} accessToken={accessToken} />

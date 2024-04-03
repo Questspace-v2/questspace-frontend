@@ -105,6 +105,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
         return form.validateFields()
             .then(values => ({
                     ...values,
+                    access: 'public',
                     media_link: s3Response.url
                 }))
             .catch(error => {
@@ -115,6 +116,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
     const handleRequest = () => handleValidation()
             .then(result => {
                 const data: IQuestCreate = {
+                    access: result!.access,
                     description: result!.description,
                     finish_time: result!.finishTime,
                     max_team_cap: result!.maxTeamCap,

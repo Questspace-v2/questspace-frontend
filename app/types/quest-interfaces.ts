@@ -1,6 +1,7 @@
-import { IUser } from '@/app/types/user-interfaces';
+import { ITeam, IUser } from '@/app/types/user-interfaces';
 
 export interface IQuest {
+    access: string,
     creator: IUser,
     description: string,
     finish_time: string | Date,
@@ -48,4 +49,9 @@ export interface IFilteredQuestsResponse {
     all?: IFilteredQuests,
     owned?: IFilteredQuests,
     registered?: IFilteredQuests
+}
+
+export interface IGetQuestResponse {
+    quest: IQuest,
+    team: ITeam
 }
