@@ -19,6 +19,7 @@ import Logotype from '@/components/Logotype/Logotype';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useFormStatus } from 'react-dom';
 import { signIn, SignInAuthorizationParams } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface AuthFormItems {
     username: string,
@@ -27,6 +28,7 @@ interface AuthFormItems {
 }
 
 export default function AuthForm() {
+    const router = useRouter();
     const [form] = Form.useForm<AuthFormItems>();
     const {pending} = useFormStatus();
     const [formType, setFormType] = useState<AuthFormTypes>(Auth.LOGIN);
@@ -61,7 +63,7 @@ export default function AuthForm() {
             ...data
         }).then((response) => {
             if (!response?.error) {
-                window.location.replace(`${FRONTEND_URL}`);
+                router.replace(`${FRONTEND_URL}`);
             } else {
                 throw new Error('Auth error');
             }
