@@ -31,3 +31,13 @@ spec:
                 secretKeyRef:
                   name: questspace-nextauth-secret
                   key: nextauth-secret
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: questspace-google-secret
+                  key: google-client-id
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: questspace-google-secret
+                  key: google-oauth-secret
