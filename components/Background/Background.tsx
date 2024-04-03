@@ -17,6 +17,8 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                         style={{objectFit: 'cover'}}
                         aria-disabled
                         loading={'eager'}
+                        placeholder={'blur'}
+                        blurDataURL={'/Questspace-Background.svg'}
                     />
                 </div>
             );
@@ -33,6 +35,8 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                         quality={100}
                         aria-disabled
                         loading={'eager'}
+                        placeholder={'blur'}
+                        blurDataURL={'/Questspace-Background.svg'}
                     />
                 </div>
             );

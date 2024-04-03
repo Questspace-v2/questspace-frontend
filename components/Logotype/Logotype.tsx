@@ -27,7 +27,7 @@ export default function Logotype(props: LogotypeProps) {
                 unselectable={'on'}
                 style={style && {height: 'auto'}}
                 loading={'eager'}
-                placeholder={'blur'}
+                placeholder={'empty'}
                 blurDataURL={'/Questspace-Text.svg'}
             />
         );
@@ -46,6 +46,8 @@ export default function Logotype(props: LogotypeProps) {
                     unselectable={'on'}
                     style={style}
                     loading={'eager'}
+                    placeholder={'empty'}
+                    blurDataURL={'/Questspace-Text.svg'}
                 />
             );
     }

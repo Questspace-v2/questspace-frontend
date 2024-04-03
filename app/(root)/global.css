@@ -76,7 +76,32 @@ body {
             "YTUC" 712;
 }
 
+.page__not-found {
+    display: flex;
+    flex-direction: column;
+    box-sizing: content-box;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
 
+.content__wrapper.not-found__content-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px 24px 24px;
+    gap: 20px;
+    width: 378px;
+
+    background: #FFFFFF;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.04);
+    border-radius: 16px;
+
+    p {
+        font-size: 24px;
+        margin: 0;
+    }
+}
 
 h1 {
     font-size: var(--medium-font-size);
@@ -108,6 +133,16 @@ h3 {
     h2 {
         &.responsive-header-h2 {
             font-size: var(--small-font-size);
+        }
+    }
+}
+
+@media (max-width: 525px) {
+    .content__wrapper.not-found__content-wrapper {
+        width: 320px;
+
+        p {
+            font-size: 20px;
         }
     }
 }
