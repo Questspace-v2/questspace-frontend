@@ -27,7 +27,7 @@
         }
     }
 
-    .ant-form-item-control {
+    .ant-form-item:not(.quest-editor__controls) .ant-col.ant-form-item-control {
         max-width: calc(100% - 178px);
     }
 
@@ -35,6 +35,28 @@
             display: flex;
             gap: 16px;
             justify-content: space-between;
+    }
+
+    .quest-editor__access-form-item {
+        .ant-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .ant-radio-wrapper-in-form-item {
+            margin: 5px 0 0;
+        }
+
+        .ant-radio-wrapper .ant-radio {
+            margin: 3px 0 0;
+            align-self: flex-start;
+        }
+
+        p {
+            margin: 0;
+            color: #00000073;
+        }
     }
 
     .ant-form-item-control-input-content .ant-picker {
@@ -62,6 +84,7 @@
 
     .ant-input-number-group .ant-input-number-group-addon {
         padding: 0;
+        width: 32px;
 
         span {
             width: 32px;
@@ -76,14 +99,13 @@
         padding-bottom: 16px;
         display: flex;
         gap: 8px;
-        align-items: flex-end;
         justify-content: center;
     }
 }
 
 @media (max-width: 639px) {
     .quest-editor__wrapper {
-        .quest-editor__small-field.ant-form-item {
+        .quest-editor__small-field.ant-form-item:not(.quest-editor__controls) {
             .ant-row {
                 flex-wrap: nowrap;
 
@@ -98,6 +120,17 @@
             }
         }
 
+        .ant-form-item.quest-editor__controls {
+            .ant-row {
+                flex-wrap: nowrap;
+
+                .ant-col.ant-form-item-label {
+                    flex: 0 1 auto;
+                    max-width: unset;
+                }
+            }
+        }
+
         .description__label {
             width: unset;
         }
@@ -108,6 +141,39 @@
     .quest-editor__wrapper {
         .ant-form-item-control-input-content .ant-picker {
             width: 100%;
+        }
+
+        .ant-row {
+            flex-direction: column;
+        }
+
+        .ant-row .ant-col.ant-form-item-control {
+            max-width: 100% !important;
+        }
+
+        .ant-input-number-group-wrapper {
+            width: 100% !important;
+        }
+
+        .quest-editor__buttons {
+            flex-direction: column;
+        }
+
+        .ant-form-item-control-input-content {
+            flex-direction: column;
+
+            .ant-upload-select {
+                display: flex;
+            }
+
+            .ant-upload-select > span {
+                display: flex;
+                width: 100%;
+            }
+
+            .ant-upload button {
+                width: 100%;
+            }
         }
     }
 }

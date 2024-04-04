@@ -56,7 +56,6 @@ export default function CreateQuest() {
         );
     }
 
-    /* eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing */
     if (xs) {
         return (
             <ContentWrapper className={'create-quest__content-wrapper'}>

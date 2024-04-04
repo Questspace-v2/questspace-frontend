@@ -32,7 +32,7 @@ export default function QuestPreview({form, file}: QuestEditorProps) {
     const image = useMemo(()=> file ? URL.createObjectURL(file.originFileObj as Blob) : '', [file]);
     const creator = useSession().data?.user;
 
-    if (!form || !image || !(form.name || form.description || form.startTime || form.finishTime)) {
+    if (!form && !image || (!(image || form.name || form.description || form.startTime || form.finishTime))) {
         return (
             <div className={'quest-preview__wrapper quest-preview_default'}>
                 <p>Здесь появится предпросмотр квеста</p>

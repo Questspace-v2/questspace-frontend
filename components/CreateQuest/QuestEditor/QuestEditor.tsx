@@ -9,6 +9,7 @@ import {
     FormInstance,
     Input,
     InputNumber,
+    Radio,
     ThemeConfig,
     Upload,
     UploadFile,
@@ -20,7 +21,6 @@ import { FileImageOutlined, MinusOutlined, PlusOutlined, ReloadOutlined, UploadO
 import dayjs from 'dayjs';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import 'dayjs/locale/ru';
-import Link from 'next/link';
 import { IQuest, IQuestCreate } from '@/app/types/quest-interfaces';
 import { createQuest } from '@/app/api/api';
 import client from '@/app/api/client/client';
@@ -45,7 +45,8 @@ export interface QuestAboutForm {
     registrationDeadline: Date | string,
     startTime: Date | string,
     finishTime: Date | string,
-    maxTeamCap: number
+    maxTeamCap: number,
+    access: string
 }
 
 const theme: ThemeConfig = {
@@ -103,7 +104,6 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
         if (!s3Response) {
             return;
         }
-
         // eslint-disable-next-line consistent-return
         return form.validateFields()
             .then(values => ({
@@ -265,7 +265,26 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                             style={{width: '128px', textAlignLast: 'center'}}
                         />
                     </Form.Item>
-                    <Form.Item>
+                    <Form.Item<QuestAboutForm>
+                        className={'quest-editor__small-field quest-editor__access-form-item'}
+                        name={'access'}
+                        labelAlign={'left'}
+                        label={'Доступ к квесту'}
+                        colon={false}
+                        required
+                    >
+                        <Radio.Group>
+                            <Radio value={'public'}>
+                                Публичный
+                                <p>Квест увидят все пользователи Квестспейса</p>
+                            </Radio>
+                            <Radio value={'link-only'}>
+                                Только по ссылке
+                                <p>Квест увидят только пользователи, которые зарегистрировались на него</p>
+                            </Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item className={'quest-editor__controls'}>
                         <div className={'quest-editor__buttons'}>
                             <Button htmlType={'submit'}
                                     type={'primary'}
@@ -278,9 +297,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                                 },
                             }}
                             >
-                                <Link href={'/'}>
-                                    <Button>Отменить</Button>
-                                </Link>
+                                <Button href={'/'}>Отменить</Button>
                             </ConfigProvider>
                         </div>
                     </Form.Item>
