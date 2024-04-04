@@ -3,6 +3,7 @@ const nextConfig = {
     images: {
         dangerouslyAllowSVG: true,
         unoptimized: false,
+        domains: ['lh3.googleusercontent.com'],
         remotePatterns: [
             {
                 protocol: "https",

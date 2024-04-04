@@ -26,6 +26,8 @@ import { createQuest } from '@/app/api/api';
 import client from '@/app/api/client/client';
 import { uid } from '@/lib/utils/utils';
 import { useSession } from 'next-auth/react';
+import { FRONTEND_URL } from '@/app/api/client/constants';
+import { useRouter } from 'next/navigation';
 
 dayjs.locale('ru')
 
@@ -70,6 +72,8 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
     const {data: sessionData} = useSession();
     const accessToken = sessionData?.accessToken;
 
+    const router = useRouter();
+
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
     };
@@ -85,7 +89,6 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
             return;
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         const key = `users/${uid()}`;
         // eslint-disable-next-line consistent-return
         return client.handleS3Request(key, fileType, file)
@@ -105,6 +108,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
         return form.validateFields()
             .then(values => ({
                     ...values,
+                    access: 'public',
                     media_link: s3Response.url
                 }))
             .catch(error => {
@@ -115,6 +119,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
     const handleRequest = () => handleValidation()
             .then(result => {
                 const data: IQuestCreate = {
+                    access: result!.access,
                     description: result!.description,
                     finish_time: result!.finishTime,
                     max_team_cap: result!.maxTeamCap,
@@ -137,6 +142,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
             .catch(error => {
                 throw error;
             });
+        router.replace(`${FRONTEND_URL}`);
     };
 
     return (

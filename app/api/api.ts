@@ -10,11 +10,12 @@ import client from '@/app/api/client/client';
 export const getUserById = async (userId: string) =>
     client.handleServerRequest(`/user/${userId}`);
 
-export const getQuestById = async (questId: string) =>
-    client.handleServerRequest(`/quest/${questId}`);
+export const getQuestById = async (questId: string, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}`, 'GET', undefined,
+        {}, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
 export const authWithGoogle = async (token: string) =>
-    client.handleServerRequest('/auth/google', 'POST', token);
+    client.handleServerRequest('/auth/google', 'POST', {id_token: token});
 
 export const authRegister = async (data: IUserCreate) =>
     client.handleServerRequest('/auth/register', 'POST', data);
@@ -45,12 +46,12 @@ export const deleteUser = async (userId: string) =>
 export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups) =>
     client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data);
 
-export const getFilteredQuests = async (fields: string[], page_id?: string, page_size = '50') =>
+export const getFilteredQuests = async (fields: string[], accessToken?: string, page_id?: string, page_size = '50') =>
     client.handleServerRequest('/quest', 'GET', undefined, {
         ...fields,
         page_size,
         page_id
-    });
+    }, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
 export const getQuestTeams = async (questId: string) =>
     client.handleServerRequest(`/quest/${questId}/teams`);

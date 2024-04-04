@@ -2,7 +2,6 @@ export interface IUser {
     avatar_url: string,
     id: string,
     username: string,
-    email?: string
 }
 
 export interface IUserUpdate {
@@ -40,5 +39,5 @@ export interface ITeam {
     invite_link: string,
     members: IUser[],
     name: string,
-    score: 0
+    score: number
 }

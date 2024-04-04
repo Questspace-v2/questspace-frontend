@@ -13,6 +13,13 @@ import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-inte
 import { IQuestCreate, IQuestTaskGroups } from '@/app/types/quest-interfaces';
 import { RcFile } from 'antd/es/upload';
 
+interface IBaseInit {
+    method: string,
+    body?: string,
+    credentials?: string,
+    headers?: Record<string, string>,
+}
+
 class Client {
     backendUrl: string;
 
@@ -58,14 +65,13 @@ class Client {
         credentials?: string,
         headers?: Record<string, string>
     ) {
-        const baseInit = {
+        const baseInit: IBaseInit = {
             headers,
             method,
             credentials,
-            body: {}
         }
 
-        if (method !== 'GET' && method !== 'DELETE') {
+        if (data && method !== 'GET' && method !== 'DELETE') {
             baseInit.body = JSON.stringify(data);
         }
 

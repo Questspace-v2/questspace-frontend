@@ -4,6 +4,7 @@ import { IUser } from '@/app/types/user-interfaces';
 declare module "next-auth" {
     interface Session {
         accessToken: string,
+        isOAuthProvider: boolean,
         user: {
             id: string,
         } & DefaultSession["user"]
@@ -17,6 +18,7 @@ declare module "next-auth" {
 
 declare module "next-auth/jwt" {
     interface JWT {
-        id: string
+        id: string,
+        isOAuthProvider: boolean
     }
 }

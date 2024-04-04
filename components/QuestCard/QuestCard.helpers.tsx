@@ -5,6 +5,7 @@ import { IUser } from '@/app/types/user-interfaces';
 import './QuestCard.css';
 
 export interface QuestHeaderProps {
+    access: string,
     id: string,
     creator: IUser,
     start_time: string | Date,
