@@ -61,7 +61,7 @@ export default function QuestTabs() {
         }
 
         setSelectedTab(value);
-        setTabContent(getQuests(selectedTab));
+        setTabContent(getQuests(value));
     }
 
     if (xs) {
