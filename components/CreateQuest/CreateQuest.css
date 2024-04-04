@@ -10,15 +10,16 @@
         gap: 32px;
     }
 
-    section {
-        width: calc((100% - 65px) / 2);
-    }
-
     .content__separator {
         min-width: 1px;
+        width: 1px;
         height: auto;
         background-color: #BFBFBF;
     }
+}
+
+.create-quest__content-wrapper section {
+    width: calc((100% - 65px) / 2);
 }
 
 .create-quest__header__content {

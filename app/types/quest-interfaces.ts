@@ -53,5 +53,5 @@ export interface IFilteredQuestsResponse {
 
 export interface IGetQuestResponse {
     quest: IQuest,
-    team: ITeam
+    team?: ITeam
 }
