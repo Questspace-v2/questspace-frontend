@@ -17,7 +17,6 @@ export default function QuestTabs() {
     const [tabContent, setTabContent] = useState<JSX.Element[] | JSX.Element>(getQuests(selectedTab));
 
 
-
     const themeConfig: ThemeConfig = {
         components: {
             Select: {
@@ -62,7 +61,7 @@ export default function QuestTabs() {
         }
 
         setSelectedTab(value);
-        setTabContent(getQuests(value));
+        setTabContent(getQuests(selectedTab));
     }
 
     if (xs) {

@@ -4,6 +4,8 @@ import QuestCard from '@/components/QuestCard/QuestCard';
 import Link from 'next/link';
 import { getFilteredQuests } from '@/app/api/api';
 import { IFilteredQuestsResponse, IQuest } from '@/app/types/quest-interfaces';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/api/auth/[...nextauth]/auth';
 
 const selectTab = ['all', 'registered', 'owned'] as const;
 export type SelectTab = (typeof selectTab)[number];
@@ -57,20 +59,34 @@ export const customizedEmpty = (
 
 export function wrapInCard(quest: IQuest) {
     return (
-        <QuestCard mode={'preview'} props={quest}/>
+        <div key={quest.id}>
+            <QuestCard mode={'preview'} props={quest}/>
+        </div>
     );
 }
 
-export function getQuestsFromBackend(tab: SelectTab) {
-    getFilteredQuests(
+export async function getBackendQuests(tab: SelectTab) {
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.accessToken;
+    const data = await getFilteredQuests(
         [`${tab}`],
-        undefined,
-        '10'
+        accessToken
     )
-        .then(result => result as IFilteredQuestsResponse)
+        .then(res => res as IFilteredQuestsResponse)
         .catch(err => {
             throw err;
         });
+
+    const quests = data[tab]?.quests;
+
+    if (!quests) {
+        return customizedEmpty;
+    }
+
+    if (tab === 'all') {
+        return quests.map(quest => wrapInCard(quest));
+    }
+    return customizedEmpty;
 }
 
 export function getQuests(tab: SelectTab) {

@@ -17,14 +17,13 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
                         src={`https://source.unsplash.com/random/${props.name}`}
                         fill sizes={'100% 128px'} style={{ objectFit: 'cover' }} alt={'quest avatar'} placeholder={'empty'}/>}
                 >
-                    <h3 className={'quest-card__name'}>Городской квест ДПММ</h3>
-                    <p className={'quest-card__start'}>25 сентября в 10:00</p>
+                    <h3 className={'quest-card__name'}>{props.name}</h3>
+                    <p className={'quest-card__start'}>{(props.start_time)?.toString()}</p>
                     <div className={'status__wrapper'}>
                         <svg className={'quest-card__status_registration'} xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="none" viewBox="0 0 8 8">
                             <circle cx="4" cy="4" r="4" fill="black" />
                         </svg>
-                        <p className={'quest-card__status quest-card__status_registration'}>Регистрация до 25
-                            сентября</p>
+                        <p className={'quest-card__status quest-card__status_registration'}>Регистрация до {(props.registration_deadline)?.toString()}</p>
                     </div>
                 </Card>
             </Link>
