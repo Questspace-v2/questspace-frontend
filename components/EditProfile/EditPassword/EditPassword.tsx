@@ -9,12 +9,16 @@ import { updatePassword } from '@/app/api/api';
 import '../EditProfile.css';
 import { IUser } from '@/app/types/user-interfaces';
 import { ValidationStatus } from '@/components/AuthForm/AuthForm.types';
+import { useSession } from 'next-auth/react';
 
-export default function EditPassword({currentModal, setCurrentModal, id, accessToken}: SubModalProps) {
+export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
+    const {data} = useSession();
+    const {id} = data!.user;
+    const {accessToken} = data!;
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');

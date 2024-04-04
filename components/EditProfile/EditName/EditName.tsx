@@ -9,12 +9,14 @@ import '../EditProfile.css';
 import { ValidationStatus } from '@/components/AuthForm/AuthForm.types';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 
-export default function EditName({currentModal, setCurrentModal, id, accessToken}: SubModalProps) {
+export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
-    const {update} = useSession();
+    const {data, update} = useSession();
+    const {id} = data!.user;
+    const {accessToken} = data!;
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');

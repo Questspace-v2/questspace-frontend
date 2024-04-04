@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Modal } from 'antd';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { EditOutlined } from '@ant-design/icons';
@@ -23,6 +23,8 @@ export default function EditProfile() {
     const {accessToken} = (useSession().data!);
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
+
+    useEffect(() => {}, [session]);
 
     const showModal = () => {
         setCurrentModal(ModalEnum.EDIT_PROFILE);
@@ -77,7 +79,7 @@ export default function EditProfile() {
                            draggable={false}
                            style={{borderRadius: '64px'}}
                     />
-                    <EditAvatar setCurrentModal={setCurrentModal} id={id} accessToken={accessToken}>
+                    <EditAvatar setCurrentModal={setCurrentModal}>
                         <Button className={'edit-profile__change-button'}
                                 type={'link'}
                                 block
@@ -99,8 +101,8 @@ export default function EditProfile() {
                     </Button>
                 }
             </Modal>
-            <EditName setCurrentModal={setCurrentModal} currentModal={currentModal} id={id} accessToken={accessToken} />
-            <EditPassword setCurrentModal={setCurrentModal} currentModal={currentModal} id={id} accessToken={accessToken} />
+            <EditName setCurrentModal={setCurrentModal} currentModal={currentModal}/>
+            <EditPassword setCurrentModal={setCurrentModal} currentModal={currentModal}/>
         </>
     );
 }

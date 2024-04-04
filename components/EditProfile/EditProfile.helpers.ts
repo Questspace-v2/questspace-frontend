@@ -13,8 +13,6 @@ export interface SubModalProps {
     children?: JSX.Element,
     setCurrentModal?:  React.Dispatch<React.SetStateAction<ModalType>>,
     currentModal?: ModalType,
-    id: string,
-    accessToken: string
 }
 
 export const getCenter = (clientWidth: number, clientHeight: number) => {
