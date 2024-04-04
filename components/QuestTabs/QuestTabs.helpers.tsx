@@ -60,7 +60,7 @@ export const customizedEmpty = (
 export function wrapInCard(quest: IQuest) {
     return (
         <div key={quest.id}>
-            <QuestCard mode={'preview'} props={quest}/>
+            <QuestCard mode={'preview'} props={{quest}}/>
         </div>
     );
 }
@@ -96,7 +96,7 @@ export function getQuests(tab: SelectTab) {
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 10; i++) {
             // @ts-expect-error Ыа, тут не только имя квеста нужно передавать
-            result.push(<div key={i}><QuestCard mode={'preview'} props={{name: i.toString()}}/></div>)
+            result.push(<div key={i}><QuestCard mode={'preview'} props={{quest: {name: i.toString()}}}/></div>)
         }
         return result;
     }
