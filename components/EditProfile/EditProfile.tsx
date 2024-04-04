@@ -17,10 +17,9 @@ import './EditProfile.css';
 export default function EditProfile() {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
-    const {data} = useSession();
-    const isOAuth = data?.isOAuthProvider;
-    const {name: username, image: avatarUrl, id} = data!.user;
-    const {accessToken} = (useSession().data!);
+    const {data: session} = useSession();
+    const isOAuth = session?.isOAuthProvider;
+    const {name: username, image: avatarUrl} = session!.user;
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
 
