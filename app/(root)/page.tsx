@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
 import Body from '@/components/Body/Body';
 import Header from '@/components/Header/Header';
-import Footer from '@/components/Footer/Footer';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 
@@ -14,6 +13,10 @@ const DynamicQuestTabs = dynamic(() => import('@/components/QuestTabs/QuestTabs'
 const DynamicProfile = dynamic(() => import('@/components/Profile/Profile'), {
     ssr: false,
     loading: () => <Spin size={'large'} />
+})
+
+const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
+    ssr: false,
 })
 
 async function HomePage() {
@@ -30,7 +33,7 @@ async function HomePage() {
                 <DynamicProfile />
                 <DynamicQuestTabs />
             </Body>
-            <Footer />
+            <DynamicFooter />
         </>
     );
 }

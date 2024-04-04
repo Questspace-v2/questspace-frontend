@@ -16,15 +16,14 @@
         gap: 8px;
         min-width: 0;
         order: -1;
+    }
 
-        p {
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            align-content: center;
-
-        }
+    .quest-editor__image-file p {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        align-content: center;
     }
 
     .ant-form-item:not(.quest-editor__controls) .ant-col.ant-form-item-control {
@@ -52,11 +51,11 @@
             margin: 3px 0 0;
             align-self: flex-start;
         }
+    }
 
-        p {
-            margin: 0;
-            color: #00000073;
-        }
+    .quest-editor__access-form-item p {
+        margin: 0;
+        color: #00000073;
     }
 
     .ant-form-item-control-input-content .ant-picker {
@@ -85,13 +84,13 @@
     .ant-input-number-group .ant-input-number-group-addon {
         padding: 0;
         width: 32px;
+    }
 
-        span {
-            width: 32px;
-            height: 32px;
-            justify-content: center;
-            user-select: none;
-        }
+    .ant-input-number-group .ant-input-number-group-addon span {
+        width: 32px;
+        height: 32px;
+        justify-content: center;
+        user-select: none;
     }
 
     .quest-editor__buttons {

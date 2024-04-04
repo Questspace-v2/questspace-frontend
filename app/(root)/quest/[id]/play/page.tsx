@@ -1,17 +1,26 @@
 import { getServerSession } from 'next-auth';
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
-import Footer from '@/components/Footer/Footer';
 import React from 'react';
+import dynamic from 'next/dynamic';
+import { redirect } from 'next/navigation';
+
+const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
+    ssr: false,
+})
 
 export default async function PlayQuestPage() {
     const session = await getServerSession();
 
+    if (!session || !session.user) {
+        redirect('/auth');
+    }
+
     return (
         <>
-            <Header isAuthorized={Boolean(session)}/>
+            <Header isAuthorized/>
             <Body />
-            <Footer />
+            <DynamicFooter />
         </>
     );
 }

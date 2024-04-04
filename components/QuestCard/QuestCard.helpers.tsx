@@ -5,15 +5,17 @@ import { IUser } from '@/app/types/user-interfaces';
 import './QuestCard.css';
 
 export interface QuestHeaderProps {
-    access: string,
-    id: string,
-    creator: IUser,
-    start_time: string | Date,
-    finish_time: string | Date,
-    media_link: string,
-    name: string,
-    registration_deadline: string | Date,
-    status: string
+    quest: {
+        access: string,
+        id: string,
+        creator: IUser,
+        start_time: string | Date,
+        finish_time: string | Date,
+        media_link: string,
+        name: string,
+        registration_deadline: string | Date,
+        status: string
+    }
 }
 
 export const enum QuestStatus {

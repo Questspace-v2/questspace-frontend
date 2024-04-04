@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import Markdown from 'react-markdown';
 import { ClockCircleTwoTone, CopyOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import { IQuest } from '@/app/types/quest-interfaces';
+import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 
 import './Quest.css';
 import { Button, message, Skeleton } from 'antd';
@@ -110,15 +110,15 @@ function QuestContent({ description }: QuestContentProps) {
     );
 }
 
-export default function Quest({props, isCreator}: {props: IQuest, isCreator: boolean}) {
+export default function Quest({props, isCreator}: {props: IGetQuestResponse, isCreator: boolean}) {
     return (
         <>
             {isCreator && (
                 <QuestAdminPanel />
             )}
             <QuestHeader props={props} />
-            <QuestResults status={props.status} />
-            <QuestContent description={props.description} />
+            <QuestResults status={props.quest.status} />
+            <QuestContent description={props.quest.description} />
             <QuestTeam />
         </>
     );

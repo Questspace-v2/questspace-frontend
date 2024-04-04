@@ -10,20 +10,20 @@ import Link from 'next/link';
 export default function QuestCard({mode, props} : {mode: 'full' | 'preview', props?: QuestHeaderProps}) {
     if (mode === 'preview' && props) {
         return (
-            <Link href={`/quest/${props.id}`} className={'quest-card__anchor'} prefetch={false}>
+            <Link href={`/quest/${props.quest.id}`} className={'quest-card__anchor'} prefetch={false}>
                 <Card
                     className={'quest-card quest-card__mode_preview'}
                     cover={<Image
-                        src={`https://source.unsplash.com/random/${props.name}`}
+                        src={`https://source.unsplash.com/random/${props.quest.name}`}
                         fill sizes={'100% 128px'} style={{ objectFit: 'cover' }} alt={'quest avatar'} placeholder={'empty'}/>}
                 >
-                    <h3 className={'quest-card__name'}>{props.name}</h3>
-                    <p className={'quest-card__start'}>{(props.start_time)?.toString()}</p>
+                    <h3 className={'quest-card__name'}>{props.quest.name}</h3>
+                    <p className={'quest-card__start'}>{(props.quest.start_time)?.toString()}</p>
                     <div className={'status__wrapper'}>
                         <svg className={'quest-card__status_registration'} xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="none" viewBox="0 0 8 8">
                             <circle cx="4" cy="4" r="4" fill="black" />
                         </svg>
-                        <p className={'quest-card__status quest-card__status_registration'}>Регистрация до {(props.registration_deadline)?.toString()}</p>
+                        <p className={'quest-card__status quest-card__status_registration'}>Регистрация до {(props.quest.registration_deadline)?.toString()}</p>
                     </div>
                 </Card>
             </Link>
@@ -39,7 +39,7 @@ export default function QuestCard({mode, props} : {mode: 'full' | 'preview', pro
             finish_time: finishTime,
             media_link: mediaLink,
             status
-        } = props;
+        } = props.quest;
         const {username, avatar_url: avatarUrl} = creator;
         const startDate = new Date(startTime);
         const registrationDate = new Date(registrationDeadline);
