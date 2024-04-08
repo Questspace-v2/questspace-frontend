@@ -31,7 +31,13 @@ export default function QuestCard({props} : {props?: QuestHeaderProps}) {
                 className={'quest-card quest-card__mode_preview'}
                 cover={<Image
                     src={mediaLink ?? `https://source.unsplash.com/random/${name}`}
-                    fill sizes={'100% 128px'} style={{ objectFit: 'cover' }} alt={'quest avatar'} placeholder={'empty'}/>}
+                    fill
+                    sizes={'100% 128px'}
+                    style={{ objectFit: 'cover' }}
+                    alt={'quest avatar'}
+                    placeholder={'empty'}
+                    fetchPriority={'low'}
+                />}
             >
                 <h3 className={'quest-card__name'}>{name}</h3>
                 <p className={'quest-card__start'}>{startDateLabel}</p>

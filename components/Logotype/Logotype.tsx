@@ -27,6 +27,7 @@ export default function Logotype(props: LogotypeProps) {
                 unselectable={'on'}
                 style={style && {height: 'auto'}}
                 loading={'eager'}
+                priority
             />
         );
     }
@@ -44,6 +45,7 @@ export default function Logotype(props: LogotypeProps) {
                     unselectable={'on'}
                     style={style}
                     loading={'eager'}
+                    priority
                 />
             );
     }
