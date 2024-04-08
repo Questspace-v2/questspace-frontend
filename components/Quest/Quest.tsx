@@ -30,6 +30,7 @@ const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?
 
 interface QuestContentProps {
     description?: string;
+    mode: 'page' | 'edit'
 }
 
 function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
@@ -112,6 +113,42 @@ function QuestHeader({props, mode}: {props?: QuestHeaderProps, mode: 'page' | 'e
         );
     }
 
+    if (mode === 'edit') {
+        return (
+            <>
+                {mediaLink &&
+                    <div className={'quest-image__container'}>
+                        <Image
+                            className={'quest-image__image'}
+                            src={mediaLink}
+                            width={1000}
+                            height={500}
+                            alt={'quest image'}
+                        />
+                    </div>
+                }
+                <h2 className={'roboto-flex-header'}>{name}</h2>
+                <div className={'quest-card__text-content'}>
+                    <div className={'quest-preview__information'}>
+                        <div className={'information__block'}>
+                            <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
+                                   height={16} style={{ borderRadius: '8px' }} />
+                            <p>{username}</p>
+                        </div>
+                        {startTime && <div className={'information__block'}>
+                            <CalendarOutlined />
+                            <p className={'quest-card__start'}>{startDateLabel}</p>
+                        </div>}
+                        {startTime && finishTime && <div className={'information__block'}>
+                            <HourglassOutlined />
+                            <p className={'quest-card__start'}>{timeDiffLabel}</p>
+                        </div>}
+                    </div>
+                </div>
+            </>
+        );
+    }
+
     return null;
 }
 
@@ -175,17 +212,30 @@ function QuestTeam({team} : {team?: ITeam}) {
     );
 }
 
-function QuestContent({ description }: QuestContentProps) {
+function QuestContent({ description, mode}: QuestContentProps) {
     const afterParse = useMemo(() => parseToMarkdown(description), [description]);
 
-    return (
-        <ContentWrapper className={'quest-page__content-wrapper quest-page__content'}>
-            <h2 className={'roboto-flex-header responsive-header-h2'}>О квесте</h2>
-            <Skeleton paragraph loading={!afterParse}>
-            <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>
-            </Skeleton>
-        </ContentWrapper>
-    );
+    if (mode === 'page') {
+        return (
+            <ContentWrapper className={'quest-page__content-wrapper quest-page__content'}>
+                <h2 className={'roboto-flex-header responsive-header-h2'}>О квесте</h2>
+                <Skeleton paragraph loading={!afterParse}>
+                    <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>
+                </Skeleton>
+            </ContentWrapper>
+        );
+    }
+
+    if (mode === 'edit') {
+        return (
+            <>
+                {description && <h2 className={'roboto-flex-header'}>О квесте</h2>}
+                <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{description}</Markdown>
+            </>
+        );
+    }
+
+    return null;
 }
 
 export {QuestHeader, QuestContent, QuestAdminPanel, QuestResults, QuestTeam};

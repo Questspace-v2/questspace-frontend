@@ -5,11 +5,11 @@ export default function QuestPageContent({props, isCreator}: {props: IGetQuestRe
     const {quest, team} = props;
     return (
         <>
-            <QuestAdminPanel isCreator={isCreator}/>
-            <QuestHeader props={quest} mode={'page'}/>
+            <QuestAdminPanel isCreator={isCreator} />
+            <QuestHeader props={quest} mode={'page'} />
             <QuestResults status={quest.status} />
-            <QuestContent description={quest.description} />
-            <QuestTeam team={team}/>
+            <QuestContent description={quest.description} mode={'page'} />
+            <QuestTeam team={team} />
         </>
     );
 }

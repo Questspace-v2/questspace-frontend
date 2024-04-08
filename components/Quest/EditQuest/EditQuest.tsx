@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
@@ -10,22 +10,41 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useEffect, useRef, useState } from 'react';
 import QuestPreview from '@/components/Quest/EditQuest/QuestPreview/QuestPreview';
 import QuestEditor, { QuestAboutForm } from '@/components/Quest/EditQuest/QuestEditor/QuestEditor';
-import { useSession } from 'next-auth/react';
+import { IGetQuestResponse } from '@/app/types/quest-interfaces';
+import dayjs from 'dayjs';
 
-export default function EditQuest() {
+export default function EditQuest({questData} : {questData?: IGetQuestResponse}) {
     const [selectedTab, setSelectedTab] = useState<string>('editor');
     const [form] = Form.useForm<QuestAboutForm>();
-    const watch = Form.useWatch([], form);
-    const {xs, sm, md} = useBreakpoint();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const fileListRef = useRef(fileList[0]);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {accessToken} = (useSession().data!);
 
     useEffect(() => {
+        if (questData) {
+            const {quest} = questData;
+            const {
+                name,
+                description,
+                finish_time: finishTime,
+                start_time: startTime,
+                access,
+                media_link: image,
+                max_team_cap: maxTeamCap,
+                registration_deadline: registrationDeadline
+            } = quest;
+
+            const formProps: QuestAboutForm = {
+                // @ts-expect-error жалуется на dayjs
+                name, description, finishTime: dayjs(finishTime), access, startTime: dayjs(startTime), image, maxTeamCap, registrationDeadline: dayjs(registrationDeadline)
+            }
+            form.setFieldsValue(formProps);
+        }
         // eslint-disable-next-line prefer-destructuring
         fileListRef.current = fileList[0];
-    }, [fileList]);
+    }, [fileList, form, questData]);
+
+    const watch = Form.useWatch([], form);
+    const {xs, sm, md} = useBreakpoint();
 
     const items: TabsProps['items'] = [
         {
