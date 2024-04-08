@@ -7,12 +7,44 @@
     .quest-card__status_registration {
         color: var(--status-color-registration);
 
-        circle {
+        & circle {
             fill: var(--status-color-registration);
         }
     }
 
-    p {
+    .quest-card__status_registration-done {
+        color: var(--status-color-registration-done);
+
+        & circle {
+            fill: var(--status-color-registration-done);
+        }
+    }
+
+    .quest-card__status_running {
+        color: var(--status-color-running);
+
+        & circle {
+            fill: var(--status-color-running);
+        }
+    }
+
+    .quest-card__status_wait-results {
+        color: var(--status-color-wait-results);
+
+        & circle {
+            fill: var(--status-color-wait-results);
+        }
+    }
+
+    .quest-card__status_finished {
+        color: var(--status-color-finished);
+
+        & circle {
+            fill: var(--status-color-finished);
+        }
+    }
+
+    & p {
         margin: 0;
     }
 }

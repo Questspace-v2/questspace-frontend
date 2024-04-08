@@ -90,7 +90,7 @@ class Client {
         credentials = 'same-origin',
         headers: Record<string, string> = {}
     ) {
-        const paramsString = queryParams?.fields && queryParams.page_size ? Client.buildQueryString(queryParams) : '';
+        const paramsString = Client.buildQueryString(queryParams);
         const url = paramsString ? `${this.backendUrl}${endpoint}?${paramsString}` : `${this.backendUrl}${endpoint}`;
         const config = Client.buildConfig(method, data, credentials, headers);
 

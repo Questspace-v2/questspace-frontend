@@ -23,7 +23,10 @@
 
     /* status color */
     --status-color-registration: #1890FF;
+    --status-color-registration-done: #722ED1;
     --status-color-running: #389E0D;
+    --status-color-wait-results: #D48806;
+    --status-color-finished: #434343;
 }
 
 * {

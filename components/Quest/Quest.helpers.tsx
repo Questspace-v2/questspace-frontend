@@ -99,41 +99,71 @@ const getQuestStatusLabel = (registrationDate: Date, status: string) => {
     if (statusQuest === QuestStatus.StatusOnRegistration) {
         const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
         return (
-            <p className={'quest-card__status quest-card__status_registration'}>
-                Регистрация до {registrationDayMonth}
-            </p>
+            <>
+                <svg className={'quest-card__status_registration'} xmlns="http://www.w3.org/2000/svg" width="8"
+                     height="8" fill="none" viewBox="0 0 8 8">
+                    <circle cx="4" cy="4" r="4" fill="black" />
+                </svg>
+                <p className={'quest-card__status quest-card__status_registration'}>
+                    Регистрация до {registrationDayMonth}
+                </p>
+            </>
         );
     }
 
     if (statusQuest === QuestStatus.StatusRegistrationDone) {
         return (
-            <p className={'quest-card__status quest-card__status_registration-done'}>
-                Регистрация завершена
-            </p>
+            <>
+                <svg className={'quest-card__status_registration-done'} xmlns="http://www.w3.org/2000/svg" width="8"
+                     height="8" fill="none" viewBox="0 0 8 8">
+                    <circle cx="4" cy="4" r="4" fill="black" />
+                </svg>
+                <p className={'quest-card__status quest-card__status_registration-done'}>
+                    Регистрация завершена
+                </p>
+            </>
         );
     }
 
     if (statusQuest === QuestStatus.StatusRunning) {
         return (
-            <p className={'quest-card__status quest-card__status_running'}>
-                Идет сейчас
-            </p>
+            <>
+                <svg className={'quest-card__status_running'} xmlns="http://www.w3.org/2000/svg" width="8"
+                     height="8" fill="none" viewBox="0 0 8 8">
+                    <circle cx="4" cy="4" r="4" fill="black" />
+                </svg>
+                <p className={'quest-card__status quest-card__status_running'}>
+                    Идет сейчас
+                </p>
+            </>
         );
     }
 
     if (statusQuest === QuestStatus.StatusWaitResults) {
         return (
-            <p className={'quest-card__status quest-card__status_wait-results'}>
-                Считаем результаты
-            </p>
+            <>
+                <svg className={'quest-card__status_wait-results'} xmlns="http://www.w3.org/2000/svg" width="8"
+                     height="8" fill="none" viewBox="0 0 8 8">
+                    <circle cx="4" cy="4" r="4" fill="black" />
+                </svg>
+                <p className={'quest-card__status quest-card__status_wait-results'}>
+                    Считаем результаты
+                </p>
+            </>
         );
     }
 
     if (statusQuest === QuestStatus.StatusFinished) {
         return (
-            <p className={'quest-card__status quest-card__status_finished'}>
-                Завершен
-            </p>
+            <>
+                <svg className={'quest-card__status_finished'} xmlns="http://www.w3.org/2000/svg" width="8"
+                         height="8" fill="none" viewBox="0 0 8 8">
+                        <circle cx="4" cy="4" r="4" fill="black" />
+                </svg>
+                <p className={'quest-card__status quest-card__status_finished'}>
+                    Завершен
+                </p>
+            </>
         );
     }
 

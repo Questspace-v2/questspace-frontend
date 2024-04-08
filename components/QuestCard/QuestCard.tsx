@@ -36,9 +36,6 @@ export default function QuestCard({props} : {props?: QuestHeaderProps}) {
                 <h3 className={'quest-card__name'}>{name}</h3>
                 <p className={'quest-card__start'}>{startDateLabel}</p>
                 <div className={'status__wrapper'}>
-                    <svg className={'quest-card__status_registration'} xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="none" viewBox="0 0 8 8">
-                        <circle cx="4" cy="4" r="4" fill="black" />
-                    </svg>
                     {getQuestStatusLabel(registrationDate, status)}
                 </div>
             </Card>
