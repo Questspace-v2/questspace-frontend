@@ -1,9 +1,9 @@
-.create-quest__content-wrapper {
+.edit-quest__content-wrapper {
     padding-top: 24px;
     padding-bottom: 24px;
     gap: 32px;
 
-    .create-quest__body__content {
+    .edit-quest__body__content {
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -18,11 +18,11 @@
     }
 }
 
-.create-quest__content-wrapper section {
+.edit-quest__content-wrapper section {
     width: calc((100% - 65px) / 2);
 }
 
-.create-quest__header__content {
+.edit-quest__header__content {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -47,7 +47,7 @@
 }
 
 @media (max-width: 639px) {
-    .create-quest__content-wrapper {
+    .edit-quest__content-wrapper {
         gap: 16px;
     }
 }

@@ -9,7 +9,7 @@ import './QuestPreview.css'
 import { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { CalendarOutlined, HourglassOutlined } from '@ant-design/icons';
-import { getTimeDiff } from '@/components/QuestCard/QuestCard.helpers';
+import { getTimeDiff } from '@/components/Quest/Quest.helpers';
 
 dayjs.locale('ru')
 
@@ -52,20 +52,12 @@ export default function QuestPreview({form, file}: QuestEditorProps) {
     return (
         <div className={'quest-preview__wrapper'}>
             {file &&
-                <div style={{
-                    aspectRatio: '2/1',
-                    width: '100%',
-                    height: 'auto',
-                    display: 'flex',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                    borderRadius: '16px',
-                }}>
+                <div className={'quest-image__container'}>
                     <Image
+                        className={'quest-image__image'}
                         src={image}
                         width={1000}
-                        height={1000}
-                        style={{ maxWidth: '100%', objectFit: 'contain', height: 'auto' }}
+                        height={500}
                         alt={'quest image'}
                     />
                 </div>

@@ -1,13 +1,13 @@
-import Quest from '@/components/Quest/Quest';
+import React from 'react';
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
-import React from 'react';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { notFound } from 'next/navigation';
 import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import { getQuestById } from '@/app/api/api';
 import dynamic from 'next/dynamic';
+import QuestPageContent from '@/components/Quest/QuestPageContent/QuestPageContent';
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
     ssr: false,
@@ -31,7 +31,7 @@ export default async function QuestPage({params}: {params: {id: string}}) {
         <>
             <Header isAuthorized={Boolean(session)}/>
             <Body>
-                <Quest props={questData} isCreator={isCreator}/>
+                <QuestPageContent props={questData} isCreator={isCreator}/>
             </Body>
             <DynamicFooter />
         </>

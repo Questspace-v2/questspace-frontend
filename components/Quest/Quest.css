@@ -8,7 +8,7 @@
         white-space: pre-wrap;
         user-select: text;
     }
-    p {
+    & p {
         margin: 0;
     }
 }
@@ -64,12 +64,12 @@
     background: var(--quit-color);
     transition: ease background-color .2s;
 
-    span {
+    & span {
         color: white;
         transition: ease color .2s;
     }
 
-    path {
+    & path {
         fill: white;
         transition: ease fill .2s;
     }
@@ -84,7 +84,7 @@
     align-items: center;
     justify-content: space-between;
 
-    p {
+    & p {
         margin: 0;
     }
 }
@@ -103,7 +103,7 @@
     .quest-page__admin-panel {
         padding: 24px;
 
-        button span {
+        & button span {
             position: relative;
             left: -15px;
         }

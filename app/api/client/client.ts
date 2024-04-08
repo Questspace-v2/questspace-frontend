@@ -79,19 +79,18 @@ class Client {
     }
 
     static buildQueryString(params = {}) {
-        const searchParams = new URLSearchParams(params);
-        return searchParams.toString();
+        return new URLSearchParams(params).toString();
     }
 
     async handleServerRequest(
         endpoint = '/',
         method = 'GET',
         data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate | IPasswordUpdate| string, // Жесть, потом придумаю получше
-        queryParams = {},
+        queryParams?: Record<string, unknown>,
         credentials = 'same-origin',
         headers: Record<string, string> = {}
     ) {
-        const paramsString = Client.buildQueryString(queryParams);
+        const paramsString = queryParams?.fields && queryParams.page_size ? Client.buildQueryString(queryParams) : '';
         const url = paramsString ? `${this.backendUrl}${endpoint}?${paramsString}` : `${this.backendUrl}${endpoint}`;
         const config = Client.buildConfig(method, data, credentials, headers);
 

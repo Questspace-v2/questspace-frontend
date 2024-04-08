@@ -2,20 +2,18 @@ import { Button } from 'antd';
 import { FlagFilled, PlayCircleFilled } from '@ant-design/icons';
 import { IUser } from '@/app/types/user-interfaces';
 
-import './QuestCard.css';
+import '../QuestCard/QuestCard.css';
 
 export interface QuestHeaderProps {
-    quest: {
-        access: string,
-        id: string,
-        creator: IUser,
-        start_time: string | Date,
-        finish_time: string | Date,
-        media_link: string,
-        name: string,
-        registration_deadline: string | Date,
-        status: string
-    }
+    access: string,
+    id: string,
+    creator: IUser,
+    start_time: string | Date,
+    finish_time: string | Date,
+    media_link: string,
+    name: string,
+    registration_deadline: string | Date,
+    status: string
 }
 
 export const enum QuestStatus {
@@ -44,7 +42,15 @@ export function getTimeDiff(startDate: Date, finishDate: Date) {
     }
     return `${Math.floor(hours)}\u00A0${declOfNum(hours, ['час', 'часа', 'часов'])}`;
 }
-const getQuestCardStatusButton = (startDate: Date, registrationDate: Date, finishDate: Date, status: string) => {
+
+const getStartDateText = (startDate: Date) => {
+    const startDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'});
+    const startHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+
+    return `${startDayMonth} в ${startHourMinute}`;
+}
+
+const getQuestStatusButton = (startDate: Date, registrationDate: Date, finishDate: Date, status: string) => {
     const statusQuest = status as QuestStatus;
     if (statusQuest === QuestStatus.StatusOnRegistration) {
         const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
@@ -88,4 +94,50 @@ const getQuestCardStatusButton = (startDate: Date, registrationDate: Date, finis
     return null;
 }
 
-export { getQuestCardStatusButton };
+const getQuestStatusLabel = (registrationDate: Date, status: string) => {
+    const statusQuest = status as QuestStatus;
+    if (statusQuest === QuestStatus.StatusOnRegistration) {
+        const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
+        return (
+            <p className={'quest-card__status quest-card__status_registration'}>
+                Регистрация до {registrationDayMonth}
+            </p>
+        );
+    }
+
+    if (statusQuest === QuestStatus.StatusRegistrationDone) {
+        return (
+            <p className={'quest-card__status quest-card__status_registration-done'}>
+                Регистрация завершена
+            </p>
+        );
+    }
+
+    if (statusQuest === QuestStatus.StatusRunning) {
+        return (
+            <p className={'quest-card__status quest-card__status_running'}>
+                Идет сейчас
+            </p>
+        );
+    }
+
+    if (statusQuest === QuestStatus.StatusWaitResults) {
+        return (
+            <p className={'quest-card__status quest-card__status_wait-results'}>
+                Считаем результаты
+            </p>
+        );
+    }
+
+    if (statusQuest === QuestStatus.StatusFinished) {
+        return (
+            <p className={'quest-card__status quest-card__status_finished'}>
+                Завершен
+            </p>
+        );
+    }
+
+    return null;
+};
+
+export { getQuestStatusButton, getQuestStatusLabel, getStartDateText };

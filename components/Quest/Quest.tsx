@@ -2,16 +2,29 @@
 
 import { useMemo } from 'react';
 import Markdown from 'react-markdown';
-import { ClockCircleTwoTone, CopyOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+    CalendarOutlined,
+    ClockCircleTwoTone,
+    CopyOutlined,
+    EditOutlined,
+    HourglassOutlined,
+    LogoutOutlined,
+} from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 
 import './Quest.css';
-import { Button, message, Skeleton } from 'antd';
-import { QuestHeaderProps, QuestStatus } from '@/components/QuestCard/QuestCard.helpers';
-import QuestCard from '@/components/QuestCard/QuestCard';
+import { Button, Card, message, Skeleton } from 'antd';
+import {
+    getQuestStatusButton,
+    getStartDateText,
+    getTimeDiff,
+    QuestHeaderProps,
+    QuestStatus,
+} from '@/components/Quest/Quest.helpers';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ITeam } from '@/app/types/user-interfaces';
+import Image from 'next/image';
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
@@ -19,26 +32,87 @@ interface QuestContentProps {
     description?: string;
 }
 
-function QuestAdminPanel() {
+function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
     const currentPath = usePathname();
 
-    return (
-        <ContentWrapper className={'quest-page__admin-panel'}>
-            <p>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
-            <Link shallow href={`${currentPath}/edit`}>
-                <Button type={'link'} size={'large'} style={{color: '#1890FF'}}><EditOutlined/>Редактировать квест</Button>
-            </Link>
+    if (isCreator) {
+        return (
+            <ContentWrapper className={'quest-page__admin-panel'}>
+                <p>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
+                <Link shallow href={`${currentPath}/edit`}>
+                    <Button type={'link'} size={'large'} style={{color: '#1890FF'}}><EditOutlined/>Редактировать квест</Button>
+                </Link>
 
-        </ContentWrapper>
-    );
+            </ContentWrapper>
+        );
+    }
+
+    return null;
 }
 
-function QuestHeader({props}: {props?: QuestHeaderProps}) {
+function QuestHeader({props, mode}: {props?: QuestHeaderProps, mode: 'page' | 'edit'}) {
     if (!props) {
         return null;
     }
 
-    return <QuestCard mode={'full'} props={props} />;
+    const {
+        name,
+        start_time: startTime,
+        creator ,
+        registration_deadline: registrationDeadline,
+        finish_time: finishTime,
+        media_link: mediaLink,
+        status
+    } = props;
+    const {username, avatar_url: avatarUrl} = creator;
+
+    const registrationDate = new Date(registrationDeadline);
+    const startDate = new Date(startTime);
+    const finishDate = new Date(finishTime);
+    const timeDiffLabel = getTimeDiff(startDate, finishDate);
+    const startDateLabel = getStartDateText(startDate);
+
+    const imageNode = <Image
+        src={mediaLink}
+        width={1000}
+        height={1000}
+        style={{ maxWidth: '100%', objectFit: 'contain', height: 'auto' }}
+        alt={'quest avatar'}
+    />;
+
+    if (mode === 'page') {
+        return (
+            <ContentWrapper className={'quest-card__wrapper'}>
+                <Card
+                    className={'quest-card quest-card__mode_full'}
+                    cover={imageNode}
+                    bordered={false}
+                >
+                    <div className={'quest-card__text-content'}>
+                        <h1 className={'quest-card__name roboto-flex-header responsive-header-h1'}>{name}</h1>
+                        <div className={'quest-preview__information'}>
+                            <div className={'information__block'}>
+                                <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
+                                       height={16} style={{ borderRadius: '8px' }} />
+                                <p>{username}</p>
+                            </div>
+                            <div className={'information__block'}>
+                                <CalendarOutlined />
+                                <p className={'quest-card__start'}>{startDateLabel}</p>
+                            </div>
+                            <div className={'information__block'}>
+                                <HourglassOutlined />
+                                <p className={'quest-card__start'}>{timeDiffLabel}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {getQuestStatusButton(startDate, registrationDate, finishDate, status)}
+                </Card>
+            </ContentWrapper>
+        );
+    }
+
+    return null;
 }
 
 function QuestResults({status} : {status: QuestStatus | string}) {
@@ -60,7 +134,11 @@ function QuestResults({status} : {status: QuestStatus | string}) {
     return null;
 }
 
-function QuestTeam() {
+function QuestTeam({team} : {team?: ITeam}) {
+    if (!team) {
+        return null;
+    }
+
     const teamName = 'Швейцария еще как существует';
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -110,16 +188,4 @@ function QuestContent({ description }: QuestContentProps) {
     );
 }
 
-export default function Quest({props, isCreator}: {props: IGetQuestResponse, isCreator: boolean}) {
-    return (
-        <>
-            {isCreator && (
-                <QuestAdminPanel />
-            )}
-            <QuestHeader props={props} />
-            <QuestResults status={props.quest.status} />
-            <QuestContent description={props.quest.description} />
-            <QuestTeam />
-        </>
-    );
-}
+export {QuestHeader, QuestContent, QuestAdminPanel, QuestResults, QuestTeam};

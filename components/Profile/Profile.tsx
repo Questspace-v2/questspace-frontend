@@ -4,7 +4,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './Profile.css';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import EditProfile from '@/components/EditProfile/EditProfile';
+import EditProfile from '@/components/Profile/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import { IUser } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import dynamic from 'next/dynamic';
 
-const DynamicCreateQuest = dynamic(() => import('@/components/CreateQuest/CreateQuest'), {ssr: false})
+const DynamicCreateQuest = dynamic(() => import('@/components/Quest/EditQuest/EditQuest'), {ssr: false})
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
     ssr: false,

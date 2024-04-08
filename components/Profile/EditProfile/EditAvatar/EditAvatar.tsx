@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { message, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { updateUser } from '@/app/api/api';
-import { getCenter, ModalEnum, SubModalProps } from '@/components/EditProfile/EditProfile.helpers';
+import { getCenter, ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import client from '@/app/api/client/client';
 import { UploadRequestOption } from 'rc-upload/lib/interface';

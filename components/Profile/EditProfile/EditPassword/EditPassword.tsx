@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { getCenter, ModalEnum, SubModalProps } from '@/components/EditProfile/EditProfile.helpers';
+import { getCenter, ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
 import { Button, Form, Input, Modal } from 'antd';
 import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';

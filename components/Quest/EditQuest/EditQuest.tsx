@@ -2,17 +2,17 @@
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
-import './CreateQuest.css';
+import './EditQuest.css';
 import { Button, Form, Tabs, TabsProps, UploadFile } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useEffect, useRef, useState } from 'react';
-import QuestPreview from '@/components/CreateQuest/QuestPreview/QuestPreview';
-import QuestEditor, { QuestAboutForm } from '@/components/CreateQuest/QuestEditor/QuestEditor';
+import QuestPreview from '@/components/Quest/EditQuest/QuestPreview/QuestPreview';
+import QuestEditor, { QuestAboutForm } from '@/components/Quest/EditQuest/QuestEditor/QuestEditor';
 import { useSession } from 'next-auth/react';
 
-export default function CreateQuest() {
+export default function EditQuest() {
     const [selectedTab, setSelectedTab] = useState<string>('editor');
     const [form] = Form.useForm<QuestAboutForm>();
     const watch = Form.useWatch([], form);
@@ -42,8 +42,8 @@ export default function CreateQuest() {
 
     if (sm && !md) {
         return (
-            <ContentWrapper className={'create-quest__content-wrapper'}>
-                <div className={'create-quest__header__content'}>
+            <ContentWrapper className={'edit-quest__content-wrapper'}>
+                <div className={'edit-quest__header__content'}>
                     <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
                         <Button className={'main-menu__button'} type={'link'} size={'middle'}>
                             <ArrowLeftOutlined />Вернуться на главную
@@ -58,8 +58,8 @@ export default function CreateQuest() {
 
     if (xs) {
         return (
-            <ContentWrapper className={'create-quest__content-wrapper'}>
-                <div className={'create-quest__header__content'}>
+            <ContentWrapper className={'edit-quest__content-wrapper'}>
+                <div className={'edit-quest__header__content'}>
                     <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
                         <Button className={'main-menu__button'} type={'link'} size={'middle'}>
                             <ArrowLeftOutlined />Вернуться на главную
@@ -73,8 +73,8 @@ export default function CreateQuest() {
     }
 
     return (
-        <ContentWrapper className={'create-quest__content-wrapper'}>
-            <div className={'create-quest__header__content'}>
+        <ContentWrapper className={'edit-quest__content-wrapper'}>
+            <div className={'edit-quest__header__content'}>
                 <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
                     <Button className={'main-menu__button'} type={'link'} size={'middle'}>
                         <ArrowLeftOutlined />Вернуться на главную
@@ -82,7 +82,7 @@ export default function CreateQuest() {
                 </Link>
                 <h1 className={'roboto-flex-header responsive-header-h1'}>Создание квеста</h1>
             </div>
-            <div className={'create-quest__body__content'}>
+            <div className={'edit-quest__body__content'}>
                 <section>
                     <h2 className={'roboto-flex-header'} style={{marginBottom: '16px'}}>Редактор</h2>
                     <QuestEditor form={form} fileList={fileList} setFileList={setFileList}/>

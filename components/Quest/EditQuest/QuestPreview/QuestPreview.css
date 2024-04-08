@@ -8,9 +8,6 @@
         white-space: pre-wrap;
         user-select: text;
     }
-    p {
-        margin: 0;
-    }
 
     .quest-preview__information {
         display: flex;
@@ -20,12 +17,16 @@
         .information__block {
             display: flex;
             gap: 8px;
-
-            img {
-                align-self: center;
-            }
         }
     }
+}
+
+.quest-preview__wrapper p {
+    margin: 0;
+}
+
+.quest-preview__information .information__block img {
+    align-self: center;
 }
 
 .quest-preview_default {
@@ -34,12 +35,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    p {
-        margin: 0;
-        width: 168px;
-        text-align: center;
-    }
+.quest-preview_default p {
+    margin: 0;
+    width: 168px;
+    text-align: center;
+}
+
+.quest-image__container {
+    aspect-ratio: 2 / 1;
+    width: 100%;
+    height: auto;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.quest-image__image {
+    color: transparent;
+    max-width: 100%;
+    object-fit: contain;
+    height: auto;
 }
 
 @media (max-width: 525px) {

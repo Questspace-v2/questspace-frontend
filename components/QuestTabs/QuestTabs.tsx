@@ -6,15 +6,16 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import './QuestTabs.css';
 import {
     createQuestButton,
-    getQuests, isSelectTab, SelectTab,
+    isSelectTab, SelectTab,
 } from '@/components/QuestTabs/QuestTabs.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useState } from 'react';
+import getBackendQuests from '@/components/QuestTabs/QuestTabs.server';
 
-export default function QuestTabs() {
+export default function QuestTabs({fetchedAllQuests} : {fetchedAllQuests: JSX.Element[] | JSX.Element}) {
     const { xs} = useBreakpoint();
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all');
-    const [tabContent, setTabContent] = useState<JSX.Element[] | JSX.Element>(getQuests(selectedTab));
+    const [tabContent, setTabContent] = useState<JSX.Element[] | JSX.Element>(fetchedAllQuests);
 
 
     const themeConfig: ThemeConfig = {
@@ -55,13 +56,14 @@ export default function QuestTabs() {
         { value: 'owned', label: 'Созданные квесты' },
     ];
 
-    const handleSelectTab = (value: string) => {
+    const handleSelectTab = async (value: string) => {
         if (!isSelectTab(value) || value === selectedTab) {
             return;
         }
+        const content = await getBackendQuests(value as SelectTab);
 
         setSelectedTab(value);
-        setTabContent(getQuests(value));
+        setTabContent(content);
     }
 
     if (xs) {
