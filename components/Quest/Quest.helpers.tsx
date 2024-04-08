@@ -2,7 +2,7 @@ import { Button } from 'antd';
 import { FlagFilled, PlayCircleFilled } from '@ant-design/icons';
 import { IUser } from '@/app/types/user-interfaces';
 
-import '../QuestCard/QuestCard.css';
+import '@/components/QuestTabs/QuestCard/QuestCard.css';
 
 export interface QuestHeaderProps {
     access: string,

@@ -1,6 +1,6 @@
 import { Button, ConfigProvider, Empty } from 'antd';
 import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
-import QuestCard from '@/components/QuestCard/QuestCard';
+import QuestCard from '@/components/QuestTabs/QuestCard/QuestCard';
 import Link from 'next/link';
 import { IQuest } from '@/app/types/quest-interfaces';
 
