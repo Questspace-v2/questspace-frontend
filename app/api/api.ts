@@ -69,8 +69,10 @@ export const getFilteredQuests = async (fields: string[], accessToken?: string, 
 export const getQuestTeams = async (questId: string) =>
     client.handleServerRequest(`/quest/${questId}/teams`);
 
-export const createTeam = async (questId: string, data: { name: string }) =>
-    client.handleServerRequest(`/quest/${questId}/teams`, 'POST', data);
+export const createTeam = async (questId: string, data: { name: string }, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/teams`, 'POST', data,
+        undefined, 'same-origin',
+        accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const joinTeam = async (invitePath: string) =>
     client.handleServerRequest(`/teams/join/${invitePath}`);

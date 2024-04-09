@@ -14,9 +14,3 @@ export interface SubModalProps {
     setCurrentModal?:  React.Dispatch<React.SetStateAction<ModalType>>,
     currentModal?: ModalType,
 }
-
-export const getCenter = (clientWidth: number, clientHeight: number) => {
-    const centerY = clientHeight / 2;
-    const centerX = clientWidth / 2;
-    return {x: centerX, y: centerY};
-}

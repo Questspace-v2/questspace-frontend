@@ -1,8 +1,12 @@
 import { Button } from 'antd';
-import { FlagFilled, PlayCircleFilled } from '@ant-design/icons';
+import { CheckOutlined, FlagFilled, PlayCircleFilled } from '@ant-design/icons';
 import { ITeam, IUser } from '@/app/types/user-interfaces';
 
 import '@/components/QuestTabs/QuestCard/QuestCard.css';
+import CreateTeam from '@/components/Quest/CreateTeam/CreateTeam';
+import { Dispatch, SetStateAction } from 'react';
+import { TeamModal, TeamModalType } from '@/lib/utils/utils';
+import InviteLink from '@/components/Quest/InviteLink/InviteLink';
 
 export interface QuestHeaderProps {
     access: string,
@@ -50,16 +54,35 @@ const getStartDateText = (startDate: Date) => {
     return `${startDayMonth} в ${startHourMinute}`;
 }
 
-const getQuestStatusButton = (startDate: Date, registrationDate: Date, finishDate: Date, status: string, team?: ITeam) => {
+const getQuestStatusButton = (startDate: Date, registrationDate: Date,
+                              finishDate: Date, status: string, isOpenModal: boolean,
+                              setOpenModal: Dispatch<SetStateAction<TeamModalType>>, id: string, team?: ITeam) => {
     const statusQuest = status as QuestStatus;
     if (statusQuest === QuestStatus.StatusOnRegistration) {
         const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
         const registrationHourMinute = registrationDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
 
+        const startDateDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
+        const startDateHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+
+        if (team) {
+            return (
+                <div>
+                    <Button>
+                        <CheckOutlined style={{marginInlineEnd: '3px'}}/>
+                        Ты уже в команде
+                    </Button>
+                    <p>{`Старт квеста ${startDateDayMonth}\u00A0${startDateHourMinute}`}</p>
+                    <InviteLink inviteLink={team?.invite_link}/>
+                </div>
+            );
+        }
+
         return (
             <div className={'quest-header__interactive quest-header__interactive_join'}>
-                <Button type={'primary'} size={'large'} block>Зарегистрироваться</Button>
+                <Button type={'primary'} size={'large'} block onClick={() => setOpenModal(TeamModal.CREATE_TEAM)}>Зарегистрироваться</Button>
                 <p>{`до ${registrationHourMinute}\u00A0${registrationDayMonth}`}</p>
+                <CreateTeam questId={id}/>
             </div>
         );
     }

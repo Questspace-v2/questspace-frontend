@@ -2,13 +2,13 @@ import React, { useMemo } from 'react';
 import { message, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { updateUser } from '@/app/api/api';
-import { getCenter, ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
+import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import client from '@/app/api/client/client';
 import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { useSession } from 'next-auth/react';
 import { RcFile } from 'antd/es/upload';
-import { uid } from '@/lib/utils/utils';
+import { getCenter, uid } from '@/lib/utils/utils';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 
 export default function EditAvatar({children, setCurrentModal}: SubModalProps) {

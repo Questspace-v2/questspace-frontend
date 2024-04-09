@@ -53,11 +53,13 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
 
 function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
     const [aspectRatio, setAspectRatio] = useState('2/1');
+    const [isOpenModal, setOpenModal] = useState(false);
     if (!props) {
         return null;
     }
 
     const {
+        id,
         name,
         start_time: startTime,
         creator ,
@@ -117,7 +119,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                             </div>
                         </div>
                     </div>
-                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, team)}
+                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, isOpenModal, setOpenModal, id, team)}
                 </Card>
             </ContentWrapper>
         );
@@ -192,7 +194,8 @@ function QuestTeam({team} : {team?: ITeam}) {
         return null;
     }
 
-    const teamName = 'Швейцария еще как существует';
+    const teamName = team.name;
+    const inviteLink = team.invite_link;
     const [messageApi, contextHolder] = message.useMessage();
 
     const success = () => {
@@ -220,8 +223,8 @@ function QuestTeam({team} : {team?: ITeam}) {
             <div className={'invite-link__wrapper'}>
                 <p className={'invite-link__text'}>Пригласи друзей в свою команду — поделись ссылкой:</p>
                 <Button className={'invite-link__link'} type={'link'} onClick={() => {
-                    navigator.clipboard.writeText('хуй').then(() => success()).catch(err => {throw err});
-                }}>questspace.app/invites/BROLDY <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
+                    navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
+                }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
 
             </div>
         </ContentWrapper>

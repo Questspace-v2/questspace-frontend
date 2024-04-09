@@ -1,0 +1,94 @@
+'use client'
+
+import React, { useMemo, useState } from 'react';
+import { getCenter, TeamModal, TeamModalType, ValidationStatus } from '@/lib/utils/utils';
+import { Button, Form, Input, Modal } from 'antd';
+import FormItem from 'antd/lib/form/FormItem';
+import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import { createTeam } from '@/app/api/api';
+import { ITeam } from '@/app/types/user-interfaces';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
+export default function CreateTeam({questId}: {questId: string}) {
+    const {clientWidth, clientHeight} = document.body;
+    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
+    const [form] = Form.useForm();
+    const { xs } = useBreakpoint();
+    const {data} = useSession();
+    const accessToken = data?.accessToken;
+    const router = useRouter();
+    const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
+
+    const [errorMsg, setErrorMsg] = useState('');
+    const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
+
+    const handleError = (msg: string) => {
+        setValidationStatus('error');
+        setErrorMsg(msg);
+    };
+
+    const handleFieldChange = () => {
+        setValidationStatus('success');
+        setErrorMsg('');
+    };
+
+    const handleSubmit = async () => {
+        const teamName = form.getFieldValue('teamName') as string;
+        if (!teamName) {
+            handleError('Это поле не должно быть пустым');
+            return;
+        }
+        const resp = await createTeam(questId, {name: teamName}, accessToken)
+            .then(response => response as ITeam)
+            .catch(err => {
+                handleError('Упс, что-то пошло не так...');
+                throw err;
+            });
+        if (resp) {
+            setCurrentModal(TeamModal.INVITE_LINK);
+            router.refresh();
+        }
+    };
+
+    const onCancel = () => {
+        setValidationStatus('success');
+        setErrorMsg('');
+        setCurrentModal(null);
+    };
+
+    return (
+        <Modal
+            open={currentModal === TeamModal.CREATE_TEAM}
+            centered
+            destroyOnClose
+            onCancel={onCancel}
+            width={xs ? '100%' : 400}
+            title={<h2>Регистрация команды</h2>}
+            mousePosition={centerPosition}
+            footer={null}
+        >
+            <Form form={form} autoComplete={'off'} preserve={false}>
+                <FormItem
+                    help={errorMsg}
+                    name={'teamName'}
+                    rules={[{required: true, message: 'Укажите имя команды'}]}
+                    validateStatus={validationStatus}>
+                    <Input
+                        type={'text'}
+                        placeholder={'Команда А'}
+                        style={{borderRadius: '2px'}}
+                        onChange={handleFieldChange}/>
+                </FormItem>
+                <FormItem>
+                    <Button
+                        type={'primary'}
+                        htmlType={'submit'}
+                        block
+                        onClick={handleSubmit}
+                    >Зарегистрировать команду</Button>
+                </FormItem>
+            </Form>
+        </Modal>
+    );
+}
