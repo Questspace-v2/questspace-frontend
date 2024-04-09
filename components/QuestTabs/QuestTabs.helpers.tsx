@@ -1,11 +1,8 @@
 import { Button, ConfigProvider, Empty } from 'antd';
 import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
-import QuestCard from '@/components/QuestCard/QuestCard';
+import QuestCard from '@/components/QuestTabs/QuestCard/QuestCard';
 import Link from 'next/link';
-import { getFilteredQuests } from '@/app/api/api';
-import { IFilteredQuestsResponse, IQuest } from '@/app/types/quest-interfaces';
-import { getServerSession } from 'next-auth';
-import authOptions from '@/app/api/auth/[...nextauth]/auth';
+import { IQuest } from '@/app/types/quest-interfaces';
 
 const selectTab = ['all', 'registered', 'owned'] as const;
 export type SelectTab = (typeof selectTab)[number];
@@ -59,46 +56,6 @@ export const customizedEmpty = (
 
 export function wrapInCard(quest: IQuest) {
     return (
-        <div key={quest.id}>
-            <QuestCard mode={'preview'} props={{quest}}/>
-        </div>
+            <QuestCard props={quest}/>
     );
-}
-
-export async function getBackendQuests(tab: SelectTab) {
-    const session = await getServerSession(authOptions);
-    const accessToken = session?.accessToken;
-    const data = await getFilteredQuests(
-        [`${tab}`],
-        accessToken
-    )
-        .then(res => res as IFilteredQuestsResponse)
-        .catch(err => {
-            throw err;
-        });
-
-    const quests = data[tab]?.quests;
-
-    if (!quests) {
-        return customizedEmpty;
-    }
-
-    if (tab === 'all') {
-        return quests.map(quest => wrapInCard(quest));
-    }
-    return customizedEmpty;
-}
-
-export function getQuests(tab: SelectTab) {
-    const result : JSX.Element[] = [];
-
-    if (tab === 'all') {
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 10; i++) {
-            // @ts-expect-error Ыа, тут не только имя квеста нужно передавать
-            result.push(<div key={i}><QuestCard mode={'preview'} props={{quest: {name: i.toString()}}}/></div>)
-        }
-        return result;
-    }
-    return customizedEmpty;
 }

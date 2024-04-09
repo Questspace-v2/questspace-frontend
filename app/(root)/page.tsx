@@ -5,6 +5,7 @@ import Body from '@/components/Body/Body';
 import Header from '@/components/Header/Header';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
+import getBackendQuests from '@/components/QuestTabs/QuestTabs.server';
 
 const DynamicQuestTabs = dynamic(() => import('@/components/QuestTabs/QuestTabs'), {
     ssr: false,
@@ -20,6 +21,7 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 })
 
 async function HomePage() {
+    const fetchedAllQuests = await getBackendQuests('all');
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
@@ -31,7 +33,7 @@ async function HomePage() {
             <Header isAuthorized/>
             <Body>
                 <DynamicProfile />
-                <DynamicQuestTabs />
+                <DynamicQuestTabs fetchedAllQuests={fetchedAllQuests}/>
             </Body>
             <DynamicFooter />
         </>

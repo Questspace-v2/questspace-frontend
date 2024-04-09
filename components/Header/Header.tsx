@@ -1,9 +1,10 @@
-import HeaderAvatar from '@/components/HeaderAvatar/HeaderAvatar';
-import './Header.css';
+import HeaderAvatar from '@/components/Header/HeaderAvatar/HeaderAvatar';
 import Logotype from '@/components/Logotype/Logotype';
 import { CSSProperties } from 'react';
 import Link from 'next/link';
 import { Button } from 'antd';
+
+import './Header.css';
 
 const pointerCursor: CSSProperties = {
     cursor: 'pointer',

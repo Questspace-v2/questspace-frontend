@@ -1,44 +1,171 @@
 'use client'
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Markdown from 'react-markdown';
-import { ClockCircleTwoTone, CopyOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+    CalendarOutlined,
+    ClockCircleTwoTone,
+    CopyOutlined,
+    EditOutlined,
+    HourglassOutlined,
+    LogoutOutlined,
+} from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 
 import './Quest.css';
-import { Button, message, Skeleton } from 'antd';
-import { QuestHeaderProps, QuestStatus } from '@/components/QuestCard/QuestCard.helpers';
-import QuestCard from '@/components/QuestCard/QuestCard';
+import { Button, Card, message, Skeleton } from 'antd';
+import {
+    getQuestStatusButton,
+    getStartDateText,
+    getTimeDiff,
+    QuestHeaderProps,
+    QuestStatus,
+} from '@/components/Quest/Quest.helpers';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ITeam } from '@/app/types/user-interfaces';
+import Image from 'next/image';
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
 interface QuestContentProps {
     description?: string;
+    mode: 'page' | 'edit'
 }
 
-function QuestAdminPanel() {
+function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
     const currentPath = usePathname();
 
-    return (
-        <ContentWrapper className={'quest-page__admin-panel'}>
-            <p>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
-            <Link shallow href={`${currentPath}/edit`}>
-                <Button type={'link'} size={'large'} style={{color: '#1890FF'}}><EditOutlined/>Редактировать квест</Button>
-            </Link>
+    if (isCreator) {
+        return (
+            <ContentWrapper className={'quest-page__admin-panel'}>
+                <p>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
+                <Link shallow href={`${currentPath}/edit`}>
+                    <Button type={'link'} size={'large'} style={{color: '#1890FF'}}><EditOutlined/>Редактировать квест</Button>
+                </Link>
 
-        </ContentWrapper>
-    );
+            </ContentWrapper>
+        );
+    }
+
+    return null;
 }
 
-function QuestHeader({props}: {props?: QuestHeaderProps}) {
+function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
+    const [aspectRatio, setAspectRatio] = useState('2/1');
     if (!props) {
         return null;
     }
 
-    return <QuestCard mode={'full'} props={props} />;
+    const {
+        name,
+        start_time: startTime,
+        creator ,
+        registration_deadline: registrationDeadline,
+        finish_time: finishTime,
+        media_link: mediaLink,
+        status
+    } = props;
+    const {username, avatar_url: avatarUrl} = creator;
+
+    const registrationDate = new Date(registrationDeadline);
+    const startDate = new Date(startTime);
+    const finishDate = new Date(finishTime);
+    const timeDiffLabel = getTimeDiff(startDate, finishDate);
+    const startDateLabel = getStartDateText(startDate);
+
+    if (mode === 'page') {
+        const imageNode = <Image
+            src={mediaLink}
+            width={1000}
+            height={1000}
+            style={{ width: '100%', objectFit: 'contain', height: 'auto' }}
+            alt={'quest avatar'}
+            loading={'eager'}
+            onLoad={({ target }) => {
+                const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+                if (naturalWidth > naturalHeight * 2) {
+                    setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+                }
+            }}
+        />;
+
+
+        return (
+            <ContentWrapper className={'quest-header__wrapper'}>
+                <Card
+                    className={'quest-header'}
+                    cover={imageNode}
+                    bordered={false}
+                    styles={{cover: {aspectRatio}}}
+                >
+                    <div className={'quest-header__text-content'}>
+                        <h1 className={'quest-header__name roboto-flex-header responsive-header-h1'}>{name}</h1>
+                        <div className={'quest-preview__information'}>
+                            <div className={'information__block'}>
+                                <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
+                                       height={16} style={{ borderRadius: '8px' }} />
+                                <p>{username}</p>
+                            </div>
+                            <div className={'information__block'}>
+                                <CalendarOutlined />
+                                <p className={'quest-header__start'}>{startDateLabel}</p>
+                            </div>
+                            <div className={'information__block'}>
+                                <HourglassOutlined />
+                                <p className={'quest-header__start'}>{timeDiffLabel}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, team)}
+                </Card>
+            </ContentWrapper>
+        );
+    }
+
+    if (mode === 'edit') {
+        return (
+            <>
+                {mediaLink &&
+                    <div className={'quest-image__container'} style={{aspectRatio}}>
+                        <Image
+                            className={'quest-image__image'}
+                            src={mediaLink}
+                            width={1000}
+                            height={1000}
+                            alt={'quest image'}
+                            onLoad={({ target }) => {
+                                const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+                                if (naturalWidth > naturalHeight * 2) {
+                                    setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+                                }
+                            }}
+                        />
+                    </div>
+                }
+                <h2 className={'roboto-flex-header'}>{name}</h2>
+                <div className={'quest-header__text-content'}>
+                    <div className={'quest-preview__information'}>
+                        <div className={'information__block'}>
+                            <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
+                                   height={16} style={{ borderRadius: '8px' }} />
+                            <p>{username}</p>
+                        </div>
+                        {startTime && <div className={'information__block'}>
+                            <CalendarOutlined />
+                            <p className={'quest-header__start'}>{startDateLabel}</p>
+                        </div>}
+                        {startTime && finishTime && <div className={'information__block'}>
+                            <HourglassOutlined />
+                            <p className={'quest-header__start'}>{timeDiffLabel}</p>
+                        </div>}
+                    </div>
+                </div>
+            </>
+        );
+    }
+
+    return null;
 }
 
 function QuestResults({status} : {status: QuestStatus | string}) {
@@ -60,7 +187,11 @@ function QuestResults({status} : {status: QuestStatus | string}) {
     return null;
 }
 
-function QuestTeam() {
+function QuestTeam({team} : {team?: ITeam}) {
+    if (!team) {
+        return null;
+    }
+
     const teamName = 'Швейцария еще как существует';
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -97,29 +228,30 @@ function QuestTeam() {
     );
 }
 
-function QuestContent({ description }: QuestContentProps) {
+function QuestContent({ description, mode}: QuestContentProps) {
     const afterParse = useMemo(() => parseToMarkdown(description), [description]);
 
-    return (
-        <ContentWrapper className={'quest-page__content-wrapper quest-page__content'}>
-            <h2 className={'roboto-flex-header responsive-header-h2'}>О квесте</h2>
-            <Skeleton paragraph loading={!afterParse}>
-            <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>
-            </Skeleton>
-        </ContentWrapper>
-    );
+    if (mode === 'page') {
+        return (
+            <ContentWrapper className={'quest-page__content-wrapper quest-page__content'}>
+                <h2 className={'roboto-flex-header responsive-header-h2'}>О квесте</h2>
+                <Skeleton paragraph loading={!afterParse}>
+                    <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>
+                </Skeleton>
+            </ContentWrapper>
+        );
+    }
+
+    if (mode === 'edit') {
+        return (
+            <>
+                {description && <h2 className={'roboto-flex-header'}>О квесте</h2>}
+                <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{description}</Markdown>
+            </>
+        );
+    }
+
+    return null;
 }
 
-export default function Quest({props, isCreator}: {props: IGetQuestResponse, isCreator: boolean}) {
-    return (
-        <>
-            {isCreator && (
-                <QuestAdminPanel />
-            )}
-            <QuestHeader props={props} />
-            <QuestResults status={props.quest.status} />
-            <QuestContent description={props.quest.description} />
-            <QuestTeam />
-        </>
-    );
-}
+export {QuestHeader, QuestContent, QuestAdminPanel, QuestResults, QuestTeam};

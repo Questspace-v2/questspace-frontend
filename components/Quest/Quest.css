@@ -8,7 +8,7 @@
         white-space: pre-wrap;
         user-select: text;
     }
-    p {
+    & p {
         margin: 0;
     }
 }
@@ -64,12 +64,12 @@
     background: var(--quit-color);
     transition: ease background-color .2s;
 
-    span {
+    & span {
         color: white;
         transition: ease color .2s;
     }
 
-    path {
+    & path {
         fill: white;
         transition: ease fill .2s;
     }
@@ -84,8 +84,96 @@
     align-items: center;
     justify-content: space-between;
 
-    p {
+    & p {
         margin: 0;
+    }
+}
+
+.quest-header {
+    .quest-header__name {
+        margin: 0;
+        color: var(--secondary-text-color);
+    }
+
+    & p {
+        margin: 0;
+    }
+}
+
+.quest-header__wrapper {
+    padding: 0 !important;
+    border-radius: 16px;
+    background: transparent;
+
+    .ant-card:not(.ant-card-bordered) {
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .ant-card {
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 500;
+
+        .ant-card-cover {
+            background-color: white;
+            width: 100%;
+            height: auto;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .ant-card-cover img {
+            border-radius: 16px 16px 0 0;
+        }
+
+        .ant-card-body {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 24px 32px;
+            background: white;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .ant-card-body:after, .ant-card-body:before {
+            display: none;
+        }
+    }
+
+    .quest-preview__information {
+        display: flex;
+        gap: 24px;
+        padding-top: 12px;
+        text-wrap: nowrap;
+
+        .information__block {
+            display: flex;
+            gap: 8px;
+
+            & img {
+                align-self: center;
+            }
+        }
+    }
+
+    .quest-header__interactive {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 4px;
+        justify-content: flex-end;
+
+        & button {
+            width: 240px;
+        }
+
+        & p {
+            text-wrap: nowrap;
+        }
     }
 }
 
@@ -103,9 +191,31 @@
     .quest-page__admin-panel {
         padding: 24px;
 
-        button span {
+        & button span {
             position: relative;
             left: -15px;
+        }
+    }
+}
+
+@media (max-width: 639px) {
+    .quest-header {
+        .quest-preview__information {
+            flex-direction: column;
+            gap: 4px;
+            padding-top: 16px;
+        }
+    }
+
+    .quest-header__wrapper .ant-card .ant-card-body {
+        flex-direction: column;
+
+        .quest-header__interactive {
+            padding-top: 16px;
+
+            & button {
+                width: unset;
+            }
         }
     }
 }

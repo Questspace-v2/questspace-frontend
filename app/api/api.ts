@@ -12,7 +12,7 @@ export const getUserById = async (userId: string) =>
 
 export const getQuestById = async (questId: string, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}`, 'GET', undefined,
-        {}, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
+        undefined, 'same-origin', accessToken ? {'Authorization': `Bearer ${accessToken}`} : {});
 
 export const authWithGoogle = async (token: string) =>
     client.handleServerRequest('/auth/google', 'POST', {id_token: token});
@@ -25,17 +25,17 @@ export const authSignIn = async (data: ISignIn) =>
 
 export const createQuest = async (data: IQuestCreate, accessToken: string) =>
     client.handleServerRequest('/quest', 'POST', data,
-        {}, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
+        undefined, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
 export const updateQuest = async (questId: string, data: IQuestCreate) =>
     client.handleServerRequest(`/quest/${questId}`, 'POST', data);
 
 
 export const updateUser = async (id: string, data: IUserUpdate, accessToken: string) =>
-    client.handleServerRequest(`/user/${id}`, 'POST', data, {},'same-origin', {'Authorization': `Bearer ${accessToken}`});
+    client.handleServerRequest(`/user/${id}`, 'POST', data, undefined,'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
 export const updatePassword = async (id: string, data: IPasswordUpdate, accessToken: string) =>
-    client.handleServerRequest(`/user/${id}/password`, 'POST', data, {},'same-origin', {'Authorization': `Bearer ${accessToken}`});
+    client.handleServerRequest(`/user/${id}/password`, 'POST', data, undefined,'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
 export const deleteQuest = async (questId: string) =>
     client.handleServerRequest(`/quest/${questId}`, 'DELETE');
@@ -46,12 +46,25 @@ export const deleteUser = async (userId: string) =>
 export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups) =>
     client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data);
 
-export const getFilteredQuests = async (fields: string[], accessToken?: string, page_id?: string, page_size = '50') =>
-    client.handleServerRequest('/quest', 'GET', undefined, {
-        ...fields,
+export const getFilteredQuests = async (fields: string[], accessToken?: string, page_id?: string, page_size = '50') => {
+    const params: Record<string, unknown> = {
+        fields,
         page_size,
-        page_id
-    }, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
+    }
+
+    if (page_id) {
+        params.page_id = page_id
+    }
+
+    return client.handleServerRequest(
+        '/quest',
+        'GET',
+        undefined,
+        params,
+        'same-origin',
+        accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}
+    );
+}
 
 export const getQuestTeams = async (questId: string) =>
     client.handleServerRequest(`/quest/${questId}/teams`);

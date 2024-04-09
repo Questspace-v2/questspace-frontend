@@ -7,10 +7,10 @@ import Image from 'next/image';
 import { EditOutlined } from '@ant-design/icons';
 import ExitButton from '@/components/ExitButton/ExitButton';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { getCenter, ModalEnum, ModalType } from '@/components/EditProfile/EditProfile.helpers';
-import EditAvatar from '@/components/EditProfile/EditAvatar/EditAvatar';
-import EditName from '@/components/EditProfile/EditName/EditName';
-import EditPassword from '@/components/EditProfile/EditPassword/EditPassword';
+import { getCenter, ModalEnum, ModalType } from '@/components/Profile/EditProfile/EditProfile.helpers';
+import EditAvatar from '@/components/Profile/EditProfile/EditAvatar/EditAvatar';
+import EditName from '@/components/Profile/EditProfile/EditName/EditName';
+import EditPassword from '@/components/Profile/EditProfile/EditPassword/EditPassword';
 
 import './EditProfile.css';
 

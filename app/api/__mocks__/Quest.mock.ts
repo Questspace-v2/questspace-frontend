@@ -1,5 +1,6 @@
 import { IQuest } from '@/app/types/quest-interfaces';
 import userMock from '@/app/api/__mocks__/User.mock';
+import { QuestStatus } from '@/components/Quest/Quest.helpers';
 
 const questMock: IQuest = {
     access: "public",
@@ -17,7 +18,7 @@ const questMock: IQuest = {
     name: "Городской квест ДПММ",
     registration_deadline: "2021-02-11T21:54:42.123Z",
     start_time: "2021-02-18T11:54:42.123Z",
-    status: "FINISHED"
+    status: QuestStatus.StatusWaitResults
 }
 
 export default questMock;
