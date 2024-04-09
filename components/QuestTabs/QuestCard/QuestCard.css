@@ -4,46 +4,6 @@
         color: var(--secondary-text-color);
     }
 
-    .quest-card__status_registration {
-        color: var(--status-color-registration);
-
-        & circle {
-            fill: var(--status-color-registration);
-        }
-    }
-
-    .quest-card__status_registration-done {
-        color: var(--status-color-registration-done);
-
-        & circle {
-            fill: var(--status-color-registration-done);
-        }
-    }
-
-    .quest-card__status_running {
-        color: var(--status-color-running);
-
-        & circle {
-            fill: var(--status-color-running);
-        }
-    }
-
-    .quest-card__status_wait-results {
-        color: var(--status-color-wait-results);
-
-        & circle {
-            fill: var(--status-color-wait-results);
-        }
-    }
-
-    .quest-card__status_finished {
-        color: var(--status-color-finished);
-
-        & circle {
-            fill: var(--status-color-finished);
-        }
-    }
-
     & p {
         margin: 0;
     }
@@ -101,19 +61,7 @@
 
         .ant-card-cover {
             position: relative;
-            aspect-ratio: 2 / 1;
-        }
-
-        &.quest-card__mode_full {
-            .ant-card-cover {
-                aspect-ratio: 2 / 1;
-                width: 100%;
-                height: auto;
-                display: flex;
-                align-items: center;
-                overflow: hidden;
-                border-radius: 16px 16px 0 0;
-            }
+            aspect-ratio: 4 / 3;
         }
 
         .ant-card-cover img {
@@ -144,7 +92,7 @@
             display: flex;
             gap: 8px;
 
-            img {
+            & img {
                 align-self: center;
             }
         }
@@ -156,11 +104,11 @@
         text-align: center;
         gap: 4px;
 
-        button {
+        & button {
             width: 240px;
         }
 
-        p {
+        & p {
             text-wrap: nowrap;
         }
     }
@@ -181,7 +129,7 @@
         .quest-card__interactive {
             padding-top: 16px;
 
-            button {
+            & button {
                 width: unset;
             }
         }

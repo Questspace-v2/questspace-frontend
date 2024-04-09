@@ -19,13 +19,13 @@ export default async function getBackendQuests(tab: SelectTab) {
         });
 
     if (!data) {
-        return customizedEmpty;
+        return [customizedEmpty];
     }
 
     const quests = data[tab]?.quests;
 
     if (!quests) {
-        return customizedEmpty;
+        return [customizedEmpty];
     }
 
     return quests.map(quest => wrapInCard(quest));

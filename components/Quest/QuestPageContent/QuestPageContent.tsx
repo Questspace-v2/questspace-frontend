@@ -6,7 +6,7 @@ export default function QuestPageContent({props, isCreator}: {props: IGetQuestRe
     return (
         <>
             <QuestAdminPanel isCreator={isCreator} />
-            <QuestHeader props={quest} mode={'page'} />
+            <QuestHeader props={quest} mode={'page'} team={team}/>
             <QuestResults status={quest.status} />
             <QuestContent description={quest.description} mode={'page'} />
             <QuestTeam team={team} />

@@ -2,8 +2,6 @@
 
 import { ConfigProvider, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-
-import './QuestTabs.css';
 import {
     createQuestButton,
     isSelectTab, SelectTab,
@@ -11,6 +9,8 @@ import {
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useState } from 'react';
 import getBackendQuests from '@/components/QuestTabs/QuestTabs.server';
+
+import './QuestTabs.css';
 
 export default function QuestTabs({fetchedAllQuests} : {fetchedAllQuests: JSX.Element[] | JSX.Element}) {
     const { xs} = useBreakpoint();

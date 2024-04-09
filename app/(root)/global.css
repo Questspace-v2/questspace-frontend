@@ -126,6 +126,46 @@ h3 {
     font-size: 20px;
 }
 
+.quest-header__status_registration {
+    color: var(--status-color-registration);
+
+    & circle {
+        fill: var(--status-color-registration);
+    }
+}
+
+.quest-header__status_registration-done {
+    color: var(--status-color-registration-done);
+
+    & circle {
+        fill: var(--status-color-registration-done);
+    }
+}
+
+.quest-header__status_running {
+    color: var(--status-color-running);
+
+    & circle {
+        fill: var(--status-color-running);
+    }
+}
+
+.quest-header__status_wait-results {
+    color: var(--status-color-wait-results);
+
+    & circle {
+        fill: var(--status-color-wait-results);
+    }
+}
+
+.quest-header__status_finished {
+    color: var(--status-color-finished);
+
+    & circle {
+        fill: var(--status-color-finished);
+    }
+}
+
 @media (max-width: 1279px) {
     h1 {
         &.responsive-header-h1 {

@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import { FlagFilled, PlayCircleFilled } from '@ant-design/icons';
-import { IUser } from '@/app/types/user-interfaces';
+import { ITeam, IUser } from '@/app/types/user-interfaces';
 
 import '@/components/QuestTabs/QuestCard/QuestCard.css';
 
@@ -50,14 +50,14 @@ const getStartDateText = (startDate: Date) => {
     return `${startDayMonth} в ${startHourMinute}`;
 }
 
-const getQuestStatusButton = (startDate: Date, registrationDate: Date, finishDate: Date, status: string) => {
+const getQuestStatusButton = (startDate: Date, registrationDate: Date, finishDate: Date, status: string, team?: ITeam) => {
     const statusQuest = status as QuestStatus;
     if (statusQuest === QuestStatus.StatusOnRegistration) {
         const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
         const registrationHourMinute = registrationDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
 
         return (
-            <div className={'quest-card__interactive quest-card__interactive_join'}>
+            <div className={'quest-header__interactive quest-header__interactive_join'}>
                 <Button type={'primary'} size={'large'} block>Зарегистрироваться</Button>
                 <p>{`до ${registrationHourMinute}\u00A0${registrationDayMonth}`}</p>
             </div>
@@ -66,7 +66,7 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date, finishDat
 
     if (statusQuest === QuestStatus.StatusRegistrationDone) {
         return (
-            <div className={'quest-card__interactive'}>
+            <div className={'quest-header__interactive'}>
                 <Button disabled size={'large'}>Регистрация завершена</Button>
             </div>
         );
@@ -75,9 +75,9 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date, finishDat
     if (statusQuest === QuestStatus.StatusRunning) {
         const finishHourMinute = finishDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
         return (
-            <div className={'quest-card__interactive'}>
-                <Button type={'primary'} style={{ backgroundColor: '#52C41A' }}><PlayCircleFilled />Открыть
-                    задания</Button>
+            <div className={'quest-header__interactive'}>
+                {team && <Button type={'primary'} style={{ backgroundColor: '#52C41A' }}><PlayCircleFilled />Открыть
+                    задания</Button>}
                 <p>{`Финиш квеста в ${finishHourMinute}`}</p>
             </div>
         );
@@ -85,7 +85,7 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date, finishDat
 
     if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
         return (
-            <div className={'quest-card__interactive'}>
+            <div className={'quest-header__interactive'}>
                 <Button disabled size={'large'}><FlagFilled />Квест завершен</Button>
             </div>
         );
@@ -100,11 +100,11 @@ const getQuestStatusLabel = (registrationDate: Date, status: string) => {
         const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
         return (
             <>
-                <svg className={'quest-card__status_registration'} xmlns="http://www.w3.org/2000/svg" width="8"
+                <svg className={'quest-header__status_registration'} xmlns="http://www.w3.org/2000/svg" width="8"
                      height="8" fill="none" viewBox="0 0 8 8">
                     <circle cx="4" cy="4" r="4" fill="black" />
                 </svg>
-                <p className={'quest-card__status quest-card__status_registration'}>
+                <p className={'quest-header__status quest-header__status_registration'}>
                     Регистрация до {registrationDayMonth}
                 </p>
             </>
@@ -114,11 +114,11 @@ const getQuestStatusLabel = (registrationDate: Date, status: string) => {
     if (statusQuest === QuestStatus.StatusRegistrationDone) {
         return (
             <>
-                <svg className={'quest-card__status_registration-done'} xmlns="http://www.w3.org/2000/svg" width="8"
+                <svg className={'quest-header__status_registration-done'} xmlns="http://www.w3.org/2000/svg" width="8"
                      height="8" fill="none" viewBox="0 0 8 8">
                     <circle cx="4" cy="4" r="4" fill="black" />
                 </svg>
-                <p className={'quest-card__status quest-card__status_registration-done'}>
+                <p className={'quest-header__status quest-header__status_registration-done'}>
                     Регистрация завершена
                 </p>
             </>
@@ -128,11 +128,11 @@ const getQuestStatusLabel = (registrationDate: Date, status: string) => {
     if (statusQuest === QuestStatus.StatusRunning) {
         return (
             <>
-                <svg className={'quest-card__status_running'} xmlns="http://www.w3.org/2000/svg" width="8"
+                <svg className={'quest-header__status_running'} xmlns="http://www.w3.org/2000/svg" width="8"
                      height="8" fill="none" viewBox="0 0 8 8">
                     <circle cx="4" cy="4" r="4" fill="black" />
                 </svg>
-                <p className={'quest-card__status quest-card__status_running'}>
+                <p className={'quest-header__status quest-header__status_running'}>
                     Идет сейчас
                 </p>
             </>
@@ -142,11 +142,11 @@ const getQuestStatusLabel = (registrationDate: Date, status: string) => {
     if (statusQuest === QuestStatus.StatusWaitResults) {
         return (
             <>
-                <svg className={'quest-card__status_wait-results'} xmlns="http://www.w3.org/2000/svg" width="8"
+                <svg className={'quest-header__status_wait-results'} xmlns="http://www.w3.org/2000/svg" width="8"
                      height="8" fill="none" viewBox="0 0 8 8">
                     <circle cx="4" cy="4" r="4" fill="black" />
                 </svg>
-                <p className={'quest-card__status quest-card__status_wait-results'}>
+                <p className={'quest-header__status quest-header__status_wait-results'}>
                     Считаем результаты
                 </p>
             </>
@@ -156,11 +156,11 @@ const getQuestStatusLabel = (registrationDate: Date, status: string) => {
     if (statusQuest === QuestStatus.StatusFinished) {
         return (
             <>
-                <svg className={'quest-card__status_finished'} xmlns="http://www.w3.org/2000/svg" width="8"
+                <svg className={'quest-header__status_finished'} xmlns="http://www.w3.org/2000/svg" width="8"
                          height="8" fill="none" viewBox="0 0 8 8">
                         <circle cx="4" cy="4" r="4" fill="black" />
                 </svg>
-                <p className={'quest-card__status quest-card__status_finished'}>
+                <p className={'quest-header__status quest-header__status_finished'}>
                     Завершен
                 </p>
             </>

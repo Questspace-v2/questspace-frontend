@@ -89,6 +89,99 @@
     }
 }
 
+.quest-header {
+    .quest-header__name {
+        margin: 0;
+        color: var(--secondary-text-color);
+    }
+
+    & p {
+        margin: 0;
+    }
+}
+
+.quest-header__wrapper {
+    padding: 0 !important;
+    border-radius: 16px;
+    background: transparent;
+
+    .ant-card:not(.ant-card-bordered) {
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .ant-card {
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 500;
+
+        .ant-card-cover {
+            background-color: white;
+            width: 100%;
+            height: auto;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .ant-card-cover img {
+            border-radius: 16px 16px 0 0;
+        }
+
+        .ant-card-body {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 24px 32px;
+            background: white;
+            border-radius: 0 0 16px 16px;
+        }
+
+        .ant-card-body:after, .ant-card-body:before {
+            display: none;
+        }
+    }
+
+    .quest-preview__information {
+        display: flex;
+        gap: 24px;
+        padding-top: 12px;
+        text-wrap: nowrap;
+
+        .information__block {
+            display: flex;
+            gap: 8px;
+
+            & img {
+                align-self: center;
+            }
+        }
+    }
+
+    .quest-header__interactive {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 4px;
+
+        & button {
+            width: 240px;
+        }
+
+        & p {
+            text-wrap: nowrap;
+        }
+    }
+}
+
+@media (max-aspect-ratio: 2/1) {
+    .quest-header__wrapper .ant-card-cover {
+        aspect-ratio: 2/1;
+    }
+}
+
 @media (max-width: 959px) {
     .quest-page__admin-panel {
         padding: 24px 9px 24px 24px;
@@ -106,6 +199,28 @@
         & button span {
             position: relative;
             left: -15px;
+        }
+    }
+}
+
+@media (max-width: 639px) {
+    .quest-header {
+        .quest-preview__information {
+            flex-direction: column;
+            gap: 4px;
+            padding-top: 16px;
+        }
+    }
+
+    .quest-header__wrapper .ant-card .ant-card-body {
+        flex-direction: column;
+
+        .quest-header__interactive {
+            padding-top: 16px;
+
+            & button {
+                width: unset;
+            }
         }
     }
 }

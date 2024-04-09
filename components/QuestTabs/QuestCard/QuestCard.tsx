@@ -1,12 +1,12 @@
 import { Card } from 'antd';
 import Image from 'next/image';
-
-import './QuestCard.css';
 import {
     getQuestStatusLabel, getStartDateText,
     QuestHeaderProps,
 } from '@/components/Quest/Quest.helpers';
 import Link from 'next/link';
+
+import './QuestCard.css';
 
 export default function QuestCard({props} : {props?: QuestHeaderProps}) {
     if (!props) {
@@ -30,7 +30,7 @@ export default function QuestCard({props} : {props?: QuestHeaderProps}) {
             <Card
                 className={'quest-card quest-card__mode_preview'}
                 cover={<Image
-                    src={mediaLink ?? `https://source.unsplash.com/random/${name}`}
+                    src={mediaLink}
                     fill
                     sizes={'100% 128px'}
                     style={{ objectFit: 'cover' }}

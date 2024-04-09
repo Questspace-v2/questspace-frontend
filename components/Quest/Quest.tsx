@@ -51,7 +51,7 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
     return null;
 }
 
-function QuestHeader({props, mode}: {props?: QuestHeaderProps, mode: 'page' | 'edit'}) {
+function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
     if (!props) {
         return null;
     }
@@ -73,24 +73,25 @@ function QuestHeader({props, mode}: {props?: QuestHeaderProps, mode: 'page' | 'e
     const timeDiffLabel = getTimeDiff(startDate, finishDate);
     const startDateLabel = getStartDateText(startDate);
 
-    const imageNode = <Image
-        src={mediaLink}
-        width={1000}
-        height={1000}
-        style={{ maxWidth: '100%', objectFit: 'contain', height: 'auto' }}
-        alt={'quest avatar'}
-    />;
-
     if (mode === 'page') {
+        const imageNode = <Image
+            src={mediaLink}
+            width={1000}
+            height={500}
+            style={{ width: '100%', objectFit: 'contain', height: 'auto' }}
+            alt={'quest avatar'}
+            loading={'eager'}
+        />;
+
         return (
-            <ContentWrapper className={'quest-card__wrapper'}>
+            <ContentWrapper className={'quest-header__wrapper'}>
                 <Card
-                    className={'quest-card quest-card__mode_full'}
+                    className={'quest-header'}
                     cover={imageNode}
                     bordered={false}
                 >
-                    <div className={'quest-card__text-content'}>
-                        <h1 className={'quest-card__name roboto-flex-header responsive-header-h1'}>{name}</h1>
+                    <div className={'quest-header__text-content'}>
+                        <h1 className={'quest-header__name roboto-flex-header responsive-header-h1'}>{name}</h1>
                         <div className={'quest-preview__information'}>
                             <div className={'information__block'}>
                                 <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
@@ -99,15 +100,15 @@ function QuestHeader({props, mode}: {props?: QuestHeaderProps, mode: 'page' | 'e
                             </div>
                             <div className={'information__block'}>
                                 <CalendarOutlined />
-                                <p className={'quest-card__start'}>{startDateLabel}</p>
+                                <p className={'quest-header__start'}>{startDateLabel}</p>
                             </div>
                             <div className={'information__block'}>
                                 <HourglassOutlined />
-                                <p className={'quest-card__start'}>{timeDiffLabel}</p>
+                                <p className={'quest-header__start'}>{timeDiffLabel}</p>
                             </div>
                         </div>
                     </div>
-                    {getQuestStatusButton(startDate, registrationDate, finishDate, status)}
+                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, team)}
                 </Card>
             </ContentWrapper>
         );
@@ -128,7 +129,7 @@ function QuestHeader({props, mode}: {props?: QuestHeaderProps, mode: 'page' | 'e
                     </div>
                 }
                 <h2 className={'roboto-flex-header'}>{name}</h2>
-                <div className={'quest-card__text-content'}>
+                <div className={'quest-header__text-content'}>
                     <div className={'quest-preview__information'}>
                         <div className={'information__block'}>
                             <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
@@ -137,11 +138,11 @@ function QuestHeader({props, mode}: {props?: QuestHeaderProps, mode: 'page' | 'e
                         </div>
                         {startTime && <div className={'information__block'}>
                             <CalendarOutlined />
-                            <p className={'quest-card__start'}>{startDateLabel}</p>
+                            <p className={'quest-header__start'}>{startDateLabel}</p>
                         </div>}
                         {startTime && finishTime && <div className={'information__block'}>
                             <HourglassOutlined />
-                            <p className={'quest-card__start'}>{timeDiffLabel}</p>
+                            <p className={'quest-header__start'}>{timeDiffLabel}</p>
                         </div>}
                     </div>
                 </div>

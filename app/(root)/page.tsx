@@ -21,13 +21,12 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 })
 
 async function HomePage() {
+    const fetchedAllQuests = await getBackendQuests('all');
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
         redirect('/auth');
     }
-
-    const fetchedAllQuests = await getBackendQuests('all');
 
     return (
         <>
