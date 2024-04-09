@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Markdown from 'react-markdown';
 import {
     CalendarOutlined,
@@ -52,6 +52,7 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
 }
 
 function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
+    const [aspectRatio, setAspectRatio] = useState('2/1');
     if (!props) {
         return null;
     }
@@ -77,11 +78,18 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
         const imageNode = <Image
             src={mediaLink}
             width={1000}
-            height={500}
+            height={1000}
             style={{ width: '100%', objectFit: 'contain', height: 'auto' }}
             alt={'quest avatar'}
             loading={'eager'}
+            onLoad={({ target }) => {
+                const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+                if (naturalWidth > naturalHeight * 2) {
+                    setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+                }
+            }}
         />;
+
 
         return (
             <ContentWrapper className={'quest-header__wrapper'}>
@@ -89,6 +97,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                     className={'quest-header'}
                     cover={imageNode}
                     bordered={false}
+                    styles={{cover: {aspectRatio}}}
                 >
                     <div className={'quest-header__text-content'}>
                         <h1 className={'quest-header__name roboto-flex-header responsive-header-h1'}>{name}</h1>
@@ -118,13 +127,19 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
         return (
             <>
                 {mediaLink &&
-                    <div className={'quest-image__container'}>
+                    <div className={'quest-image__container'} style={{aspectRatio}}>
                         <Image
                             className={'quest-image__image'}
                             src={mediaLink}
                             width={1000}
-                            height={500}
+                            height={1000}
                             alt={'quest image'}
+                            onLoad={({ target }) => {
+                                const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+                                if (naturalWidth > naturalHeight * 2) {
+                                    setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+                                }
+                            }}
                         />
                     </div>
                 }

@@ -165,6 +165,7 @@
         flex-direction: column;
         text-align: center;
         gap: 4px;
+        justify-content: flex-end;
 
         & button {
             width: 240px;
@@ -173,12 +174,6 @@
         & p {
             text-wrap: nowrap;
         }
-    }
-}
-
-@media (max-aspect-ratio: 2/1) {
-    .quest-header__wrapper .ant-card-cover {
-        aspect-ratio: 2/1;
     }
 }
 
