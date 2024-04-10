@@ -1,26 +1,25 @@
 'use client'
 
-import React, { useMemo, useState } from 'react';
-import { getCenter, TeamModal, TeamModalType } from '@/lib/utils/utils';
+import React, { useMemo } from 'react';
+import { getCenter, ModalProps, TeamModal } from '@/lib/utils/utils';
 import { Form, Input, Modal } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import FormItem from 'antd/lib/form/FormItem';
 import { CopyOutlined } from '@ant-design/icons';
 
-export default function InviteLink({inviteLink}: {inviteLink: string | undefined}) {
+export default function InviteLink({inviteLink, currentModal, setCurrentModal}: ModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
-    const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
 
     const onCancel = () => {
-        setCurrentModal(null);
+        setCurrentModal!(null);
     };
 
     return (
         <Modal
-            open={currentModal === TeamModal.CREATE_TEAM}
+            open={currentModal === TeamModal.INVITE_LINK}
             centered
             destroyOnClose
             onCancel={onCancel}
@@ -37,9 +36,10 @@ export default function InviteLink({inviteLink}: {inviteLink: string | undefined
                     <Input
                         type={'text'}
                         style={{ borderRadius: '2px' }}
-                        value={inviteLink}
+                        defaultValue={inviteLink}
                         readOnly
-                    ><CopyOutlined style={{marginInlineStart: '3px'}}/></Input>
+                        suffix={<CopyOutlined/>}
+                    />
                 </FormItem>
             </Form>
         </Modal>

@@ -63,7 +63,12 @@ export default function AuthForm() {
             ...data
         }).then((response) => {
             if (!response?.error) {
-                router.replace(`${FRONTEND_URL}`);
+                if (window.history.length > 1) {
+                    router.back();
+                } else {
+                    router.replace(`${FRONTEND_URL}`);
+                }
+                router.refresh();
             } else {
                 throw new Error('Auth error');
             }

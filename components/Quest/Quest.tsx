@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Markdown from 'react-markdown';
 import {
     CalendarOutlined,
@@ -25,6 +25,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ITeam } from '@/app/types/user-interfaces';
 import Image from 'next/image';
+import { TeamModalType } from '@/lib/utils/utils';
+import InviteLink from '@/components/Quest/InviteLink/InviteLink';
+import CreateTeam from '@/components/Quest/CreateTeam/CreateTeam';
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
@@ -53,7 +56,7 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
 
 function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
     const [aspectRatio, setAspectRatio] = useState('2/1');
-    const [isOpenModal, setOpenModal] = useState(false);
+    const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
     if (!props) {
         return null;
     }
@@ -119,7 +122,9 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                             </div>
                         </div>
                     </div>
-                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, isOpenModal, setOpenModal, id, team)}
+                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, currentModal, setCurrentModal, id, team)}
+                    <CreateTeam questId={id} currentModal={currentModal} setCurrentModal={setCurrentModal}/>
+                    {team?.invite_link && <InviteLink inviteLink={team.invite_link} currentModal={currentModal} setCurrentModal={setCurrentModal}/>}
                 </Card>
             </ContentWrapper>
         );

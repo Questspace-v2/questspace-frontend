@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
 export const getCenter = (clientWidth: number, clientHeight: number) => {
@@ -14,3 +16,10 @@ export const enum TeamModal {
 }
 
 export type TeamModalType = TeamModal | null;
+
+export interface ModalProps {
+    questId?: string,
+    inviteLink?: string,
+    setCurrentModal?:  React.Dispatch<React.SetStateAction<TeamModalType>>,
+    currentModal?: TeamModalType
+}

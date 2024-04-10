@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
 import React, { useMemo, useState } from 'react';
-import { getCenter, TeamModal, TeamModalType, ValidationStatus } from '@/lib/utils/utils';
+import { getCenter, ModalProps, TeamModal, ValidationStatus } from '@/lib/utils/utils';
 import { Button, Form, Input, Modal } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
@@ -10,7 +10,7 @@ import { ITeam } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-export default function CreateTeam({questId}: {questId: string}) {
+export default function CreateTeam({questId, currentModal, setCurrentModal}: ModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
@@ -18,7 +18,6 @@ export default function CreateTeam({questId}: {questId: string}) {
     const {data} = useSession();
     const accessToken = data?.accessToken;
     const router = useRouter();
-    const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
@@ -39,22 +38,23 @@ export default function CreateTeam({questId}: {questId: string}) {
             handleError('Это поле не должно быть пустым');
             return;
         }
-        const resp = await createTeam(questId, {name: teamName}, accessToken)
+        const resp = await createTeam(questId!, {name: teamName}, accessToken)
             .then(response => response as ITeam)
+            .then(team => team)
             .catch(err => {
                 handleError('Упс, что-то пошло не так...');
                 throw err;
             });
         if (resp) {
-            setCurrentModal(TeamModal.INVITE_LINK);
             router.refresh();
+            setCurrentModal!(TeamModal.INVITE_LINK);
         }
     };
 
     const onCancel = () => {
         setValidationStatus('success');
         setErrorMsg('');
-        setCurrentModal(null);
+        setCurrentModal!(null);
     };
 
     return (
