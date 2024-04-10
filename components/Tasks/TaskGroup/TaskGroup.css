@@ -1,0 +1,33 @@
+.task-group__content-wrapper {
+    max-width: 800px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.task-group__collapse {
+    .ant-collapse-item >.ant-collapse-header.task-group__name {
+        align-items: center;
+        padding: 0;
+    }
+
+    &.ant-collapse .ant-collapse-content>.ant-collapse-content-box {
+        padding: 0;
+    }
+}
+
+.task-group__name {
+    font-size: 32px;
+
+    & svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+
+
+@media (max-width: 799px) {
+    .task-group__name {
+        font-size: 24px;
+    }
+}

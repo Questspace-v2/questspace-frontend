@@ -4,6 +4,7 @@ import Body from '@/components/Body/Body';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { redirect } from 'next/navigation';
+import TaskGroup from '@/components/Tasks/TaskGroup/TaskGroup';
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
     ssr: false,
@@ -19,7 +20,9 @@ export default async function PlayQuestPage() {
     return (
         <>
             <Header isAuthorized/>
-            <Body />
+            <Body>
+                <TaskGroup mode={'play'}/>
+            </Body>
             <DynamicFooter />
         </>
     );
