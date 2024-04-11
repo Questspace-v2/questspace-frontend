@@ -52,6 +52,13 @@
     }
 }
 
+.task__answer-part.ant-form {
+    gap: 4px;
+    .ant-form-item {
+        margin-inline-end: unset;
+    }
+}
+
 @media (max-width: 799px) {
     .task__text-part .task__name {
         font-size: 18px;

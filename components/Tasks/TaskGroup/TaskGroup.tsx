@@ -1,9 +1,11 @@
 import { Collapse, CollapseProps } from 'antd';
 import Task from '@/components/Tasks/Task/Task';
-import { taskGroupMock } from '@/app/api/__mocks__/Task.mock';
+import { taskGroupMock, taskMock1, taskMock2 } from '@/app/api/__mocks__/Task.mock';
 
 import './TaskGroup.css';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
+
+const tasks = [taskMock2, taskMock1];
 
 export default function TaskGroup({mode} : {mode: 'play' | 'edit'}) {
     const {name} = taskGroupMock;
@@ -11,7 +13,7 @@ export default function TaskGroup({mode} : {mode: 'play' | 'edit'}) {
         {
             key: '1',
             label: name,
-            children: <Task mode={mode}/>,
+            children: <><Task props={taskMock1} mode={mode}/><Task props={taskMock2} mode={mode}/></>,
             headerClass: 'task-group__name roboto-flex-header'
         },
     ];

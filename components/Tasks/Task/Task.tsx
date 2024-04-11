@@ -1,11 +1,14 @@
 import './Task.css';
-import { taskMock2 } from '@/app/api/__mocks__/Task.mock';
 import Image from 'next/image';
 import { uid } from '@/lib/utils/utils';
-import { Button } from 'antd';
+import { Button, Form, Input } from 'antd';
+import { ITask } from '@/app/types/quest-interfaces';
+import { SendOutlined } from '@ant-design/icons';
+import { useState } from 'react';
+import FormItem from 'antd/lib/form/FormItem';
 
-export default function Task({mode}: {mode: 'play' | 'edit'}) {
-    const {name, question, hints, media_link: mediaLink} = taskMock2;
+export default function Task({mode, props}: {mode: 'play' | 'edit', props: ITask}) {
+    const {name, question, hints, media_link: mediaLink} = props;
     const editMode = mode === 'edit';
 
     if (editMode) {
@@ -33,6 +36,14 @@ export default function Task({mode}: {mode: 'play' | 'edit'}) {
                     )}
                 </div>
             )}
+            <Form className={'task__answer-part'} layout={'inline'}>
+                <FormItem required>
+                    <Input placeholder={'Ответ'} style={{borderRadius: 2, minWidth: '300px'}}/>
+                </FormItem>
+                <FormItem>
+                    <Button type={'primary'}><SendOutlined/></Button>
+                </FormItem>
+            </Form>
         </div>
     );
 }

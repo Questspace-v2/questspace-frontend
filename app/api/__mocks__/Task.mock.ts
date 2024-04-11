@@ -1,9 +1,11 @@
-const taskMock1 = {
+import { ITask } from '@/app/types/quest-interfaces';
+
+const taskMock1: ITask = {
     correct_answers: [
         "string"
     ],
     hints: [
-        "string"
+        "string", "str"
     ],
     id: "string",
     media_link: "https://api.dicebear.com/7.x/thumbs/svg?seed=591f6fe1-d6cd-479b-a327-35f6b12a08fc",
@@ -15,7 +17,7 @@ const taskMock1 = {
     verification_type: "auto"
 }
 
-const taskMock2 = {
+const taskMock2: ITask = {
     correct_answers: [
         "строка", "возможно"
     ],
