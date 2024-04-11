@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 'use client'
 
 import { ConfigProvider, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
@@ -7,16 +9,21 @@ import {
     isSelectTab, SelectTab,
 } from '@/components/QuestTabs/QuestTabs.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import getBackendQuests from '@/components/QuestTabs/QuestTabs.server';
 
 import './QuestTabs.css';
+import { IQuest } from '@/app/types/quest-interfaces';
+import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList';
+import { useInView } from 'react-intersection-observer';
 
-export default function QuestTabs({fetchedAllQuests} : {fetchedAllQuests: JSX.Element[] | JSX.Element}) {
+export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQuests: IQuest[], nextPageId: string}) {
     const { xs} = useBreakpoint();
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all');
-    const [tabContent, setTabContent] = useState<JSX.Element[] | JSX.Element>(fetchedAllQuests);
+    const [tabContent, setTabContent] = useState<IQuest[]>(fetchedAllQuests);
+    const [page, setPage] = useState(nextPageId);
 
+    const { ref, inView } = useInView();
 
     const themeConfig: ThemeConfig = {
         components: {
@@ -36,17 +43,17 @@ export default function QuestTabs({fetchedAllQuests} : {fetchedAllQuests: JSX.El
         {
             key: 'all',
             label: 'Все квесты',
-            children: selectedTab === 'all' ? tabContent : undefined,
+            children: selectedTab === 'all' ? <><QuestCardsList quests={tabContent} /><div ref={ref}/></> : undefined,
         },
         {
             key: 'registered',
             label: 'Мои квесты',
-            children: selectedTab === 'registered' ? tabContent : undefined,
+            children: selectedTab === 'registered' ? <><QuestCardsList quests={tabContent} /><div ref={ref} /></> : undefined,
         },
         {
             key: 'owned',
             label: 'Созданные квесты',
-            children: selectedTab === 'owned' ? tabContent : undefined,
+            children: selectedTab === 'owned' ? <><QuestCardsList quests={tabContent} /><div ref={ref} /></> : undefined,
         },
     ];
 
@@ -56,14 +63,33 @@ export default function QuestTabs({fetchedAllQuests} : {fetchedAllQuests: JSX.El
         { value: 'owned', label: 'Созданные квесты' },
     ];
 
+    const loadMoreQuests = async () => {
+        const data = await getBackendQuests(selectedTab, page);
+        const newQuests = data?.quests ?? [];
+        const nextPage = data?.next_page_id ?? '';
+        setTabContent((prevQuests: IQuest[]) => [...prevQuests, ...newQuests]);
+        setPage(nextPage);
+    }
+
+    useEffect(() => {
+        if (inView) {
+            loadMoreQuests().catch(err => {
+                throw err;
+            });
+        }
+    }, [inView]);
+
     const handleSelectTab = async (value: string) => {
         if (!isSelectTab(value) || value === selectedTab) {
             return;
         }
-        const content = await getBackendQuests(value as SelectTab);
+        const data = await getBackendQuests(value as SelectTab);
+        const content = data?.quests ?? [];
+        const nextPage = data?.next_page_id ?? '';
 
         setSelectedTab(value);
         setTabContent(content);
+        setPage(nextPage);
     }
 
     if (xs) {
@@ -97,7 +123,8 @@ export default function QuestTabs({fetchedAllQuests} : {fetchedAllQuests: JSX.El
                         {createQuestButton}
                     </div>
                     <div className={'quest-tabpane'}>
-                        {tabContent}
+                        <QuestCardsList quests={tabContent} />
+                        <div ref={ref}/>
                     </div>
                 </section>
             </ContentWrapper>
