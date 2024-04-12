@@ -1,4 +1,4 @@
-import { getCenter, ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
+import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
 import { Button, Form, Input, Modal } from 'antd';
 import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
@@ -6,8 +6,8 @@ import { updateUser } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 
 import '../EditProfile.css';
-import { ValidationStatus } from '@/components/AuthForm/AuthForm.types';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
+import { getCenter, ValidationStatus } from '@/lib/utils/utils';
 
 export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;

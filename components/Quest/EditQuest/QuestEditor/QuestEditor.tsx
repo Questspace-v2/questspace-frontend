@@ -75,6 +75,8 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
 
     const router = useRouter();
 
+    const [errorMsg, setErrorMsg] = useState('');
+
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
     };
@@ -83,6 +85,14 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
         if (teamCapacity > 1) setTeamCapacity((prev) => prev - 1);
     };
 
+    const handleError = (msg = 'Проверьте, что все поля заполнены') => {
+        setErrorMsg(msg);
+    };
+
+    const handleValueChange = () => {
+        setErrorMsg('');
+    }
+
     const handleS3Response = () => {
         const file = fileList[0].originFileObj as File;
         const fileType = file.type;
@@ -90,7 +100,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
             return;
         }
 
-        const key = `users/${uid()}`;
+        const key = `quests/${uid()}`;
         // eslint-disable-next-line consistent-return
         return client.handleS3Request(key, fileType, file)
             .then(res => res)
@@ -100,17 +110,26 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
     };
 
     const handleValidation = async () => {
-        const s3Response = await handleS3Response();
+        const imageValidation = fileList.length > 0;
+        const s3Response = imageValidation && await handleS3Response();
         if (!s3Response) {
+            handleError('С картинкой что-то не так');
             return;
         }
         // eslint-disable-next-line consistent-return
         return form.validateFields()
-            .then(values => ({
+            .then(values => {
+                if (!values.name || !values.description || !values.registrationDeadline
+                    || !values.startTime || !values.finishTime || !values.access) {
+                    handleError();
+                    return null;
+                }
+
+                return {
                     ...values,
-                    access: 'public',
                     media_link: s3Response.url
-                }))
+                };
+            })
             .catch(error => {
                 throw error;
             });
@@ -118,15 +137,19 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
 
     const handleRequest = () => handleValidation()
             .then(result => {
+                if (!result) {
+                    handleError();
+                    return null;
+                }
                 const data: IQuestCreate = {
-                    access: result!.access,
-                    description: result!.description,
-                    finish_time: result!.finishTime,
-                    max_team_cap: result!.maxTeamCap,
-                    media_link: result!.media_link,
-                    name: result!.name,
-                    registration_deadline: result!.registrationDeadline,
-                    start_time: result!.startTime
+                    access: result.access,
+                    description: result.description,
+                    finish_time: result.finishTime,
+                    max_team_cap: result.maxTeamCap,
+                    media_link: result.media_link,
+                    name: result.name,
+                    registration_deadline: result.registrationDeadline,
+                    start_time: result.startTime
                 };
 
                 return data;
@@ -137,12 +160,16 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
 
     const handleSubmit = async () => {
         const data = await handleRequest();
+        if (!data) {
+            handleError();
+            return;
+        }
         await createQuest(data, accessToken!)
             .then(resp => resp as IQuest)
             .catch(error => {
                 throw error;
             });
-        router.replace(`${FRONTEND_URL}`);
+        router.replace(`${FRONTEND_URL}`, {scroll: false});
     };
 
     return (
@@ -161,13 +188,14 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                     ]}
                     autoComplete={'off'}
                 >
+                    {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>}
                     <Form.Item<QuestAboutForm>
                         name={'name'}
                         label={'Название квеста'}
                         colon={false}
                         required
                     >
-                        <Input type={'text'} />
+                        <Input type={'text'} onChange={handleValueChange}/>
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         name={'description'}
@@ -178,7 +206,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                         }
                         colon={false}
                     >
-                        <TextArea style={{resize: 'none', height: '320px'}}/>
+                        <TextArea style={{resize: 'none', height: '320px'}} onChange={handleValueChange}/>
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__image-form-item'}
@@ -214,6 +242,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
+                            onChange={handleValueChange}
                         />
 
                     </Form.Item>
@@ -228,6 +257,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
+                            onChange={handleValueChange}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -241,7 +271,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-
+                            onChange={handleValueChange}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -263,6 +293,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                             controls={false}
                             min={1}
                             style={{width: '128px', textAlignLast: 'center'}}
+                            onChange={handleValueChange}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -273,7 +304,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                         colon={false}
                         required
                     >
-                        <Radio.Group>
+                        <Radio.Group onChange={handleValueChange}>
                             <Radio value={'public'}>
                                 Публичный
                                 <p>Квест увидят все пользователи Квестспейса</p>

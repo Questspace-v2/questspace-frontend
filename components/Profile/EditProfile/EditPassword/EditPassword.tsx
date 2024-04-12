@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { getCenter, ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
+import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
 import { Button, Form, Input, Modal } from 'antd';
 import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
@@ -8,8 +8,8 @@ import { updatePassword } from '@/app/api/api';
 
 import '../EditProfile.css';
 import { IUser } from '@/app/types/user-interfaces';
-import { ValidationStatus } from '@/components/AuthForm/AuthForm.types';
 import { useSession } from 'next-auth/react';
+import { getCenter, ValidationStatus } from '@/lib/utils/utils';
 
 export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;

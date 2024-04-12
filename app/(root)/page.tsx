@@ -21,7 +21,9 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 })
 
 async function HomePage() {
-    const fetchedAllQuests = await getBackendQuests('all');
+    const fetchedData = await getBackendQuests('all');
+    const fetchedAllQuests = fetchedData?.quests;
+    const nextPageId = fetchedData?.next_page_id;
     const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
@@ -33,7 +35,7 @@ async function HomePage() {
             <Header isAuthorized/>
             <Body>
                 <DynamicProfile />
-                <DynamicQuestTabs fetchedAllQuests={fetchedAllQuests}/>
+                <DynamicQuestTabs fetchedAllQuests={fetchedAllQuests ?? []} nextPageId={nextPageId ?? ''}/>
             </Body>
             <DynamicFooter />
         </>

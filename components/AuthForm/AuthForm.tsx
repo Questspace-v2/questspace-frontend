@@ -9,7 +9,6 @@ import {
     LoginDictionary,
     SignupDictionary,
     TitleDictionary,
-    ValidationStatus,
 } from '@/components/AuthForm/AuthForm.types';
 import FormItem from 'antd/lib/form/FormItem';
 
@@ -20,6 +19,7 @@ import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useFormStatus } from 'react-dom';
 import { signIn, SignInAuthorizationParams } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { ValidationStatus } from '@/lib/utils/utils';
 
 interface AuthFormItems {
     username: string,
@@ -63,7 +63,12 @@ export default function AuthForm() {
             ...data
         }).then((response) => {
             if (!response?.error) {
-                router.replace(`${FRONTEND_URL}`);
+                if (window.history.length > 1) {
+                    router.back();
+                } else {
+                    router.replace(`${FRONTEND_URL}`, {scroll: false});
+                }
+                router.refresh();
             } else {
                 throw new Error('Auth error');
             }
