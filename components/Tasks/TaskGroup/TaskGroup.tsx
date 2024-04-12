@@ -1,26 +1,37 @@
 import { Collapse, CollapseProps } from 'antd';
 import Task from '@/components/Tasks/Task/Task';
-import { taskGroupMock, taskMock1, taskMock2 } from '@/app/api/__mocks__/Task.mock';
+import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
+import { getTaskExtra, getTaskGroupExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
+import { ITaskGroup } from '@/app/types/quest-interfaces';
 
 import './TaskGroup.css';
-import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
+import { uid } from '@/lib/utils/utils';
 
-const tasks = [taskMock2, taskMock1];
+export default function TaskGroup({mode, props} : {mode: TasksMode, props: ITaskGroup}) {
+    const { name, tasks } = props;
+    const collapseExtra = getTaskGroupExtra(mode === TasksMode.EDIT);
 
-export default function TaskGroup({mode} : {mode: 'play' | 'edit'}) {
-    const {name} = taskGroupMock;
     const items: CollapseProps['items'] = [
         {
             key: '1',
             label: name,
-            children: <><Task props={taskMock1} mode={mode}/><Task props={taskMock2} mode={mode}/></>,
-            headerClass: 'task-group__name roboto-flex-header'
+            children:
+                <>
+                    {(tasks.map((task) =>
+                        <div className={'task-group__task'} key={uid()}>
+                            <Task props={task} mode={mode} />
+                            {getTaskExtra(mode === TasksMode.EDIT, false)}
+                        </div>
+                    ))}
+                </>,
+            headerClass: 'task-group__name roboto-flex-header',
+            extra: collapseExtra,
         },
     ];
 
     return (
         <ContentWrapper className={'task-group__content-wrapper'}>
-            <Collapse ghost items={items} className={'task-group__collapse'}/>
+            <Collapse ghost items={items} className={'task-group__collapse'} collapsible={'header'}/>
         </ContentWrapper>
     );
 }

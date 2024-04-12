@@ -28,6 +28,7 @@ import { uid } from '@/lib/utils/utils';
 import { useSession } from 'next-auth/react';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useRouter } from 'next/navigation';
+import { redOutlinedButton } from '@/lib/theme/themeConfig';
 
 dayjs.locale('ru')
 
@@ -289,14 +290,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                             <Button htmlType={'submit'}
                                     type={'primary'}
                                     onClick={handleSubmit}>Создать квест</Button>
-                            <ConfigProvider theme={{
-                                token: {
-                                    colorText: '#FF4D4F',
-                                    colorPrimaryHover: '#FF4D4F',
-                                    colorPrimaryActive: '#FF4D4F'
-                                },
-                            }}
-                            >
+                            <ConfigProvider theme={redOutlinedButton}>
                                 <Button href={'/'}>Отменить</Button>
                             </ConfigProvider>
                         </div>

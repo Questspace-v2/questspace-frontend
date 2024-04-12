@@ -59,12 +59,16 @@ export default function EditQuest({questData} : {questData?: IGetQuestResponse})
         },
     ];
 
-    if (sm && !md) {
+    if (xs === undefined) {
+        return null;
+    }
+
+    if (xs || (sm && !md)) {
         return (
             <ContentWrapper className={'edit-quest__content-wrapper'}>
                 <div className={'edit-quest__header__content'}>
                     <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
-                        <Button className={'main-menu__button'} type={'link'} size={'middle'}>
+                        <Button className={'return__button'} type={'link'} size={'middle'}>
                             <ArrowLeftOutlined />Вернуться на главную
                         </Button>
                     </Link>
@@ -75,27 +79,11 @@ export default function EditQuest({questData} : {questData?: IGetQuestResponse})
         );
     }
 
-    if (xs) {
-        return (
-            <ContentWrapper className={'edit-quest__content-wrapper'}>
-                <div className={'edit-quest__header__content'}>
-                    <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
-                        <Button className={'main-menu__button'} type={'link'} size={'middle'}>
-                            <ArrowLeftOutlined />Вернуться на главную
-                        </Button>
-                    </Link>
-                    <h1 className={'roboto-flex-header responsive-header-h1'}>Создание квеста</h1>
-                </div>
-                <Tabs items={items} />
-            </ContentWrapper>
-        );
-    }
-
     return (
         <ContentWrapper className={'edit-quest__content-wrapper'}>
             <div className={'edit-quest__header__content'}>
                 <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
-                    <Button className={'main-menu__button'} type={'link'} size={'middle'}>
+                    <Button className={'return__button'} type={'link'} size={'middle'}>
                         <ArrowLeftOutlined />Вернуться на главную
                     </Button>
                 </Link>

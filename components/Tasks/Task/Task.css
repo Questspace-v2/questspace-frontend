@@ -3,7 +3,6 @@
     flex-direction: column;
     padding: 24px 0 16px;
     gap: 16px;
-    border-top: 1px solid #D9D9D9;
 }
 
 .task__text-part {
@@ -59,6 +58,59 @@
     }
 }
 
+.admin-page__content {
+    .task-hints__container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        justify-content: unset;
+        gap: 24px;
+    }
+
+    .task-hint__container {
+        width: auto;
+        flex-grow: 1;
+    }
+}
+
+.task__edit-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 24px;
+}
+
+.task-extra_small {
+    display: none;
+    padding: 0;
+}
+
+@media (max-width: 959px) {
+    .admin-page__content {
+        .task__text-part .task__name {
+            font-size: 18px;
+        }
+
+        .task-hints__container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .task-hint__container {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 88px;
+            width: auto;
+            padding: 16px;
+
+            .hint__title {
+                text-align: start;
+            }
+        }
+    }
+}
+
 @media (max-width: 799px) {
     .task__text-part .task__name {
         font-size: 18px;
@@ -88,4 +140,22 @@
         min-height: 120px;
     }
 
+    .task-extra_small {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+
+        .ant-btn {
+            flex-grow: 1;
+        }
+    }
+
+    .task-extra_large {
+        display: none;
+    }
+}
+
+@media (max-width: 374px) {
+    .task__answer-part.ant-form {
+    }
 }

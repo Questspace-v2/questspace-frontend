@@ -1,6 +1,6 @@
-import { ITask } from '@/app/types/quest-interfaces';
+import { ITask, ITaskGroup } from '@/app/types/quest-interfaces';
 
-const taskMock1: ITask = {
+export const taskMock1: ITask = {
     correct_answers: [
         "string"
     ],
@@ -17,7 +17,7 @@ const taskMock1: ITask = {
     verification_type: "auto"
 }
 
-const taskMock2: ITask = {
+export const taskMock2: ITask = {
     correct_answers: [
         "строка", "возможно"
     ],
@@ -34,12 +34,10 @@ const taskMock2: ITask = {
     verification_type: "auto"
 }
 
-const taskGroupMock = {
+export const taskGroupMock: ITaskGroup = {
     id: "string",
     name: "Уралмаш",
     order_idx: 0,
     pub_time: "string",
     tasks: [taskMock1, taskMock2]
 }
-
-export {taskMock1, taskMock2, taskGroupMock};

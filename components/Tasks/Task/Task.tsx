@@ -1,24 +1,23 @@
-import './Task.css';
 import Image from 'next/image';
 import { uid } from '@/lib/utils/utils';
 import { Button, Form, Input } from 'antd';
 import { ITask } from '@/app/types/quest-interfaces';
 import { SendOutlined } from '@ant-design/icons';
-import { useState } from 'react';
 import FormItem from 'antd/lib/form/FormItem';
+import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
 
-export default function Task({mode, props}: {mode: 'play' | 'edit', props: ITask}) {
-    const {name, question, hints, media_link: mediaLink} = props;
-    const editMode = mode === 'edit';
+import './Task.css';
 
-    if (editMode) {
-        return null;
-    }
+export default function Task({mode, props}: {mode: TasksMode, props: ITask}) {
+    const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers} = props;
+    const editMode = mode === TasksMode.EDIT;
+    const severalAnswers = correctAnswers.length > 1;
 
     return (
         <div className={'task__wrapper'}>
             <div className={'task__text-part'}>
             <h4 className={'roboto-flex-header task__name'}>{name}</h4>
+                {getTaskExtra(mode === TasksMode.EDIT, true)}
             <p className={'task__question'}>{question}</p>
             </div>
             {mediaLink && (
@@ -44,6 +43,7 @@ export default function Task({mode, props}: {mode: 'play' | 'edit', props: ITask
                     <Button type={'primary'}><SendOutlined/></Button>
                 </FormItem>
             </Form>
+            {editMode && (<span>{severalAnswers ? 'Правильные ответы:' : 'Правильный ответ:'} {correctAnswers.join('; ')}</span>)}
         </div>
     );
 }

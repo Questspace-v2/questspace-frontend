@@ -27,6 +27,14 @@ export interface ITask {
     verification_type: string
 }
 
+export interface ITaskGroup {
+    id: string,
+    name: string,
+    order_idx: number,
+    pub_time: string,
+    tasks: ITask[]
+}
+
 export type IQuestCreate = Omit<IQuest, 'creator' | 'status' | 'id'>
 
 export interface ITaskGroupsCreate {

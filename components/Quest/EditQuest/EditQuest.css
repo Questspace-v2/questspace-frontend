@@ -28,13 +28,14 @@
     gap: 8px;
 }
 
-.ant-btn.main-menu__button {
+.ant-btn.return__button {
     color: var(--primary-color);
     display: flex;
     border: none;
     padding: 4px 15px 4px 0;
     gap: 10px;
     width: min-content;
+    max-width: 100%;
     align-items: center;
 
     &.ant-btn >.anticon+span {
@@ -43,6 +44,14 @@
 
     &.ant-btn > span {
         display: inline-flex;
+    }
+
+    &.ant-btn > span:not(.anticon) {
+        display: inline-block;
+        width:100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
