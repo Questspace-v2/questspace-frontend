@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import {
@@ -11,15 +11,14 @@ import {
     TitleDictionary,
 } from '@/components/AuthForm/AuthForm.types';
 import FormItem from 'antd/lib/form/FormItem';
-
-import './AuthForm.css';
 import { GoogleOutlined, LockOutlined, RightOutlined, UserOutlined } from '@ant-design/icons';
 import Logotype from '@/components/Logotype/Logotype';
 import { FRONTEND_URL } from '@/app/api/client/constants';
-import { useFormStatus } from 'react-dom';
 import { signIn, SignInAuthorizationParams } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { ValidationStatus } from '@/lib/utils/utils';
+
+import './AuthForm.css';
 
 interface AuthFormItems {
     username: string,
@@ -28,12 +27,11 @@ interface AuthFormItems {
 }
 
 export default function AuthForm() {
+    const [status, setStatus] = useState<boolean>(true);
     const router = useRouter();
     const [form] = Form.useForm<AuthFormItems>();
-    const {pending} = useFormStatus();
     const [formType, setFormType] = useState<AuthFormTypes>(Auth.LOGIN);
     const [dictionary, setDictionary] = useState<TitleDictionary>(LoginDictionary);
-
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
     const [errorMsg, setErrorMsg] = useState<string>('');
     const handleChangeClick = () => {
@@ -78,6 +76,10 @@ export default function AuthForm() {
         })
     };
 
+    useEffect(() => {
+        setStatus(false);
+    }, []);
+
     const onFinish = (values: AuthFormItems) => {
         const data: SignInAuthorizationParams = {
             username: values.username,
@@ -103,7 +105,7 @@ export default function AuthForm() {
                     name={'auth-form'}
                     className={'auth-form__body'}
                     title={dictionary.formTitle}
-                    style={{ width: '100%' }}
+                    style={status ? {visibility: 'hidden', width: '100%'} : { width: '100%'}}
                     initialValues={{ remember: true }}
                     form={form}
                     onFinish={onFinish}
@@ -116,6 +118,7 @@ export default function AuthForm() {
                         validateStatus={validationStatus}
                         help={errorMsg === 'Логин уже занят' ? errorMsg : ''}>
                         <Input
+                            disabled={status}
                             prefix={<UserOutlined />}
                             size={'middle'}
                             variant={'outlined'}
@@ -126,6 +129,7 @@ export default function AuthForm() {
                     </Form.Item>
                     <Form.Item<AuthFormItems> name={'password'} rules={[{required: true}]}>
                         <Input
+                            disabled={status}
                             type={'password'}
                             prefix={<LockOutlined />}
                             size={'middle'}
@@ -152,6 +156,7 @@ export default function AuthForm() {
                             ]}
                         >
                             <Input
+                                disabled={status}
                                 type={'password'}
                                 prefix={<LockOutlined />}
                                 size={'middle'}
@@ -166,7 +171,7 @@ export default function AuthForm() {
                         <Button
                             type="primary"
                             htmlType="submit"
-                            disabled={pending}
+                            disabled={status}
                             block
                             style={{ borderRadius: '2px', fontWeight: 500, }}
                         >
@@ -175,6 +180,7 @@ export default function AuthForm() {
                     </FormItem>
                     <FormItem className={'auth-form__google-button'}>
                         <Button
+                            disabled={status}
                             htmlType='button'
                             onClick={() => signIn('google', {callbackUrl: `${FRONTEND_URL}`})}
                             block
