@@ -1,0 +1,39 @@
+.admin-page__content {
+    display: contents;
+}
+
+.quest-admin__content-wrapper {
+    padding-top: 24px;
+
+    .quest-admin__header__content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+.quest-admin__upper-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    .delete-quest__button.ant-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+    .delete-quest__button.ant-btn .anticon+span {
+        margin-inline-start: 0;
+    }
+}
+
+@media (max-width: 799px) {
+    .delete-quest__button.ant-btn {
+        gap: 8px;
+
+        & span:not(.anticon) {
+            display: none;
+        }
+    }
+}

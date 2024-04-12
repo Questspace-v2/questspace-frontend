@@ -27,12 +27,12 @@ export default function HeaderAvatar() {
 
     const items: MenuProps['items'] = [
         {
-            label: <Link href='/public'>Мой профиль</Link>,
+            label: <Link href='/'>Мой профиль</Link>,
             key: '1',
         },
         {
 
-            label: <a href='/public' onClick={
+            label: <a href='/' onClick={
                 async (event) => {
                     event.preventDefault();
                     await signOut()}

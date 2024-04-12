@@ -38,4 +38,20 @@ const theme: ThemeConfig = {
     },
 };
 
+export const redOutlinedButton: ThemeConfig = {
+    token: {
+        colorText: '#FF4D4F',
+            colorPrimaryHover: '#FF4D4F',
+            colorPrimaryActive: '#FF4D4F'
+    },
+}
+
+export const blueOutlinedButton: ThemeConfig = {
+    token: {
+        colorText: '#1890FF',
+        colorPrimaryHover: '#1890FF',
+        colorPrimaryActive: '#1890FF'
+    },
+}
+
 export default theme;

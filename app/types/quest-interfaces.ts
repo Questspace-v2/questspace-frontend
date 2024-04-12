@@ -14,6 +14,27 @@ export interface IQuest {
     status: string
 }
 
+export interface ITask {
+    correct_answers: string[],
+    hints: string[],
+    id: string,
+    media_link?: string,
+    name: string,
+    order_idx: number,
+    pub_time: string,
+    question: string,
+    reward: number,
+    verification_type: string
+}
+
+export interface ITaskGroup {
+    id: string,
+    name: string,
+    order_idx: number,
+    pub_time: string,
+    tasks: ITask[]
+}
+
 export type IQuestCreate = Omit<IQuest, 'creator' | 'status' | 'id'>
 
 export interface ITaskGroupsCreate {
