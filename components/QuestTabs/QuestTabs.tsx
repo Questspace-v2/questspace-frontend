@@ -22,6 +22,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all');
     const [tabContent, setTabContent] = useState<IQuest[]>(fetchedAllQuests);
     const [page, setPage] = useState(nextPageId);
+    const [canRequest, setCanRequest] = useState(true);
 
     const { ref, inView } = useInView();
 
@@ -67,12 +68,13 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
         const data = await getBackendQuests(selectedTab, page);
         const newQuests = data?.quests ?? [];
         const nextPage = data?.next_page_id ?? '';
+        setCanRequest(!!nextPage);
         setTabContent((prevQuests: IQuest[]) => [...prevQuests, ...newQuests]);
         setPage(nextPage);
     }
 
     useEffect(() => {
-        if (inView) {
+        if (inView && canRequest) {
             loadMoreQuests().catch(err => {
                 throw err;
             });
@@ -83,10 +85,11 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
         if (!isSelectTab(value) || value === selectedTab) {
             return;
         }
+        setCanRequest(true);
         const data = await getBackendQuests(value as SelectTab);
         const content = data?.quests ?? [];
         const nextPage = data?.next_page_id ?? '';
-
+        setCanRequest(!!nextPage);
         setSelectedTab(value);
         setTabContent(content);
         setPage(nextPage);

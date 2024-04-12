@@ -169,7 +169,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
             .catch(error => {
                 throw error;
             });
-        router.replace(`${FRONTEND_URL}`);
+        router.replace(`${FRONTEND_URL}`, {scroll: false});
     };
 
     return (
