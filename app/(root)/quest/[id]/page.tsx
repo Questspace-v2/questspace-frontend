@@ -25,11 +25,13 @@ export default async function QuestPage({params}: {params: {id: string}}) {
         notFound();
     }
 
+    const redirectParams = new URLSearchParams({route: 'quest', id: questData.quest.id});
+
     const isCreator = (session && session.user.id === questData.quest.creator.id) ?? false;
 
     return (
         <>
-            <Header isAuthorized={Boolean(session)}/>
+            <Header isAuthorized={Boolean(session)} redirectParams={redirectParams.toString()}/>
             <Body>
                 <QuestPageContent props={questData} isCreator={isCreator}/>
             </Body>

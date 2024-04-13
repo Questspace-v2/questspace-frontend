@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { getCenter, ModalProps, TeamModal } from '@/lib/utils/utils';
-import { Input, Modal } from 'antd';
+import { Input, message, Modal } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { CopyOutlined } from '@ant-design/icons';
 
@@ -12,9 +12,18 @@ export default function InviteModal({inviteLink, currentModal, setCurrentModal}:
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs } = useBreakpoint();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const onCancel = () => {
         setCurrentModal!(null);
+    };
+
+    const success = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'success',
+            content: 'Скопировано!',
+        });
     };
 
     return (
@@ -31,12 +40,15 @@ export default function InviteModal({inviteLink, currentModal, setCurrentModal}:
             footer={null}
         >
             <span className={'invite-content__span'}>Пригласите друзей в свою команду</span>
+            {contextHolder}
             <Input
                 type={'text'}
                 style={{ borderRadius: '2px' }}
                 defaultValue={inviteLink}
                 readOnly
-                suffix={<CopyOutlined />}
+                suffix={<CopyOutlined onClick={() => {
+                    navigator.clipboard.writeText(inviteLink!).then(() => success()).catch(err => {throw err});
+                }}/>}
             />
         </Modal>
     );

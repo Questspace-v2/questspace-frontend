@@ -14,9 +14,13 @@ import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import { taskGroupMock } from '@/app/api/__mocks__/Task.mock';
 
 import './QuestAdmin.css';
+import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
+import { getQuestTeams } from '@/app/api/api';
+import { ITeam } from '@/app/types/user-interfaces';
 
 export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
+    const [leaderboardTabContent, setLeaderboardTabContent] = useState<ITeam[]>([]);
     const aboutTabContent = <EditQuest questData={questData}/>;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]}/>;
 
@@ -35,10 +39,14 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
         },
     ]
 
-    const handleSelectTab = (value: string) => {
+    const handleSelectTab = async (value: string) => {
         const valueTab = value as SelectAdminTabs;
         if (!(valueTab || value)) {
             return;
+        }
+        if (valueTab === SelectAdminTabs.LEADERBOARD) {
+            const data = await getQuestTeams(questData.quest.id) as ITeam[];
+            setLeaderboardTabContent(data);
         }
 
         setSelectedTab(valueTab);
@@ -54,6 +62,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                             <ArrowLeftOutlined />{questData.quest.name}
                         </Button>
                     </Link>
+                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
                     <ConfigProvider theme={redOutlinedButton}>
                         <Button className={'delete-quest__button'}><DeleteOutlined/>Удалить квест</Button>
                     </ConfigProvider>
@@ -69,6 +78,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                     <div style={{padding: '24px 32px'}}><Button type={'primary'}><PlusOutlined/>Добавить раздел</Button></div>
                 </>
             )}
+            {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent}/>}
         </div>
     );
 }
