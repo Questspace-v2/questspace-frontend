@@ -64,7 +64,7 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
 
             return (
                 <div className={'quest-header__interactive'}>
-                    <Button size={'large'} type={'dashed'} disabled ghost block>
+                    <Button className={'already-have-team'} size={'large'} type={'dashed'} disabled ghost block>
                         <CheckOutlined/>
                         Ты уже в команде
                     </Button>

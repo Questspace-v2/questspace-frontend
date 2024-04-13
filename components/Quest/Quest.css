@@ -177,7 +177,10 @@
 
         & button {
             width: 240px;
-            border-width: 2px;
+        }
+
+        & .already-have-team {
+            border: 1px dashed #D9D9D9;
         }
 
         & p {
@@ -185,11 +188,11 @@
         }
     }
 
-    .quest-header__interactive:not(.quest-header__interactive_join) button {
+    .quest-header__interactive button.already-have-team {
         color: var(--status-color-running);
     }
 
-    .quest-header__interactive:not(.quest-header__interactive_join) svg {
+    .quest-header__interactive .already-have-team svg {
         fill: var(--green-color);
     }
 }
@@ -206,6 +209,11 @@
         gap: 8px;
         text-align: center;
         font-weight: 500;
+        width: 128px;
+    }
+
+    .team-member__name {
+        word-break: break-word;
     }
 
     .team-member__captain::after {
@@ -289,7 +297,10 @@
     .team__members .team-member__wrapper {
         flex-direction: row;
         gap: 8px;
+        text-align: start;
         align-items: center;
+        width: unset;
+        max-width: 80%;
 
         & img {
             width: 32px;
@@ -303,5 +314,6 @@
         height: 16px;
         box-shadow: unset;
         background-size: 80%;
+        flex-shrink: 0;
     }
 }

@@ -6,6 +6,8 @@ import { Input, Modal } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { CopyOutlined } from '@ant-design/icons';
 
+import './InviteModal.css'
+
 export default function InviteModal({inviteLink, currentModal, setCurrentModal}: ModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
@@ -28,7 +30,7 @@ export default function InviteModal({inviteLink, currentModal, setCurrentModal}:
             mousePosition={centerPosition}
             footer={null}
         >
-            <span>Пригласите друзей в свою команду</span>
+            <span className={'invite-content__span'}>Пригласите друзей в свою команду</span>
             <Input
                 type={'text'}
                 style={{ borderRadius: '2px' }}

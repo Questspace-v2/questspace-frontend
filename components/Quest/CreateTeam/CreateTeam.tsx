@@ -10,6 +10,8 @@ import { ITeam } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
+import './CreateTeam.css'
+
 export default function CreateTeam({questId, currentModal, setCurrentModal}: ModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
@@ -59,20 +61,23 @@ export default function CreateTeam({questId, currentModal, setCurrentModal}: Mod
 
     return (
         <Modal
+            className={'create-team-modal'}
+            classNames={{content: 'create-team-modal__content'}}
             open={currentModal === TeamModal.CREATE_TEAM}
             centered
             destroyOnClose
             onCancel={onCancel}
             width={xs ? '100%' : 400}
-            title={<h2>Регистрация команды</h2>}
+            title={<h2 className={'roboto-flex-header'}>Регистрация команды</h2>}
             mousePosition={centerPosition}
             footer={null}
         >
+            <span className={'create-team-content__span'}>Укажите название команды</span>
             <Form form={form} autoComplete={'off'} preserve={false}>
                 <FormItem
                     help={errorMsg}
                     name={'teamName'}
-                    rules={[{required: true, message: 'Укажите имя команды'}]}
+                    rules={[{required: true, message: 'Укажите название команды'}]}
                     validateStatus={validationStatus}>
                     <Input
                         type={'text'}
