@@ -56,28 +56,36 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
                               finishDate: Date, status: string, currentModal: TeamModalType,
                               setCurrentModal: Dispatch<SetStateAction<TeamModalType>>, id: string, team?: ITeam) => {
     const statusQuest = status as QuestStatus;
-    if (statusQuest === QuestStatus.StatusOnRegistration) {
-        const registrationDayMonth = registrationDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
-        const registrationHourMinute = registrationDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
 
-        const startDateDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
-        const startDateHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+    if (statusQuest === QuestStatus.StatusOnRegistration) {
+        if (team) {
+            const startDateDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
+            const startDateHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+
+            return (
+                <div className={'quest-header__interactive'}>
+                    <Button size={'large'} type={'dashed'} disabled ghost block>
+                        <CheckOutlined/>
+                        Ты уже в команде
+                    </Button>
+                    <p>{`Старт квеста ${startDateDayMonth} в\u00A0${startDateHourMinute}`}</p>
+                </div>
+            );
+        }
+
+        const registrationDayMonth = registrationDate.toLocaleString('ru', {
+            day: 'numeric',
+            month: 'long',
+        }).replace(' ', '\u00A0');
+        const registrationHourMinute = registrationDate.toLocaleString('ru', {
+            hour: 'numeric', minute: '2-digit'
+        });
 
         return (
             <div className={'quest-header__interactive quest-header__interactive_join'}>
-                {team ?
-                    <div>
-                        <Button>
-                            <CheckOutlined style={{ marginInlineEnd: '3px' }} />
-                            Ты уже в команде
-                        </Button>
-                        <p>{`Старт квеста ${startDateDayMonth} в\u00A0${startDateHourMinute}`}</p>
-                    </div> :
-                    <div>
-                        <Button type={'primary'} size={'large'} block
-                                onClick={() => setCurrentModal(TeamModal.CREATE_TEAM)}>Зарегистрироваться</Button>
-                        <p>{`до ${registrationHourMinute}\u00A0${registrationDayMonth}`}</p>
-                    </div>}
+                <Button type={'primary'} size={'large'} block
+                        onClick={() => setCurrentModal(TeamModal.CREATE_TEAM)}>Зарегистрироваться</Button>
+                <p>{`до ${registrationHourMinute}\u00A0${registrationDayMonth}`}</p>
             </div>
         );
     }

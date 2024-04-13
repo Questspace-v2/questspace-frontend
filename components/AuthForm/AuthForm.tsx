@@ -61,7 +61,7 @@ export default function AuthForm() {
             ...data
         }).then((response) => {
             if (!response?.error) {
-                if (window.history.length > 1) {
+                if (window.history.length > 1 && window.history.state === -1) {
                     router.back();
                 } else {
                     router.replace(`${FRONTEND_URL}`, {scroll: false});

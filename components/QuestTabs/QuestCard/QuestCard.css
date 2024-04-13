@@ -2,6 +2,9 @@
     .quest-card__name {
         margin: 0;
         color: var(--secondary-text-color);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     & p {
@@ -13,6 +16,7 @@
     display: flex;
     box-sizing: content-box;
     text-decoration: none;
+    min-width: 0;
 
     .ant-card-cover {
         position: relative;

@@ -47,10 +47,18 @@
     }
 
     .invite-link__link {
+        max-width: 100%;
+        display: flex;
+        align-items: center;
         font-size: 16px;
         color: var(--primary-color);
     }
 
+    .invite-link__link span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .team__header {
@@ -169,12 +177,25 @@
 
         & button {
             width: 240px;
+            border-width: 2px;
         }
 
         & p {
             text-wrap: nowrap;
         }
     }
+
+    .quest-header__interactive:not(.quest-header__interactive_join) button {
+        color: var(--status-color-running);
+    }
+
+    .quest-header__interactive:not(.quest-header__interactive_join) svg {
+        fill: var(--green-color);
+    }
+}
+
+.exit-team__small-screen {
+    display: none !important;
 }
 
 @media (max-width: 959px) {
@@ -196,9 +217,7 @@
             left: -15px;
         }
     }
-}
 
-@media (max-width: 639px) {
     .quest-header {
         .quest-preview__information {
             flex-direction: column;
@@ -214,8 +233,22 @@
             padding-top: 16px;
 
             & button {
-                width: unset;
+                width: 100%;
             }
         }
+    }
+}
+
+@media (max-width: 639px) {
+    .invite-link__wrapper {
+        padding: 24px 0 0;
+    }
+
+    .exit-team__large-screen {
+        display: none !important;
+    }
+
+    .exit-team__small-screen {
+        display: unset !important;
     }
 }

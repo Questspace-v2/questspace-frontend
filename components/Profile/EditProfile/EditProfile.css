@@ -53,8 +53,10 @@
     flex-direction: column;
     width: min-content;
 
-    .ant-upload {
-        width: 130px;
+    .ant-upload-wrapper .ant-upload-select {
+        display: flex;
+        width: 100%;
+        justify-content: center;
     }
 }
 

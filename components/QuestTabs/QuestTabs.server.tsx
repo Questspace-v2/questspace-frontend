@@ -6,7 +6,7 @@ import { getFilteredQuests } from '@/app/api/api';
 import { IFilteredQuestsResponse } from '@/app/types/quest-interfaces';
 import { SelectTab } from '@/components/QuestTabs/QuestTabs.helpers';
 
-export default async function getBackendQuests(tab: SelectTab, pageId?: string, pageSize = '8') {
+export default async function getBackendQuests(tab: SelectTab, pageId?: string, pageSize = '12') {
     const session = await getServerSession(authOptions);
     const accessToken = session?.accessToken;
     const data = await getFilteredQuests(

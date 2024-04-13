@@ -3,6 +3,7 @@ import { PlusOutlined, SmileOutlined } from '@ant-design/icons';
 import QuestCard from '@/components/QuestTabs/QuestCard/QuestCard';
 import Link from 'next/link';
 import { IQuest } from '@/app/types/quest-interfaces';
+import { uid } from '@/lib/utils/utils';
 
 const selectTab = ['all', 'registered', 'owned'] as const;
 export type SelectTab = (typeof selectTab)[number];
@@ -56,6 +57,6 @@ export const customizedEmpty = (
 
 export function wrapInCard(quest: IQuest) {
     return (
-            <QuestCard props={quest}/>
+            <QuestCard props={quest} key={uid()}/>
     );
 }

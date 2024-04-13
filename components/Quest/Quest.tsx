@@ -25,9 +25,17 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ITeam } from '@/app/types/user-interfaces';
 import Image from 'next/image';
-import { TeamModalType } from '@/lib/utils/utils';
-import InviteLink from '@/components/Quest/InviteLink/InviteLink';
-import CreateTeam from '@/components/Quest/CreateTeam/CreateTeam';
+import { TeamModalType, uid } from '@/lib/utils/utils';
+import dynamic from 'next/dynamic';
+
+
+const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
+    ssr: false,
+})
+
+const DynamicInviteModal = dynamic(() => import('@/components/Quest/InviteModal/InviteModal'), {
+    ssr: false,
+})
 
 const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
@@ -123,8 +131,8 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                         </div>
                     </div>
                     {getQuestStatusButton(startDate, registrationDate, finishDate, status, currentModal, setCurrentModal, id, team)}
-                    <CreateTeam questId={id} currentModal={currentModal} setCurrentModal={setCurrentModal}/>
-                    {team?.invite_link && <InviteLink inviteLink={team.invite_link} currentModal={currentModal} setCurrentModal={setCurrentModal}/>}
+                    <DynamicCreateTeam questId={id} currentModal={currentModal} setCurrentModal={setCurrentModal}/>
+                    {team?.invite_link && <DynamicInviteModal inviteLink={team.invite_link} currentModal={currentModal} setCurrentModal={setCurrentModal}/>}
                 </Card>
             </ContentWrapper>
         );
@@ -217,7 +225,7 @@ function QuestTeam({team} : {team?: ITeam}) {
             <div className={'team__header'}>
                 <h2 className={'roboto-flex-header responsive-header-h2'}>{`Твоя команда — ${teamName}`}</h2>
                 <Button
-                    className={'exit-team__button'}
+                    className={'exit-team__button exit-team__large-screen'}
                     type={'text'}
                     icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }} />}
                     style={{ color: 'var(--quit-color)' }}
@@ -225,13 +233,29 @@ function QuestTeam({team} : {team?: ITeam}) {
                     Выйти из команды
                 </Button>
             </div>
+            <div className={'team__members'}>
+                {team.members.map((member) => (
+                    <div key={uid()} className={'team-member__wrapper'}>
+                        <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
+                        <span className={'team-member__name'}>{member.username}</span>
+                    </div>
+                    )
+                )}
+            </div>
             <div className={'invite-link__wrapper'}>
                 <p className={'invite-link__text'}>Пригласи друзей в свою команду — поделись ссылкой:</p>
                 <Button className={'invite-link__link'} type={'link'} onClick={() => {
                     navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
                 }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
-
             </div>
+            <Button
+                className={'exit-team__button exit-team__small-screen'}
+                icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }}/>}
+                style={{ color: 'var(--quit-color)' }}
+                block
+            >
+                Выйти из команды
+            </Button>
         </ContentWrapper>
     );
 }
