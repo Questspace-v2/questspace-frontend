@@ -93,9 +93,9 @@ export default function EditProfile() {
                 <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_NAME)}>
                     Изменить логин
                 </Button>
-                <h4 className={'edit-profile-subheader'}>Пароль</h4>
+                <h4 className={'edit-profile-subheader'} style={isOAuth ? {color: '#8C8C8C'} : {}}>Пароль</h4>
                 {isOAuth ?
-                    <div>Учетная запись привязана к аккаунту Google, для авторизации не нужен пароль</div> :
+                    <span style={{color: '#8C8C8C'}}>Учетная запись привязана к аккаунту Google, для авторизации не нужен пароль</span> :
                     <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_PASSWORD)}>
                         Изменить пароль
                     </Button>
