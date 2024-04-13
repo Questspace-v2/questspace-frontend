@@ -194,6 +194,35 @@
     }
 }
 
+.team__members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 48px;
+
+    .team-member__wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .team-member__captain::after {
+        position: absolute;
+        right: 0;
+        content: "";
+        width: 36px;
+        height: 36px;
+        background-color: rgb(250, 173, 20);
+        background-image: url("data:image/svg+xml,%3Csvg width='24' height='25' viewBox='0 0 24 25' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.0848 6.52063L16.5238 9.33079L12.1504 3.49719C12.1328 3.47372 12.11 3.45466 12.0837 3.44153C12.0575 3.4284 12.0286 3.42157 11.9992 3.42157C11.9699 3.42157 11.9409 3.4284 11.9147 3.44153C11.8885 3.45466 11.8656 3.47372 11.848 3.49719L7.47695 9.33079L2.91367 6.52063C2.78008 6.4386 2.60664 6.54876 2.62773 6.70579L4.41836 20.3136C4.44414 20.4988 4.60351 20.6417 4.79336 20.6417H19.2098C19.3973 20.6417 19.559 20.5011 19.5824 20.3136L21.373 6.70579C21.3918 6.54876 21.2207 6.4386 21.0848 6.52063ZM12.0004 17.248C10.5449 17.248 9.36133 16.0644 9.36133 14.6089C9.36133 13.1535 10.5449 11.9699 12.0004 11.9699C13.4559 11.9699 14.6394 13.1535 14.6394 14.6089C14.6394 16.0644 13.4559 17.248 12.0004 17.248ZM12.0004 13.4769C11.377 13.4769 10.8707 13.9831 10.8707 14.6089C10.8707 15.2324 11.377 15.741 12.0004 15.741C12.6238 15.741 13.1301 15.2347 13.1301 14.6089C13.1301 13.9855 12.6238 13.4769 12.0004 13.4769Z' fill='white'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        box-shadow: rgba(0, 0, 0, 0.15) 0 6px 8px 0;
+        border-radius: 50%;
+    }
+}
+
 .exit-team__small-screen {
     display: none !important;
 }
@@ -250,5 +279,29 @@
 
     .exit-team__small-screen {
         display: unset !important;
+    }
+
+    .team__members {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .team__members .team-member__wrapper {
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+
+        & img {
+            width: 32px;
+            height: 32px;
+        }
+    }
+
+    .team__members .team-member__captain::after {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        box-shadow: unset;
+        background-size: 80%;
     }
 }

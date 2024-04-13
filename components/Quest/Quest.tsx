@@ -13,7 +13,7 @@ import {
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './Quest.css';
-import { Button, Card, message, Skeleton } from 'antd';
+import { Button, Card, ConfigProvider, message, Skeleton } from 'antd';
 import {
     getQuestStatusButton,
     getStartDateText,
@@ -27,6 +27,7 @@ import { ITeam } from '@/app/types/user-interfaces';
 import Image from 'next/image';
 import { TeamModalType, uid } from '@/lib/utils/utils';
 import dynamic from 'next/dynamic';
+import { redOutlinedButton } from '@/lib/theme/themeConfig';
 
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
@@ -235,7 +236,7 @@ function QuestTeam({team} : {team?: ITeam}) {
             </div>
             <div className={'team__members'}>
                 {team.members.map((member) => (
-                    <div key={uid()} className={'team-member__wrapper'}>
+                    <div key={uid()} className={`team-member__wrapper ${member.id === team.captain.id ? 'team-member__captain' : ''}`}>
                         <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
                         <span className={'team-member__name'}>{member.username}</span>
                     </div>
@@ -248,14 +249,16 @@ function QuestTeam({team} : {team?: ITeam}) {
                     navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
                 }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
             </div>
-            <Button
-                className={'exit-team__button exit-team__small-screen'}
-                icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }}/>}
-                style={{ color: 'var(--quit-color)' }}
-                block
-            >
-                Выйти из команды
-            </Button>
+            <ConfigProvider theme={redOutlinedButton}>
+                <Button
+                    className={'exit-team__button exit-team__small-screen'}
+                    icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }}/>}
+                    style={{ color: 'var(--quit-color)' }}
+                    block
+                >
+                    Выйти из команды
+                </Button>
+            </ConfigProvider>
         </ContentWrapper>
     );
 }
