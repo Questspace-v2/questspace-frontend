@@ -1,22 +1,5 @@
-.invite-modal__content {
+.create-team-modal__content {
     padding: 32px 32px 40px 32px !important;
-
-    .ant-input-suffix {
-        color: #d9d9d9;
-        transition-behavior: normal;
-        transition-delay: 0s;
-        transition-duration: 0.2s;
-        transition-property: all;
-        transition-timing-function: ease;
-    }
-
-    .ant-input-affix-wrapper-readonly {
-        &:hover, &:focus, &:focus-within {
-            .ant-input-suffix {
-                color: var(--primary-color);
-            }
-        }
-    }
 
     .ant-modal-close {
         width: 24px;
@@ -51,15 +34,18 @@
     .ant-modal-body {
         display: flex;
         flex-direction: column;
-        gap: 8px;
     }
 
-    .invite-content__span {
+    .create-team-content__span {
         font-size: 16px;
+    }
+
+    .create-team-content__span + .ant-form {
+        padding-top: 8px;
     }
 }
 
-.ant-modal-root .ant-modal.invite-modal {
+.ant-modal-root .ant-modal.create-team-modal {
     margin: 0;
     max-width: unset;
 }

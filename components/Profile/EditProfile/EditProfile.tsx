@@ -77,7 +77,7 @@ export default function EditProfile() {
                            width={128}
                            height={128}
                            draggable={false}
-                           style={{borderRadius: '64px'}}
+                           style={{borderRadius: '50%'}}
                     />
                     <EditAvatar setCurrentModal={setCurrentModal}>
                         <Button className={'edit-profile__change-button'}
