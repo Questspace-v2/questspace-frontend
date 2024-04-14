@@ -13,7 +13,23 @@ import QuestEditor, { QuestAboutForm } from '@/components/Quest/EditQuest/QuestE
 import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import dayjs from 'dayjs';
 
-export default function EditQuest({questData} : {questData?: IGetQuestResponse}) {
+function EditQuestHeader({isNewQuest}: {isNewQuest: boolean}) {
+    if (isNewQuest) {
+        return (
+            <div className={'edit-quest__header__content'}>
+                <Link href={'/'} style={{ textDecoration: 'none', width: 'min-content' }}>
+                    <Button className={'return__button'} type={'link'} size={'middle'}>
+                        <ArrowLeftOutlined />Вернуться на главную
+                    </Button>
+                </Link>
+                <h1 className={'roboto-flex-header responsive-header-h1'}>Создание квеста</h1>
+            </div>
+        );
+    }
+    return null;
+}
+
+export default function EditQuest({ questData }: { questData?: IGetQuestResponse }) {
     const [selectedTab, setSelectedTab] = useState<string>('editor');
     const [form] = Form.useForm<QuestAboutForm>();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -21,7 +37,7 @@ export default function EditQuest({questData} : {questData?: IGetQuestResponse})
 
     useEffect(() => {
         if (questData) {
-            const {quest} = questData;
+            const { quest } = questData;
             const {
                 name,
                 description,
@@ -50,12 +66,17 @@ export default function EditQuest({questData} : {questData?: IGetQuestResponse})
         {
             key: 'editor',
             label: 'Редактор',
-            children: <QuestEditor form={form} fileList={fileList} setFileList={setFileList}/>,
+            children: <QuestEditor form={form}
+                                   fileList={fileList}
+                                   setFileList={setFileList}
+                                   isNewQuest={!questData}
+                                   questId={questData?.quest.id}
+                                   previousImage={questData?.quest.media_link}/>,
         },
         {
             key: 'preview',
             label: 'Предпросмотр',
-            children: <QuestPreview form={watch} file={fileListRef.current}/>,
+            children: <QuestPreview form={watch} file={fileListRef.current} previousImage={questData?.quest.media_link}/>,
         },
     ];
 
@@ -66,14 +87,7 @@ export default function EditQuest({questData} : {questData?: IGetQuestResponse})
     if (xs || (sm && !md)) {
         return (
             <ContentWrapper className={'edit-quest__content-wrapper'}>
-                <div className={'edit-quest__header__content'}>
-                    <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
-                        <Button className={'return__button'} type={'link'} size={'middle'}>
-                            <ArrowLeftOutlined />Вернуться на главную
-                        </Button>
-                    </Link>
-                    <h1 className={'roboto-flex-header responsive-header-h1'}>Создание квеста</h1>
-                </div>
+                <EditQuestHeader isNewQuest={!questData}/>
                 <Tabs items={items} activeKey={selectedTab} onTabClick={setSelectedTab}/>
             </ContentWrapper>
         );
@@ -81,23 +95,21 @@ export default function EditQuest({questData} : {questData?: IGetQuestResponse})
 
     return (
         <ContentWrapper className={'edit-quest__content-wrapper'}>
-            <div className={'edit-quest__header__content'}>
-                <Link href={'/'} style={{textDecoration: 'none', width: 'min-content'}} >
-                    <Button className={'return__button'} type={'link'} size={'middle'}>
-                        <ArrowLeftOutlined />Вернуться на главную
-                    </Button>
-                </Link>
-                <h1 className={'roboto-flex-header responsive-header-h1'}>Создание квеста</h1>
-            </div>
+            <EditQuestHeader isNewQuest={!questData}/>
             <div className={'edit-quest__body__content'}>
                 <section>
                     <h2 className={'roboto-flex-header'} style={{marginBottom: '16px'}}>Редактор</h2>
-                    <QuestEditor form={form} fileList={fileList} setFileList={setFileList}/>
+                    <QuestEditor form={form}
+                                 fileList={fileList}
+                                 setFileList={setFileList}
+                                 isNewQuest={!questData}
+                                 questId={questData?.quest.id}
+                                 previousImage={questData?.quest.media_link}/>
                 </section>
                 <div className={'content__separator'}/>
                 <section>
                     <h2 className={'roboto-flex-header'} style={{ marginBottom: '16px' }}>Предпросмотр</h2>
-                    <QuestPreview form={watch} file={fileListRef.current}/>
+                    <QuestPreview form={watch} file={fileListRef.current} previousImage={questData?.quest.media_link}/>
                 </section>
             </div>
         </ContentWrapper>

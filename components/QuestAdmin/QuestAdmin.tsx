@@ -15,14 +15,16 @@ import { taskGroupMock } from '@/app/api/__mocks__/Task.mock';
 
 import './QuestAdmin.css';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import { getQuestTeams } from '@/app/api/api';
+import { deleteQuest, getQuestTeams } from '@/app/api/api';
 import { ITeam } from '@/app/types/user-interfaces';
+import { useSession } from 'next-auth/react';
 
 export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
     const [leaderboardTabContent, setLeaderboardTabContent] = useState<ITeam[]>([]);
     const aboutTabContent = <EditQuest questData={questData}/>;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]}/>;
+    const {data: session} = useSession();
 
     const tabs: TabsProps['items']  = [
         {
@@ -52,6 +54,11 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
         setSelectedTab(valueTab);
     }
 
+    const handleDelete = async () => {
+        // Здесь бы открывать модалку с подтверждением
+        await deleteQuest(questData.quest.id, session?.accessToken);
+    }
+
     return (
         <div className={'admin-page__content'}>
         <ContentWrapper className={'quest-admin__content-wrapper'}>
@@ -64,7 +71,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                     </Link>
                     {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
                     <ConfigProvider theme={redOutlinedButton}>
-                        <Button className={'delete-quest__button'}><DeleteOutlined/>Удалить квест</Button>
+                        <Button className={'delete-quest__button'} onClick={handleDelete}><DeleteOutlined/>Удалить квест</Button>
                     </ConfigProvider>
                 </div>
                 <h1 className={'roboto-flex-header responsive-header-h1'}>Управление квестом</h1>
