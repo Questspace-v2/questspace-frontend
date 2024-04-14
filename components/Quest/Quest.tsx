@@ -9,11 +9,12 @@ import {
     EditOutlined,
     HourglassOutlined,
     LogoutOutlined,
+    ExclamationCircleOutlined
 } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './Quest.css';
-import { Button, Card, ConfigProvider, message, Skeleton } from 'antd';
+import { Button, Card, ConfigProvider, message, Modal, Skeleton } from 'antd';
 import {
     getQuestStatusButton,
     getStartDateText,
@@ -22,11 +23,13 @@ import {
     QuestStatus,
 } from '@/components/Quest/Quest.helpers';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ITeam } from '@/app/types/user-interfaces';
 import Image from 'next/image';
 import { TeamModalType, uid } from '@/lib/utils/utils';
 import dynamic from 'next/dynamic';
+import { changeTeamCaptain, deleteTeamMember, leaveTeam } from '@/app/api/api';
+import { Session } from 'next-auth';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 
 
@@ -203,14 +206,17 @@ function QuestResults({status} : {status: QuestStatus | string}) {
     return null;
 }
 
-function QuestTeam({team} : {team?: ITeam}) {
+function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
+    const router = useRouter();
+    const [modal, modalContextHolder] = Modal.useModal();
+    const [messageApi, contextHolder] = message.useMessage();
+
     if (!team) {
         return null;
     }
 
     const teamName = team.name;
     const inviteLink = team.invite_link;
-    const [messageApi, contextHolder] = message.useMessage();
 
     const success = () => {
         // eslint-disable-next-line no-void
@@ -218,6 +224,36 @@ function QuestTeam({team} : {team?: ITeam}) {
             type: 'success',
             content: 'Скопировано!',
         });
+    };
+
+    const showConfirm = async () => {
+        await modal.confirm({
+            title: 'Вы хотите выйти из команды?',
+            icon: <ExclamationCircleOutlined />,
+            okText: 'Нет',
+            cancelText: 'Да',
+            async onCancel() {
+                const captainId = team.captain.id;
+                const isCaptain = captainId === session?.user.id;
+                if (isCaptain) {
+                    const newCaptainId = team.members.filter(member => member.id !== captainId)[0]?.id;
+                    await leaveTeam(team.id, session?.accessToken, newCaptainId ?? undefined);
+                } else {
+                    await leaveTeam(team.id, session?.accessToken);
+                }
+                router.refresh();
+            }
+        });
+    };
+
+    const deleteMember = async (memberId: string) => {
+        await deleteTeamMember(team.id, memberId, session?.accessToken);
+        router.refresh();
+    };
+
+    const changeCaptain = async (newCaptainId: string) => {
+        await changeTeamCaptain(team.id, {new_captain_id: newCaptainId}, session?.accessToken);
+        router.refresh();
     };
 
     return (
@@ -230,15 +266,24 @@ function QuestTeam({team} : {team?: ITeam}) {
                     type={'text'}
                     icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }} />}
                     style={{ color: 'var(--quit-color)' }}
+                    onClick={showConfirm}
                 >
                     Выйти из команды
                 </Button>
+                {modalContextHolder}
             </div>
             <div className={'team__members'}>
                 {team.members.map((member) => (
                     <div key={uid()} className={`team-member__wrapper ${member.id === team.captain.id ? 'team-member__captain' : ''}`}>
                         <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
                         <span className={'team-member__name'}>{member.username}</span>
+                        {
+                            session?.user.id === team.captain.id && member.id !== team.captain.id &&
+                            <>
+                                <Button onClick={() => changeCaptain(member.id)}>Сделать капитаном</Button>
+                                <Button onClick={() => deleteMember(member.id)}>Удалить участника</Button>
+                            </>
+                        }
                     </div>
                     )
                 )}
@@ -249,6 +294,7 @@ function QuestTeam({team} : {team?: ITeam}) {
                     navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
                 }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
             </div>
+            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
             <ConfigProvider theme={redOutlinedButton}>
                 <Button
                     className={'exit-team__button exit-team__small-screen'}

@@ -1,24 +1,28 @@
-import { BACKEND_URL } from '@/app/api/client/constants';
 import { IGetQuestResponse } from '@/app/types/quest-interfaces';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
+import { getQuestByTeamInvite, joinTeam } from '@/app/api/api';
+import { ITeam } from '@/app/types/user-interfaces';
 
 export default async function InvitePage({params}: {params: {path: string}}) {
     const session = await getServerSession(authOptions);
-    const resp = await fetch(`${BACKEND_URL}/teams/join/${params.path}/quest`);
-
-    if (resp.status === 200) {
-        const data= await resp.json() as IGetQuestResponse;
-        const questId = data.quest?.id;
-
-        const joinQuestResp = await fetch(`${BACKEND_URL}/teams/join/${params.path}`, {headers: {'Authorization': `Bearer ${session?.accessToken}`}});
-        if (joinQuestResp.status === 200) {
-            redirect(`/quest/${questId}`);
-        } else {
-            redirect(`/quest/${questId}?error=${joinQuestResp.statusText}`);
-        }
+    if (!session?.accessToken) {
+        const [id] = params.path.split('/');
+        const redirectParams = new URLSearchParams({route: 'invites', id});
+        redirect(`/auth?${redirectParams.toString()}`);
     }
 
-    return null;
+    const data = await getQuestByTeamInvite(params.path, session?.accessToken) as IGetQuestResponse;
+    if (data) {
+        const questId = data.quest?.id;
+        const team = await joinTeam(params.path, session.accessToken) as ITeam;
+        if (team) {
+            redirect(`/quest/${questId}`);
+        } else {
+            notFound();
+        }
+    } else {
+        notFound();
+    }
 }

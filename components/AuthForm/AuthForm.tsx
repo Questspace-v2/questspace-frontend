@@ -55,17 +55,24 @@ export default function AuthForm() {
         setValidationStatus('error');
     };
 
+    const makeRedirectParams = () => {
+        const redirectParams = new URLSearchParams(window.location.search);
+        const route = redirectParams.get('route');
+        const id = redirectParams.get('id');
+        if (route && id) {
+            return `/${route}/${id}`;
+        }
+        return '/';
+    };
+
     const handleAuth = (providerType: string, data: Record<string, string>) => {
+        const redirectParams = makeRedirectParams();
         signIn(`${providerType}`, {
             redirect: false,
             ...data
         }).then((response) => {
             if (!response?.error) {
-                if (window.history.length > 1 && window.history.state === -1) {
-                    router.back();
-                } else {
-                    router.replace(`${FRONTEND_URL}`, {scroll: false});
-                }
+                router.replace(`${FRONTEND_URL}${redirectParams}`, {scroll: false});
                 router.refresh();
             } else {
                 throw new Error('Auth error');
@@ -182,7 +189,7 @@ export default function AuthForm() {
                         <Button
                             disabled={status}
                             htmlType='button'
-                            onClick={() => signIn('google', {callbackUrl: `${FRONTEND_URL}`})}
+                            onClick={() => signIn('google', {callbackUrl: `${FRONTEND_URL}${makeRedirectParams()}`})}
                             block
                         >
                             <GoogleOutlined />

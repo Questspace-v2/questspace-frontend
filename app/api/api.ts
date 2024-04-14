@@ -27,8 +27,9 @@ export const createQuest = async (data: IQuestCreate, accessToken: string) =>
     client.handleServerRequest('/quest', 'POST', data,
         undefined, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
-export const updateQuest = async (questId: string, data: IQuestCreate) =>
-    client.handleServerRequest(`/quest/${questId}`, 'POST', data);
+export const updateQuest = async (questId: string, data: IQuestCreate, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}`, 'POST', data, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 
 export const updateUser = async (id: string, data: IUserUpdate, accessToken: string) =>
@@ -37,11 +38,13 @@ export const updateUser = async (id: string, data: IUserUpdate, accessToken: str
 export const updatePassword = async (id: string, data: IPasswordUpdate, accessToken: string) =>
     client.handleServerRequest(`/user/${id}/password`, 'POST', data, undefined,'same-origin', {'Authorization': `Bearer ${accessToken}`});
 
-export const deleteQuest = async (questId: string) =>
-    client.handleServerRequest(`/quest/${questId}`, 'DELETE');
+export const deleteQuest = async (questId: string, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}`, 'DELETE', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const deleteUser = async (userId: string) =>
-    client.handleServerRequest(`/user/${userId}`, 'DELETE');
+export const deleteUser = async (userId: string, accessToken?: string) =>
+    client.handleServerRequest(`/user/${userId}`, 'DELETE', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups) =>
     client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data);
@@ -74,23 +77,37 @@ export const createTeam = async (questId: string, data: { name: string }, access
         undefined, 'same-origin',
         accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const joinTeam = async (invitePath: string) =>
-    client.handleServerRequest(`/teams/join/${invitePath}`);
+export const joinTeam = async (invitePath: string, accessToken?: string) =>
+    client.handleServerRequest(`/teams/join/${invitePath}`, 'GET', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
+
+export const getQuestByTeamInvite = async (invitePath: string, accessToken?: string) =>
+    client.handleServerRequest(`/teams/join/${invitePath}/quest`,
+        'GET', undefined, undefined, 'same-origin',
+        accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const getTeamById = async (teamId: string) =>
     client.handleServerRequest(`/teams/${teamId}`);
 
-export const updateTeam = async (teamId: string, data: { name: string }) =>
-    client.handleServerRequest(`/teams/${teamId}`, 'POST', data);
+export const updateTeam = async (teamId: string, data: { name: string }, accessToken?: string) =>
+    client.handleServerRequest(`/teams/${teamId}`, 'POST', data, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const deleteTeam = async (teamId: string) =>
-    client.handleServerRequest(`/teams/${teamId}`, 'DELETE');
+export const deleteTeam = async (teamId: string, accessToken?: string) =>
+    client.handleServerRequest(`/teams/${teamId}`, 'DELETE', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const changeTeamCaptain = async (teamId: string, data: { new_captain_id: string }) =>
-    client.handleServerRequest(`/teams/${teamId}/captain`, 'POST', data);
+export const changeTeamCaptain = async (teamId: string, data: {
+    new_captain_id: string
+}, accessToken?: string) =>
+    client.handleServerRequest(`/teams/${teamId}/captain`, 'POST', data, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const leaveTeam = async (teamId: string, new_captain_id?: string) =>
-    client.handleServerRequest(`/teams/${teamId}/leave`, 'POST', new_captain_id && new_captain_id);
+export const leaveTeam = async (teamId: string, accessToken?: string, new_captain?: string) =>
+    client.handleServerRequest(`/teams/${teamId}/leave`, 'POST', undefined,
+        new_captain ? {new_captain} : undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const removeTeamMember = async (teamId: string, memberId: string) =>
-    client.handleServerRequest(`/teams/${teamId}/${memberId}`, 'DELETE');
+export const deleteTeamMember = async (teamId: string, memberId: string, accessToken?: string) =>
+    client.handleServerRequest(`/teams/${teamId}/${memberId}`, 'DELETE', undefined,
+        undefined, 'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});

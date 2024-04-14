@@ -9,7 +9,12 @@ import './Header.css';
 const pointerCursor: CSSProperties = {
     cursor: 'pointer',
 };
-export default function Header({isAuthorized} : {isAuthorized: boolean}) {
+
+interface HeaderProps {
+    isAuthorized: boolean,
+    redirectParams?: string
+}
+export default function Header({isAuthorized, redirectParams} : HeaderProps) {
     return (
         <div className={'page-header'}>
             <div className={'page-header__items'}>
@@ -19,7 +24,7 @@ export default function Header({isAuthorized} : {isAuthorized: boolean}) {
                 {isAuthorized ?
                     <HeaderAvatar />
                     :
-                    <Link className={'page-header__auth-link'} href={'/auth'}>
+                    <Link className={'page-header__auth-link'} href={`/auth?${redirectParams}`}>
                         <Button type={'link'} style={{fontWeight: 700}}>Войти</Button>
                     </Link>
                 }
