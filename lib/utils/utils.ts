@@ -1,4 +1,5 @@
 import React from 'react';
+import { ALLOWED_USERS_ID } from '@/app/api/client/constants';
 
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
@@ -23,3 +24,5 @@ export interface ModalProps {
     setCurrentModal?:  React.Dispatch<React.SetStateAction<TeamModalType>>,
     currentModal?: TeamModalType
 }
+
+export const isAllowedUser = (userId: string) : boolean => ALLOWED_USERS_ID.includes(userId);

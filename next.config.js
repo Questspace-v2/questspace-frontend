@@ -3,7 +3,6 @@ const nextConfig = {
     images: {
         dangerouslyAllowSVG: true,
         unoptimized: false,
-        domains: ['lh3.googleusercontent.com'],
         remotePatterns: [
             {
                 protocol: "https",
@@ -22,6 +21,9 @@ const nextConfig = {
                 hostname: 'source.unsplash.com',
                 port: '',
                 pathname: '/**'
+            },
+            {
+                hostname: 'lh3.googleusercontent.com'
             }
         ],
     },

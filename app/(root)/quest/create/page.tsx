@@ -1,10 +1,12 @@
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import React from 'react';
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import dynamic from 'next/dynamic';
 import { Spin } from 'antd';
+import { isAllowedUser } from '@/lib/utils/utils';
+import authOptions from '@/app/api/auth/[...nextauth]/auth';
 
 const DynamicCreateQuest = dynamic(() => import('@/components/Quest/EditQuest/EditQuest'), {
     ssr: false,
@@ -16,10 +18,14 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 })
 
 export default async function CreateQuestPage() {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
         redirect('/auth');
+    }
+
+    if (!isAllowedUser(session.user.id)) {
+        notFound();
     }
 
     return (

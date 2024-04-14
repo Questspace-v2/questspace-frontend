@@ -197,6 +197,10 @@
     }
 }
 
+.team__header button.ant-btn.ant-btn-text.exit-team__button.exit-team__large-screen {
+    align-self: start;
+}
+
 .team__members {
     display: flex;
     flex-wrap: wrap;
