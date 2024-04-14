@@ -16,6 +16,8 @@ import './QuestTabs.css';
 import { IQuest } from '@/app/types/quest-interfaces';
 import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList';
 import { useInView } from 'react-intersection-observer';
+import { useSession } from 'next-auth/react';
+import { isAllowedUser } from '@/lib/utils/utils';
 
 export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQuests: IQuest[], nextPageId: string}) {
     const { xs} = useBreakpoint();
@@ -23,6 +25,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
     const [tabContent, setTabContent] = useState<IQuest[]>(fetchedAllQuests);
     const [page, setPage] = useState(nextPageId);
     const [canRequest, setCanRequest] = useState(true);
+    const {data: session} = useSession();
 
     const { ref, inView } = useInView();
 
@@ -123,7 +126,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
                                 onSelect={handleSelectTab}
                             />
                         </ConfigProvider>
-                        {createQuestButton}
+                        {isAllowedUser(session ? session.user.id : '') && createQuestButton}
                     </div>
                     <div className={'quest-tabpane'}>
                         <QuestCardsList quests={tabContent} />
@@ -138,7 +141,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
                 <ConfigProvider theme={themeConfig}>
                 <Tabs
                     className={'quest-tabs'}
-                    tabBarExtraContent={createQuestButton}
+                    tabBarExtraContent={isAllowedUser(session ? session.user.id : '') && createQuestButton}
                     items={items}
                     activeKey={selectedTab}
                     style={{

@@ -11,6 +11,10 @@
     flex-direction: column;
     justify-content: center;
     gap: 16px;
+
+    & h1 {
+        word-break: break-word;
+    }
 }
 
 .profile-information__buttons {

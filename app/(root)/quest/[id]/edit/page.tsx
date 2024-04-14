@@ -8,6 +8,7 @@ import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { getQuestById } from '@/app/api/api';
 import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import QuestAdmin from '@/components/QuestAdmin/QuestAdmin';
+import { isAllowedUser } from '@/lib/utils/utils';
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
     ssr: false,
@@ -16,8 +17,12 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 export default async function EditQuestPage({params}: {params: {id: string}}) {
     const session = await getServerSession(authOptions);
 
-    if (!session?.user) {
+    if (!session || !session.user) {
         redirect('/auth');
+    }
+
+    if (!isAllowedUser(session.user.id)) {
+        notFound();
     }
 
     const questData = await getQuestById(params.id, session.accessToken)

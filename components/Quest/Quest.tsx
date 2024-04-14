@@ -31,6 +31,7 @@ import dynamic from 'next/dynamic';
 import { changeTeamCaptain, deleteTeamMember, leaveTeam } from '@/app/api/api';
 import { Session } from 'next-auth';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
+import { RELEASED_FEATURE } from '@/app/api/client/constants';
 
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
@@ -278,7 +279,7 @@ function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
                         <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
                         <span className={'team-member__name'}>{member.username}</span>
                         {
-                            session?.user.id === team.captain.id && member.id !== team.captain.id &&
+                            RELEASED_FEATURE && session?.user.id === team.captain.id && member.id !== team.captain.id &&
                             <>
                                 <Button onClick={() => changeCaptain(member.id)}>Сделать капитаном</Button>
                                 <Button onClick={() => deleteMember(member.id)}>Удалить участника</Button>
