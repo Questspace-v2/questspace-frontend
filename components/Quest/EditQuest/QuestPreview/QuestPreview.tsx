@@ -14,10 +14,11 @@ dayjs.locale('ru')
 
 interface QuestEditorProps {
     form: QuestAboutForm,
-    file: UploadFile
+    file: UploadFile,
+    previousImage?: string
 }
 
-export default function QuestPreview({form, file}: QuestEditorProps) {
+export default function QuestPreview({form, file, previousImage}: QuestEditorProps) {
     let image = useMemo(()=> file ? URL.createObjectURL(file.originFileObj as Blob) : '', [file]);
     const creator = useSession().data?.user;
 
@@ -46,11 +47,10 @@ export default function QuestPreview({form, file}: QuestEditorProps) {
         id: '',
         status: '',
         registration_deadline: '',
-        media_link: image,
+        media_link: image.trim().length > 0 ? image : previousImage!,
         finish_time: finishTime,
         access: 'public'
     };
-
 
     return (
         <div className={'quest-preview__wrapper'}>

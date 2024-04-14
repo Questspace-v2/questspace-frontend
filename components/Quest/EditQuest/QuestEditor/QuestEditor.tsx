@@ -22,7 +22,7 @@ import dayjs from 'dayjs';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import 'dayjs/locale/ru';
 import { IQuest, IQuestCreate } from '@/app/types/quest-interfaces';
-import { createQuest } from '@/app/api/api';
+import { createQuest, updateQuest } from '@/app/api/api';
 import client from '@/app/api/client/client';
 import { uid } from '@/lib/utils/utils';
 import { useSession } from 'next-auth/react';
@@ -36,7 +36,10 @@ const {TextArea}= Input;
 interface QuestEditorProps {
     form: FormInstance<QuestAboutForm>,
     fileList: UploadFile[],
-    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>
+    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
+    isNewQuest?: boolean,
+    questId?: string,
+    previousImage?: string
 }
 
 export interface QuestAboutForm {
@@ -67,11 +70,25 @@ const theme: ThemeConfig = {
     }
 };
 
-export default function QuestEditor({form, fileList, setFileList}: QuestEditorProps) {
+function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.MouseEventHandler<HTMLElement>, isNewQuest?: boolean}) {
+    const createBtnText = isNewQuest ? 'Создать квест' : 'Сохранить изменения';
+    return (
+        <div className={'quest-editor__buttons'}>
+            <Button htmlType={'submit'}
+                    type={'primary'}
+                    onClick={handleSubmit}>{createBtnText}</Button>
+            <ConfigProvider theme={redOutlinedButton}>
+                <Button href={'/'}>Отменить</Button>
+            </ConfigProvider>
+        </div>
+    );
+}
+
+export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage }: QuestEditorProps) {
     const [teamCapacity, setTeamCapacity] = useState(3);
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
 
-    const {data: sessionData} = useSession();
+    const { data: sessionData } = useSession();
     const accessToken = sessionData?.accessToken;
 
     const router = useRouter();
@@ -113,7 +130,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
     const handleValidation = async () => {
         const imageValidation = fileList.length > 0;
         const s3Response = imageValidation && await handleS3Response();
-        if (!s3Response) {
+        if (!s3Response && !previousImage) {
             handleError('С картинкой что-то не так');
             return;
         }
@@ -128,7 +145,7 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
 
                 return {
                     ...values,
-                    media_link: s3Response.url
+                    media_link: (s3Response as Response).url ?? previousImage
                 };
             })
             .catch(error => {
@@ -165,11 +182,19 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
             handleError();
             return;
         }
-        await createQuest(data, accessToken!)
-            .then(resp => resp as IQuest)
-            .catch(error => {
-                throw error;
-            });
+        if (isNewQuest) {
+            await createQuest(data, accessToken!)
+                .then(resp => resp as IQuest)
+                .catch(error => {
+                    throw error;
+                });
+        } else {
+            await updateQuest(questId!,data, accessToken)
+                .then(resp => resp as IQuest)
+                .catch(err => {
+                    throw err;
+                })
+        }
         router.replace(`${FRONTEND_URL}`, {scroll: false});
     };
 
@@ -310,21 +335,14 @@ export default function QuestEditor({form, fileList, setFileList}: QuestEditorPr
                                 Публичный
                                 <p>Квест увидят все пользователи Квестспейса</p>
                             </Radio>
-                            <Radio value={'link-only'}>
+                            <Radio value={'link_only'}>
                                 Только по ссылке
                                 <p>Квест увидят только пользователи, которые зарегистрировались на него</p>
                             </Radio>
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item className={'quest-editor__controls'}>
-                        <div className={'quest-editor__buttons'}>
-                            <Button htmlType={'submit'}
-                                    type={'primary'}
-                                    onClick={handleSubmit}>Создать квест</Button>
-                            <ConfigProvider theme={redOutlinedButton}>
-                                <Button href={'/'}>Отменить</Button>
-                            </ConfigProvider>
-                        </div>
+                        <QuestEditorButtons handleSubmit={handleSubmit} isNewQuest={isNewQuest}/>
                     </Form.Item>
                 </Form>
             </ConfigProvider>
