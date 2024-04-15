@@ -72,7 +72,7 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
                                    isNewQuest={!questData}
                                    questId={questData?.quest.id}
                                    previousImage={questData?.quest.media_link}
-                                   initialTeamCapacity={questData?.max_team_cap}
+                                   initialTeamCapacity={questData?.quest.max_team_cap}
                       />,
         },
         {
@@ -107,7 +107,7 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
                                  isNewQuest={!questData}
                                  questId={questData?.quest.id}
                                  previousImage={questData?.quest.media_link}
-                                 initialTeamCapacity={questData?.max_team_cap}
+                                 initialTeamCapacity={questData?.quest.max_team_cap}
                     />
                 </section>
                 <div className={'content__separator'}/>
