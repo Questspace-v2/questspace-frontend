@@ -168,6 +168,37 @@ h3 {
     }
 }
 
+.confirm-delete__modal.ant-modal {
+    .ant-modal-content {
+        border-radius: 2px;
+    }
+
+    .ant-modal-confirm-title {
+        font-weight: 500;
+        color: var(--base-text-color);
+    }
+
+    .ant-btn-default:not(:disabled):hover {
+        color: var(--quit-color);
+        border-color: var(--quit-color);
+    }
+
+    .ant-btn-default:not(:disabled):active {
+        color: var(--quit-color);
+        border-color: var(--quit-color);
+    }
+
+    .ant-modal-confirm-btns {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 8px;
+    }
+
+    .ant-modal-confirm-btns .ant-btn+.ant-btn {
+        margin-inline-start: 0;
+    }
+}
+
 @media (max-width: 1279px) {
     h1 {
         &.responsive-header-h1 {

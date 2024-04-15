@@ -185,19 +185,24 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
             return;
         }
         if (isNewQuest) {
-            await createQuest(data, accessToken!)
+            const result = await createQuest(data, accessToken!)
                 .then(resp => resp as IQuest)
                 .catch(error => {
                     throw error;
                 });
+            if (result) {
+                router.replace(`${FRONTEND_URL}/quest/${result.id}`, {scroll: false});
+            }
         } else {
-            await updateQuest(questId!,data, accessToken)
+            const result = await updateQuest(questId!,data, accessToken)
                 .then(resp => resp as IQuest)
                 .catch(err => {
                     throw err;
                 })
+            if (result) {
+                router.refresh();
+            }
         }
-        router.replace(`${FRONTEND_URL}`, {scroll: false});
     };
 
     return (
