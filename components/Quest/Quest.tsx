@@ -302,6 +302,7 @@ function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
                     icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }}/>}
                     style={{ color: 'var(--quit-color)' }}
                     block
+                    onClick={showConfirm}
                 >
                     Выйти из команды
                 </Button>
