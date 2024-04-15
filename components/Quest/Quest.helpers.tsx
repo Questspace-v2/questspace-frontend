@@ -42,7 +42,7 @@ export function getTimeDiff(startDate: Date, finishDate: Date) {
         const days = Math.floor(hours / 24);
         return `${days}\u00A0${declOfNum(days, ['день', 'дня', 'дней'])}`;
     }
-    return `${Math.floor(hours)}\u00A0${declOfNum(hours, ['час', 'часа', 'часов'])}`;
+    return `${Math.floor(hours)}\u00A0${declOfNum(Math.floor(hours), ['час', 'часа', 'часов'])}`;
 }
 
 const getStartDateText = (startDate: Date) => {
