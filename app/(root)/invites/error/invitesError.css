@@ -23,11 +23,19 @@
         font-size: 24px;
         margin: 0;
     }
+
+    .roboto-flex-header {
+        font-size: 107px;
+    }
 }
 
 @media (max-width: 525px) {
     .content__wrapper.invites-error__content-wrapper {
         width: 320px;
+
+        .roboto-flex-header {
+            font-size: 90px;
+        }
 
         p {
             font-size: 20px;
