@@ -71,7 +71,9 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
                                    setFileList={setFileList}
                                    isNewQuest={!questData}
                                    questId={questData?.quest.id}
-                                   previousImage={questData?.quest.media_link}/>,
+                                   previousImage={questData?.quest.media_link}
+                                   initialTeamCapacity={questData?.max_team_cap}
+                      />,
         },
         {
             key: 'preview',
@@ -104,7 +106,9 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
                                  setFileList={setFileList}
                                  isNewQuest={!questData}
                                  questId={questData?.quest.id}
-                                 previousImage={questData?.quest.media_link}/>
+                                 previousImage={questData?.quest.media_link}
+                                 initialTeamCapacity={questData?.max_team_cap}
+                    />
                 </section>
                 <div className={'content__separator'}/>
                 <section>
