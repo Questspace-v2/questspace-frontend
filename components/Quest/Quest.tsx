@@ -231,9 +231,13 @@ function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
         await modal.confirm({
             title: 'Вы хотите выйти из команды?',
             icon: <ExclamationCircleOutlined />,
-            okText: 'Нет',
-            cancelText: 'Да',
-            async onCancel() {
+            className: 'confirm-delete__modal',
+            cancelText: 'Нет',
+            cancelButtonProps: {type: 'primary'},
+            okText: 'Да',
+            okType: 'default',
+            centered: true,
+            async onOk() {
                 const captainId = team.captain.id;
                 const isCaptain = captainId === session?.user.id;
                 if (isCaptain) {
@@ -244,7 +248,7 @@ function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
                 }
                 router.refresh();
             }
-        });
+        }).then(confirmed => confirmed ? router.refresh() : {}, () => {});
     };
 
     const deleteMember = async (memberId: string) => {
