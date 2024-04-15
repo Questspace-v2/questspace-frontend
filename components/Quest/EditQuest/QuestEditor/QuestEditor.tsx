@@ -101,7 +101,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     };
 
     const shrinkTeamCapacity = () => {
-        if (teamCapacity > 1) setTeamCapacity((prev) => prev - 1);
+        if ((initialTeamCapacity && teamCapacity > initialTeamCapacity) || (!initialTeamCapacity && teamCapacity > 1))
+            setTeamCapacity((prev) => prev - 1);
     };
 
     const handleError = (msg = 'Проверьте, что все поля заполнены') => {
