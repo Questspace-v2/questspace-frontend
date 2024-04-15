@@ -85,7 +85,8 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
 }
 
 export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage }: QuestEditorProps) {
-    const [teamCapacity, setTeamCapacity] = useState(3);
+    const initialTeamCapacity = isNewQuest ? 3 : form.maxTeamCap;
+    const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity);
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
 
     const { data: sessionData } = useSession();
@@ -204,7 +205,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                 <Form
                     form={form}
                     requiredMark={false}
-                    initialValues={{'maxTeamCap': 3}}
+                    initialValues={{'maxTeamCap': initialTeamCapacity}}
                     fields={[
                         {name: 'maxTeamCap', value: teamCapacity},
                         {name: 'registrationDeadline', value: registrationDeadlineChecked ?
@@ -317,7 +318,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                                     onClick={expandTeamCapacity}
                                 />}
                             controls={false}
-                            min={1}
+                            min={isNewQuest ? 1 : initialTeamCapacity}
                             style={{width: '128px', textAlignLast: 'center'}}
                             onChange={handleValueChange}
                         />
