@@ -39,7 +39,8 @@ interface QuestEditorProps {
     setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
     isNewQuest?: boolean,
     questId?: string,
-    previousImage?: string
+    previousImage?: string,
+    initialTeamCapacity?: number
 }
 
 export interface QuestAboutForm {
@@ -84,8 +85,8 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
     );
 }
 
-export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage }: QuestEditorProps) {
-    const [teamCapacity, setTeamCapacity] = useState(3);
+export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage, initialTeamCapacity }: QuestEditorProps) {
+    const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity ?? 3);
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
 
     const { data: sessionData } = useSession();
@@ -100,7 +101,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     };
 
     const shrinkTeamCapacity = () => {
-        if (teamCapacity > 1) setTeamCapacity((prev) => prev - 1);
+        if ((initialTeamCapacity && teamCapacity > initialTeamCapacity) ?? (!initialTeamCapacity && teamCapacity > 1))
+            setTeamCapacity((prev) => prev - 1);
     };
 
     const handleError = (msg = 'Проверьте, что все поля заполнены') => {
@@ -204,7 +206,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                 <Form
                     form={form}
                     requiredMark={false}
-                    initialValues={{'maxTeamCap': 3}}
+                    initialValues={{'maxTeamCap': initialTeamCapacity ?? 3}}
                     fields={[
                         {name: 'maxTeamCap', value: teamCapacity},
                         {name: 'registrationDeadline', value: registrationDeadlineChecked ?
@@ -317,7 +319,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                                     onClick={expandTeamCapacity}
                                 />}
                             controls={false}
-                            min={1}
+                            min={initialTeamCapacity ?? 1}
                             style={{width: '128px', textAlignLast: 'center'}}
                             onChange={handleValueChange}
                         />
