@@ -38,7 +38,7 @@ export default function QuestCard({props} : {props?: QuestHeaderProps}) {
                     style={{ objectFit: 'cover' }}
                     alt={'quest avatar'}
                     placeholder={'empty'}
-                    fetchPriority={'low'}
+                    priority
                     onError={() => setSrc('https://storage.yandexcloud.net/questspace-img/assets/error-src.png')}
                 />}
             >
