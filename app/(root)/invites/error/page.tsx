@@ -1,7 +1,6 @@
 import Background from '@/components/Background/Background';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { Button } from 'antd';
-import './invitesError.css';
 
 export default function InviteErrorPage() {
     return (
