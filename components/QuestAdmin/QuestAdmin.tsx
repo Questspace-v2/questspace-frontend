@@ -4,7 +4,7 @@ import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
-import { Button, ConfigProvider, Modal, Tabs, TabsProps } from 'antd';
+import { Button, ConfigProvider, message, Modal, Tabs, TabsProps } from 'antd';
 import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { SelectAdminTabs } from '@/components/QuestAdmin/QuestAdmin.helpers';
@@ -29,6 +29,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]}/>;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const tabs: TabsProps['items']  = [
         {
@@ -43,7 +44,15 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
             key: 'leaderboard',
             label: 'Лидерборд',
         },
-    ]
+    ];
+
+    const error = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Что-то пошло не так',
+        });
+    };
 
     const handleDelete = async () => {
         await modal.confirm({
@@ -56,9 +65,14 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
             okType: 'default',
             centered: true,
             async onOk() {
-                await deleteQuest(questData.quest.id, session?.accessToken);
+                try {
+                    await deleteQuest(questData.quest.id, session?.accessToken)
+                        .then(() => router.push(`${FRONTEND_URL}`, {scroll: false}));
+                } catch (err) {
+                    error();
+                }
             }
-        }).then(confirmed => confirmed ? router.push(`${FRONTEND_URL}`, {scroll: false}) : {}, () => {});
+        });
     };
 
     const handleSelectTab = async (value: string) => {
@@ -78,6 +92,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
         <div className={'admin-page__content'}>
             {modalContextHolder}
         <ContentWrapper className={'quest-admin__content-wrapper'}>
+            {contextHolder}
             <div className={'quest-admin__header__content'}>
                 <div className={'quest-admin__upper-wrapper'}>
                     <Link href={`/quest/${questData.quest.id}`} style={{textDecoration: 'none', width: 'min-content', maxWidth: '50%'}} >
