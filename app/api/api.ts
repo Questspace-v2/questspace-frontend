@@ -4,7 +4,7 @@ import {
     IUserCreate,
     IUserUpdate,
 } from '@/app/types/user-interfaces';
-import { IQuestCreate, IQuestTaskGroups } from '@/app/types/quest-interfaces';
+import { IQuestCreate, IQuestTaskGroups, ITaskGroupsCreateRequest } from '@/app/types/quest-interfaces';
 import client from '@/app/api/client/client';
 
 export const getUserById = async (userId: string) =>
@@ -44,6 +44,10 @@ export const deleteQuest = async (questId: string, accessToken?: string) =>
 
 export const deleteUser = async (userId: string, accessToken?: string) =>
     client.handleServerRequest(`/user/${userId}`, 'DELETE', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
+
+export const createTaskGroupsAndTasks = async (questId: string, data: ITaskGroupsCreateRequest, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/task-groups`, 'POST', data, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups) =>

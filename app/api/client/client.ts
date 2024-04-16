@@ -10,7 +10,7 @@ import createHttpError, {
 } from 'http-errors';
 import { Data } from '@/app/types/json-data';
 import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
-import { IQuestCreate, IQuestTaskGroups } from '@/app/types/quest-interfaces';
+import { IQuestCreate, IQuestTaskGroups, ITaskGroupsCreateRequest } from '@/app/types/quest-interfaces';
 import { RcFile } from 'antd/es/upload';
 
 interface IBaseInit {
@@ -19,6 +19,9 @@ interface IBaseInit {
     credentials?: string,
     headers?: Record<string, string>,
 }
+
+type DataType = Data | IUserCreate| IUserUpdate | IQuestTaskGroups|
+    IQuestCreate | IPasswordUpdate| ITaskGroupsCreateRequest | string;
 
 class Client {
     backendUrl: string;
@@ -61,7 +64,7 @@ class Client {
 
     static buildConfig(
         method: string,
-        data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate| IPasswordUpdate| string,
+        data?: DataType,
         credentials?: string,
         headers?: Record<string, string>
     ) {
@@ -85,7 +88,7 @@ class Client {
     async handleServerRequest(
         endpoint = '/',
         method = 'GET',
-        data?: Data | IUserCreate| IUserUpdate | IQuestTaskGroups| IQuestCreate | IPasswordUpdate| string, // Жесть, потом придумаю получше
+        data?: DataType, // Жесть, потом придумаю получше
         queryParams?: Record<string, unknown>,
         credentials = 'same-origin',
         headers: Record<string, string> = {}
