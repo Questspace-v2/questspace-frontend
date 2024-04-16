@@ -1,6 +1,6 @@
 'use client';
 
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
+import { IGetQuestResponse, ITaskGroupsCreateRequest } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
@@ -15,7 +15,7 @@ import { taskGroupMock } from '@/app/api/__mocks__/Task.mock';
 
 import './QuestAdmin.css';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import { deleteQuest, getQuestTeams } from '@/app/api/api';
+import { createTaskGroupsAndTasks, deleteQuest, getQuestTeams } from '@/app/api/api';
 import { ITeam } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -74,6 +74,11 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
         setSelectedTab(valueTab);
     }
 
+    const handleSaveRequest = async () => {
+        const taskGroupsData: ITaskGroupsCreateRequest = {task_groups: []}; // Заменить на данные
+        await createTaskGroupsAndTasks(questData.quest.id, taskGroupsData, session?.accessToken);
+    };
+
     return (
         <div className={'admin-page__content'}>
             {modalContextHolder}
@@ -100,6 +105,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                 <>
                     {tasksTabContent}
                     <div style={{padding: '24px 32px'}}><Button type={'primary'}><PlusOutlined/>Добавить раздел</Button></div>
+                    <div><Button type={'primary'} onClick={handleSaveRequest}>Сохранить все</Button></div>
                 </>
             )}
             {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent}/>}
