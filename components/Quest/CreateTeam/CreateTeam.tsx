@@ -40,6 +40,11 @@ export default function CreateTeam({questId, currentModal, setCurrentModal}: Mod
             handleError('Это поле не должно быть пустым');
             return;
         }
+        const redirectParams = new URLSearchParams({route: 'quest', id: questId!});
+        if (!accessToken) {
+            router.push(`/auth?${redirectParams.toString()}`);
+            return;
+        }
         const resp = await createTeam(questId!, {name: teamName}, accessToken)
             .then(response => response as ITeam)
             .then(team => team)
