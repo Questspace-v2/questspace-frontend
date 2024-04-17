@@ -100,10 +100,8 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                             <ArrowLeftOutlined />{questData.quest.name}
                         </Button>
                     </Link>
-                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
                     <ConfigProvider theme={redOutlinedButton}>
                         <Button className={'delete-quest__button'} onClick={handleDelete}><DeleteOutlined/>Удалить квест</Button>
-
                     </ConfigProvider>
                 </div>
                 <h1 className={'roboto-flex-header responsive-header-h1'}>Управление квестом</h1>
