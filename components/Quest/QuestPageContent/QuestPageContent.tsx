@@ -3,6 +3,7 @@ import { QuestAdminPanel, QuestContent, QuestHeader, QuestResults, QuestTeam } f
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { isAllowedUser } from '@/lib/utils/utils';
+import { QuestHeaderProps } from '@/components/Quest/Quest.helpers';
 
 export default async function QuestPageContent({props, isCreator}: {props: IGetQuestResponse, isCreator: boolean}) {
     const {quest, team} = props;
@@ -10,7 +11,7 @@ export default async function QuestPageContent({props, isCreator}: {props: IGetQ
     return (
         <>
             {isAllowedUser(session ? session.user.id : '') && <QuestAdminPanel isCreator={isCreator} />}
-            <QuestHeader props={quest} mode={'page'} team={team}/>
+            <QuestHeader props={quest as QuestHeaderProps} mode={'page'} team={team}/>
             <QuestResults status={quest.status} />
             <QuestContent description={quest.description} mode={'page'} />
             <QuestTeam team={team} session={session}/>

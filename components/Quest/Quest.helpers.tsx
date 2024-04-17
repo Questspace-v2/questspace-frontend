@@ -18,7 +18,7 @@ export interface QuestHeaderProps {
     name: string,
     registration_deadline: string | Date,
     status: string,
-    max_team_cap?: string
+    max_team_cap?: number
 }
 
 export const enum QuestStatus {
