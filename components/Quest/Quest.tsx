@@ -9,7 +9,7 @@ import {
     EditOutlined,
     HourglassOutlined,
     LogoutOutlined,
-    ExclamationCircleOutlined
+    ExclamationCircleOutlined, TeamOutlined,
 } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
@@ -82,7 +82,8 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
         registration_deadline: registrationDeadline,
         finish_time: finishTime,
         media_link: mediaLink,
-        status
+        status,
+        max_team_cap: maxTeamCap
     } = props;
     const {username, avatar_url: avatarUrl} = creator;
 
@@ -133,6 +134,10 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                                 <HourglassOutlined />
                                 <p className={'quest-header__start'}>{timeDiffLabel}</p>
                             </div>
+                            <div className={'information__block'}>
+                                <TeamOutlined />
+                                <p className={'quest-header__start'}>макс. {maxTeamCap} чел.</p>
+                            </div>
                         </div>
                     </div>
                     {getQuestStatusButton(startDate, registrationDate, finishDate, status, currentModal, setCurrentModal, id, team)}
@@ -179,6 +184,10 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                             <HourglassOutlined />
                             <p className={'quest-header__start'}>{timeDiffLabel}</p>
                         </div>}
+                        {maxTeamCap && <div className={'information__block'}>
+                            <TeamOutlined />
+                            <p className={'quest-header__start'}>макс. {maxTeamCap} чел.</p>
+                        </div>}
                     </div>
                 </div>
             </>
@@ -188,7 +197,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
     return null;
 }
 
-function QuestResults({status} : {status: QuestStatus | string}) {
+function QuestResults({ status }: { status: QuestStatus | string }) {
     const statusQuest = status as QuestStatus;
     if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
         return (

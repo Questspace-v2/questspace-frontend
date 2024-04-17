@@ -341,7 +341,10 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             controls={false}
                             min={initialTeamCapacity ?? 1}
                             style={{width: '128px', textAlignLast: 'center'}}
-                            onChange={() => handleValueChange('maxTeamCap')}
+                            onChange={(value) => {
+                                setTeamCapacity(value ?? (initialTeamCapacity ?? 1));
+                                handleValueChange('maxTeamCap')
+                            }}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
