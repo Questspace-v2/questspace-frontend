@@ -1,6 +1,6 @@
 'use client';
 
-import { IGetQuestResponse, ITaskGroupsCreateRequest } from '@/app/types/quest-interfaces';
+import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
@@ -20,6 +20,7 @@ import { ITeam } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
+import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 
 export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
     const router = useRouter();
@@ -29,6 +30,8 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]}/>;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
+
+    const {data: contextData, updater: setContextData} = useTasksContext()!;
 
     const tabs: TabsProps['items']  = [
         {
@@ -75,40 +78,48 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
     }
 
     const handleSaveRequest = async () => {
-        const taskGroupsData: ITaskGroupsCreateRequest = {task_groups: []}; // Заменить на данные
-        await createTaskGroupsAndTasks(questData.quest.id, taskGroupsData, session?.accessToken);
+        await createTaskGroupsAndTasks(questData.quest.id, contextData, session?.accessToken);
+    };
+
+    const handleAddTaskGroup = () => {
+        setContextData({task_groups: [...contextData.task_groups, {name: 'Test', tasks: [], pub_time: '23'}]});
     };
 
     return (
         <div className={'admin-page__content'}>
             {modalContextHolder}
-        <ContentWrapper className={'quest-admin__content-wrapper'}>
-            <div className={'quest-admin__header__content'}>
-                <div className={'quest-admin__upper-wrapper'}>
-                    <Link href={`/quest/${questData.quest.id}`} style={{textDecoration: 'none', width: 'min-content', maxWidth: '50%'}} >
-                        <Button className={'return__button'} type={'link'} size={'middle'}>
-                            <ArrowLeftOutlined />{questData.quest.name}
-                        </Button>
-                    </Link>
-                    {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-                    <ConfigProvider theme={redOutlinedButton}>
-                        <Button className={'delete-quest__button'} onClick={handleDelete}><DeleteOutlined/>Удалить квест</Button>
+            <ContentWrapper className={'quest-admin__content-wrapper'}>
+                <div className={'quest-admin__header__content'}>
+                    <div className={'quest-admin__upper-wrapper'}>
+                        <Link href={`/quest/${questData.quest.id}`}
+                              style={{ textDecoration: 'none', width: 'min-content', maxWidth: '50%' }}>
+                            <Button className={'return__button'} type={'link'} size={'middle'}>
+                                <ArrowLeftOutlined />{questData.quest.name}
+                            </Button>
+                        </Link>
+                        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+                        <ConfigProvider theme={redOutlinedButton}>
+                            <Button className={'delete-quest__button'} onClick={handleDelete}><DeleteOutlined />Удалить
+                                квест</Button>
 
-                    </ConfigProvider>
+                        </ConfigProvider>
+                    </div>
+                    <h1 className={'roboto-flex-header responsive-header-h1'}>Управление квестом</h1>
+                    <Tabs items={tabs} activeKey={selectedTab} defaultActiveKey={selectedTab}
+                          onTabClick={handleSelectTab} />
                 </div>
-                <h1 className={'roboto-flex-header responsive-header-h1'}>Управление квестом</h1>
-                <Tabs items={tabs} activeKey={selectedTab} defaultActiveKey={selectedTab} onTabClick={handleSelectTab}/>
-            </div>
-        </ContentWrapper>
+            </ContentWrapper>
             {selectedTab === SelectAdminTabs.ABOUT && aboutTabContent}
             {selectedTab === SelectAdminTabs.TASKS && (
                 <>
                     {tasksTabContent}
-                    <div style={{padding: '24px 32px'}}><Button type={'primary'}><PlusOutlined/>Добавить раздел</Button></div>
+                    <div style={{ padding: '24px 32px' }}><Button type={'primary'}
+                                                                  onClick={handleAddTaskGroup}><PlusOutlined />Добавить
+                        раздел</Button></div>
                     <div><Button type={'primary'} onClick={handleSaveRequest}>Сохранить все</Button></div>
                 </>
             )}
-            {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent}/>}
+            {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent} />}
         </div>
     );
 }

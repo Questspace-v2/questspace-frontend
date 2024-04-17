@@ -1,6 +1,7 @@
 import { Button, ConfigProvider } from 'antd';
 import { CopyOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
+import TaskGroupCollapseButtons from '@/components/Tasks/TaskGroup/TaskGroupCollapseButtons';
 
 export const enum TasksMode {
     EDIT = 'edit',
@@ -10,15 +11,7 @@ export const enum TasksMode {
 export const getTaskGroupExtra = (edit: boolean) => {
     if (edit) {
         return (
-            <div className={'task-group__collapse-buttons'}>
-                <ConfigProvider theme={blueOutlinedButton}>
-                    <Button><EditOutlined/>Изменить название</Button>
-                    <Button><CopyOutlined/>Добавить задачу</Button>
-                </ConfigProvider>
-                <ConfigProvider theme={redOutlinedButton}>
-                    <Button><DeleteOutlined/>Удалить раздел</Button>
-                </ConfigProvider>
-            </div>
+            <TaskGroupCollapseButtons />
         );
     }
     return null;
