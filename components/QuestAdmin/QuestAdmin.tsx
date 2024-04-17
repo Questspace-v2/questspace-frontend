@@ -92,14 +92,22 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                     </ConfigProvider>
                 </div>
                 <h1 className={'roboto-flex-header responsive-header-h1'}>Управление квестом</h1>
-                <Tabs items={tabs} activeKey={selectedTab} defaultActiveKey={selectedTab} onTabClick={handleSelectTab}/>
+                <Tabs
+                    items={tabs}
+                    activeKey={selectedTab}
+                    defaultActiveKey={selectedTab}
+                    onTabClick={handleSelectTab}
+                />
             </div>
         </ContentWrapper>
             {selectedTab === SelectAdminTabs.ABOUT && aboutTabContent}
             {selectedTab === SelectAdminTabs.TASKS && (
                 <>
                     {tasksTabContent}
-                    <div style={{padding: '24px 32px'}}><Button type={'primary'}><PlusOutlined/>Добавить раздел</Button></div>
+                    <div style={{display: 'flex', gap: '8px', padding: '24px 32px'}}>
+                        <Button><PlusOutlined/>Добавить раздел</Button>
+                        <Button type={'primary'}>Сохранить</Button>
+                    </div>
                 </>
             )}
             {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent}/>}
