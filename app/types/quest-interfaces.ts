@@ -61,6 +61,7 @@ export interface IQuestTaskGroupsResponse extends ITaskGroupsUpdate {
     quest: IQuest,
     team: ITeam,
     task_groups: ITaskGroup[],
+    error?: string
 }
 
 export interface IFilteredQuests {

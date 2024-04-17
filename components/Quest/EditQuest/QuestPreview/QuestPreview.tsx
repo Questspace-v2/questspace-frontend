@@ -34,7 +34,7 @@ export default function QuestPreview({form, file, previousImage}: QuestEditorPro
         image = form.image;
     }
 
-    const {name, description, startTime, finishTime} = form;
+    const {name, description, startTime, finishTime, maxTeamCap} = form;
     const {name: username, image: avatarUrl, id: creatorId} = creator!;
     const props: QuestHeaderProps = {
         name,
@@ -49,7 +49,8 @@ export default function QuestPreview({form, file, previousImage}: QuestEditorPro
         registration_deadline: '',
         media_link: image.trim().length > 0 ? image : previousImage!,
         finish_time: finishTime,
-        access: 'public'
+        access: 'public',
+        max_team_cap: maxTeamCap?.toString() ?? '0'
     };
 
     return (

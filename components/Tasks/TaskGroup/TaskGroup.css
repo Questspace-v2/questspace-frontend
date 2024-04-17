@@ -19,6 +19,10 @@
         padding: 0;
     }
 
+    &.ant-collapse-ghost >.ant-collapse-item >.ant-collapse-content >.ant-collapse-content-box {
+        padding-block-end: 0;
+    }
+
     .task-group__collapse-buttons {
         display: flex;
         gap: 8px;

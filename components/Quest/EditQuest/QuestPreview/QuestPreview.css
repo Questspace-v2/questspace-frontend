@@ -11,8 +11,9 @@
 
     .quest-preview__information {
         display: flex;
-        gap: 24px;
-        text-wrap: nowrap;
+        column-gap: 24px;
+        row-gap: 4px;
+        flex-wrap: wrap;
 
         .information__block {
             display: flex;
@@ -63,7 +64,6 @@
     .quest-preview__wrapper {
         .quest-preview__information {
             flex-direction: column;
-            gap: 4px;
         }
     }
 }

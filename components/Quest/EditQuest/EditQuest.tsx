@@ -34,6 +34,8 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
     const [form] = Form.useForm<QuestAboutForm>();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const fileListRef = useRef(fileList[0]);
+    const watch = Form.useWatch([], form);
+    const {xs, sm, md} = useBreakpoint();
 
     useEffect(() => {
         if (questData) {
@@ -59,26 +61,32 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
         fileListRef.current = fileList[0];
     }, [fileList, form, questData]);
 
-    const watch = Form.useWatch([], form);
-    const {xs, sm, md} = useBreakpoint();
+    const editor =
+        <QuestEditor form={form}
+                     fileList={fileList}
+                     setFileList={setFileList}
+                     isNewQuest={!questData}
+                     questId={questData?.quest.id}
+                     previousImage={questData?.quest.media_link}
+                     initialTeamCapacity={questData?.quest.max_team_cap}
+        />;
+    const preview =
+        <QuestPreview
+            form={watch}
+            file={fileListRef.current}
+            previousImage={questData?.quest.media_link}
+        />;
 
     const items: TabsProps['items'] = [
         {
             key: 'editor',
             label: 'Редактор',
-            children: <QuestEditor form={form}
-                                   fileList={fileList}
-                                   setFileList={setFileList}
-                                   isNewQuest={!questData}
-                                   questId={questData?.quest.id}
-                                   previousImage={questData?.quest.media_link}
-                                   initialTeamCapacity={questData?.quest.max_team_cap}
-                      />,
+            children: editor,
         },
         {
             key: 'preview',
             label: 'Предпросмотр',
-            children: <QuestPreview form={watch} file={fileListRef.current} previousImage={questData?.quest.media_link}/>,
+            children: preview,
         },
     ];
 
@@ -101,19 +109,12 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
             <div className={'edit-quest__body__content'}>
                 <section>
                     <h2 className={'roboto-flex-header'} style={{marginBottom: '16px'}}>Редактор</h2>
-                    <QuestEditor form={form}
-                                 fileList={fileList}
-                                 setFileList={setFileList}
-                                 isNewQuest={!questData}
-                                 questId={questData?.quest.id}
-                                 previousImage={questData?.quest.media_link}
-                                 initialTeamCapacity={questData?.quest.max_team_cap}
-                    />
+                    {editor}
                 </section>
                 <div className={'content__separator'}/>
                 <section>
                     <h2 className={'roboto-flex-header'} style={{ marginBottom: '16px' }}>Предпросмотр</h2>
-                    <QuestPreview form={watch} file={fileListRef.current} previousImage={questData?.quest.media_link}/>
+                    {preview}
                 </section>
             </div>
         </ContentWrapper>

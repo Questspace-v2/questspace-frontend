@@ -19,8 +19,9 @@
 
 .play-page__information {
     display: flex;
-    gap: 24px;
-    text-wrap: nowrap;
+    column-gap: 24px;
+    row-gap: 8px;
+    flex-wrap: wrap;
 
     .information__block {
         display: flex;

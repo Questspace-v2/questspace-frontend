@@ -6,6 +6,7 @@ import '@/components/QuestTabs/QuestCard/QuestCard.css';
 import React, { Dispatch, SetStateAction } from 'react';
 import { TeamModal, TeamModalType } from '@/lib/utils/utils';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export interface QuestHeaderProps {
     access: string,
@@ -16,7 +17,8 @@ export interface QuestHeaderProps {
     media_link: string,
     name: string,
     registration_deadline: string | Date,
-    status: string
+    status: string,
+    max_team_cap?: string
 }
 
 export const enum QuestStatus {
@@ -36,14 +38,41 @@ function declOfNum(number: number, titles: string[]) {
 export function getTimeDiff(startDate: Date, finishDate: Date) {
     const hours = Math.abs(startDate.getTime() - finishDate.getTime()) / 36e5;
     if (hours < 1) {
-        const minutes = Math.abs(startDate.getTime() - finishDate.getTime()) / 6e4;
-        return `${Math.floor(minutes)}\u00A0${declOfNum(minutes, ['минута', 'минуты', 'минут'])}`;
+        const minutes = Math.floor(Math.abs(startDate.getTime() - finishDate.getTime()) / 6e4);
+        return `${minutes}\u00A0${declOfNum(minutes, ['минута', 'минуты', 'минут'])}`;
     }
     if (hours >= 24) {
         const days = Math.floor(hours / 24);
         return `${days}\u00A0${declOfNum(days, ['день', 'дня', 'дней'])}`;
     }
     return `${Math.floor(hours)}\u00A0${declOfNum(Math.floor(hours), ['час', 'часа', 'часов'])}`;
+}
+
+export function getLongTimeDiff(startDate: Date, finishDate: Date) {
+    const minutes = Math.floor(Math.abs(startDate.getTime() - finishDate.getTime()) / 6e4);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const modHours = hours % 24;
+    const modMinutes = minutes % 60;
+    const daysLabel = days > 0 ? `${days}\u00A0${declOfNum(days, ['день', 'дня', 'дней'])}` : '';
+    const hoursLabel = modHours > 0 ? `${modHours}\u00A0${declOfNum(modHours, ['час', 'часа', 'часов'])}` : '';
+    const minutesLabel = modMinutes > 0 ?`${modMinutes}\u00A0${declOfNum(modMinutes, ['минута', 'минуты', 'минут'])}` : '';
+
+    return [daysLabel, hoursLabel, minutesLabel].join(' ');
+}
+
+export function getRemainingVerb(startDate: Date, finishDate: Date) {
+    const minutes = Math.floor(Math.abs(startDate.getTime() - finishDate.getTime()) / 6e4);
+
+    if (minutes < 60) {
+        return declOfNum(minutes, ['Осталась', 'Осталось', 'Осталось']);
+    }
+
+    if (minutes < 1440) {
+        return declOfNum(Math.floor(minutes / 60), ['Остался', 'Осталось', 'Осталось']);
+    }
+
+    return declOfNum(Math.floor(minutes / 1440), ['Остался', 'Осталось', 'Осталось']);
 }
 
 const getStartDateText = (startDate: Date) => {
@@ -101,10 +130,12 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
 
     if (statusQuest === QuestStatus.StatusRunning) {
         const finishHourMinute = finishDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const pathname = usePathname();
         return (
             <div className={'quest-header__interactive'}>
                 {team && (
-                    <Link href={`${document.URL}/play`}><Button type={'primary'} style={{ backgroundColor: '#52C41A' }}>
+                    <Link href={`${pathname}/play`}><Button type={'primary'} style={{ backgroundColor: '#52C41A' }}>
                         <PlayCircleFilled />Открыть задания
                     </Button></Link>
                 )}

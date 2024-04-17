@@ -17,7 +17,7 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 export default async function PlayQuestPage({params}: {params: {id: string}}) {
     const session = await getServerSession(authOptions);
 
-    const questData = await fetch(`${BACKEND_URL}/quest/${params.id}/task-groups`, {
+    const questData = await fetch(`${BACKEND_URL}/quest/${params.id}/play`, {
         method :'GET',
         headers: {'Authorization': `Bearer ${session?.accessToken}`}})
         .then(res => res.json())
@@ -25,7 +25,7 @@ export default async function PlayQuestPage({params}: {params: {id: string}}) {
             throw err;
         }) as IQuestTaskGroupsResponse;
 
-    if (!questData) {
+    if (!questData || questData.error) {
         notFound();
     }
 
