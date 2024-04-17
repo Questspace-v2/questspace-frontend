@@ -8,14 +8,12 @@ import {
     Form,
     FormInstance,
     Input,
-    InputNumber,
+    InputNumber, message,
     Radio,
     ThemeConfig,
     Upload,
     UploadFile,
 } from 'antd';
-
-import './QuestEditor.css';
 import React, { useState } from 'react';
 import { FileImageOutlined, MinusOutlined, PlusOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -30,9 +28,12 @@ import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useRouter } from 'next/navigation';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 
+import './QuestEditor.css';
+
 dayjs.locale('ru')
 
-const {TextArea}= Input;
+const {TextArea} = Input;
+
 interface QuestEditorProps {
     form: FormInstance<QuestAboutForm>,
     fileList: UploadFile[],
@@ -77,7 +78,10 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
         <div className={'quest-editor__buttons'}>
             <Button htmlType={'submit'}
                     type={'primary'}
-                    onClick={handleSubmit}>{createBtnText}</Button>
+                    onClick={handleSubmit}
+            >
+                {createBtnText}
+            </Button>
             <ConfigProvider theme={redOutlinedButton}>
                 <Button href={'/'}>Отменить</Button>
             </ConfigProvider>
@@ -88,12 +92,10 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
 export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage, initialTeamCapacity }: QuestEditorProps) {
     const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity ?? 3);
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
-
+    const [messageApi, contextHolder] = message.useMessage();
     const { data: sessionData } = useSession();
     const accessToken = sessionData?.accessToken;
-
     const router = useRouter();
-
     const [errorMsg, setErrorMsg] = useState('');
     const [changedFields, setChangedFields] = useState<string[]>([])
 
@@ -116,6 +118,14 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
             setChangedFields([...changedFields, fieldName.toString()]);
         }
     }
+
+    const success = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'success',
+            content: 'Сохранено!',
+        });
+    };
 
     const handleS3Response = () => {
         const file = fileList[0].originFileObj as File;
@@ -189,19 +199,25 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
             return;
         }
         if (isNewQuest) {
-            await createQuest(data, accessToken!)
+            const result = await createQuest(data, accessToken!)
                 .then(resp => resp as IQuest)
                 .catch(error => {
                     throw error;
                 });
+            if (result) {
+                router.replace(`${FRONTEND_URL}/quest/${result.id}`, {scroll: false});
+            }
         } else {
-            await updateQuest(questId!,data, accessToken)
+            const result = await updateQuest(questId!,data, accessToken)
                 .then(resp => resp as IQuest)
                 .catch(err => {
                     throw err;
                 })
+            if (result) {
+                router.refresh();
+                success();
+            }
         }
-        router.replace(`${FRONTEND_URL}`, {scroll: false});
     };
 
     return (
@@ -348,6 +364,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item className={'quest-editor__controls'}>
+                        {contextHolder}
                         <QuestEditorButtons handleSubmit={handleSubmit} isNewQuest={isNewQuest}/>
                     </Form.Item>
                 </Form>

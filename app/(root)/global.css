@@ -111,6 +111,33 @@ body {
 .content__wrapper.invites-error__content-wrapper {
     .roboto-flex-header {
         font-size: 107px;
+  }
+}
+
+.ant-btn.return__button {
+    color: var(--primary-color);
+    display: flex;
+    border: none;
+    padding: 4px 15px 4px 0;
+    gap: 10px;
+    width: min-content;
+    max-width: 100%;
+    align-items: center;
+
+    &.ant-btn >.anticon+span {
+        margin-inline-start: 0;
+    }
+
+    &.ant-btn > span {
+        display: inline-flex;
+    }
+
+    &.ant-btn > span:not(.anticon) {
+        display: inline-block;
+        width:100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -171,6 +198,37 @@ h3 {
 
     & circle {
         fill: var(--status-color-finished);
+    }
+}
+
+.confirm-delete__modal.ant-modal {
+    .ant-modal-content {
+        border-radius: 2px;
+    }
+
+    .ant-modal-confirm-title {
+        font-weight: 500;
+        color: var(--base-text-color);
+    }
+
+    .ant-btn-default:not(:disabled):hover {
+        color: var(--quit-color);
+        border-color: var(--quit-color);
+    }
+
+    .ant-btn-default:not(:disabled):active {
+        color: var(--quit-color);
+        border-color: var(--quit-color);
+    }
+
+    .ant-modal-confirm-btns {
+        display: flex;
+        flex-direction: row-reverse;
+        gap: 8px;
+    }
+
+    .ant-modal-confirm-btns .ant-btn+.ant-btn {
+        margin-inline-start: 0;
     }
 }
 
