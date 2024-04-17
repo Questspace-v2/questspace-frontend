@@ -7,7 +7,7 @@ export default function Tasks({mode, props} : {mode: TasksMode, props: ITaskGrou
     return (
         <>
             {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-            {props.map((taskGroup) => <TaskGroup mode={mode} props={taskGroup} key={uid()}/>)}
+            {props?.map((taskGroup) => <TaskGroup mode={mode} props={taskGroup} key={uid()}/>)}
         </>
     );
 }

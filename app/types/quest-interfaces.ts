@@ -58,7 +58,9 @@ export interface IQuestTaskGroups {
 }
 
 export interface IQuestTaskGroupsResponse extends ITaskGroupsUpdate {
-    quest: IQuest
+    quest: IQuest,
+    team: ITeam,
+    task_groups: ITaskGroup[],
 }
 
 export interface IFilteredQuests {
