@@ -5,6 +5,7 @@ import { ITeam, IUser } from '@/app/types/user-interfaces';
 import '@/components/QuestTabs/QuestCard/QuestCard.css';
 import React, { Dispatch, SetStateAction } from 'react';
 import { TeamModal, TeamModalType } from '@/lib/utils/utils';
+import Link from 'next/link';
 
 export interface QuestHeaderProps {
     access: string,
@@ -102,8 +103,11 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
         const finishHourMinute = finishDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
         return (
             <div className={'quest-header__interactive'}>
-                {team && <Button type={'primary'} style={{ backgroundColor: '#52C41A' }}><PlayCircleFilled />Открыть
-                    задания</Button>}
+                {team && (
+                    <Link href={`${document.URL}/play`}><Button type={'primary'} style={{ backgroundColor: '#52C41A' }}>
+                        <PlayCircleFilled />Открыть задания
+                    </Button></Link>
+                )}
                 <p>{`Финиш квеста в ${finishHourMinute}`}</p>
             </div>
         );

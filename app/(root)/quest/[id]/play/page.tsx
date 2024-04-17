@@ -4,14 +4,30 @@ import Body from '@/components/Body/Body';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { notFound, redirect } from 'next/navigation';
+import { BACKEND_URL } from '@/app/api/client/constants';
+import authOptions from '@/app/api/auth/[...nextauth]/auth';
+import { IQuestTaskGroupsResponse } from '@/app/types/quest-interfaces';
+import PlayPageContent from '@/components/Tasks/PlayPageContent/PlayPageContent';
 import { isAllowedUser } from '@/lib/utils/utils';
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
     ssr: false,
 })
 
-export default async function PlayQuestPage() {
-    const session = await getServerSession();
+export default async function PlayQuestPage({params}: {params: {id: string}}) {
+    const session = await getServerSession(authOptions);
+
+    const questData = await fetch(`${BACKEND_URL}/quest/${params.id}/task-groups`, {
+        method :'GET',
+        headers: {'Authorization': `Bearer ${session?.accessToken}`}})
+        .then(res => res.json())
+        .catch(err => {
+            throw err;
+        }) as IQuestTaskGroupsResponse;
+
+    if (!questData) {
+        notFound();
+    }
 
     if (!session || !session.user) {
         redirect('/auth');
@@ -24,7 +40,9 @@ export default async function PlayQuestPage() {
     return (
         <>
             <Header isAuthorized/>
-            <Body/>
+            <Body>
+                <PlayPageContent props={questData}/>
+            </Body>
             <DynamicFooter />
         </>
     );
