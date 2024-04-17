@@ -136,7 +136,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                             </div>
                             <div className={'information__block'}>
                                 <TeamOutlined />
-                                <p className={'quest-header__start'}>макс. {maxTeamCap} чел.</p>
+                                <p className={'quest-header__start'}>макс. {maxTeamCap?.toString()} чел.</p>
                             </div>
                         </div>
                     </div>
@@ -186,7 +186,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                         </div>}
                         {maxTeamCap && <div className={'information__block'}>
                             <TeamOutlined />
-                            <p className={'quest-header__start'}>макс. {maxTeamCap} чел.</p>
+                            <p className={'quest-header__start'}>макс. {maxTeamCap.toString()} чел.</p>
                         </div>}
                     </div>
                 </div>

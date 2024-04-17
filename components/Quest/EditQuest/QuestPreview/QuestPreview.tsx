@@ -50,7 +50,7 @@ export default function QuestPreview({form, file, previousImage}: QuestEditorPro
         media_link: image.trim().length > 0 ? image : previousImage!,
         finish_time: finishTime,
         access: 'public',
-        max_team_cap: maxTeamCap?.toString() ?? '0'
+        max_team_cap: maxTeamCap ?? 0
     };
 
     return (
