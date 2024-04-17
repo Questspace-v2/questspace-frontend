@@ -97,7 +97,7 @@ class Client {
         return fetch(url, config)
             .then(res => {
                 if (res.ok) {
-                    return res.json();
+                    return method !== 'DELETE' ? res.json() : res.status;
                 }
                 return null;
             })
