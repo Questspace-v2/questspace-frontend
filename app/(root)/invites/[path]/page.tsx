@@ -20,7 +20,7 @@ export default async function InvitePage({params}: {params: {path: string}}) {
         if (team) {
             redirect(`/quest/${questId}`);
         } else {
-            notFound();
+            redirect('/invites/error');
         }
     } else {
         notFound();

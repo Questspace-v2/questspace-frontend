@@ -134,7 +134,7 @@ export default function AuthForm() {
                             onChange={handleFieldChange}
                         />
                     </Form.Item>
-                    <Form.Item<AuthFormItems> name={'password'} rules={[{required: true}]}>
+                    <Form.Item<AuthFormItems> name={'password'} rules={[{required: true, message: 'Введите пароль'}]}>
                         <Input
                             disabled={status}
                             type={'password'}

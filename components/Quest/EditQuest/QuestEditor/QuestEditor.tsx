@@ -97,6 +97,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const accessToken = sessionData?.accessToken;
     const router = useRouter();
     const [errorMsg, setErrorMsg] = useState('');
+    const [changedFields, setChangedFields] = useState<string[]>([])
 
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
@@ -111,8 +112,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         setErrorMsg(msg);
     };
 
-    const handleValueChange = () => {
+    const handleValueChange = (fieldName: string | number) => {
         setErrorMsg('');
+        if (!changedFields.includes(fieldName.toString())) {
+            setChangedFields([...changedFields, fieldName.toString()]);
+        }
     }
 
     const success = () => {
@@ -239,7 +243,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         colon={false}
                         required
                     >
-                        <Input type={'text'} onChange={handleValueChange}/>
+                        <Input type={'text'} onChange={() => handleValueChange('name')}/>
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         name={'description'}
@@ -250,7 +254,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         }
                         colon={false}
                     >
-                        <TextArea style={{resize: 'none', height: '320px'}} onChange={handleValueChange}/>
+                        <TextArea style={{resize: 'none', height: '320px'}} onChange={() => handleValueChange('description')}/>
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__image-form-item'}
@@ -286,7 +290,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={handleValueChange}
+                            onChange={() => handleValueChange('registrationDeadline')}
                         />
 
                     </Form.Item>
@@ -301,7 +305,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={handleValueChange}
+                            onChange={() => handleValueChange('startTime')}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -315,7 +319,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={handleValueChange}
+                            onChange={() => handleValueChange('finishTime')}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -337,7 +341,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             controls={false}
                             min={initialTeamCapacity ?? 1}
                             style={{width: '128px', textAlignLast: 'center'}}
-                            onChange={handleValueChange}
+                            onChange={() => handleValueChange('maxTeamCap')}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -348,7 +352,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         colon={false}
                         required
                     >
-                        <Radio.Group onChange={handleValueChange}>
+                        <Radio.Group onChange={() => handleValueChange('access')}>
                             <Radio value={'public'}>
                                 Публичный
                                 <p>Квест увидят все пользователи Квестспейса</p>
