@@ -9,6 +9,7 @@ import { getQuestById } from '@/app/api/api';
 import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import QuestAdmin from '@/components/QuestAdmin/QuestAdmin';
 import { isAllowedUser } from '@/lib/utils/utils';
+import ContextProvider from '@/components/Tasks/ContextProvider/ContextProvider';
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
     ssr: false,
@@ -45,7 +46,9 @@ export default async function EditQuestPage({params}: {params: {id: string}}) {
         <>
             <Header isAuthorized/>
             <Body>
-                <QuestAdmin questData={questData}/>
+                <ContextProvider>
+                    <QuestAdmin questData={questData}/>
+                </ContextProvider>
             </Body>
             <DynamicFooter />
         </>
