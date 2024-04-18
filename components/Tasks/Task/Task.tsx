@@ -11,7 +11,7 @@ import './Task.css';
 export default function Task({mode, props}: {mode: TasksMode, props: ITask}) {
     const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers} = props;
     const editMode = mode === TasksMode.EDIT;
-    const severalAnswers = correctAnswers.length > 1;
+    const severalAnswers = editMode ? correctAnswers.length > 1 : false;
 
     return (
         <div className={'task__wrapper'}>
@@ -22,7 +22,7 @@ export default function Task({mode, props}: {mode: TasksMode, props: ITask}) {
             </div>
             {mediaLink && (
                 <div className={'task__image-part task-image__container'}>
-                    <Image src={mediaLink} alt={'task image'} width={300} height={300} style={{objectFit: 'contain', width: 'auto'}}/>
+                    <Image src={mediaLink} alt={'task image'} width={300} height={300}/>
                 </div>
             )}
             {hints.length > 0 && (
@@ -37,7 +37,7 @@ export default function Task({mode, props}: {mode: TasksMode, props: ITask}) {
             )}
             <Form className={'task__answer-part'} layout={'inline'}>
                 <FormItem required>
-                    <Input placeholder={'Ответ'} style={{borderRadius: 2, minWidth: '300px'}}/>
+                    <Input placeholder={'Ответ'} style={{borderRadius: 2}}/>
                 </FormItem>
                 <FormItem>
                     <Button type={'primary'}><SendOutlined/></Button>

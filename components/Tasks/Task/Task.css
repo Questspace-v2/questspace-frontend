@@ -23,8 +23,17 @@
     display: flex;
     background-color: var(--task-background-color);
     max-height: 300px;
+    height: 300px;
+    align-items: center;
     justify-content: center;
     border-radius: 8px;
+    overflow: hidden;
+
+    & img {
+        max-width: 100%;
+        object-fit: contain;
+        width: auto;
+    }
 }
 
 .task-hints__container {
@@ -52,10 +61,22 @@
 }
 
 .task__answer-part.ant-form {
-    gap: 4px;
+    max-width: 350px;
+    column-gap: 4px;
+    flex-wrap: nowrap;
+
     .ant-form-item {
         margin-inline-end: unset;
     }
+}
+
+.task__answer-part.ant-form .ant-form-item:first-child {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+.task__answer-part.ant-form .ant-form-item:last-child .ant-form-item-control-input-content {
+    flex: none;
 }
 
 .admin-page__content {

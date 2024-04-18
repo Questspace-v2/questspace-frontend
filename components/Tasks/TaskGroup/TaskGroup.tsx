@@ -1,15 +1,16 @@
 import { Collapse, CollapseProps } from 'antd';
 import Task from '@/components/Tasks/Task/Task';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import { getTaskExtra, getTaskGroupExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
+import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { ITaskGroup } from '@/app/types/quest-interfaces';
+import { uid } from '@/lib/utils/utils';
+import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra';
 
 import './TaskGroup.css';
-import { uid } from '@/lib/utils/utils';
 
 export default function TaskGroup({mode, props} : {mode: TasksMode, props: ITaskGroup}) {
     const { name, tasks } = props;
-    const collapseExtra = getTaskGroupExtra(mode === TasksMode.EDIT);
+    const collapseExtra = <TaskGroupExtra edit={mode === TasksMode.EDIT}/>;
 
     const items: CollapseProps['items'] = [
         {

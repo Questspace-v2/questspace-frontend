@@ -7,23 +7,6 @@ export const enum TasksMode {
     PLAY = 'play'
 }
 
-export const getTaskGroupExtra = (edit: boolean) => {
-    if (edit) {
-        return (
-            <div className={'task-group__collapse-buttons'}>
-                <ConfigProvider theme={blueOutlinedButton}>
-                    <Button><EditOutlined/>Изменить название</Button>
-                    <Button><CopyOutlined/>Добавить задачу</Button>
-                </ConfigProvider>
-                <ConfigProvider theme={redOutlinedButton}>
-                    <Button><DeleteOutlined/>Удалить раздел</Button>
-                </ConfigProvider>
-            </div>
-        );
-    }
-    return null;
-}
-
 export const getTaskExtra = (edit: boolean, mobile526: boolean) => {
     if (edit) {
         const classname = mobile526 ? 'task-extra_small' : 'task-extra_large';
