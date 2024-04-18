@@ -4,9 +4,12 @@ import React, { useState } from 'react';
 import { Button, ConfigProvider, Dropdown, MenuProps } from 'antd';
 import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
+import TaskCreateModal from '@/components/Tasks/Task/TaskCreateModal';
 
 export default function TaskGroupExtra({edit}: {edit: boolean}) {
     const [open, setOpen] = useState(false);
+
+    const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
 
     const handleMenuClick: MenuProps['onClick'] = () => {
         setOpen(false);
@@ -14,6 +17,10 @@ export default function TaskGroupExtra({edit}: {edit: boolean}) {
 
     const handleOpenChange = (flag: boolean) => {
         setOpen(flag);
+    };
+
+    const handleAddTask = () => {
+        setIsOpenCreateModal(true);
     };
 
     const items: MenuProps['items'] = [
@@ -38,7 +45,7 @@ export default function TaskGroupExtra({edit}: {edit: boolean}) {
             <div className={'task-group__collapse-buttons'}>
                 <ConfigProvider theme={blueOutlinedButton}>
                     <Button><EditOutlined/>Изменить название</Button>
-                    <Button><PlusOutlined/>Добавить задачу</Button>
+                    <Button onClick={handleAddTask}><PlusOutlined/>Добавить задачу</Button>
                 </ConfigProvider>
                 <ConfigProvider theme={redOutlinedButton}>
                     <Button><DeleteOutlined/>Удалить раздел</Button>
@@ -57,7 +64,7 @@ export default function TaskGroupExtra({edit}: {edit: boolean}) {
                 >
                     <Button><MenuOutlined/></Button>
                 </Dropdown>
-
+                <TaskCreateModal isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} />
             </div>
         );
     }
