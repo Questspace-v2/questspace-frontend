@@ -31,7 +31,7 @@ export interface ITaskGroup {
     id?: string,
     name: string,
     order_idx?: number,
-    pub_time: string,
+    pub_time?: string,
     tasks: ITask[]
 }
 
@@ -82,4 +82,36 @@ export interface IFilteredQuestsResponse {
 export interface IGetQuestResponse {
     quest: IQuest,
     team?: ITeam
+}
+
+export interface ITaskAnswer {
+    taskID: string,
+    text: string
+}
+
+export interface ITaskAnswerResponse {
+    accepted: boolean,
+    score: number,
+    text: string
+}
+
+export interface IHintRequest {
+    index: number,
+    task_id: string
+}
+
+export interface IHintResponse {
+    index: number,
+    text: string
+}
+
+export interface IQuestResult {
+    id: string,
+    name: string,
+    task_groups: ITaskGroup[],
+    total_score: number
+}
+
+export interface ILeaderboardResponse {
+    results: IQuestResult[]
 }

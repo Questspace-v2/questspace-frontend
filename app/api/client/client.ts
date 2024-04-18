@@ -10,7 +10,13 @@ import createHttpError, {
 } from 'http-errors';
 import { Data } from '@/app/types/json-data';
 import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
-import { IQuestCreate, IQuestTaskGroups, ITaskGroupsCreateRequest } from '@/app/types/quest-interfaces';
+import {
+    IHintRequest,
+    IQuestCreate,
+    IQuestTaskGroups,
+    ITaskAnswer,
+    ITaskGroupsCreateRequest,
+} from '@/app/types/quest-interfaces';
 import { RcFile } from 'antd/es/upload';
 
 interface IBaseInit {
@@ -21,7 +27,8 @@ interface IBaseInit {
 }
 
 type DataType = Data | IUserCreate| IUserUpdate | IQuestTaskGroups|
-    IQuestCreate | IPasswordUpdate| ITaskGroupsCreateRequest | string;
+    IQuestCreate | IPasswordUpdate| ITaskGroupsCreateRequest | ITaskAnswer |
+    IHintRequest | string;
 
 class Client {
     backendUrl: string;

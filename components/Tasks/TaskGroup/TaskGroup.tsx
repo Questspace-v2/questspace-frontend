@@ -8,7 +8,7 @@ import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra';
 
 import './TaskGroup.css';
 
-export default function TaskGroup({mode, props} : {mode: TasksMode, props: ITaskGroup}) {
+export default function TaskGroup({mode, props, questId} : {mode: TasksMode, props: ITaskGroup, questId: string}) {
     const { name, tasks } = props;
     const collapseExtra = <TaskGroupExtra edit={mode === TasksMode.EDIT}/>;
 
@@ -20,7 +20,7 @@ export default function TaskGroup({mode, props} : {mode: TasksMode, props: ITask
                 <>
                     {(tasks.map((task) =>
                         <div className={'task-group__task'} key={uid()}>
-                            <Task props={task} mode={mode} />
+                            <Task props={task} mode={mode} questId={questId} />
                             {getTaskExtra(mode === TasksMode.EDIT, false)}
                         </div>
                     ))}
