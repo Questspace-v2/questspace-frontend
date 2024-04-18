@@ -15,11 +15,12 @@ import { taskGroupMock } from '@/app/api/__mocks__/Task.mock';
 
 import './QuestAdmin.css';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import { deleteQuest, getQuestTeams } from '@/app/api/api';
+import { createTaskGroupsAndTasks, deleteQuest, getQuestTeams } from '@/app/api/api';
 import { ITeam } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
+import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 
 export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
     const router = useRouter();
@@ -30,6 +31,8 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
+
+    const {data: contextData, updater: setContextData} = useTasksContext()!;
 
     const tabs: TabsProps['items']  = [
         {
@@ -88,6 +91,14 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
         setSelectedTab(valueTab);
     }
 
+    const handleSaveRequest = async () => {
+        await createTaskGroupsAndTasks(questData.quest.id, contextData, session?.accessToken);
+    };
+
+    const handleAddTaskGroup = () => {
+        setContextData({task_groups: [...contextData.task_groups, {name: 'Test', tasks: [], pub_time: '23'}]});
+    };
+
     return (
         <div className={'admin-page__content'}>
             {modalContextHolder}
@@ -118,8 +129,8 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                 <>
                     {tasksTabContent}
                     <div style={{display: 'flex', gap: '8px', padding: '24px 32px'}}>
-                        <Button><PlusOutlined/>Добавить раздел</Button>
-                        <Button type={'primary'}>Сохранить</Button>
+                        <Button onClick={handleAddTaskGroup}><PlusOutlined/>Добавить раздел</Button>
+                        <Button type={'primary'} onClick={handleSaveRequest}>Сохранить</Button>
                     </div>
                 </>
             )}

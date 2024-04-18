@@ -17,10 +17,10 @@ export interface IQuest {
 export interface ITask {
     correct_answers: string[],
     hints: string[],
-    id: string,
+    id?: string,
     media_link?: string,
     name: string,
-    order_idx: number,
+    order_idx?: number,
     pub_time: string,
     question: string,
     reward: number,
@@ -28,9 +28,9 @@ export interface ITask {
 }
 
 export interface ITaskGroup {
-    id: string,
+    id?: string,
     name: string,
-    order_idx: number,
+    order_idx?: number,
     pub_time: string,
     tasks: ITask[]
 }
@@ -41,6 +41,10 @@ export interface ITaskGroupsCreate {
     name: string,
     order_idx: number,
     pub_time: string
+}
+
+export interface ITaskGroupsCreateRequest {
+    task_groups: ITaskGroup[]
 }
 
 export interface ITaskGroupsDelete {
