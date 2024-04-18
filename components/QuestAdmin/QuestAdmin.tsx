@@ -21,6 +21,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
+import TaskGroupCreateModal from '@/components/Tasks/TaskGroup/TaskGroupCreateModal';
 
 export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
     const router = useRouter();
@@ -31,8 +32,9 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
+    const [isOpenModal, setIsOpenModal] = useState(false);
 
-    const {data: contextData, updater: setContextData} = useTasksContext()!;
+    const {data: contextData} = useTasksContext()!;
 
     const tabs: TabsProps['items']  = [
         {
@@ -96,7 +98,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
     };
 
     const handleAddTaskGroup = () => {
-        setContextData({task_groups: [...contextData.task_groups, {name: 'Test', tasks: [], pub_time: '23'}]});
+        setIsOpenModal(true);
     };
 
     return (
@@ -135,6 +137,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                 </>
             )}
             {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent}/>}
+            <TaskGroupCreateModal isOpen={isOpenModal} setIsOpen={setIsOpenModal}/>
         </div>
     );
 }
