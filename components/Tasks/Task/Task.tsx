@@ -7,14 +7,13 @@ import { IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse } from '@/app/typ
 import { SendOutlined } from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
-
-import './Task.css';
 import { answerTaskPlayMode, takeHintPlayMode } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
-const { Countdown } = Statistic;
+import './Task.css';
 
+const { Countdown } = Statistic;
 const enum SendButtonStates {
     BASIC = 'basic',
     LOADING = 'loading',
@@ -30,6 +29,8 @@ const enum InputStates {
 
 export default function Task({mode, props, questId}: {mode: TasksMode, props: ITask, questId: string}) {
     const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
+    const [openConfirm, setOpenConfirm] = useState(false);
+    const objectHints = hints as {taken: boolean, text?: string}[];
     const editMode = mode === TasksMode.EDIT;
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
     const [form] = Form.useForm();
@@ -52,6 +53,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
             task_id: taskId!
         };
 
+        setOpenConfirm(false);
         await takeHintPlayMode(questId, data, session?.accessToken);
     };
 
@@ -106,9 +108,9 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
     return (
         <div className={'task__wrapper'}>
             <div className={'task__text-part'}>
-            <h4 className={'roboto-flex-header task__name'}>{name}</h4>
+                <h4 className={'roboto-flex-header task__name'}>{name}</h4>
                 {getTaskExtra(mode === TasksMode.EDIT, true)}
-            <p className={'task__question'}>{question}</p>
+                <p className={'task__question'}>{question}</p>
             </div>
             {mediaLink && (
                 <div className={'task__image-part task-image__container'}>
@@ -117,19 +119,37 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
             )}
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
-                    {hints.map((_, index) =>
-                        <div className={'task-hint__container'} key={uid()}>
-                            <span className={'hint__title'}>Подсказка {index + 1}</span>
-                            <Button type={'link'} onClick={() => handleTakeHint(index)}>Открыть</Button>
+                    {objectHints.map((hint, index) =>
+                        <div className={`task-hint__container ${openConfirm ? 'task-hint__container_confirm' : ''} ${hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
+                            {openConfirm ? (
+                                <>
+                                    <div className={'hint__text-part'}>
+                                        <span className={'hint__title'}>Взять подсказку?</span>
+                                        <span className={'hint__text'}>Вы потеряете 20% баллов</span>
+                                    </div>
+                                    <div className={'hint__confirm-buttons'}>
+                                        <Button type={'primary'} onClick={() => handleTakeHint(index)}>Да</Button>
+                                        <Button type={'default'} onClick={() => setOpenConfirm(false)}>Нет</Button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <span className={'hint__title'}>Подсказка {index + 1}</span>
+                                    {hint.taken ?
+                                        <span className={'hint__text'}>{hint?.text}</span> :
+                                        <Button type={'link'} onClick={() => setOpenConfirm(true)}>Открыть</Button>
+                                    }
+                                </>
+                            )}
                         </div>
                     )}
                 </div>
             )}
             <Form className={'task__answer-part'} layout={'inline'} form={form}>
                 <Form.Item required
-                          name={'task-answer'}
-                          validateStatus={inputValidationStatus}
-                          hasFeedback>
+                           name={'task-answer'}
+                           validateStatus={inputValidationStatus}
+                           hasFeedback>
                     <Input
                         placeholder={'Ответ'}
                         style={{borderRadius: 2, color: textColor}}

@@ -58,6 +58,51 @@
         font-size: 16px;
         text-align: center;
     }
+
+    .hint__text {
+        font-size: 16px;
+    }
+
+    & span {
+        line-height: normal;
+    }
+}
+
+.task-hint__container_confirm {
+    background-color: white;
+    border: 1px solid #D9D9D9;
+    column-gap: 0;
+    row-gap: 12px;
+    padding: 16px;
+
+    .hint__text-part {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hint__text {
+        text-align: center;
+    }
+
+    .hint__confirm-buttons {
+        display: flex;
+        column-gap: 8px;
+        justify-content: center;
+    }
+
+    .hint__confirm-buttons button {
+        flex: auto;
+    }
+}
+
+.task-hint__container_taken {
+    background-color: white;
+    border: 1px solid #D9D9D9;
+    padding: 16px;
+
+    .hint__title {
+        text-align: left;
+    }
 }
 
 .task__answer-part.ant-form {
@@ -153,6 +198,12 @@
         .hint__title {
             text-align: start;
         }
+    }
+
+    .task-hint__container_taken {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
     }
 }
 

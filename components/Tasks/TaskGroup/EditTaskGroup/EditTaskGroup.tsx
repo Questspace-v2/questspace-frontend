@@ -12,7 +12,7 @@ interface TaskGroupModalProps {
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
-export default function TaskGroupCreateModal({isOpen, setIsOpen}: TaskGroupModalProps) {
+export default function EditTaskGroup({isOpen, setIsOpen}: TaskGroupModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
