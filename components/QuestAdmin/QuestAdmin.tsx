@@ -21,14 +21,17 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
-import TaskGroupCreateModal from '@/components/Tasks/TaskGroup/TaskGroupCreateModal';
+import dynamic from 'next/dynamic';
+
+const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
+    {ssr: false})
 
 export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
     const [leaderboardTabContent, setLeaderboardTabContent] = useState<ITeam[]>([]);
     const aboutTabContent = <EditQuest questData={questData}/>;
-    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]}/>;
+    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]} questId={questData.quest.id}/>;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
@@ -137,7 +140,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
                 </>
             )}
             {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent}/>}
-            <TaskGroupCreateModal isOpen={isOpenModal} setIsOpen={setIsOpenModal}/>
+            <DynamicEditTaskGroup isOpen={isOpenModal} setIsOpen={setIsOpenModal}/>
         </div>
     );
 }

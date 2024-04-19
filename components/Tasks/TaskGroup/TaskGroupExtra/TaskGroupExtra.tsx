@@ -4,11 +4,14 @@ import React, { useState } from 'react';
 import { Button, ConfigProvider, Dropdown, MenuProps } from 'antd';
 import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
-import TaskCreateModal from '@/components/Tasks/Task/TaskCreateModal';
+import dynamic from 'next/dynamic';
+
+const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
+    {ssr: false})
 
 export default function TaskGroupExtra({edit}: {edit: boolean}) {
+    // const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [open, setOpen] = useState(false);
-
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
 
     const handleMenuClick: MenuProps['onClick'] = () => {
@@ -21,6 +24,7 @@ export default function TaskGroupExtra({edit}: {edit: boolean}) {
 
     const handleAddTask = () => {
         setIsOpenCreateModal(true);
+        // setContextData({task_groups: contextData.task_groups});
     };
 
     const items: MenuProps['items'] = [
@@ -32,6 +36,7 @@ export default function TaskGroupExtra({edit}: {edit: boolean}) {
 
             label: <><PlusOutlined/>Добавить задачу</>,
             key: '2',
+            onClick: handleAddTask,
         },
         {
 
@@ -64,7 +69,7 @@ export default function TaskGroupExtra({edit}: {edit: boolean}) {
                 >
                     <Button><MenuOutlined/></Button>
                 </Dropdown>
-                <TaskCreateModal isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} />
+                <DynamicEditTask isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} />
             </div>
         );
     }

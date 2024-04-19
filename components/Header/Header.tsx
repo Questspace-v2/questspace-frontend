@@ -16,7 +16,7 @@ interface HeaderProps {
 }
 export default function Header({isAuthorized, redirectParams} : HeaderProps) {
     return (
-        <div className={'page-header'}>
+        <header className={'page-header'}>
             <div className={'page-header__items'}>
                 <Link href={'/'}>
                     <Logotype width={146} type={'text'} style={pointerCursor} />
@@ -29,6 +29,6 @@ export default function Header({isAuthorized, redirectParams} : HeaderProps) {
                     </Link>
                 }
             </div>
-        </div>
+        </header>
     );
 }

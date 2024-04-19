@@ -11,6 +11,10 @@
     & p {
         margin: 0;
     }
+
+    & a:not(a:visited) {
+        color: var(--primary-color);
+    }
 }
 
 .results__title {

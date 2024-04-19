@@ -4,7 +4,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { ITaskGroup } from '@/app/types/quest-interfaces';
 import { uid } from '@/lib/utils/utils';
-import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra';
+import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra/TaskGroupExtra';
 
 import './TaskGroup.css';
 

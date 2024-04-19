@@ -1,0 +1,74 @@
+.edit-task__content {
+    padding: 32px 32px 40px 32px !important;
+
+    .edit-task__labels {
+        width: 184px;
+    }
+
+    .ant-input-suffix {
+        color: #d9d9d9;
+        transition-behavior: normal;
+        transition-delay: 0s;
+        transition-duration: 0.2s;
+        transition-property: all;
+        transition-timing-function: ease;
+    }
+
+    .ant-input-affix-wrapper-readonly {
+        &:hover, &:focus, &:focus-within {
+            .ant-input-suffix {
+                color: var(--primary-color);
+            }
+        }
+    }
+
+    .ant-input {
+        border-radius: 2px;
+    }
+
+    .ant-modal-close {
+        width: 24px;
+        height: 24px;
+
+        & svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+
+    .ant-form-item {
+        margin: 0;
+    }
+
+    .ant-modal-header {
+        margin-bottom: 16px;
+    }
+
+    .ant-modal-title h3 {
+        font-size: 24px;
+    }
+
+    .ant-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .ant-modal-body {
+        margin-bottom: 40px;
+    }
+
+    .ant-modal-footer {
+        display: flex;
+        justify-content: flex-start;
+        margin: 0;
+        padding-top: 16px;
+        border-top: 1px solid #D9D9D9;
+    }
+}
+
+.ant-modal-root .ant-modal.edit-task__modal {
+    margin: 0;
+    max-width: 100%;
+}

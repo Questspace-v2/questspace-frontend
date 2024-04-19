@@ -16,7 +16,7 @@ export interface IQuest {
 
 export interface ITask {
     correct_answers: string[],
-    hints: IHint[],
+    hints: IHint[] | string[],
     id?: string,
     media_link?: string,
     name: string,
