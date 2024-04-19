@@ -24,7 +24,8 @@ export interface ITask {
     pub_time: string,
     question: string,
     reward: number,
-    verification_type: string
+    verification_type: string,
+    answer?: string
 }
 
 export interface ITaskGroup {
