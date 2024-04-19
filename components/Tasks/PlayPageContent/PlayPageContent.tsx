@@ -43,7 +43,7 @@ export default function PlayPageContent({props}: {props: IQuestTaskGroupsRespons
                 </div>
             </ContentWrapper>
             <div className={`play-page__tasks`}>
-                <Tasks mode={TasksMode.PLAY} props={props.task_groups} />
+                <Tasks mode={TasksMode.PLAY} props={props.task_groups} questId={questId} />
             </div>
         </div>
     );
