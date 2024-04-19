@@ -16,7 +16,7 @@ export interface IQuest {
 
 export interface ITask {
     correct_answers: string[],
-    hints: string[],
+    hints: IHint[],
     id?: string,
     media_link?: string,
     name: string,
@@ -26,6 +26,11 @@ export interface ITask {
     reward: number,
     verification_type: string,
     answer?: string
+}
+
+export interface IHint {
+    taken: boolean,
+    text: string
 }
 
 export interface ITaskGroup {

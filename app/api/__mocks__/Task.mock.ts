@@ -5,7 +5,14 @@ export const taskMock1: ITask = {
         "string"
     ],
     hints: [
-        "string", "str"
+        {
+            taken: false,
+            text: "string"
+        },
+        {
+            taken: false,
+            text: "str"
+        }
     ],
     id: "string",
     media_link: "https://api.dicebear.com/7.x/thumbs/svg?seed=591f6fe1-d6cd-479b-a327-35f6b12a08fc",
@@ -22,7 +29,18 @@ export const taskMock2: ITask = {
         "строка", "возможно"
     ],
     hints: [
-        "string", "string2", "string3"
+        {
+            taken: false,
+            text: "string"
+        },
+        {
+            taken: false,
+            text: "string2"
+        },
+        {
+            taken: false,
+            text: "string3"
+        }
     ],
     id: "string1337",
     media_link: "",
