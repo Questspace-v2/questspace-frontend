@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { uid } from '@/lib/utils/utils';
-import { Button, CountdownProps, Form, Input, Statistic } from 'antd';
+import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
 import { IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse } from '@/app/types/quest-interfaces';
 import { SendOutlined } from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
@@ -12,6 +12,7 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 import './Task.css';
+import { useRouter } from 'next/navigation';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -35,6 +36,8 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
     const [form] = Form.useForm();
     const {data: session} = useSession();
+    const [messageApi, contextHolder] = message.useMessage();
+    const router = useRouter();
 
     const [sendButtonState, setSendButtonState] = useState<SendButtonStates>(teamAnswer ? SendButtonStates.DISABLED : SendButtonStates.BASIC);
     const [inputState, setInputState] = useState<InputStates>(teamAnswer ? InputStates.ACCEPTED : InputStates.BASIC);
@@ -47,6 +50,14 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
         setSendButtonState(SendButtonStates.BASIC);
     };
 
+    const success = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'success',
+            content: 'Принято!',
+        });
+    };
+
     const handleTakeHint = async (index: number) => {
         const data: IHintRequest = {
             index,
@@ -55,6 +66,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
 
         setOpenConfirm(false);
         await takeHintPlayMode(questId, data, session?.accessToken);
+        router.refresh();
     };
 
     const handleError = () => {
@@ -74,11 +86,13 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
         setInputState(InputStates.ACCEPTED);
         setSendButtonContent(<SendOutlined/>);
         setSendButtonState(SendButtonStates.DISABLED);
+        success();
     };
 
     const handleValueChange = () => {
         if (inputState !== InputStates.BASIC) {
             setInputState(InputStates.BASIC);
+            setInputValidationStatus('');
         }
     };
 
@@ -107,6 +121,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
 
     return (
         <div className={'task__wrapper'}>
+            {contextHolder}
             <div className={'task__text-part'}>
                 <h4 className={'roboto-flex-header task__name'}>{name}</h4>
                 {getTaskExtra(mode === TasksMode.EDIT, true)}
@@ -154,7 +169,8 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                         placeholder={'Ответ'}
                         style={{borderRadius: 2, color: textColor}}
                         onChange={handleValueChange}
-                        defaultValue={teamAnswer ?? ''} />
+                        defaultValue={teamAnswer ?? ''}
+                        disabled={inputState === InputStates.ACCEPTED}/>
                 </Form.Item>
                 <FormItem>
                     <Button
