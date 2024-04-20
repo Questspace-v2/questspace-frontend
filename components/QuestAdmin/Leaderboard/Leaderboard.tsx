@@ -1,11 +1,11 @@
 import { uid } from '@/lib/utils/utils';
-import { ITeam } from '@/app/types/user-interfaces';
+import {IAdminLeaderboardResponse} from '@/app/types/quest-interfaces';
 
-export default function Leaderboard({teams}: {teams: ITeam[]}) {
+export default function Leaderboard({teams}: {teams: IAdminLeaderboardResponse}) {
     // Здесь табличка с результатами по идее...
     return (
         <div>
-            {teams?.map(team => <div key={uid()}>{team.name}</div>)}
+            {teams?.results?.map(team => <div key={uid()}>{team.name}</div>)}
         </div>
     );
 }
