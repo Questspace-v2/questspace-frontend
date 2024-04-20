@@ -6,6 +6,13 @@
     width: 100%;
 }
 
+
+.play-page__tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
 .play-page__content-wrapper {
     padding-top: 24px;
     padding-bottom: 24px;
