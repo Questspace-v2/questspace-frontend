@@ -32,6 +32,7 @@ const enum InputStates {
 export default function Task({mode, props, questId}: {mode: TasksMode, props: ITask, questId: string}) {
     const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
     const [openConfirm, setOpenConfirm] = useState(false);
+    const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const objectHints = hints as {taken: boolean, text?: string}[];
     const editMode = mode === TasksMode.EDIT;
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
@@ -66,6 +67,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
         };
 
         setOpenConfirm(false);
+        setOpenConfirmIndex(null);
         await takeHintPlayMode(questId, data, session?.accessToken);
         router.refresh();
     };
@@ -136,8 +138,8 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
-                        <div className={`task-hint__container ${openConfirm ? 'task-hint__container_confirm' : ''} ${hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
-                            {openConfirm ? (
+                        <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
+                            {openConfirm && index === openConfirmIndex ? (
                                 <>
                                     <div className={'hint__text-part'}>
                                         <span className={'hint__title'}>Взять подсказку?</span>
@@ -145,7 +147,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                                     </div>
                                     <div className={'hint__confirm-buttons'}>
                                         <Button type={'primary'} onClick={() => handleTakeHint(index)}>Да</Button>
-                                        <Button type={'default'} onClick={() => setOpenConfirm(false)}>Нет</Button>
+                                        <Button type={'default'} onClick={() => {setOpenConfirm(false); setOpenConfirmIndex(null)}}>Нет</Button>
                                     </div>
                                 </>
                             ) : (
@@ -153,7 +155,11 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                                     <span className={'hint__title'}>Подсказка {index + 1}</span>
                                     {hint.taken ?
                                         <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']}>{hint?.text}</Markdown> :
-                                        <Button type={'link'} onClick={() => setOpenConfirm(true)}>Открыть</Button>
+                                        <Button type={'link'} onClick={() => {
+                                            setOpenConfirm(true);
+                                            // @ts-expect-error мы знаем индекс
+                                            setOpenConfirmIndex(index)
+                                        }}>Открыть</Button>
                                     }
                                 </>
                             )}
