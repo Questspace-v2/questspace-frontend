@@ -1,6 +1,6 @@
 'use client';
 
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
+import { IAdminLeaderboardResponse, IGetQuestResponse } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
@@ -15,8 +15,7 @@ import { taskGroupMock } from '@/app/api/__mocks__/Task.mock';
 
 import './QuestAdmin.css';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import { createTaskGroupsAndTasks, deleteQuest, getQuestTeams } from '@/app/api/api';
-import { ITeam } from '@/app/types/user-interfaces';
+import { createTaskGroupsAndTasks, deleteQuest, getLeaderboardPlayMode } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
@@ -29,7 +28,7 @@ const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/
 export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
-    const [leaderboardTabContent, setLeaderboardTabContent] = useState<ITeam[]>([]);
+    const [leaderboardTabContent, setLeaderboardTabContent] = useState<IAdminLeaderboardResponse>({rows: []});
     const aboutTabContent = <EditQuest questData={questData}/>;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]} questId={questData.quest.id}/>;
     const {data: session} = useSession();
@@ -89,7 +88,7 @@ export default function QuestAdmin({questData} : {questData: IGetQuestResponse})
             return;
         }
         if (valueTab === SelectAdminTabs.LEADERBOARD) {
-            const data = await getQuestTeams(questData.quest.id) as ITeam[];
+            const data = await getLeaderboardPlayMode(questData.quest.id, session?.accessToken) as IAdminLeaderboardResponse;
             setLeaderboardTabContent(data);
         }
 

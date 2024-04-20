@@ -126,3 +126,27 @@ export interface IQuestResult {
 export interface ILeaderboardResponse {
     results: IQuestResult[]
 }
+
+export interface IAdminLeaderboardResponse {
+    results: IAdminLeaderboardResult[]
+}
+
+export interface IAdminLeaderboardResult {
+    id: string,
+    name: string,
+    penalty: number,
+    task_groups: IAdminTaskGroup[],
+    total_score: number
+}
+
+export interface IAdminTaskGroup {
+    id: string,
+    name: string,
+    tasks: IAdminTask[]
+}
+
+export interface IAdminTask {
+    id: string,
+    name: string,
+    score: number
+}
