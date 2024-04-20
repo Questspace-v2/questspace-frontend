@@ -32,6 +32,7 @@ import { changeTeamCaptain, deleteTeamMember, leaveTeam } from '@/app/api/api';
 import { Session } from 'next-auth';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import { RELEASED_FEATURE } from '@/app/api/client/constants';
+import remarkGfm from 'remark-gfm';
 
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
@@ -331,7 +332,7 @@ function QuestContent({ description, mode}: QuestContentProps) {
             <ContentWrapper className={'quest-page__content-wrapper quest-page__content'}>
                 <h2 className={'roboto-flex-header responsive-header-h2'}>О квесте</h2>
                 <Skeleton paragraph loading={!afterParse}>
-                    <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{afterParse?.toString()}</Markdown>
+                    <Markdown className={'line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{afterParse?.toString()}</Markdown>
                 </Skeleton>
             </ContentWrapper>
         );
@@ -341,7 +342,7 @@ function QuestContent({ description, mode}: QuestContentProps) {
         return (
             <>
                 {description && <h2 className={'roboto-flex-header'}>О квесте</h2>}
-                <Markdown className={'line-break'} disallowedElements={['pre', 'code']}>{description}</Markdown>
+                <Markdown className={'line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{description}</Markdown>
             </>
         );
     }

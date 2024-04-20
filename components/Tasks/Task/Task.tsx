@@ -14,6 +14,7 @@ import { useState } from 'react';
 import './Task.css';
 import { useRouter } from 'next/navigation';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -128,7 +129,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
             <div className={'task__text-part'}>
                 <h4 className={'roboto-flex-header task__name'}>{name}</h4>
                 {getTaskExtra(mode === TasksMode.EDIT, true)}
-                <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']}>{question}</Markdown>
+                <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
             {mediaLink && (
                 <div className={'task__image-part task-image__container'}>
@@ -154,7 +155,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                                 <>
                                     <span className={'hint__title'}>Подсказка {index + 1}</span>
                                     {hint.taken ?
-                                        <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']}>{hint?.text}</Markdown> :
+                                        <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{hint?.text}</Markdown> :
                                         <Button type={'link'} onClick={() => {
                                             setOpenConfirm(true);
                                             // @ts-expect-error мы знаем индекс
