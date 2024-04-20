@@ -17,6 +17,18 @@
     .task__question {
         margin: 0;
     }
+
+    .task__question.line-break {
+        white-space: pre-wrap;
+        user-select: text;
+    }
+    .task__question p {
+        margin: 0;
+    }
+
+    .task__question a:not(a:visited) {
+        color: var(--primary-color);
+    }
 }
 
 .task-image__container {
@@ -102,6 +114,18 @@
 
     .hint__title {
         text-align: left;
+    }
+
+    .hint__text.line-break {
+        white-space: pre-wrap;
+        user-select: text;
+    }
+    .hint__text p {
+        margin: 0;
+    }
+
+    .hint__text a:not(a:visited) {
+        color: var(--primary-color);
     }
 }
 

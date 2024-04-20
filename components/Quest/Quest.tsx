@@ -26,7 +26,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ITeam } from '@/app/types/user-interfaces';
 import Image from 'next/image';
-import { TeamModalType, uid } from '@/lib/utils/utils';
+import { parseToMarkdown, TeamModalType, uid } from '@/lib/utils/utils';
 import dynamic from 'next/dynamic';
 import { changeTeamCaptain, deleteTeamMember, leaveTeam } from '@/app/api/api';
 import { Session } from 'next-auth';
@@ -42,7 +42,6 @@ const DynamicInviteModal = dynamic(() => import('@/components/Quest/InviteModal/
     ssr: false,
 })
 
-const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
 interface QuestContentProps {
     description?: string;
