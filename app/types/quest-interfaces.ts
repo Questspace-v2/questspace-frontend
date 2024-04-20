@@ -117,16 +117,16 @@ export interface IHintResponse {
 }
 
 export interface IAdminLeaderboardResponse {
-    results: IAdminLeaderboardResult[]
+    results: IAdminLeaderboardResult[],
+    task_groups?: IAdminTaskGroup[] & {order_idx: number}
 }
 
-export interface IAdminLeaderboardResult {
+export type IAdminLeaderboardResult = {
     id: string,
-    name: string,
+    team_name: string,
     penalty: number,
-    task_groups: IAdminTaskGroup[],
-    "total_score": 0
-}
+    total_score: 0
+} & Record<string, string | number>
 
 export interface IAdminTaskGroup {
     id: string,
