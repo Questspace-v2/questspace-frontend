@@ -55,6 +55,10 @@
     }
 }
 
+a.quest-card__anchor + div {
+    display: contents;
+}
+
 .quest-card__wrapper {
     padding: 0 !important;
     border-radius: 16px;
