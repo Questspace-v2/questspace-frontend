@@ -1,5 +1,9 @@
 .admin-page__content {
     display: contents;
+
+    .task__wrapper {
+        flex: 1;
+    }
 }
 
 .quest-admin__content-wrapper {
