@@ -13,6 +13,7 @@ import { useState } from 'react';
 
 import './Task.css';
 import { useRouter } from 'next/navigation';
+import Markdown from 'react-markdown';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -43,7 +44,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
     const [inputState, setInputState] = useState<InputStates>(teamAnswer ? InputStates.ACCEPTED : InputStates.BASIC);
     const [sendButtonContent, setSendButtonContent] = useState<JSX.Element | null>(<SendOutlined/>);
     const [inputValidationStatus, setInputValidationStatus] = useState<'success' | 'error' | ''>(teamAnswer ? 'success' : '');
-    const [textColor, setTextColor] = useState(teamAnswer ? '#389e0d' : 'black');
+    const [textColor, setTextColor] = useState(teamAnswer ? '#389e0d' : '#262626');
 
     const onFinish: CountdownProps['onFinish'] = () => {
         setSendButtonContent(<SendOutlined/>);
@@ -125,7 +126,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
             <div className={'task__text-part'}>
                 <h4 className={'roboto-flex-header task__name'}>{name}</h4>
                 {getTaskExtra(mode === TasksMode.EDIT, true)}
-                <p className={'task__question'}>{question}</p>
+                <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']}>{question}</Markdown>
             </div>
             {mediaLink && (
                 <div className={'task__image-part task-image__container'}>
@@ -151,7 +152,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                                 <>
                                     <span className={'hint__title'}>Подсказка {index + 1}</span>
                                     {hint.taken ?
-                                        <span className={'hint__text'}>{hint?.text}</span> :
+                                        <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']}>{hint?.text}</Markdown> :
                                         <Button type={'link'} onClick={() => setOpenConfirm(true)}>Открыть</Button>
                                     }
                                 </>

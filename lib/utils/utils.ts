@@ -11,6 +11,8 @@ export const getCenter = (clientWidth: number, clientHeight: number) => {
 
 export type ValidationStatus = '' | 'success' | 'error' | 'warning' | 'validating' | undefined;
 
+export const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
+
 export const enum TeamModal {
     CREATE_TEAM,
     INVITE_LINK
