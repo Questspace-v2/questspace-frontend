@@ -116,13 +116,26 @@ export interface IHintResponse {
     text: string
 }
 
-export interface IQuestResult {
-    id: string,
-    name: string,
-    task_groups: ITaskGroup[],
-    total_score: number
+export interface IAdminLeaderboardResponse {
+    results: IAdminLeaderboardResult[]
 }
 
-export interface ILeaderboardResponse {
-    results: IQuestResult[]
+export interface IAdminLeaderboardResult {
+    id: string,
+    name: string,
+    penalty: number,
+    task_groups: IAdminTaskGroup[],
+    "total_score": 0
+}
+
+export interface IAdminTaskGroup {
+    id: string,
+    name: string,
+    tasks: IAdminTask[]
+}
+
+export interface IAdminTask {
+    id: string,
+    name: string,
+    score: number
 }
