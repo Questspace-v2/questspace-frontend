@@ -178,7 +178,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                         style={{borderRadius: 2, color: textColor}}
                         onChange={handleValueChange}
                         defaultValue={teamAnswer ?? ''}
-                        disabled={inputState === InputStates.ACCEPTED}/>
+                        disabled={inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
                 </Form.Item>
                 <FormItem>
                     <Button
