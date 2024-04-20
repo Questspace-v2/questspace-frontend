@@ -1,6 +1,6 @@
 'use client';
 
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
+import { ITaskGroupsAdminResponse } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
@@ -11,7 +11,6 @@ import { SelectAdminTabs } from '@/components/QuestAdmin/QuestAdmin.helpers';
 import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
-import { taskGroupMock } from '@/app/api/__mocks__/Task.mock';
 
 import './QuestAdmin.css';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
@@ -26,12 +25,12 @@ import dynamic from 'next/dynamic';
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
     {ssr: false})
 
-export default function QuestAdmin({questData} : {questData: IGetQuestResponse}) {
+export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminResponse}) {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
     const [leaderboardTabContent, setLeaderboardTabContent] = useState<ITeam[]>([]);
     const aboutTabContent = <EditQuest questData={questData}/>;
-    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={[taskGroupMock, taskGroupMock]} questId={questData.quest.id}/>;
+    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={questData.task_groups} questId={questData.quest.id}/>;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
