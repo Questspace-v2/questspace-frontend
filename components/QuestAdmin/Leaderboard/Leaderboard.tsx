@@ -1,5 +1,5 @@
 import { uid } from '@/lib/utils/utils';
-import {IAdminLeaderboardResponse} from "@/app/types/quest-interfaces";
+import {IAdminLeaderboardResponse} from '@/app/types/quest-interfaces';
 
 export default function Leaderboard({teams}: {teams: IAdminLeaderboardResponse}) {
     // Здесь табличка с результатами по идее...
