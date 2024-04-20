@@ -137,3 +137,7 @@ export const getTaskGroupsPlayMode = async (questId: string, accessToken?: strin
 export const getLeaderboardPlayMode = async (questId: string, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/table`, 'GET', undefined, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
+
+export const getTaskGroupsAdmin = async (questId: string, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/task-groups`, 'GET', undefined,
+        undefined, 'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {})
