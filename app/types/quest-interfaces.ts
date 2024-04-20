@@ -74,6 +74,11 @@ export interface IQuestTaskGroupsResponse extends ITaskGroupsUpdate {
     error?: string
 }
 
+export interface ITaskGroupsAdminResponse {
+    quest: IQuest,
+    task_groups: ITaskGroup[]
+}
+
 export interface IFilteredQuests {
     next_page_id: string,
     quests: IQuest[]

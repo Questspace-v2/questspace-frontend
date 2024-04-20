@@ -5,8 +5,8 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { notFound, redirect } from 'next/navigation';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
-import { getQuestById } from '@/app/api/api';
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
+import { getTaskGroupsAdmin } from '@/app/api/api';
+import { ITaskGroupsAdminResponse } from '@/app/types/quest-interfaces';
 import QuestAdmin from '@/components/QuestAdmin/QuestAdmin';
 import { isAllowedUser } from '@/lib/utils/utils';
 import ContextProvider from '@/components/Tasks/ContextProvider/ContextProvider';
@@ -26,11 +26,7 @@ export default async function EditQuestPage({params}: {params: {id: string}}) {
         notFound();
     }
 
-    const questData = await getQuestById(params.id, session.accessToken)
-        .then(res => res as IGetQuestResponse)
-        .catch(err => {
-            throw err;
-        })
+    const questData = await getTaskGroupsAdmin(params.id, session.accessToken) as ITaskGroupsAdminResponse;
 
     if (!questData) {
         notFound();
