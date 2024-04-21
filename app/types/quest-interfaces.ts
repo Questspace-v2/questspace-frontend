@@ -92,7 +92,18 @@ export interface IFilteredQuestsResponse {
 
 export interface IGetQuestResponse {
     quest: IQuest,
-    team?: ITeam
+    team?: ITeam,
+    leaderboard?: IFinalLeaderboard
+}
+
+export interface IFinalLeaderboard {
+    rows: IFinalLeaderboardRow[]
+}
+
+export interface IFinalLeaderboardRow {
+    score: number,
+    team_id: string,
+    team_name: string,
 }
 
 export interface ITaskAnswer {
