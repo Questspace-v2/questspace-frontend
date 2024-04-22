@@ -34,7 +34,7 @@ import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import { RELEASED_FEATURE } from '@/app/api/client/constants';
 import remarkGfm from 'remark-gfm';
 import { IFinalLeaderboard, IFinalLeaderboardRow } from '@/app/types/quest-interfaces';
-
+import Column from 'antd/lib/table/Column';
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
     ssr: false,
@@ -43,7 +43,6 @@ const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/Cr
 const DynamicInviteModal = dynamic(() => import('@/components/Quest/InviteModal/InviteModal'), {
     ssr: false,
 })
-
 
 interface QuestContentProps {
     description?: string;
@@ -201,53 +200,6 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
 function QuestResults({ status, leaderboard }: { status: QuestStatus | string, leaderboard?: IFinalLeaderboard }) {
     const statusQuest = status as QuestStatus;
     if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
-        const columns = [
-            {
-                key: 'team_place',
-                width: '36px',
-                // @ts-expect-error ноет на типы
-                render: (_, record: IFinalLeaderboardRow, index: number) => {
-                    // eslint-disable-next-line no-param-reassign
-                    index += 1;
-                    return `${index}.`;
-                    },
-                align: 'right',
-            },
-            {
-                dataIndex: 'team_name',
-                key: 'team_name',
-            },
-            {
-                dataIndex: 'score',
-                key: 'score',
-                width: '50px',
-                // @ts-expect-error ноет на типы
-                render: (_, record: IFinalLeaderboardRow) => record.score
-            },
-            {
-                key: 'place',
-                align: 'right',
-                width: '22px',
-                // @ts-expect-error ноет на типы
-                render: (_, record: IFinalLeaderboardRow, index) => {
-                    // eslint-disable-next-line no-param-reassign
-                    index += 1;
-                    if (index === 1) {
-                        return <TrophyFilled style={{color: '#FADB14'}}/>
-                    }
-                    if (index === 2) {
-                        return <TrophyFilled style={{color: '#D9D9D9'}}/>
-                    }
-                    if (index === 3) {
-                        return <TrophyFilled style={{color: '#D46B08'}}/>
-                    }
-
-                    return null;
-                },
-            },
-    ]
-
-
         return (
             <ContentWrapper className={'quest-page__content-wrapper quest-page__results'}>
                 <h2 className={'roboto-flex-header responsive-header-h2'}>Результаты квеста</h2>
@@ -257,8 +209,33 @@ function QuestResults({ status, leaderboard }: { status: QuestStatus | string, l
                         <h6 className={'results__title'}>Ждем результаты</h6>
                     </div>
                 ) : leaderboard && (
-                    // @ts-expect-error ноет на тип колонок
-                    <Table dataSource={leaderboard.rows} pagination={false} size={'small'} showHeader={false} columns={columns}/>
+                    <Table className={'results__table'} dataSource={leaderboard.rows} pagination={false} size={'small'} showHeader={false}>
+                        <Column
+                            key='team_place'
+                            width={'36px'}
+                            render={(_, record: IFinalLeaderboardRow, index: number) => `${index + 1}.`}
+                            align={'right'}
+                        />
+                        <Column dataIndex={'team_name'} key={'team_name'}/>
+                        <Column dataIndex={'score'} key={'score'} width={'50px'} render={(_, record: IFinalLeaderboardRow) => record.score}/>
+                        <Column key={'place'}
+                                render={(_, record: IFinalLeaderboardRow, index) => {
+                                    if (index + 1 === 1) {
+                                        return <TrophyFilled style={{color: '#FADB14'}}/>
+                                    }
+                                    if (index + 1 === 2) {
+                                        return <TrophyFilled style={{color: '#D9D9D9'}}/>
+                                    }
+                                    if (index + 1 === 3) {
+                                        return <TrophyFilled style={{color: '#D46B08'}}/>
+                                    }
+
+                                    return null;
+                                }}
+                                align={'right'}
+                                width={'22px'}
+                        />
+                    </Table>
                 )}
             </ContentWrapper>
         );
@@ -359,7 +336,6 @@ function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
                     navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
                 }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
             </div>
-            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
             <ConfigProvider theme={redOutlinedButton}>
                 <Button
                     className={'exit-team__button exit-team__small-screen'}
