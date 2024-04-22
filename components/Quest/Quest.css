@@ -24,6 +24,10 @@
     margin: 0;
 }
 
+.results__table .ant-table-content {
+    column-count: 2;
+}
+
 .results__content_waiting {
     display: flex;
     flex-direction: column;
@@ -247,6 +251,10 @@
 }
 
 @media (max-width: 799px) {
+    .results__table .ant-table-content {
+        column-count: 1;
+    }
+
     .invite-link__wrapper {
         flex-direction: column;
     }
