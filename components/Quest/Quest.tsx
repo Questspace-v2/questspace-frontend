@@ -9,12 +9,12 @@ import {
     EditOutlined,
     HourglassOutlined,
     LogoutOutlined,
-    ExclamationCircleOutlined, TeamOutlined,
+    ExclamationCircleOutlined, TeamOutlined, TrophyFilled,
 } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import './Quest.css';
-import { Button, Card, ConfigProvider, message, Modal, Skeleton } from 'antd';
+import { Button, Card, ConfigProvider, message, Modal, Skeleton, Table } from 'antd';
 import {
     getQuestStatusButton,
     getStartDateText,
@@ -33,6 +33,7 @@ import { Session } from 'next-auth';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import { RELEASED_FEATURE } from '@/app/api/client/constants';
 import remarkGfm from 'remark-gfm';
+import { IFinalLeaderboard, IFinalLeaderboardRow } from '@/app/types/quest-interfaces';
 
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
@@ -197,17 +198,67 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
     return null;
 }
 
-function QuestResults({ status }: { status: QuestStatus | string }) {
+function QuestResults({ status, leaderboard }: { status: QuestStatus | string, leaderboard?: IFinalLeaderboard }) {
     const statusQuest = status as QuestStatus;
     if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
+        const columns = [
+            {
+                key: 'team_place',
+                width: '36px',
+                // @ts-expect-error ноет на типы
+                render: (_, record: IFinalLeaderboardRow, index: number) => {
+                    // eslint-disable-next-line no-param-reassign
+                    index += 1;
+                    return `${index}.`;
+                    },
+                align: 'right',
+            },
+            {
+                dataIndex: 'team_name',
+                key: 'team_name',
+            },
+            {
+                dataIndex: 'score',
+                key: 'score',
+                width: '50px',
+                // @ts-expect-error ноет на типы
+                render: (_, record: IFinalLeaderboardRow) => record.score
+            },
+            {
+                key: 'place',
+                align: 'right',
+                width: '22px',
+                // @ts-expect-error ноет на типы
+                render: (_, record: IFinalLeaderboardRow, index) => {
+                    // eslint-disable-next-line no-param-reassign
+                    index += 1;
+                    if (index === 1) {
+                        return <TrophyFilled style={{color: '#FADB14'}}/>
+                    }
+                    if (index === 2) {
+                        return <TrophyFilled style={{color: '#D9D9D9'}}/>
+                    }
+                    if (index === 3) {
+                        return <TrophyFilled style={{color: '#D46B08'}}/>
+                    }
+
+                    return null;
+                },
+            },
+    ]
+
+
         return (
             <ContentWrapper className={'quest-page__content-wrapper quest-page__results'}>
                 <h2 className={'roboto-flex-header responsive-header-h2'}>Результаты квеста</h2>
-                {statusQuest === QuestStatus.StatusWaitResults && (
+                {statusQuest === QuestStatus.StatusWaitResults ? (
                     <div className={'results__content_waiting'}>
                         <ClockCircleTwoTone />
                         <h6 className={'results__title'}>Ждем результаты</h6>
                     </div>
+                ) : leaderboard && (
+                    // @ts-expect-error ноет на тип колонок
+                    <Table dataSource={leaderboard.rows} pagination={false} size={'small'} showHeader={false} columns={columns}/>
                 )}
             </ContentWrapper>
         );
