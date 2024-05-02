@@ -97,29 +97,29 @@ export const getQuestByTeamInvite = async (invitePath: string, accessToken?: str
         accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const getTeamById = async (teamId: string) =>
-    client.handleServerRequest(`/teams/${teamId}`);
+    client.handleServerRequest(`/teams/all/${teamId}`);
 
 export const updateTeam = async (teamId: string, data: { name: string }, accessToken?: string) =>
-    client.handleServerRequest(`/teams/${teamId}`, 'POST', data, undefined,
+    client.handleServerRequest(`/teams/all/${teamId}`, 'POST', data, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const deleteTeam = async (teamId: string, accessToken?: string) =>
-    client.handleServerRequest(`/teams/${teamId}`, 'DELETE', undefined, undefined,
+    client.handleServerRequest(`/teams/all/${teamId}`, 'DELETE', undefined, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const changeTeamCaptain = async (teamId: string, data: {
     new_captain_id: string
 }, accessToken?: string) =>
-    client.handleServerRequest(`/teams/${teamId}/captain`, 'POST', data, undefined,
+    client.handleServerRequest(`/teams/all/${teamId}/captain`, 'POST', data, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const leaveTeam = async (teamId: string, accessToken?: string, new_captain?: string) =>
-    client.handleServerRequest(`/teams/${teamId}/leave`, 'POST', undefined,
+    client.handleServerRequest(`/teams/all/${teamId}/leave`, 'POST', undefined,
         new_captain ? {new_captain} : undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const deleteTeamMember = async (teamId: string, memberId: string, accessToken?: string) =>
-    client.handleServerRequest(`/teams/${teamId}/${memberId}`, 'DELETE', undefined,
+    client.handleServerRequest(`/teams/all/${teamId}/${memberId}`, 'DELETE', undefined,
         undefined, 'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const answerTaskPlayMode = async (questId: string, data: ITaskAnswer, accessToken?: string) =>
