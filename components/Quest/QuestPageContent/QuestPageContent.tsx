@@ -14,7 +14,7 @@ export default async function QuestPageContent({props, isCreator}: {props: IGetQ
             <QuestHeader props={quest as QuestHeaderProps} mode={'page'} team={team}/>
             <QuestResults status={quest.status} leaderboard={leaderboard}/>
             <QuestContent description={quest.description} mode={'page'} />
-            <QuestTeam team={team} session={session}/>
+            <QuestTeam team={team} session={session} status={quest.status}/>
         </>
     );
 }

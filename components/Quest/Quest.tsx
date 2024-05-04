@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useMemo, useState } from 'react';
 import Markdown from 'react-markdown';
@@ -7,9 +7,11 @@ import {
     ClockCircleTwoTone,
     CopyOutlined,
     EditOutlined,
+    ExclamationCircleOutlined,
     HourglassOutlined,
     LogoutOutlined,
-    ExclamationCircleOutlined, TeamOutlined, TrophyFilled,
+    TeamOutlined,
+    TrophyFilled,
 } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
@@ -68,7 +70,7 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
 }
 
 function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
-    const [aspectRatio, setAspectRatio] = useState('2/1');
+    const [aspectRatio, setAspectRatio] = useState('0/1');
     const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
     if (!props) {
         return null;
@@ -97,7 +99,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
         const imageNode = <Image
             src={mediaLink}
             width={1000}
-            height={1000}
+            height={0}
             style={{ width: '100%', objectFit: 'contain', height: 'auto' }}
             alt={'quest avatar'}
             loading={'eager'}
@@ -105,6 +107,8 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                 const { naturalWidth, naturalHeight } = target as HTMLImageElement;
                 if (naturalWidth > naturalHeight * 2) {
                     setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+                } else {
+                    setAspectRatio(`2/1`);
                 }
             }}
         />;
@@ -163,6 +167,8 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                                 const { naturalWidth, naturalHeight } = target as HTMLImageElement;
                                 if (naturalWidth > naturalHeight * 2) {
                                     setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+                                } else {
+                                    setAspectRatio(`2/1`);
                                 }
                             }}
                         />
@@ -209,7 +215,7 @@ function QuestResults({ status, leaderboard }: { status: QuestStatus | string, l
                         <h6 className={'results__title'}>Ждем результаты</h6>
                     </div>
                 ) : leaderboard && (
-                    <Table className={'results__table'} dataSource={leaderboard.rows} pagination={false} size={'small'} showHeader={false}>
+                    <Table className={'results__table'} dataSource={leaderboard.rows} pagination={false} size={'small'} showHeader={false} rowKey={'team_name'}>
                         <Column
                             key='team_place'
                             width={'36px'}
@@ -244,8 +250,9 @@ function QuestResults({ status, leaderboard }: { status: QuestStatus | string, l
     return null;
 }
 
-function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
+function QuestTeam({team, session, status} : {team?: ITeam, session?: Session | null, status?: string}) {
     const router = useRouter();
+    const statusType = status as QuestStatus;
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -298,55 +305,75 @@ function QuestTeam({team, session} : {team?: ITeam, session?: Session | null}) {
         router.refresh();
     };
 
+    if (statusType !== QuestStatus.StatusWaitResults && statusType !== QuestStatus.StatusFinished) {
+        return (
+            <ContentWrapper className={'quest-page__content-wrapper quest-page__team'}>
+                {contextHolder}
+                <div className={'team__header'}>
+                    <h2 className={'roboto-flex-header responsive-header-h2'}>{`Твоя команда — ${teamName}`}</h2>
+                    <Button
+                        className={'exit-team__button exit-team__large-screen'}
+                        type={'text'}
+                        icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }} />}
+                        style={{ color: 'var(--quit-color)' }}
+                        onClick={showConfirm}
+                    >
+                        Выйти из команды
+                    </Button>
+                    {modalContextHolder}
+                </div>
+                <div className={'team__members'}>
+                    {team.members.map((member) => (
+                            <div key={uid()} className={`team-member__wrapper ${member.id === team.captain.id ? 'team-member__captain' : ''}`}>
+                                <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
+                                <span className={'team-member__name'}>{member.username}</span>
+                                {
+                                    RELEASED_FEATURE && session?.user.id === team.captain.id && member.id !== team.captain.id &&
+                                    <>
+                                        <Button onClick={() => changeCaptain(member.id)}>Сделать капитаном</Button>
+                                        <Button onClick={() => deleteMember(member.id)}>Удалить участника</Button>
+                                    </>
+                                }
+                            </div>
+                        )
+                    )}
+                </div>
+                <div className={'invite-link__wrapper'}>
+                    <p className={'invite-link__text'}>Пригласи друзей в свою команду — поделись ссылкой:</p>
+                    <Button className={'invite-link__link'} type={'link'} onClick={() => {
+                        navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
+                    }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
+                </div>
+                <ConfigProvider theme={redOutlinedButton}>
+                    <Button
+                        className={'exit-team__button exit-team__small-screen'}
+                        icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }}/>}
+                        style={{ color: 'var(--quit-color)' }}
+                        block
+                        onClick={showConfirm}
+                    >
+                        Выйти из команды
+                    </Button>
+                </ConfigProvider>
+            </ContentWrapper>
+        );
+    }
+
     return (
         <ContentWrapper className={'quest-page__content-wrapper quest-page__team'}>
             {contextHolder}
             <div className={'team__header'}>
                 <h2 className={'roboto-flex-header responsive-header-h2'}>{`Твоя команда — ${teamName}`}</h2>
-                <Button
-                    className={'exit-team__button exit-team__large-screen'}
-                    type={'text'}
-                    icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }} />}
-                    style={{ color: 'var(--quit-color)' }}
-                    onClick={showConfirm}
-                >
-                    Выйти из команды
-                </Button>
-                {modalContextHolder}
             </div>
             <div className={'team__members'}>
                 {team.members.map((member) => (
-                    <div key={uid()} className={`team-member__wrapper ${member.id === team.captain.id ? 'team-member__captain' : ''}`}>
-                        <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
-                        <span className={'team-member__name'}>{member.username}</span>
-                        {
-                            RELEASED_FEATURE && session?.user.id === team.captain.id && member.id !== team.captain.id &&
-                            <>
-                                <Button onClick={() => changeCaptain(member.id)}>Сделать капитаном</Button>
-                                <Button onClick={() => deleteMember(member.id)}>Удалить участника</Button>
-                            </>
-                        }
-                    </div>
+                        <div key={uid()} className={`team-member__wrapper ${member.id === team.captain.id ? 'team-member__captain' : ''}`}>
+                            <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
+                            <span className={'team-member__name'}>{member.username}</span>
+                        </div>
                     )
                 )}
             </div>
-            <div className={'invite-link__wrapper'}>
-                <p className={'invite-link__text'}>Пригласи друзей в свою команду — поделись ссылкой:</p>
-                <Button className={'invite-link__link'} type={'link'} onClick={() => {
-                    navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
-                }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
-            </div>
-            <ConfigProvider theme={redOutlinedButton}>
-                <Button
-                    className={'exit-team__button exit-team__small-screen'}
-                    icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }}/>}
-                    style={{ color: 'var(--quit-color)' }}
-                    block
-                    onClick={showConfirm}
-                >
-                    Выйти из команды
-                </Button>
-            </ConfigProvider>
         </ContentWrapper>
     );
 }
