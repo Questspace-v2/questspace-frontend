@@ -1,30 +1,42 @@
 'use client';
 
-import { Button, Col, ConfigProvider, Form, Input, InputNumber, Modal, Row, Upload } from 'antd';
+import {Button, Col, ConfigProvider, Form, Input, InputNumber, Modal, Row, Upload, UploadFile} from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { getCenter } from '@/lib/utils/utils';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { MinusOutlined, PlusOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+    DeleteOutlined,
+    FileImageOutlined,
+    MinusOutlined,
+    PlusOutlined,
+    ReloadOutlined,
+    UploadOutlined
+} from '@ant-design/icons';
 
 import './EditTask.css';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
+import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
+import {ITask, ITaskGroup} from "@/app/types/quest-interfaces";
 
 const {TextArea} = Input;
 
 interface TaskCreateModalProps {
     isOpen: boolean,
-    setIsOpen: Dispatch<SetStateAction<boolean>>
+    setIsOpen: Dispatch<SetStateAction<boolean>>,
+    taskGroupName: string,
+    fileList: UploadFile[]
 }
 
-export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
+export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs, md } = useBreakpoint();
 
     const [pointsAmount, setPointsAmount] = useState(0);
+    const {data: contextData, updater: setContextData} = useTasksContext()!;
 
     const increasePointsAmount = () => {
         setPointsAmount((prevAmount) => prevAmount + 1);
@@ -41,7 +53,34 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
     };
 
     const handleSaveTask = () => {
+        const taskGroup = contextData.task_groups
+            .find(group => group.name === taskGroupName)!;
+        const unchangedGroups = contextData.task_groups
+            .filter(group => group.name !== taskGroup?.name);
 
+        const taskName = form.getFieldValue('taskName') as string;
+        const pubTime = new Date();
+        const taskText = form.getFieldValue('taskText') as string;
+        const taskPoints = form.getFieldValue('taskPoints') as number;
+        const hints = form.getFieldsValue(['hints']) as string[];
+        const answers = form.getFieldsValue(['answers']) as string[];
+
+        const newTask: ITask = { // Нужна ссылка на картинку
+            name: taskName,
+            pub_time: pubTime.toLocaleString('ru'),
+            question: taskText,
+            correct_answers: answers,
+            hints,
+            reward: taskPoints,
+            verification_type: 'auto'
+        };
+
+        const updatedGroup: ITaskGroup = {
+            name: taskGroup?.name,
+            tasks: [...taskGroup.tasks, newTask]
+        };
+
+        setContextData({task_groups: [...unchangedGroups, updatedGroup]});
     }
 
     return (
@@ -71,7 +110,7 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Название задания</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
+                            <FormItem name={'taskName'}>
                                 <Input type={'text'} placeholder={'Название задания'}/>
                             </FormItem>
                         </Col>
@@ -81,7 +120,7 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Текст задания</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
+                            <FormItem name={'taskText'}>
                                 <TextArea placeholder={'Текст задания'} style={{resize: 'none', height: '320px'}}/>
                             </FormItem>
                         </Col>
@@ -92,14 +131,15 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                         </Col>
                         <Col flex={'auto'}>
                             <FormItem>
-                                <Upload maxCount={1} showUploadList={false}>
+                                <Upload maxCount={1} showUploadList={false} fileList={fileList}>
                                     {/* eslint-disable-next-line no-constant-condition */}
-                                    {0 > 1 ? (
+                                    {fileList.length > 0 ? (
                                         <Button><ReloadOutlined />Заменить</Button>
                                     ) : (
                                         <Button><UploadOutlined />Загрузить</Button>
                                     )}
                                 </Upload>
+                                {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
                             </FormItem>
                         </Col>
                     </Row>
@@ -108,11 +148,27 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Подсказки (max 3)<span style={{ color: '#00000073' }}><br/>поддерживает Markdown</span></span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
-                                <Button>
-                                    <PlusOutlined/> Добавить подсказку
-                                </Button>
-                            </FormItem>
+                            <Form.List name={'hints'}>
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map((field, index) => (
+                                            <Form.Item label={`${index + 1}.`} key={field.key}>
+                                                <Form.Item>
+                                                    <Input
+                                                        placeholder={'Введите подсказку'}
+                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                                    />
+                                                </Form.Item>
+                                            </Form.Item>
+                                        ))}
+                                        <FormItem>
+                                            <Button onClick={() => add()}>
+                                                <PlusOutlined/> Добавить подсказку
+                                            </Button>
+                                        </FormItem>
+                                    </>
+                                )}
+                            </Form.List>
                         </Col>
                     </Row>
                     <Row>
@@ -120,11 +176,27 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Варианты ответа</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
-                                <Button>
-                                    <PlusOutlined/> Добавить вариант ответа
-                                </Button>
-                            </FormItem>
+                            <Form.List name={'answers'}>
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map((field, index) => (
+                                            <Form.Item label={`${index + 1}.`} key={field.key}>
+                                                <Form.Item>
+                                                    <Input
+                                                        placeholder={'Введите вариант ответа'}
+                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                                    />
+                                                </Form.Item>
+                                            </Form.Item>
+                                        ))}
+                                        <FormItem>
+                                            <Button onClick={() => add()}>
+                                                <PlusOutlined/> Добавить вариант ответа
+                                            </Button>
+                                        </FormItem>
+                                    </>
+                                )}
+                            </Form.List>
                         </Col>
                     </Row>
                     <Row>
@@ -132,7 +204,7 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Баллы за задание</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
+                            <FormItem name={'taskPoints'}>
                                 <InputNumber
                                     addonBefore={
                                         <MinusOutlined
@@ -145,6 +217,9 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                                     controls={false}
                                     min={1}
                                     style={{width: '128px', textAlignLast: 'center'}}
+                                    onChange={(value) => {
+                                        setPointsAmount(value ?? 1);
+                                    }}
                                 />
                             </FormItem>
                         </Col>

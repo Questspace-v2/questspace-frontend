@@ -10,7 +10,7 @@ import './TaskGroup.css';
 
 export default function TaskGroup({mode, props, questId} : {mode: TasksMode, props: ITaskGroup, questId: string}) {
     const { name, tasks } = props;
-    const collapseExtra = <TaskGroupExtra edit={mode === TasksMode.EDIT}/>;
+    const collapseExtra = <TaskGroupExtra edit={mode === TasksMode.EDIT} taskGroupName={name}/>;
 
     const items: CollapseProps['items'] = [
         {
@@ -20,8 +20,8 @@ export default function TaskGroup({mode, props, questId} : {mode: TasksMode, pro
                 <>
                     {(tasks.map((task) =>
                         <div className={'task-group__task'} key={uid()}>
-                            <Task props={task} mode={mode} questId={questId} />
-                            {getTaskExtra(mode === TasksMode.EDIT, false)}
+                            <Task props={task} mode={mode} questId={questId} taskGroupName={name}/>
+                            {getTaskExtra(mode === TasksMode.EDIT, false, name)}
                         </div>
                     ))}
                 </>,

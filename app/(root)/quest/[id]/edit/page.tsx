@@ -42,7 +42,7 @@ export default async function EditQuestPage({params}: {params: {id: string}}) {
         <>
             <Header isAuthorized/>
             <Body>
-                <ContextProvider>
+                <ContextProvider taskGroups={questData.task_groups}>
                     <QuestAdmin questData={questData}/>
                 </ContextProvider>
             </Body>

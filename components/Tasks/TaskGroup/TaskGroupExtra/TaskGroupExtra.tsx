@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic';
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
     {ssr: false})
 
-export default function TaskGroupExtra({edit}: {edit: boolean}) {
+export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, taskGroupName: string}) {
     // const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [open, setOpen] = useState(false);
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
@@ -69,7 +69,12 @@ export default function TaskGroupExtra({edit}: {edit: boolean}) {
                 >
                     <Button><MenuOutlined/></Button>
                 </Dropdown>
-                <DynamicEditTask isOpen={isOpenCreateModal} setIsOpen={setIsOpenCreateModal} />
+                <DynamicEditTask
+                    isOpen={isOpenCreateModal}
+                    setIsOpen={setIsOpenCreateModal}
+                    taskGroupName={taskGroupName}
+                    fileList={[]}
+                />
             </div>
         );
     }
