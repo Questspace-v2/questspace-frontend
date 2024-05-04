@@ -93,7 +93,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
 
         const newTask: ITask = {
             name: taskName,
-            pub_time: pubTime.toLocaleString('ru'),
+            pub_time: pubTime.toISOString(),
             question: taskText,
             correct_answers: answers,
             hints,
@@ -183,7 +183,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                     <>
                                         {fields.map((field, index) => (
                                             <Form.Item label={`${index + 1}.`} key={field.key}>
-                                                <Form.Item {...field}>
+                                                <Form.Item key={field.key} name={field.name}>
                                                     <Input
                                                         placeholder={'Введите подсказку'}
                                                         suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
@@ -211,7 +211,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                     <>
                                         {fields.map((field, index) => (
                                             <Form.Item label={`${index + 1}.`} key={field.key}>
-                                                <Form.Item {...field}>
+                                                <Form.Item key={field.key} name={field.name}>
                                                     <Input
                                                         placeholder={'Введите вариант ответа'}
                                                         suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
@@ -246,7 +246,6 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                         />}
                                     controls={false}
                                     min={1}
-                                    defaultValue={1}
                                     style={{width: '128px', textAlignLast: 'center'}}
                                 />
                             </FormItem>
