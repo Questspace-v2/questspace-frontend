@@ -3,7 +3,7 @@
 import {Button, Col, ConfigProvider, Form, Input, InputNumber, Modal, Row, Upload, UploadFile} from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
-import { getCenter } from '@/lib/utils/utils';
+import {getCenter, uid} from '@/lib/utils/utils';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {
     DeleteOutlined,
@@ -19,6 +19,7 @@ import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import {ITask, ITaskGroup} from "@/app/types/quest-interfaces";
+import client from "@/app/api/client/client";
 
 const {TextArea} = Input;
 
@@ -26,7 +27,8 @@ interface TaskCreateModalProps {
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,
     taskGroupName: string,
-    fileList: UploadFile[]
+    fileList: UploadFile[],
+    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>
 }
 
 interface TaskForm {
@@ -37,7 +39,7 @@ interface TaskForm {
     taskPoints: number
 }
 
-export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: TaskCreateModalProps) {
+export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, setFileList}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
@@ -60,23 +62,43 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: T
         setIsOpen(false);
     };
 
-    const handleSaveTask = () => {
+    const handleS3Request = async () => {
+        const file = fileList[0].originFileObj as File;
+        const fileType = file.type;
+        if (!fileType.startsWith('image/')) {
+            return;
+        }
+
+        const key = `/tasks/${uid()}`;
+        // eslint-disable-next-line consistent-return
+        return client.handleS3Request(key, fileType, file);
+    }
+
+    const handleSaveTask = async () => {
         const taskGroup = contextData.task_groups
             .find(group => group.name === taskGroupName)!;
         const unchangedGroups = contextData.task_groups
             .filter(group => group.name !== taskGroup?.name);
 
+        const imageValidation = fileList.length > 0;
+        const s3Response = imageValidation && await handleS3Request();
+
+        if (!s3Response) {
+            return;
+        }
+
         const fields = form.getFieldsValue() as TaskForm;
         const {taskName, taskText, taskPoints, hints, answers} = fields;
         const pubTime = new Date();
 
-        const newTask: ITask = { // Нужна ссылка на картинку
+        const newTask: ITask = {
             name: taskName,
             pub_time: pubTime.toLocaleString('ru'),
             question: taskText,
             correct_answers: answers,
             hints,
             reward: taskPoints,
+            media_link: s3Response.url,
             verification_type: 'auto'
         };
 
@@ -136,7 +158,10 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: T
                         </Col>
                         <Col flex={'auto'}>
                             <FormItem>
-                                <Upload maxCount={1} showUploadList={false} fileList={fileList}>
+                                <Upload
+                                    maxCount={1}
+                                    showUploadList={false}
+                                    fileList={fileList} onChange={({ fileList: fllst }) => setFileList(fllst)}>
                                     {/* eslint-disable-next-line no-constant-condition */}
                                     {fileList.length > 0 ? (
                                         <Button><ReloadOutlined />Заменить</Button>
@@ -221,10 +246,8 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: T
                                         />}
                                     controls={false}
                                     min={1}
+                                    defaultValue={1}
                                     style={{width: '128px', textAlignLast: 'center'}}
-                                    onChange={(value) => {
-                                        setPointsAmount(value ?? 1);
-                                    }}
                                 />
                             </FormItem>
                         </Col>

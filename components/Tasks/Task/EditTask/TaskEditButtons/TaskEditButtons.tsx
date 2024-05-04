@@ -1,6 +1,6 @@
 'use client';
 
-import {Button, ConfigProvider} from "antd";
+import {Button, ConfigProvider, UploadFile} from "antd";
 import {blueOutlinedButton, redOutlinedButton} from "@/lib/theme/themeConfig";
 import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useState} from "react";
@@ -9,6 +9,7 @@ import EditTask from "@/components/Tasks/Task/EditTask/EditTask";
 export default function TaskEditButtons({mobile526, taskGroupName}: {mobile526: boolean, taskGroupName: string}) {
     const classname = mobile526 ? 'task-extra_small' : 'task-extra_large';
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     const handleEditTask = () => {
         setIsOpenModal(true);
@@ -31,7 +32,13 @@ export default function TaskEditButtons({mobile526, taskGroupName}: {mobile526: 
             <ConfigProvider theme={redOutlinedButton}>
                 <Button onClick={handleDeleteTask}><DeleteOutlined/>{!mobile526 && 'Удалить задачу'}</Button>
             </ConfigProvider>
-            <EditTask isOpen={isOpenModal} setIsOpen={setIsOpenModal} taskGroupName={taskGroupName} fileList={[]}/>
+            <EditTask
+                isOpen={isOpenModal}
+                setIsOpen={setIsOpenModal}
+                taskGroupName={taskGroupName}
+                fileList={fileList}
+                setFileList={setFileList}
+            />
         </div>
     );
 }

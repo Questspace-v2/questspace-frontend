@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, ConfigProvider, Dropdown, MenuProps } from 'antd';
+import {Button, ConfigProvider, Dropdown, MenuProps, UploadFile} from 'antd';
 import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
@@ -13,6 +13,7 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
     // const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [open, setOpen] = useState(false);
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
 
     const handleMenuClick: MenuProps['onClick'] = () => {
         setOpen(false);
@@ -73,7 +74,8 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
                     isOpen={isOpenCreateModal}
                     setIsOpen={setIsOpenCreateModal}
                     taskGroupName={taskGroupName}
-                    fileList={[]}
+                    fileList={fileList}
+                    setFileList={setFileList}
                 />
             </div>
         );
