@@ -29,6 +29,14 @@ interface TaskCreateModalProps {
     fileList: UploadFile[]
 }
 
+interface TaskForm {
+    taskName: string,
+    taskText: string,
+    hints: string[],
+    answers: string[],
+    taskPoints: number
+}
+
 export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
@@ -58,12 +66,9 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: T
         const unchangedGroups = contextData.task_groups
             .filter(group => group.name !== taskGroup?.name);
 
-        const taskName = form.getFieldValue('taskName') as string;
+        const fields = form.getFieldsValue() as TaskForm;
+        const {taskName, taskText, taskPoints, hints, answers} = fields;
         const pubTime = new Date();
-        const taskText = form.getFieldValue('taskText') as string;
-        const taskPoints = form.getFieldValue('taskPoints') as number;
-        const hints = form.getFieldsValue(['hints']) as string[];
-        const answers = form.getFieldsValue(['answers']) as string[];
 
         const newTask: ITask = { // Нужна ссылка на картинку
             name: taskName,
@@ -153,7 +158,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: T
                                     <>
                                         {fields.map((field, index) => (
                                             <Form.Item label={`${index + 1}.`} key={field.key}>
-                                                <Form.Item>
+                                                <Form.Item {...field}>
                                                     <Input
                                                         placeholder={'Введите подсказку'}
                                                         suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
@@ -181,7 +186,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList}: T
                                     <>
                                         {fields.map((field, index) => (
                                             <Form.Item label={`${index + 1}.`} key={field.key}>
-                                                <Form.Item>
+                                                <Form.Item {...field}>
                                                     <Input
                                                         placeholder={'Введите вариант ответа'}
                                                         suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
