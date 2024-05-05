@@ -45,7 +45,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
     const [form] = Form.useForm();
     const { xs, md } = useBreakpoint();
 
-    const [pointsAmount, setPointsAmount] = useState(0);
+    const [pointsAmount, setPointsAmount] = useState(100);
     const {data: contextData, updater: setContextData} = useTasksContext()!;
 
     const increasePointsAmount = () => {
@@ -131,7 +131,12 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                     </Button>
                 ]}
             >
-                <Form form={form}>
+                <Form
+                    form={form}
+                    fields={[
+                        {name: 'taskPoints', value: pointsAmount}
+                    ]}
+                >
                     <Row>
                         <Col className={'edit-task__labels'}>
                             <span>Название задания</span>
@@ -247,6 +252,9 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                     controls={false}
                                     min={1}
                                     style={{width: '128px', textAlignLast: 'center'}}
+                                    onChange={(value) => {
+                                        setPointsAmount(value ?? 100);
+                                    }}
                                 />
                             </FormItem>
                         </Col>
