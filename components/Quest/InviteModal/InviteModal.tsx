@@ -1,12 +1,13 @@
 'use client'
 
 import React, { useMemo } from 'react';
-import { getCenter, ModalProps, TeamModal } from '@/lib/utils/utils';
+import { getCenter } from '@/lib/utils/utils';
 import { Input, message, Modal } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { CopyOutlined } from '@ant-design/icons';
 
 import './InviteModal.css'
+import {ModalProps, TeamModal} from '@/lib/utils/modalTypes';
 
 export default function InviteModal({inviteLink, currentModal, setCurrentModal}: ModalProps) {
     const {clientWidth, clientHeight} = document.body;

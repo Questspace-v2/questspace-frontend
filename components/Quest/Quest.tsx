@@ -28,7 +28,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ITeam } from '@/app/types/user-interfaces';
 import Image from 'next/image';
-import { parseToMarkdown, TeamModalType, uid } from '@/lib/utils/utils';
+import { parseToMarkdown, uid } from '@/lib/utils/utils';
 import dynamic from 'next/dynamic';
 import { changeTeamCaptain, deleteTeamMember, leaveTeam } from '@/app/api/api';
 import { Session } from 'next-auth';
@@ -37,6 +37,7 @@ import { RELEASED_FEATURE } from '@/app/api/client/constants';
 import remarkGfm from 'remark-gfm';
 import { IFinalLeaderboard, IFinalLeaderboardRow } from '@/app/types/quest-interfaces';
 import Column from 'antd/lib/table/Column';
+import {TeamModalType} from '@/lib/utils/modalTypes';
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
     ssr: false,

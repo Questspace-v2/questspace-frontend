@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import { getCenter, ModalProps, TeamModal, ValidationStatus } from '@/lib/utils/utils';
+import { getCenter } from '@/lib/utils/utils';
 import { Button, Form, Input, Modal } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
@@ -11,6 +11,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 import './CreateTeam.css'
+import {ModalProps, TeamModal, ValidationStatus} from '@/lib/utils/modalTypes';
 
 export default function CreateTeam({questId, currentModal, setCurrentModal}: ModalProps) {
     const {clientWidth, clientHeight} = document.body;

@@ -7,7 +7,8 @@ import { useSession } from 'next-auth/react';
 
 import '../EditProfile.css';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
-import { getCenter, ValidationStatus } from '@/lib/utils/utils';
+import { getCenter } from '@/lib/utils/utils';
+import {ValidationStatus} from '@/lib/utils/modalTypes';
 
 export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;

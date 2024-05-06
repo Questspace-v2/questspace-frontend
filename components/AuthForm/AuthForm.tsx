@@ -16,9 +16,9 @@ import Logotype from '@/components/Logotype/Logotype';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { signIn, SignInAuthorizationParams } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { ValidationStatus } from '@/lib/utils/utils';
 
 import './AuthForm.css';
+import {ValidationStatus} from '@/lib/utils/modalTypes';
 
 interface AuthFormItems {
     username: string,
