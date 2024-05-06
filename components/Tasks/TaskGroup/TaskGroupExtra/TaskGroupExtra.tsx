@@ -25,7 +25,6 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
 
     const handleAddTask = () => {
         setIsOpenCreateModal(true);
-        // setContextData({task_groups: contextData.task_groups});
     };
 
     const items: MenuProps['items'] = [

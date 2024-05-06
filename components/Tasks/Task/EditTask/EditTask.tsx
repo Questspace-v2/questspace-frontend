@@ -136,6 +136,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                     fields={[
                         {name: 'taskPoints', value: pointsAmount}
                     ]}
+                    autoComplete={'off'}
                 >
                     <Row>
                         <Col className={'edit-task__labels'}>

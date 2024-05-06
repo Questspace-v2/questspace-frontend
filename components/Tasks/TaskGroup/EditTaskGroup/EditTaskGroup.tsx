@@ -24,7 +24,7 @@ export default function EditTaskGroup({isOpen, setIsOpen}: TaskGroupModalProps) 
         const groupName = form.getFieldValue('groupName') as string;
         const pubTime = new Date();
         setContextData({task_groups: [...contextData.task_groups,
-                {name: groupName, tasks: [], pub_time: pubTime.toLocaleString('ru')}
+                {name: groupName, tasks: [], pub_time: pubTime.toISOString()}
             ]});
         setIsOpen(false);
     };
