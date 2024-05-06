@@ -135,7 +135,7 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
             {contextHolder}
             <div className={'task__text-part'}>
                 <h4 className={'roboto-flex-header task__name'}>{name}</h4>
-                {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupName)}
+                {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupName, props)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
             {mediaLink && (

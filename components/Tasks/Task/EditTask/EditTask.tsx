@@ -1,6 +1,18 @@
 'use client';
 
-import {Button, Col, ConfigProvider, Form, Input, InputNumber, Modal, Row, Upload, UploadFile} from 'antd';
+import {
+    Button,
+    Col,
+    ConfigProvider,
+    Form,
+    FormInstance,
+    Input,
+    InputNumber,
+    Modal,
+    Row,
+    Upload,
+    UploadFile
+} from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import {getCenter, uid} from '@/lib/utils/utils';
@@ -18,7 +30,7 @@ import './EditTask.css';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
-import {ITask, ITaskGroup} from "@/app/types/quest-interfaces";
+import {ITask} from "@/app/types/quest-interfaces";
 import client from "@/app/api/client/client";
 
 const {TextArea} = Input;
@@ -28,10 +40,12 @@ interface TaskCreateModalProps {
     setIsOpen: Dispatch<SetStateAction<boolean>>,
     taskGroupName: string,
     fileList: UploadFile[],
-    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>
+    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
+    form: FormInstance<TaskForm>,
+    task?: ITask
 }
 
-interface TaskForm {
+export interface TaskForm {
     taskName: string,
     taskText: string,
     hints: string[],
@@ -39,13 +53,12 @@ interface TaskForm {
     taskPoints: number
 }
 
-export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, setFileList}: TaskCreateModalProps) {
+export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, setFileList, form, task}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
-    const [form] = Form.useForm();
     const { xs, md } = useBreakpoint();
 
-    const [pointsAmount, setPointsAmount] = useState(100);
+    const [pointsAmount, setPointsAmount] = useState(task?.reward ?? 100);
     const {data: contextData, updater: setContextData} = useTasksContext()!;
 
     const increasePointsAmount = () => {
@@ -72,22 +85,22 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
         const key = `/tasks/${uid()}`;
         // eslint-disable-next-line consistent-return
         return client.handleS3Request(key, fileType, file);
-    }
+    };
 
     const handleSaveTask = async () => {
-        const taskGroup = contextData.task_groups
+        const taskGroups = contextData.task_groups;
+        const taskGroup = taskGroups
             .find(group => group.name === taskGroupName)!;
-        const unchangedGroups = contextData.task_groups
-            .filter(group => group.name !== taskGroup?.name);
+        const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
         const imageValidation = fileList.length > 0;
         const s3Response = imageValidation && await handleS3Request();
 
-        if (!s3Response) {
+        if (!s3Response && !task?.media_link) {
             return;
         }
 
-        const fields = form.getFieldsValue() as TaskForm;
+        const fields = form.getFieldsValue();
         const {taskName, taskText, taskPoints, hints, answers} = fields;
         const pubTime = new Date();
 
@@ -98,16 +111,21 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
             correct_answers: answers,
             hints,
             reward: taskPoints,
-            media_link: s3Response.url,
+            media_link: (s3Response as Response).url ?? task?.media_link,
             verification_type: 'auto'
         };
 
-        const updatedGroup: ITaskGroup = {
-            name: taskGroup?.name,
-            tasks: [...taskGroup.tasks, newTask]
-        };
+        if (task) {
+            const index = taskGroup.tasks.indexOf(task);
+            taskGroup.tasks[index] = newTask;
+            taskGroups[taskGroupIndex] = taskGroup;
+            setContextData({task_groups: [...taskGroups]});
+            return;
+        }
 
-        setContextData({task_groups: [...unchangedGroups, updatedGroup]});
+        taskGroup.tasks.push(newTask);
+        taskGroups[taskGroupIndex] = taskGroup;
+        setContextData({task_groups: [...taskGroups]});
     }
 
     return (
@@ -251,10 +269,10 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                             onClick={increasePointsAmount}
                                         />}
                                     controls={false}
-                                    min={1}
+                                    min={task?.reward ?? 1}
                                     style={{width: '128px', textAlignLast: 'center'}}
                                     onChange={(value) => {
-                                        setPointsAmount(value ?? 100);
+                                        setPointsAmount(value ?? (task?.reward ?? 100));
                                     }}
                                 />
                             </FormItem>

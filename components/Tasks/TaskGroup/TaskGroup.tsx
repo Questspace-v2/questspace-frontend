@@ -21,7 +21,7 @@ export default function TaskGroup({mode, props, questId} : {mode: TasksMode, pro
                     {(tasks.map((task) =>
                         <div className={'task-group__task'} key={uid()}>
                             <Task props={task} mode={mode} questId={questId} taskGroupName={name}/>
-                            {getTaskExtra(mode === TasksMode.EDIT, false, name)}
+                            {getTaskExtra(mode === TasksMode.EDIT, false, name, task)}
                         </div>
                     ))}
                 </>,

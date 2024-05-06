@@ -1,15 +1,45 @@
 'use client';
 
-import {Button, ConfigProvider, UploadFile} from "antd";
+import {Button, ConfigProvider, Form, UploadFile} from "antd";
 import {blueOutlinedButton, redOutlinedButton} from "@/lib/theme/themeConfig";
 import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import {useState} from "react";
-import EditTask from "@/components/Tasks/Task/EditTask/EditTask";
+import {useEffect, useState} from "react";
+import EditTask, {TaskForm} from "@/components/Tasks/Task/EditTask/EditTask";
+import {ITask} from "@/app/types/quest-interfaces";
 
-export default function TaskEditButtons({mobile526, taskGroupName}: {mobile526: boolean, taskGroupName: string}) {
+interface TaskEditButtonsProps {
+    mobile526: boolean,
+    taskGroupName: string,
+    task: ITask
+}
+
+export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEditButtonsProps) {
     const classname = mobile526 ? 'task-extra_small' : 'task-extra_large';
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [form] = Form.useForm<TaskForm>();
+
+    useEffect(() => {
+        if (task) {
+            const {
+                name,
+                question,
+                reward,
+                correct_answers: correctAnswers,
+                hints
+            } = task;
+
+            const formProps: TaskForm = {
+                taskName: name,
+                taskText: question,
+                taskPoints: reward,
+                hints: hints as string[],
+                answers: correctAnswers
+            };
+
+            form.setFieldsValue(formProps);
+        }
+    }, [form, task]);
 
     const handleEditTask = () => {
         setIsOpenModal(true);
@@ -38,6 +68,8 @@ export default function TaskEditButtons({mobile526, taskGroupName}: {mobile526: 
                 taskGroupName={taskGroupName}
                 fileList={fileList}
                 setFileList={setFileList}
+                form={form}
+                task={task}
             />
         </div>
     );
