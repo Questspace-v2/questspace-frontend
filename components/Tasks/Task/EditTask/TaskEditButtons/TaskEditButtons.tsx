@@ -6,6 +6,7 @@ import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
 import EditTask, {TaskForm} from "@/components/Tasks/Task/EditTask/EditTask";
 import {ITask} from "@/app/types/quest-interfaces";
+import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 
 interface TaskEditButtonsProps {
     mobile526: boolean,
@@ -18,6 +19,12 @@ export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEd
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [form] = Form.useForm<TaskForm>();
+
+    const {data: contextData, updater: setContextData} = useTasksContext()!;
+    const taskGroups = contextData.task_groups;
+    const taskGroup = taskGroups
+        .find(group => group.name === taskGroupName)!;
+    const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
     useEffect(() => {
         if (task) {
@@ -45,12 +52,16 @@ export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEd
         setIsOpenModal(true);
     };
 
-    const handleDeleteTask = async () => {
-
+    const handleDeleteTask = () => {
+        taskGroup.tasks = taskGroup.tasks.filter(item => item.id !== task.id);
+        taskGroups[taskGroupIndex] = taskGroup;
+        setContextData({task_groups: taskGroups});
     };
 
     const handleCopyTask = () => {
-
+        taskGroup.tasks.push(task);
+        taskGroups[taskGroupIndex] = taskGroup;
+        setContextData({task_groups: taskGroups});
     };
 
     return (

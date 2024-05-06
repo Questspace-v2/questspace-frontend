@@ -16,7 +16,7 @@ export default function TaskGroup({mode, props, questId} : {mode: TasksMode, pro
         {
             key: '1',
             label: name,
-            children:
+            children: tasks &&
                 <>
                     {(tasks.map((task) =>
                         <div className={'task-group__task'} key={uid()}>
