@@ -83,6 +83,7 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
                     open={open}
                     placement={'bottomRight'}
                     destroyPopupOnHide
+                    trigger={['click']}
                 >
                     <Button><MenuOutlined/></Button>
                 </Dropdown>
