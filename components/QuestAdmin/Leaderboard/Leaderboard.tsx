@@ -16,7 +16,7 @@ export default function Leaderboard({teams}: {teams: IAdminLeaderboardResponse})
     return (
         <ContentWrapper className={'leaderboard__content-wrapper'}>
         <div className={'leaderboard__wrapper'}>
-            <Table dataSource={teams.results} pagination={false} bordered scroll={{ x: true}}>
+            <Table dataSource={teams.results} pagination={false} bordered scroll={{ x: true}} rowKey={'team_name'}>
                 <Column title={'Имя участника'} dataIndex={'team_name'} key={'team-name'} fixed={!xs ? 'left' : false}/>
                 <Column title={'Сумма'} dataIndex={'total_score'} key={"total-score"} fixed={!xs ? 'left' : false}/>
                 <Column title={'Баллы'} dataIndex={'task_score'} key={'task_score'}/>

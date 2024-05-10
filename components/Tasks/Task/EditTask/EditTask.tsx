@@ -31,6 +31,7 @@ import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import {ITask} from "@/app/types/quest-interfaces";
 import client from "@/app/api/client/client";
+import {ValidationStatus} from "@/lib/utils/modalTypes";
 
 const {TextArea} = Input;
 
@@ -59,6 +60,13 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
     const [pointsAmount, setPointsAmount] = useState(task?.reward ?? 100);
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [form] = Form.useForm<TaskForm>();
+
+    const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
+    const [errorMsg, setErrorMsg] = useState<string>('');
+
+    const taskNameError = 'Введите название задания';
+    const taskTextError = 'Введите текст задания';
+    const answersError = 'Добавьте хотя бы один вариант ответа';
 
     useEffect(() => {
         if (task) {
@@ -96,6 +104,16 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
         setIsOpen(false);
     };
 
+    const handleFieldChange = () => {
+        setValidationStatus('success');
+        setErrorMsg('');
+    };
+
+    const handleError = (msg: string) => {
+        setErrorMsg(msg);
+        setValidationStatus('error');
+    };
+
     const handleS3Request = async () => {
         const file = fileList[0].originFileObj as File;
         const fileType = file.type;
@@ -120,6 +138,21 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
         const fields = form.getFieldsValue();
         const {taskName, taskText, taskPoints, hints, answers} = fields;
         const pubTime = new Date();
+
+        if (!taskName) {
+            handleError(taskNameError);
+            return;
+        }
+
+        if (!taskText) {
+            handleError(taskTextError);
+            return;
+        }
+
+        if (!answers?.length || !answers.some(item => item)) {
+            handleError(answersError);
+            return;
+        }
 
         const newTask: ITask = {
             name: taskName,
@@ -182,9 +215,17 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                             <span>Название задания</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem name={'taskName'}>
-                                <Input type={'text'} placeholder={'Название задания'}/>
-                            </FormItem>
+                            <Form.Item
+                                name={'taskName'}
+                                help={errorMsg === taskNameError ? errorMsg : ''}
+                                validateStatus={errorMsg === taskNameError ? validationStatus : 'success'}
+                            >
+                                <Input
+                                    type={'text'}
+                                    placeholder={'Название задания'}
+                                    onChange={handleFieldChange}
+                                />
+                            </Form.Item>
                         </Col>
                     </Row>
                     <Row>
@@ -192,9 +233,17 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                             <span>Текст задания</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem name={'taskText'}>
-                                <TextArea placeholder={'Текст задания'} style={{resize: 'none', height: '320px'}}/>
-                            </FormItem>
+                            <Form.Item
+                                name={'taskText'}
+                                help={errorMsg === taskTextError ? errorMsg : ''}
+                                validateStatus={errorMsg === taskTextError ? validationStatus : 'success'}
+                            >
+                                <TextArea
+                                    placeholder={'Текст задания'}
+                                    style={{resize: 'none', height: '320px'}}
+                                    onChange={handleFieldChange}
+                                />
+                            </Form.Item>
                         </Col>
                     </Row>
                     <Row>
@@ -254,18 +303,29 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                             <Form.List name={'answers'}>
                                 {(fields, { add, remove }) => (
                                     <>
+                                        {errorMsg === answersError
+                                            && <p style={{color: 'red'}}>{errorMsg}</p>}
                                         {fields.map((field, index) => (
                                             <Form.Item label={`${index + 1}.`} key={field.key}>
-                                                <Form.Item key={field.key} name={field.name}>
+                                                <Form.Item
+                                                    key={field.key}
+                                                    name={field.name}
+                                                    validateStatus={index === 0 &&
+                                                        errorMsg === answersError ? validationStatus : 'success'}
+                                                >
                                                     <Input
                                                         placeholder={'Введите вариант ответа'}
                                                         suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                                        onChange={handleFieldChange}
                                                     />
                                                 </Form.Item>
                                             </Form.Item>
                                         ))}
                                         <FormItem>
-                                            <Button onClick={() => add()}>
+                                            <Button onClick={() => {
+                                                add();
+                                                handleFieldChange();
+                                            }}>
                                                 <PlusOutlined/> Добавить вариант ответа
                                             </Button>
                                         </FormItem>
