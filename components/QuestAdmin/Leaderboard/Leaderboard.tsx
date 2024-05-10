@@ -9,7 +9,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 
 export default function Leaderboard({teams}: {teams: IAdminLeaderboardResponse}) {
     const {xs} = useBreakpoint();
-    if (!teams.results.length) {
+    if (!teams.results?.length) {
         return null;
     }
 
@@ -23,7 +23,7 @@ export default function Leaderboard({teams}: {teams: IAdminLeaderboardResponse})
                 <Column title={'Штраф'} dataIndex={'penalty'} key={'penalty'} />
                 {teams.task_groups?.map((group, group_index) => (
                         <ColumnGroup title={group.name} key={group.id}>
-                            {group.tasks.map((task, task_index) =>
+                            {group.tasks?.map((task, task_index) =>
                                 <Column title={task.name} key={task.id} dataIndex={`task_${group_index}_${task_index}_score`}/>
                             )}
                         </ColumnGroup>

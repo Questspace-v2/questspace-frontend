@@ -9,7 +9,6 @@ import { uid } from '@/lib/utils/utils';
 import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra/TaskGroupExtra';
 
 import './TaskGroup.css';
-import {useState} from "react";
 
 interface TaskGroupProps {
     mode: TasksMode,
@@ -19,12 +18,9 @@ interface TaskGroupProps {
 
 export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
     const { name, tasks } = props;
-    const collapseExtra = <TaskGroupExtra edit={mode === TasksMode.EDIT} taskGroupName={name}/>;
-    const [activeKey, setActiveKey] = useState<string | string[] | undefined>(undefined);
-
-    const handleChange = (key: string | string[]) => {
-        setActiveKey(key === activeKey ? undefined : key);
-    };
+    const collapseExtra = mode === TasksMode.EDIT ?
+        <TaskGroupExtra edit={mode === TasksMode.EDIT} taskGroupName={name}/> :
+        null;
 
     const items: CollapseProps['items'] = [
         {
@@ -51,9 +47,6 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                 items={items}
                 className={'task-group__collapse'}
                 collapsible={'header'}
-                onChange={handleChange}
-                activeKey={activeKey}
-                defaultActiveKey={'1'}
             />
         </ContentWrapper>
     );

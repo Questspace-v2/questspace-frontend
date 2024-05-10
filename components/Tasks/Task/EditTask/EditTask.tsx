@@ -5,7 +5,6 @@ import {
     Col,
     ConfigProvider,
     Form,
-    FormInstance,
     Input,
     InputNumber,
     Modal,
@@ -14,7 +13,7 @@ import {
     UploadFile
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 import {getCenter, uid} from '@/lib/utils/utils';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {
@@ -41,7 +40,6 @@ interface TaskCreateModalProps {
     taskGroupName: string,
     fileList: UploadFile[],
     setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
-    form: FormInstance<TaskForm>,
     task?: ITask
 }
 
@@ -53,13 +51,36 @@ export interface TaskForm {
     taskPoints: number
 }
 
-export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, setFileList, form, task}: TaskCreateModalProps) {
+export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, setFileList, task}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs, md } = useBreakpoint();
 
     const [pointsAmount, setPointsAmount] = useState(task?.reward ?? 100);
     const {data: contextData, updater: setContextData} = useTasksContext()!;
+    const [form] = Form.useForm<TaskForm>();
+
+    useEffect(() => {
+        if (task) {
+            const {
+                name,
+                question,
+                reward,
+                correct_answers: correctAnswers,
+                hints
+            } = task;
+
+            const formProps: TaskForm = {
+                taskName: name,
+                taskText: question,
+                taskPoints: reward,
+                hints: hints as string[],
+                answers: correctAnswers
+            };
+
+            form.setFieldsValue(formProps);
+        }
+    }, [form, task]);
 
     const increasePointsAmount = () => {
         setPointsAmount((prevAmount) => prevAmount + 1);
@@ -96,10 +117,6 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
         const imageValidation = fileList.length > 0;
         const s3Response = imageValidation && await handleS3Request();
 
-        if (!s3Response && !task?.media_link) {
-            return;
-        }
-
         const fields = form.getFieldsValue();
         const {taskName, taskText, taskPoints, hints, answers} = fields;
         const pubTime = new Date();
@@ -111,9 +128,12 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
             correct_answers: answers,
             hints,
             reward: taskPoints,
-            media_link: (s3Response as Response).url ?? task?.media_link,
             verification_type: 'auto'
         };
+        
+        if (s3Response ?? task?.media_link) {
+            newTask.media_link = (s3Response as Response).url ?? task?.media_link;
+        }
 
         if (task) {
             const index = taskGroup.tasks.indexOf(task);
@@ -148,6 +168,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                         Отменить
                     </Button>
                 ]}
+                forceRender
             >
                 <Form
                     form={form}

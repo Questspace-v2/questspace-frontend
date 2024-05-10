@@ -1,11 +1,10 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Button, ConfigProvider, Dropdown, Form, MenuProps, UploadFile} from 'antd';
+import {Button, ConfigProvider, Dropdown, MenuProps, UploadFile} from 'antd';
 import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
-import {TaskForm} from '@/components/Tasks/Task/EditTask/EditTask';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
@@ -18,7 +17,6 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [isOpenNameModal, setIsOpenNameModal] = useState(false);
-    const [form] = Form.useForm<TaskForm>();
 
     const {data: contextData, updater: setContextData} = useTasksContext()!;
 
@@ -93,7 +91,6 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
                     taskGroupName={taskGroupName}
                     fileList={fileList}
                     setFileList={setFileList}
-                    form={form}
                 />
                 <DynamicEditTaskGroup
                     taskGroupName={taskGroupName}

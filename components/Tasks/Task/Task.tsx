@@ -175,7 +175,14 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
                     )}
                 </div>
             )}
-            <Form className={'task__answer-part'} layout={'inline'} form={form}>
+            <Form
+                className={'task__answer-part'}
+                layout={'inline'}
+                form={form}
+                initialValues={[
+                    {name: 'task-answer', value: teamAnswer ?? ''}
+                ]}
+            >
                 <Form.Item required
                            name={'task-answer'}
                            validateStatus={inputValidationStatus}
@@ -184,7 +191,6 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
                         placeholder={'Ответ'}
                         style={{borderRadius: 2, color: textColor}}
                         onChange={handleValueChange}
-                        defaultValue={teamAnswer ?? ''}
                         disabled={inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
                 </Form.Item>
                 <FormItem>

@@ -26,7 +26,7 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const title = taskGroupName ? 'Изменить название раздела' : 'Название раздела';
 
-    const taskGroups = contextData.task_groups;
+    const taskGroups = contextData.task_groups ?? [];
     const currentTaskGroup = taskGroups.find(item => item.name === taskGroupName)!;
     const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
 
@@ -40,7 +40,7 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
         }
 
         const pubTime = new Date();
-        setContextData({task_groups: [...contextData.task_groups,
+        setContextData({task_groups: [...taskGroups,
                 {name: groupName, tasks: [], pub_time: pubTime.toISOString()}
             ]});
         setIsOpen(false);
