@@ -47,6 +47,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                 items={items}
                 className={'task-group__collapse'}
                 collapsible={'header'}
+                defaultActiveKey={mode === TasksMode.EDIT ? '1' : undefined}
             />
         </ContentWrapper>
     );
