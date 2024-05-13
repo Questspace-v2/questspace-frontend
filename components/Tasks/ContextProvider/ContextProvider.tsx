@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState } from 'react';
-import { ITaskGroupsCreateRequest } from '@/app/types/quest-interfaces';
+import {ITaskGroup, ITaskGroupsCreateRequest} from '@/app/types/quest-interfaces';
 
 export interface IContext {
     data: ITaskGroupsCreateRequest,
@@ -10,9 +10,9 @@ export interface IContext {
 
 const TasksContext = createContext<IContext | null>(null);
 
-export default function ContextProvider({children}: {children: React.ReactNode}) {
+export default function ContextProvider({children, taskGroups}: {children: React.ReactNode, taskGroups: ITaskGroup[]}) {
     const [state, setState] = useState<ITaskGroupsCreateRequest>(
-        {task_groups: []}
+        {task_groups: taskGroups}
     );
 
     return (

@@ -1,30 +1,94 @@
 'use client';
 
-import { Button, Col, ConfigProvider, Form, Input, InputNumber, Modal, Row, Upload } from 'antd';
+import {
+    Button,
+    Col,
+    ConfigProvider,
+    Form,
+    Input,
+    InputNumber,
+    Modal,
+    Row,
+    Upload,
+    UploadFile
+} from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import React, { Dispatch, SetStateAction, useMemo, useState } from 'react';
-import { getCenter } from '@/lib/utils/utils';
+import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
+import {getCenter, uid} from '@/lib/utils/utils';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { MinusOutlined, PlusOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
+import {
+    DeleteOutlined,
+    FileImageOutlined,
+    MinusOutlined,
+    PlusOutlined,
+    ReloadOutlined,
+    UploadOutlined
+} from '@ant-design/icons';
 
 import './EditTask.css';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
+import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
+import {ITask} from "@/app/types/quest-interfaces";
+import client from "@/app/api/client/client";
+import {ValidationStatus} from "@/lib/utils/modalTypes";
 
 const {TextArea} = Input;
 
 interface TaskCreateModalProps {
     isOpen: boolean,
-    setIsOpen: Dispatch<SetStateAction<boolean>>
+    setIsOpen: Dispatch<SetStateAction<boolean>>,
+    taskGroupName: string,
+    fileList: UploadFile[],
+    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
+    task?: ITask
 }
 
-export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
+export interface TaskForm {
+    taskName: string,
+    taskText: string,
+    hints: string[],
+    answers: string[],
+    taskPoints: number
+}
+
+export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, setFileList, task}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
-    const [form] = Form.useForm();
     const { xs, md } = useBreakpoint();
 
-    const [pointsAmount, setPointsAmount] = useState(0);
+    const [pointsAmount, setPointsAmount] = useState(task?.reward ?? 100);
+    const {data: contextData, updater: setContextData} = useTasksContext()!;
+    const [form] = Form.useForm<TaskForm>();
+
+    const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
+    const [errorMsg, setErrorMsg] = useState<string>('');
+
+    const taskNameError = 'Введите название задания';
+    const taskTextError = 'Введите текст задания';
+    const answersError = 'Добавьте хотя бы один вариант ответа';
+
+    useEffect(() => {
+        if (task) {
+            const {
+                name,
+                question,
+                reward,
+                correct_answers: correctAnswers,
+                hints
+            } = task;
+
+            const formProps: TaskForm = {
+                taskName: name,
+                taskText: question,
+                taskPoints: reward,
+                hints: hints as string[],
+                answers: correctAnswers
+            };
+
+            form.setFieldsValue(formProps);
+        }
+    }, [form, task]);
 
     const increasePointsAmount = () => {
         setPointsAmount((prevAmount) => prevAmount + 1);
@@ -40,8 +104,81 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
         setIsOpen(false);
     };
 
-    const handleSaveTask = () => {
+    const handleFieldChange = () => {
+        setValidationStatus('success');
+        setErrorMsg('');
+    };
 
+    const handleError = (msg: string) => {
+        setErrorMsg(msg);
+        setValidationStatus('error');
+    };
+
+    const handleS3Request = async () => {
+        const file = fileList[0].originFileObj as File;
+        const fileType = file.type;
+        if (!fileType.startsWith('image/')) {
+            return;
+        }
+
+        const key = `/tasks/${uid()}`;
+        // eslint-disable-next-line consistent-return
+        return client.handleS3Request(key, fileType, file);
+    };
+
+    const handleSaveTask = async () => {
+        const taskGroups = contextData.task_groups;
+        const taskGroup = taskGroups
+            .find(group => group.name === taskGroupName)!;
+        const taskGroupIndex = taskGroups.indexOf(taskGroup);
+
+        const imageValidation = fileList.length > 0;
+        const s3Response = imageValidation && await handleS3Request();
+
+        const fields = form.getFieldsValue();
+        const {taskName, taskText, taskPoints, hints, answers} = fields;
+        const pubTime = new Date();
+
+        if (!taskName) {
+            handleError(taskNameError);
+            return;
+        }
+
+        if (!taskText) {
+            handleError(taskTextError);
+            return;
+        }
+
+        if (!answers?.length || !answers.some(item => item)) {
+            handleError(answersError);
+            return;
+        }
+
+        const newTask: ITask = {
+            name: taskName,
+            pub_time: pubTime.toISOString(),
+            question: taskText,
+            correct_answers: answers,
+            hints,
+            reward: taskPoints,
+            verification_type: 'auto'
+        };
+        
+        if (s3Response ?? task?.media_link) {
+            newTask.media_link = (s3Response as Response).url ?? task?.media_link;
+        }
+
+        if (task) {
+            const index = taskGroup.tasks.indexOf(task);
+            taskGroup.tasks[index] = newTask;
+            taskGroups[taskGroupIndex] = taskGroup;
+            setContextData({task_groups: [...taskGroups]});
+            return;
+        }
+
+        taskGroup.tasks.push(newTask);
+        taskGroups[taskGroupIndex] = taskGroup;
+        setContextData({task_groups: [...taskGroups]});
     }
 
     return (
@@ -64,16 +201,31 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                         Отменить
                     </Button>
                 ]}
+                forceRender
             >
-                <Form form={form}>
+                <Form
+                    form={form}
+                    fields={[
+                        {name: 'taskPoints', value: pointsAmount}
+                    ]}
+                    autoComplete={'off'}
+                >
                     <Row>
                         <Col className={'edit-task__labels'}>
                             <span>Название задания</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
-                                <Input type={'text'} placeholder={'Название задания'}/>
-                            </FormItem>
+                            <Form.Item
+                                name={'taskName'}
+                                help={errorMsg === taskNameError ? errorMsg : ''}
+                                validateStatus={errorMsg === taskNameError ? validationStatus : 'success'}
+                            >
+                                <Input
+                                    type={'text'}
+                                    placeholder={'Название задания'}
+                                    onChange={handleFieldChange}
+                                />
+                            </Form.Item>
                         </Col>
                     </Row>
                     <Row>
@@ -81,9 +233,17 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Текст задания</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
-                                <TextArea placeholder={'Текст задания'} style={{resize: 'none', height: '320px'}}/>
-                            </FormItem>
+                            <Form.Item
+                                name={'taskText'}
+                                help={errorMsg === taskTextError ? errorMsg : ''}
+                                validateStatus={errorMsg === taskTextError ? validationStatus : 'success'}
+                            >
+                                <TextArea
+                                    placeholder={'Текст задания'}
+                                    style={{resize: 'none', height: '320px'}}
+                                    onChange={handleFieldChange}
+                                />
+                            </Form.Item>
                         </Col>
                     </Row>
                     <Row>
@@ -92,14 +252,18 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                         </Col>
                         <Col flex={'auto'}>
                             <FormItem>
-                                <Upload maxCount={1} showUploadList={false}>
+                                <Upload
+                                    maxCount={1}
+                                    showUploadList={false}
+                                    fileList={fileList} onChange={({ fileList: fllst }) => setFileList(fllst)}>
                                     {/* eslint-disable-next-line no-constant-condition */}
-                                    {0 > 1 ? (
+                                    {fileList.length > 0 ? (
                                         <Button><ReloadOutlined />Заменить</Button>
                                     ) : (
                                         <Button><UploadOutlined />Загрузить</Button>
                                     )}
                                 </Upload>
+                                {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
                             </FormItem>
                         </Col>
                     </Row>
@@ -108,11 +272,27 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Подсказки (max 3)<span style={{ color: '#00000073' }}><br/>поддерживает Markdown</span></span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
-                                <Button>
-                                    <PlusOutlined/> Добавить подсказку
-                                </Button>
-                            </FormItem>
+                            <Form.List name={'hints'}>
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map((field, index) => (
+                                            <Form.Item label={`${index + 1}.`} key={field.key}>
+                                                <Form.Item key={field.key} name={field.name}>
+                                                    <Input
+                                                        placeholder={'Введите подсказку'}
+                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                                    />
+                                                </Form.Item>
+                                            </Form.Item>
+                                        ))}
+                                        <FormItem>
+                                            <Button onClick={() => add()}>
+                                                <PlusOutlined/> Добавить подсказку
+                                            </Button>
+                                        </FormItem>
+                                    </>
+                                )}
+                            </Form.List>
                         </Col>
                     </Row>
                     <Row>
@@ -120,11 +300,38 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Варианты ответа</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
-                                <Button>
-                                    <PlusOutlined/> Добавить вариант ответа
-                                </Button>
-                            </FormItem>
+                            <Form.List name={'answers'}>
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {errorMsg === answersError
+                                            && <p style={{color: 'red'}}>{errorMsg}</p>}
+                                        {fields.map((field, index) => (
+                                            <Form.Item label={`${index + 1}.`} key={field.key}>
+                                                <Form.Item
+                                                    key={field.key}
+                                                    name={field.name}
+                                                    validateStatus={index === 0 &&
+                                                        errorMsg === answersError ? validationStatus : 'success'}
+                                                >
+                                                    <Input
+                                                        placeholder={'Введите вариант ответа'}
+                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                                        onChange={handleFieldChange}
+                                                    />
+                                                </Form.Item>
+                                            </Form.Item>
+                                        ))}
+                                        <FormItem>
+                                            <Button onClick={() => {
+                                                add();
+                                                handleFieldChange();
+                                            }}>
+                                                <PlusOutlined/> Добавить вариант ответа
+                                            </Button>
+                                        </FormItem>
+                                    </>
+                                )}
+                            </Form.List>
                         </Col>
                     </Row>
                     <Row>
@@ -132,7 +339,7 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                             <span>Баллы за задание</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
+                            <FormItem name={'taskPoints'}>
                                 <InputNumber
                                     addonBefore={
                                         <MinusOutlined
@@ -143,8 +350,11 @@ export default function EditTask({isOpen, setIsOpen}: TaskCreateModalProps) {
                                             onClick={increasePointsAmount}
                                         />}
                                     controls={false}
-                                    min={1}
+                                    min={task?.reward ?? 1}
                                     style={{width: '128px', textAlignLast: 'center'}}
+                                    onChange={(value) => {
+                                        setPointsAmount(value ?? (task?.reward ?? 100));
+                                    }}
                                 />
                             </FormItem>
                         </Col>

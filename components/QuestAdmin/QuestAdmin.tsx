@@ -26,16 +26,15 @@ const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/
 
 export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminResponse}) {
     const router = useRouter();
+    const {data: contextData} = useTasksContext()!;
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
     const [leaderboardTabContent, setLeaderboardTabContent] = useState<IAdminLeaderboardResponse>({results: []});
     const aboutTabContent = <EditQuest questData={questData}/>;
-    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={questData.task_groups} questId={questData.quest.id}/>;
+    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData.task_groups} questId={questData.quest.id}/>;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
     const [isOpenModal, setIsOpenModal] = useState(false);
-
-    const {data: contextData} = useTasksContext()!;
 
     const tabs: TabsProps['items']  = [
         {

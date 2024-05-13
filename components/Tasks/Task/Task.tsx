@@ -30,7 +30,14 @@ const enum InputStates {
     ACCEPTED = 'accepted'
 }
 
-export default function Task({mode, props, questId}: {mode: TasksMode, props: ITask, questId: string}) {
+interface TaskProps {
+    mode: TasksMode,
+    props: ITask,
+    questId: string,
+    taskGroupName: string
+}
+
+export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
     const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
@@ -128,7 +135,7 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
             {contextHolder}
             <div className={'task__text-part'}>
                 <h4 className={'roboto-flex-header task__name'}>{name}</h4>
-                {getTaskExtra(mode === TasksMode.EDIT, true)}
+                {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupName, props)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
             {mediaLink && (
@@ -168,7 +175,14 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                     )}
                 </div>
             )}
-            <Form className={'task__answer-part'} layout={'inline'} form={form}>
+            <Form
+                className={'task__answer-part'}
+                layout={'inline'}
+                form={form}
+                initialValues={[
+                    {name: 'task-answer', value: teamAnswer ?? ''}
+                ]}
+            >
                 <Form.Item required
                            name={'task-answer'}
                            validateStatus={inputValidationStatus}
@@ -177,7 +191,6 @@ export default function Task({mode, props, questId}: {mode: TasksMode, props: IT
                         placeholder={'Ответ'}
                         style={{borderRadius: 2, color: textColor}}
                         onChange={handleValueChange}
-                        defaultValue={teamAnswer ?? ''}
                         disabled={inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
                 </Form.Item>
                 <FormItem>

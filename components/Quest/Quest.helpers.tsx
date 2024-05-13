@@ -4,9 +4,9 @@ import { ITeam, IUser } from '@/app/types/user-interfaces';
 
 import '@/components/QuestTabs/QuestCard/QuestCard.css';
 import React, { Dispatch, SetStateAction } from 'react';
-import { TeamModal, TeamModalType } from '@/lib/utils/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {TeamModal, TeamModalType} from '@/lib/utils/modalTypes';
 
 export interface QuestHeaderProps {
     access: string,
