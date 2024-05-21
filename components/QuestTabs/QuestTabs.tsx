@@ -22,10 +22,13 @@ import { isAllowedUser } from '@/lib/utils/utils';
 export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQuests: IQuest[], nextPageId: string}) {
     const { xs} = useBreakpoint();
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all');
-    const [tabContent, setTabContent] = useState<IQuest[]>(fetchedAllQuests);
     const [page, setPage] = useState(nextPageId);
     const [canRequest, setCanRequest] = useState(true);
     const {data: session} = useSession();
+
+    const initialTabsMap = new Map<SelectTab, IQuest[]>();
+    initialTabsMap.set('all', fetchedAllQuests);
+    const [tabsMap, setTabsMap] = useState(initialTabsMap);
 
     const { ref, inView } = useInView();
 
@@ -47,17 +50,23 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
         {
             key: 'all',
             label: 'Все квесты',
-            children: selectedTab === 'all' ? <><QuestCardsList quests={tabContent} /><div ref={ref}/></> : undefined,
+            children: selectedTab === 'all' && tabsMap.has('all') ?
+                <><QuestCardsList quests={tabsMap.get('all')!} /><div ref={ref}/></> :
+                undefined,
         },
         {
             key: 'registered',
             label: 'Мои квесты',
-            children: selectedTab === 'registered' ? <><QuestCardsList quests={tabContent} /><div ref={ref} /></> : undefined,
+            children: selectedTab === 'registered' && tabsMap.has('registered') ?
+                <><QuestCardsList quests={tabsMap.get('registered')!} /><div ref={ref} /></> :
+                undefined,
         },
         {
             key: 'owned',
             label: 'Созданные квесты',
-            children: selectedTab === 'owned' ? <><QuestCardsList quests={tabContent} /><div ref={ref} /></> : undefined,
+            children: selectedTab === 'owned' && tabsMap.has('owned') ?
+                <><QuestCardsList quests={tabsMap.get('owned')!} /><div ref={ref} /></> :
+                undefined,
         },
     ];
 
@@ -72,7 +81,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
         const newQuests = data?.quests ?? [];
         const nextPage = data?.next_page_id ?? '';
         setCanRequest(!!nextPage);
-        setTabContent((prevQuests: IQuest[]) => [...prevQuests, ...newQuests]);
+        setTabsMap((prevMap) => prevMap.set(selectedTab, [...prevMap.get(selectedTab)!, ...newQuests]));
         setPage(nextPage);
     }
 
@@ -88,13 +97,17 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
         if (!isSelectTab(value) || value === selectedTab) {
             return;
         }
+        if (tabsMap.has(value)) {
+            setSelectedTab(value);
+            return;
+        }
         setCanRequest(true);
         const data = await getBackendQuests(value as SelectTab);
         const content = data?.quests ?? [];
         const nextPage = data?.next_page_id ?? '';
         setCanRequest(!!nextPage);
         setSelectedTab(value);
-        setTabContent(content);
+        setTabsMap((prevMap) => prevMap.set(value, [...content]));
         setPage(nextPage);
     }
 
@@ -129,7 +142,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
                         {isAllowedUser(session ? session.user.id : '') && createQuestButton}
                     </div>
                     <div className={'quest-tabpane'}>
-                        <QuestCardsList quests={tabContent} />
+                        <QuestCardsList quests={tabsMap.get(selectedTab)!} />
                         <div ref={ref}/>
                     </div>
                 </section>
