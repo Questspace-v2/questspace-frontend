@@ -3,15 +3,13 @@ import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { manrope, robotoFlex } from '@/lib/fonts';
 import { Metadata } from 'next';
 
-import './global.css';
+import '../(root)/global.css';
 import { getServerSession } from 'next-auth';
 import NextAuthProvider from '@/components/NextAuthProvider/NextAuthProvider';
 import { ConfigProvider } from 'antd';
 import theme from '@/lib/theme/themeConfig';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
-import Header from '@/components/Header/Header';
-import Body from '@/components/Body/Body';
-import dynamic from 'next/dynamic';
+import Background from '@/components/Background/Background';
 
 export const metadata: Metadata = {
     title: 'Квестспейс',
@@ -19,13 +17,8 @@ export const metadata: Metadata = {
     icons: [{ rel: "icon", url: `/favicon.ico` }]
 };
 
-const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
-    ssr: false,
-})
-
 export default async function RootLayout({ children }: React.PropsWithChildren) {
     const session = await getServerSession(authOptions);
-
 
     return (
         <html lang="ru">
@@ -34,11 +27,8 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
                     <AntdRegistry>
                         <ConfigProvider theme={theme}>
                             <div className={'App'}>
-                                <Header isAuthorized={Boolean(session?.user)}/>
-                                <Body>
-                                    {children}
-                                </Body>
-                                <DynamicFooter />
+                                <Background type={'page'} />
+                                {children}
                             </div>
                         </ConfigProvider>
                     </AntdRegistry>
