@@ -1,4 +1,5 @@
 import { ALLOWED_USERS_ID } from '@/app/api/client/constants';
+import { usePathname } from 'next/navigation';
 
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
@@ -11,3 +12,10 @@ export const getCenter = (clientWidth: number, clientHeight: number) => {
 export const parseToMarkdown = (str?: string): string => str?.replaceAll('\\n', '\n') ?? '';
 
 export const isAllowedUser = (userId: string) : boolean => ALLOWED_USERS_ID.includes(userId);
+
+export const getRedirectParams = () => {
+    const location = usePathname();
+    const splitParams = location.split('/').slice(1);
+
+    return new URLSearchParams({route: splitParams[0], id: splitParams[1]});
+}
