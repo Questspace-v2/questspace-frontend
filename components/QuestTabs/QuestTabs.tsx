@@ -45,28 +45,30 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
             }
         },
     };
+    
+    const getTabsChildren = (tabName: string) =>
+        selectedTab === tabName && tabsMap.has(tabName) ?
+            <>
+                <QuestCardsList quests={tabsMap.get(tabName)} />
+                <div ref={ref}/>
+            </> :
+            undefined;
 
     const items: TabsProps['items'] = [
         {
             key: 'all',
             label: 'Все квесты',
-            children: selectedTab === 'all' && tabsMap.has('all') ?
-                <><QuestCardsList quests={tabsMap.get('all')!} /><div ref={ref}/></> :
-                undefined,
+            children: getTabsChildren('all'),
         },
         {
             key: 'registered',
             label: 'Мои квесты',
-            children: selectedTab === 'registered' && tabsMap.has('registered') ?
-                <><QuestCardsList quests={tabsMap.get('registered')!} /><div ref={ref} /></> :
-                undefined,
+            children: getTabsChildren('registered'),
         },
         {
             key: 'owned',
             label: 'Созданные квесты',
-            children: selectedTab === 'owned' && tabsMap.has('owned') ?
-                <><QuestCardsList quests={tabsMap.get('owned')!} /><div ref={ref} /></> :
-                undefined,
+            children: getTabsChildren('owned'),
         },
     ];
 
@@ -142,7 +144,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
                         {isAllowedUser(session ? session.user.id : '') && createQuestButton}
                     </div>
                     <div className={'quest-tabpane'}>
-                        <QuestCardsList quests={tabsMap.get(selectedTab)!} />
+                        <QuestCardsList quests={tabsMap.get(selectedTab)} />
                         <div ref={ref}/>
                     </div>
                 </section>

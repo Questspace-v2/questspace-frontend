@@ -5,9 +5,9 @@ import { customizedEmpty, wrapInCard } from '@/components/QuestTabs/QuestTabs.he
 import { isAllowedUser } from '@/lib/utils/utils';
 import { useSession } from 'next-auth/react';
 
-export default function QuestCardsList({quests}: {quests: IQuest[]}) {
+export default function QuestCardsList({quests}: {quests?: IQuest[]}) {
     const {data} = useSession();
-    if (quests.length === 0) {
+    if (!quests || quests.length === 0) {
         return customizedEmpty(isAllowedUser(data ? data.user.id : ''));
     }
     return (
