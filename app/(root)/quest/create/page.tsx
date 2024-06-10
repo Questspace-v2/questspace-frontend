@@ -1,9 +1,8 @@
 import React from 'react';
-import { notFound, redirect } from 'next/navigation';
+import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth';
 import dynamic from 'next/dynamic';
 import { Spin } from 'antd';
-import { isAllowedUser } from '@/lib/utils/utils';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 
 const DynamicCreateQuest = dynamic(() => import('@/components/Quest/EditQuest/EditQuest'), {
@@ -16,10 +15,6 @@ export default async function CreateQuestPage() {
 
     if (!session || !session.user) {
         redirect('/auth');
-    }
-
-    if (!isAllowedUser(session.user.id)) {
-        notFound();
     }
 
     return (

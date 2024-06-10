@@ -16,15 +16,12 @@ import './QuestTabs.css';
 import { IQuest } from '@/app/types/quest-interfaces';
 import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList';
 import { useInView } from 'react-intersection-observer';
-import { useSession } from 'next-auth/react';
-import { isAllowedUser } from '@/lib/utils/utils';
 
 export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQuests: IQuest[], nextPageId: string}) {
     const { xs} = useBreakpoint();
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all');
     const [page, setPage] = useState(nextPageId);
     const [canRequest, setCanRequest] = useState(true);
-    const {data: session} = useSession();
 
     const initialTabsMap = new Map<SelectTab, IQuest[]>();
     initialTabsMap.set('all', fetchedAllQuests);
@@ -45,7 +42,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
             }
         },
     };
-    
+
     const getTabsChildren = (tabName: string) =>
         selectedTab === tabName && tabsMap.has(tabName) ?
             <>
@@ -141,7 +138,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
                                 onSelect={handleSelectTab}
                             />
                         </ConfigProvider>
-                        {isAllowedUser(session ? session.user.id : '') && createQuestButton}
+                        {createQuestButton}
                     </div>
                     <div className={'quest-tabpane'}>
                         <QuestCardsList quests={tabsMap.get(selectedTab)} />
@@ -156,7 +153,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
                 <ConfigProvider theme={themeConfig}>
                 <Tabs
                     className={'quest-tabs'}
-                    tabBarExtraContent={isAllowedUser(session ? session.user.id : '') && createQuestButton}
+                    tabBarExtraContent={createQuestButton}
                     items={items}
                     activeKey={selectedTab}
                     style={{
