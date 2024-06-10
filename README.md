@@ -1,6 +1,6 @@
 # questspace-frontend
 
-<img width="96" height="96" src="https://gist.github.com/assets/22644149/03287c6d-ca75-42f3-98d1-7052a81050c8" align="right" alt="">
+<img width="96" height="96" src="https://github.com/Questspace-v2/questspace-frontend/assets/62214913/39ca0585-a63d-48c4-964b-e2d7279298ab" align="right" alt="">
 
 Движок для создания и проведения квестов
 
@@ -20,12 +20,12 @@
 
 | Страница квеста | Каталог квестов |
 |:---------------:|:---------------:|
-| <img src="https://gist.github.com/assets/22644149/8e085a93-46b1-468b-a287-abdb0bdacf1f" width="150"> | <img src="https://gist.github.com/assets/22644149/2a2b4f43-625e-4a5f-b2a9-e911f93e7ce6" width="150"> |
+| <img src="https://github.com/Questspace-v2/questspace-frontend/assets/62214913/4fc22daa-ea0c-4cbf-8889-5a9babe48fe7" width="150"> | <img src="https://github.com/Questspace-v2/questspace-frontend/assets/62214913/22764b57-dea1-42b1-8913-0376b6ffcc4d" width="150"> |
 
 
 | Редактирование задачи | Редактирование квеста | Лидерборд |
 |:---------------------:|:---------------------:|:---------:|
-| <img src="https://gist.github.com/assets/22644149/94172f51-796e-4023-815b-cc98bf81c924" width="150"> | <img src="https://gist.github.com/assets/22644149/b1cc3f8c-7df2-4378-8f93-ebd29fbb828e" width="150"> | <img src="https://gist.github.com/assets/22644149/6b98821a-3581-44ac-a46e-bff08da7e110" width="150"> |
+| <img src="https://github.com/Questspace-v2/questspace-frontend/assets/62214913/6be80573-80ed-4654-8d09-49fe10bd649c" width="150"> | <img src="https://github.com/Questspace-v2/questspace-frontend/assets/62214913/4a7eaa9b-f3ec-4425-a48f-3f6a27aa84fd" width="150"> | <img src="https://github.com/Questspace-v2/questspace-frontend/assets/62214913/675dad4c-43be-479c-91ae-17728de01cd0" width="150"> |
 
 
 
