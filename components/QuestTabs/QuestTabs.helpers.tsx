@@ -26,24 +26,21 @@ export const createQuestButton = (
     </ConfigProvider>
 );
 
-export const customizedEmpty = (isAllowedUser: boolean) => (
+export const customizedEmpty = () => (
     <Empty
         image={<SmileOutlined style={{ fontSize: 48, opacity: 0.5 }} />}
         description={
             <span>
                 Квесты не найдены
-                {isAllowedUser && (
-                    <>
-                        <br />
-                        Попробуйте{' '}
-                        <Link
-                            className={'create-quest-button'}
-                            href={'/quest/create'}
-                            style={{ color: '#1890FF' }}
-                        >
-                            создать квест
-                        </Link>
-                    </>)}
+                <br />
+                Попробуйте{' '}
+                <Link
+                    className={'create-quest-button'}
+                    href={'/quest/create'}
+                    style={{ color: '#1890FF' }}
+                >
+                    создать квест
+                </Link>
             </span>
         }
         style={{
