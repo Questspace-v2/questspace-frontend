@@ -41,7 +41,13 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
     const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
-    const objectHints = hints as {taken: boolean, text?: string}[];
+
+    const transformHints = () => hints.map(hint => ({
+        taken: false,
+        text: hint as string
+    }));
+    const objectHints = hints.length && typeof hints[0] === 'string' ? transformHints() : hints as {taken: boolean, text?: string}[];
+
     const editMode = mode === TasksMode.EDIT;
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
     const [form] = Form.useForm();
@@ -69,6 +75,12 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
     };
 
     const handleTakeHint = async (index: number) => {
+        if (editMode) {
+            setOpenConfirm(false);
+            setOpenConfirmIndex(null);
+            return;
+        }
+
         const data: IHintRequest = {
             index,
             task_id: taskId!

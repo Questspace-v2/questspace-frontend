@@ -33,15 +33,21 @@ export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEd
     };
 
     const handleDeleteTask = () => {
-        taskGroup.tasks = taskGroup.tasks.filter(item => item.id !== task.id);
+        taskGroup.tasks = taskGroup.tasks.filter(item => item.pub_time !== task.pub_time);
         taskGroups[taskGroupIndex] = taskGroup;
-        setContextData({task_groups: taskGroups});
+        setContextData(prevState => ({
+            task_groups: prevState.task_groups
+                .map((item, index) => index === taskGroupIndex ? taskGroup : item)
+        }));
     };
 
     const handleCopyTask = () => {
         taskGroup.tasks.push(task);
         taskGroups[taskGroupIndex] = taskGroup;
-        setContextData({task_groups: taskGroups});
+        setContextData(prevState => ({
+            ...prevState,
+            task_groups: taskGroups
+        }));
     };
 
     return (
