@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
             <link rel="apple-touch-icon" sizes="180x180" href="../apple-icon.png" />
             <link rel="icon" type="image/png" sizes="32x32" href="../icon2.png" />
             <link rel="icon" type="image/png" sizes="16x16" href="../icon1.png" />
-            <link rel="mask-icon" href="../icon-safari.svg" color="#5bbad5" />
+            <link rel="mask-icon" href="../icon5.svg" color="#5bbad5" />
             <meta name="msapplication-TileColor" content="#428df4" />
             <meta name="theme-color" content="#ffffff" />
         </head>
