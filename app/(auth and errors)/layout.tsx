@@ -27,7 +27,6 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
     return (
         <html lang="ru">
         <head>
-            <link rel="icon" href="../favicon.ico" sizes="any" />
             <link rel="apple-touch-icon" sizes="180x180" href="../apple-icon.png" />
             <link rel="icon" type="image/png" sizes="32x32" href="../icon2.png" />
             <link rel="icon" type="image/png" sizes="16x16" href="../icon1.png" />
