@@ -15,7 +15,12 @@ import dynamic from 'next/dynamic';
 
 export const metadata: Metadata = {
     title: 'Квестспейс',
-    description: 'Разработано и спроектировано МатМехом'
+    description: 'Разработано и спроектировано МатМехом',
+    other: {
+        "msapplication-TileColor": "#428df4",
+        "msapplication-TileImage": "../mstile-150x150.png",
+        "msapplication-config": "../browserconfig.xml",
+    },
 };
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {

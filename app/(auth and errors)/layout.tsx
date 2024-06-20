@@ -14,6 +14,11 @@ import Background from '@/components/Background/Background';
 export const metadata: Metadata = {
     title: 'Квестспейс',
     description: 'Разработано и спроектировано МатМехом',
+    other: {
+        "msapplication-TileColor": "#428df4",
+        "msapplication-TileImage": "../mstile-150x150.png",
+        "msapplication-config": "../browserconfig.xml",
+    },
 };
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
