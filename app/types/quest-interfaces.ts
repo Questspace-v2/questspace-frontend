@@ -122,11 +122,6 @@ export interface IHintRequest {
     task_id: string
 }
 
-export interface IHintResponse {
-    index: number,
-    text: string
-}
-
 export interface IAdminLeaderboardResponse {
     results: IAdminLeaderboardResult[],
     task_groups?: IAdminTaskGroup[] & {order_idx: number}

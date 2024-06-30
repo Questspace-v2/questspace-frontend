@@ -5,7 +5,7 @@ import {ITaskGroup, ITaskGroupsCreateRequest} from '@/app/types/quest-interfaces
 
 export interface IContext {
     data: ITaskGroupsCreateRequest,
-    updater: (value: ITaskGroupsCreateRequest) => void
+    updater: React.Dispatch<React.SetStateAction<ITaskGroupsCreateRequest>>
 }
 
 const TasksContext = createContext<IContext | null>(null);
