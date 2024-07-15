@@ -158,8 +158,8 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
             name: taskName,
             pub_time: pubTime.toISOString(),
             question: taskText,
-            correct_answers: answers,
-            hints,
+            correct_answers: answers.filter(answer => answer),
+            hints: hints && hints.some(item => item) ? hints.filter(hint => hint) : [],
             reward: taskPoints,
             verification_type: 'auto'
         };
@@ -172,13 +172,19 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
             const index = taskGroup.tasks.indexOf(task);
             taskGroup.tasks[index] = newTask;
             taskGroups[taskGroupIndex] = taskGroup;
-            setContextData({task_groups: [...taskGroups]});
+            setContextData((prevState) => ({
+                ...prevState,
+                task_groups: taskGroups
+            }));
             return;
         }
 
         taskGroup.tasks.push(newTask);
         taskGroups[taskGroupIndex] = taskGroup;
-        setContextData({task_groups: [...taskGroups]});
+        setContextData((prevState) => ({
+            ...prevState,
+            task_groups: taskGroups
+        }));
     }
 
     return (
@@ -276,7 +282,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                 {(fields, { add, remove }) => (
                                     <>
                                         {fields.map((field, index) => (
-                                            <Form.Item label={`${index + 1}.`} key={field.key}>
+                                            <Form.Item label={`${index + 1}`} key={field.key}>
                                                 <Form.Item key={field.key} name={field.name}>
                                                     <Input
                                                         placeholder={'Введите подсказку'}
@@ -286,7 +292,10 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                             </Form.Item>
                                         ))}
                                         <FormItem>
-                                            <Button onClick={() => add()}>
+                                            <Button
+                                                onClick={() => add()}
+                                                disabled={fields.length >= 3}
+                                            >
                                                 <PlusOutlined/> Добавить подсказку
                                             </Button>
                                         </FormItem>
@@ -306,7 +315,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                         {errorMsg === answersError
                                             && <p style={{color: 'red'}}>{errorMsg}</p>}
                                         {fields.map((field, index) => (
-                                            <Form.Item label={`${index + 1}.`} key={field.key}>
+                                            <Form.Item label={`${index + 1}`} key={field.key}>
                                                 <Form.Item
                                                     key={field.key}
                                                     name={field.name}
@@ -315,7 +324,10 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                                                 >
                                                     <Input
                                                         placeholder={'Введите вариант ответа'}
-                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                                        suffix={<DeleteOutlined onClick={() => {
+                                                            remove(field.name);
+                                                            handleFieldChange();
+                                                        }}/>}
                                                         onChange={handleFieldChange}
                                                     />
                                                 </Form.Item>

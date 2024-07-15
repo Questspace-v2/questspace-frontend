@@ -29,6 +29,7 @@ import { useRouter } from 'next/navigation';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 
 import './QuestEditor.css';
+import {ValidationStatus} from "@/lib/utils/modalTypes";
 
 dayjs.locale('ru')
 
@@ -97,7 +98,18 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const accessToken = sessionData?.accessToken;
     const router = useRouter();
     const [errorMsg, setErrorMsg] = useState('');
-    const [changedFields, setChangedFields] = useState<string[]>([])
+    const [changedFields, setChangedFields] = useState<string[]>([]);
+
+    const defaultFieldsValidationStatus: Record<string, ValidationStatus> = {
+        name: 'success',
+        description: 'success',
+        image: 'success',
+        registrationDeadline: 'success',
+        startTime: 'success',
+        finishTime: 'success',
+        access: 'success'
+    };
+    const [fieldsValidationStatus, setFieldsValidationStatus] = useState(defaultFieldsValidationStatus);
 
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
@@ -147,7 +159,10 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         const imageValidation = fileList.length > 0;
         const s3Response = imageValidation && await handleS3Response();
         if (!s3Response && !previousImage) {
-            handleError('С картинкой что-то не так');
+            setFieldsValidationStatus((prevState) => ({
+                ...prevState,
+                image: 'error'
+            }));
             return;
         }
         // eslint-disable-next-line consistent-return
@@ -155,6 +170,15 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
             .then(values => {
                 if (!values.name || !values.description || !values.registrationDeadline
                     || !values.startTime || !values.finishTime || !values.access) {
+                    setFieldsValidationStatus((prevState) => ({
+                        ...prevState,
+                        name: !values.name ? 'error' : prevState.name,
+                        description: !values.description ? 'error' : prevState.description,
+                        registrationDeadline: !values.registrationDeadline ? 'error' : prevState.registrationDeadline,
+                        startTime: !values.startTime ? 'error' : prevState.startTime,
+                        finishTime: !values.finishTime ? 'error' : prevState.finishTime,
+                        access: !values.access ? 'error' : prevState.access
+                    }));
                     handleError();
                     return null;
                 }
@@ -242,8 +266,18 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         label={'Название квеста'}
                         colon={false}
                         required
+                        validateStatus={fieldsValidationStatus.name}
                     >
-                        <Input type={'text'} onChange={() => handleValueChange('name')}/>
+                        <Input
+                            type={'text'}
+                            onChange={() => {
+                                handleValueChange('name');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    name: 'success'
+                                }));
+                            }}
+                        />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         name={'description'}
@@ -253,16 +287,36 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             </p>
                         }
                         colon={false}
+                        validateStatus={fieldsValidationStatus.description}
                     >
-                        <TextArea style={{resize: 'none', height: '320px'}} onChange={() => handleValueChange('description')}/>
+                        <TextArea
+                            style={{resize: 'none', height: '320px'}}
+                            onChange={() => {
+                                handleValueChange('description');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    description: 'success'
+                                }));
+                            }}
+                        />
                     </Form.Item>
+                    {fieldsValidationStatus.image === 'error' ?? <p style={{color: 'red'}}>Добавьте обложку</p>}
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__image-form-item'}
                         label={'Обложка'}
                         colon={false}
+                        help={fieldsValidationStatus.image === 'error' ? <p style={{color: 'red'}}>Добавьте обложку</p> : ''}
+                        validateStatus={fieldsValidationStatus.image}
                     >
                         <Upload maxCount={1} showUploadList={false}
-                                fileList={fileList} onChange={({ fileList: fllst }) => setFileList(fllst)}>
+                                fileList={fileList} onChange={({ fileList: fllst }) => {
+                                    setFileList(fllst);
+                                    setFieldsValidationStatus((prevState) => ({
+                                        ...prevState,
+                                        image: 'success'
+                                    }));
+                                    handleError('');
+                                }}>
                             {fileList.length > 0 ? (
                                 <Button><ReloadOutlined />Заменить</Button>
                             ) : (
@@ -278,6 +332,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         label={'Дедлайн регистрации'}
                         colon={false}
                         extra={<Checkbox checked={registrationDeadlineChecked} onClick={() => setRegistrationDeadlineChecked((prev) => !prev)} style={{padding: '5px 0'}}>Совпадает с началом квеста</Checkbox>}
+                        validateStatus={fieldsValidationStatus.registrationDeadline}
                     >
                         <DatePicker
                             disabledDate={
@@ -290,7 +345,13 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={() => handleValueChange('registrationDeadline')}
+                            onChange={() => {
+                                handleValueChange('registrationDeadline');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    registrationDeadline: 'success'
+                                }));
+                            }}
                         />
 
                     </Form.Item>
@@ -299,13 +360,20 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         className={'quest-editor__small-field'}
                         label={'Старт'}
                         colon={false}
+                        validateStatus={fieldsValidationStatus.startTime}
                     >
                         <DatePicker
                             disabledDate={(value) => value.isBefore(dayjs(), 'day') || value > form.getFieldValue('finishTime')}
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={() => handleValueChange('startTime')}
+                            onChange={() => {
+                                handleValueChange('startTime');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    startTime: 'success'
+                                }));
+                            }}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -313,13 +381,20 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         className={'quest-editor__small-field'}
                         label={'Завершение'}
                         colon={false}
+                        validateStatus={fieldsValidationStatus.finishTime}
                     >
                         <DatePicker
                             disabledDate={(value) => value.isBefore(dayjs(), 'day') || value < form.getFieldValue('startTime')}
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={() => handleValueChange('finishTime')}
+                            onChange={() => {
+                                handleValueChange('finishTime');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    finishTime: 'success'
+                                }));
+                            }}
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
@@ -354,8 +429,17 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         label={'Доступ к квесту'}
                         colon={false}
                         required
+                        help={fieldsValidationStatus.access === 'error' ?
+                            <p style={{color: 'red'}}>Выберите тип доступа</p> : ''}
                     >
-                        <Radio.Group onChange={() => handleValueChange('access')}>
+                    <Radio.Group
+                        onChange={() => {
+                            handleValueChange('access');
+                            setFieldsValidationStatus((prevState) => ({
+                                ...prevState,
+                                access: 'success'
+                            }));
+                        }}>
                             <Radio value={'public'}>
                                 Публичный
                                 <p>Квест увидят все пользователи Квестспейса</p>
