@@ -5,7 +5,6 @@ import Task from '@/components/Tasks/Task/Task';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { ITaskGroup } from '@/app/types/quest-interfaces';
-import { uid } from '@/lib/utils/utils';
 import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra/TaskGroupExtra';
 
 import './TaskGroup.css';
@@ -29,8 +28,8 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
             children: tasks &&
                 <>
                     {(tasks.map((task) =>
-                        <div className={'task-group__task'} key={uid()}>
-                            <Task props={task} mode={mode} questId={questId} taskGroupName={name}/>
+                        <div className={'task-group__task'} key={task.pub_time + task.id}>
+                            <Task props={task} mode={mode} questId={questId} taskGroupName={name} key={task.pub_time + task.id}/>
                             {getTaskExtra(mode === TasksMode.EDIT, false, name, task)}
                         </div>
                     ))}

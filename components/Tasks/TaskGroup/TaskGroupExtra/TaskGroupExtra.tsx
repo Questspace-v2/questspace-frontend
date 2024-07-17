@@ -18,7 +18,7 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [isOpenNameModal, setIsOpenNameModal] = useState(false);
 
-    const {data: contextData, updater: setContextData} = useTasksContext()!;
+    const { updater: setContextData} = useTasksContext()!;
 
     const handleMenuClick: MenuProps['onClick'] = () => {
         setOpen(false);
@@ -37,7 +37,10 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
     };
 
     const handleDeleteGroup = () => {
-        setContextData({task_groups: contextData.task_groups.filter(group => group.name !== taskGroupName)});
+        setContextData((prevState) => ({
+            ...prevState,
+            task_groups: prevState.task_groups.filter(group => group.name !== taskGroupName)
+        }));
     };
 
     const items: MenuProps['items'] = [
@@ -60,46 +63,46 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
         },
     ];
 
-    if (edit) {
-        return (
-            <div className={'task-group__collapse-buttons'}>
-                <ConfigProvider theme={blueOutlinedButton}>
-                    <Button onClick={handleChangeName}><EditOutlined/>Изменить название</Button>
-                    <Button onClick={handleAddTask}><PlusOutlined/>Добавить задачу</Button>
-                </ConfigProvider>
-                <ConfigProvider theme={redOutlinedButton}>
-                    <Button onClick={handleDeleteGroup}><DeleteOutlined/>Удалить раздел</Button>
-                </ConfigProvider>
-                <Dropdown
-                    rootClassName={'task-group-extra__dropdown'}
-                    className={'task-group-extra__burger-button'}
-                    menu={{
-                        items,
-                        onClick: handleMenuClick,
-                    }}
-                    onOpenChange={handleOpenChange}
-                    open={open}
-                    placement={'bottomRight'}
-                    destroyPopupOnHide
-                    trigger={['click']}
-                >
-                    <Button><MenuOutlined/></Button>
-                </Dropdown>
-                <DynamicEditTask
-                    isOpen={isOpenCreateModal}
-                    setIsOpen={setIsOpenCreateModal}
-                    taskGroupName={taskGroupName}
-                    fileList={fileList}
-                    setFileList={setFileList}
-                />
-                <DynamicEditTaskGroup
-                    taskGroupName={taskGroupName}
-                    isOpen={isOpenNameModal}
-                    setIsOpen={setIsOpenNameModal}
-                />
-            </div>
-        );
+    if (!edit) {
+        return null;
     }
 
-    return null;
+    return (
+        <div className={'task-group__collapse-buttons'}>
+            <ConfigProvider theme={blueOutlinedButton}>
+                <Button onClick={handleChangeName}><EditOutlined/>Изменить название</Button>
+                <Button onClick={handleAddTask}><PlusOutlined/>Добавить задачу</Button>
+            </ConfigProvider>
+            <ConfigProvider theme={redOutlinedButton}>
+                <Button onClick={handleDeleteGroup}><DeleteOutlined/>Удалить раздел</Button>
+            </ConfigProvider>
+            <Dropdown
+                rootClassName={'task-group-extra__dropdown'}
+                className={'task-group-extra__burger-button'}
+                menu={{
+                    items,
+                    onClick: handleMenuClick,
+                }}
+                onOpenChange={handleOpenChange}
+                open={open}
+                placement={'bottomRight'}
+                destroyPopupOnHide
+                trigger={['click']}
+            >
+                <Button><MenuOutlined/></Button>
+            </Dropdown>
+            <DynamicEditTask
+                isOpen={isOpenCreateModal}
+                setIsOpen={setIsOpenCreateModal}
+                taskGroupName={taskGroupName}
+                fileList={fileList}
+                setFileList={setFileList}
+            />
+            <DynamicEditTaskGroup
+                taskGroupName={taskGroupName}
+                isOpen={isOpenNameModal}
+                setIsOpen={setIsOpenNameModal}
+            />
+        </div>
+    );
 }

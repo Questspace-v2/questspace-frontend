@@ -101,6 +101,9 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
     };
 
     const onCancel = () => {
+        setErrorMsg('');
+        setValidationStatus('success');
+        form.resetFields();
         setIsOpen(false);
     };
 
@@ -176,6 +179,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                 ...prevState,
                 task_groups: taskGroups
             }));
+            setIsOpen(false);
             return;
         }
 
@@ -185,6 +189,8 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
             ...prevState,
             task_groups: taskGroups
         }));
+        form.resetFields();
+        setIsOpen(false);
     }
 
     return (
@@ -215,6 +221,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                         {name: 'taskPoints', value: pointsAmount}
                     ]}
                     autoComplete={'off'}
+                    preserve={false}
                 >
                     <Row>
                         <Col className={'edit-task__labels'}>

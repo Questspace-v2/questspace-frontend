@@ -1,11 +1,11 @@
 'use client';
 
 import {Button, Form, Input, Modal} from 'antd';
-import FormItem from 'antd/lib/form/FormItem';
-import {Dispatch, SetStateAction, useMemo} from 'react';
+import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import { getCenter } from '@/lib/utils/utils';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import {ValidationStatus} from "@/lib/utils/modalTypes";
 
 interface TaskGroupModalProps {
     isOpen: boolean,
@@ -26,16 +26,31 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const title = taskGroupName ? 'Изменить название раздела' : 'Название раздела';
 
+    const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
+    const [errorMsg, setErrorMsg] = useState<string>('');
+
     const taskGroups = contextData.task_groups ?? [];
     const currentTaskGroup = taskGroups.find(item => item.name === taskGroupName)!;
     const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
 
+    const handleFieldChange = () => {
+        setErrorMsg('');
+        setValidationStatus('success');
+    };
+
     const handleSave = () => {
         const groupName = form.getFieldValue('groupName') as string;
+
+        if (!groupName) {
+            setValidationStatus('error');
+            setErrorMsg('Название не должно быть пустой строкой');
+            return;
+        }
 
         if (taskGroupName) {
             taskGroups[taskGroupIndex].name = groupName;
             setContextData({task_groups: taskGroups});
+            setIsOpen(false);
             return;
         }
 
@@ -47,6 +62,8 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
     };
 
     const onCancel = () => {
+        setErrorMsg('');
+        setValidationStatus('success');
         setIsOpen(false);
     }
 
@@ -69,10 +86,10 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
                   groupName: taskGroupName
               }}
           >
-              <FormItem name={'groupName'}>
-                  <Input placeholder={'Название раздела'}/>
-              </FormItem>
-              <FormItem>
+              <Form.Item name={'groupName'} validateStatus={validationStatus} help={errorMsg}>
+                  <Input placeholder={'Название раздела'} onChange={handleFieldChange}/>
+              </Form.Item>
+              <Form.Item>
                   <Button
                       type={'primary'}
                       htmlType={'submit'}
@@ -81,7 +98,7 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
                   >
                       Сохранить
                   </Button>
-              </FormItem>
+              </Form.Item>
           </Form>
       </Modal>
     );
