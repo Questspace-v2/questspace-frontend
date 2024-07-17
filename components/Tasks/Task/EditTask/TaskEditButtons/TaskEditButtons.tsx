@@ -42,7 +42,11 @@ export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEd
     };
 
     const handleCopyTask = () => {
-        taskGroup.tasks.push(task);
+        const copiedTask: ITask = {
+            ...task,
+            pub_time: new Date().toISOString()
+        };
+        taskGroup.tasks.push(copiedTask);
         taskGroups[taskGroupIndex] = taskGroup;
         setContextData(prevState => ({
             ...prevState,

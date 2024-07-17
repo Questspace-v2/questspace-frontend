@@ -9,7 +9,7 @@ export const enum TasksMode {
 export const getTaskExtra = (edit: boolean, mobile526: boolean, taskGroupName: string, task: ITask) => {
     if (edit) {
         return (
-            <TaskEditButtons mobile526={mobile526} taskGroupName={taskGroupName} task={task}/>
+            <TaskEditButtons mobile526={mobile526} taskGroupName={taskGroupName} task={task} key={task.pub_time}/>
         );
     }
 
