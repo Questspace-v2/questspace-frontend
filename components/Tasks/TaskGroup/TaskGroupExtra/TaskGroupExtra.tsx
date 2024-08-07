@@ -12,7 +12,7 @@ const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/E
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
     {ssr: false});
 
-export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, taskGroupName: string}) {
+export default function TaskGroupExtra({questId, edit, taskGroupName}: {questId: string, edit: boolean, taskGroupName: string}) {
     const [open, setOpen] = useState(false);
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -92,6 +92,7 @@ export default function TaskGroupExtra({edit, taskGroupName}: {edit: boolean, ta
                 <Button><MenuOutlined/></Button>
             </Dropdown>
             <DynamicEditTask
+                questId={questId}
                 isOpen={isOpenCreateModal}
                 setIsOpen={setIsOpenCreateModal}
                 taskGroupName={taskGroupName}
