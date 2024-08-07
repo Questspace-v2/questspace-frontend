@@ -41,6 +41,7 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
     const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
+    const [takenHints, setTakenHints] = useState([false, false, false]);
 
     const transformHints = () => hints.map(hint => ({
         taken: false,
@@ -76,6 +77,7 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
 
     const handleTakeHint = async (index: number) => {
         if (editMode) {
+            setTakenHints([...takenHints.slice(0, index), true, ...takenHints.slice(index + 1)]);
             setOpenConfirm(false);
             setOpenConfirmIndex(null);
             return;
@@ -158,7 +160,7 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
-                        <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
+                        <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${takenHints[index] || hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
                             {openConfirm && index === openConfirmIndex ? (
                                 <>
                                     <div className={'hint__text-part'}>
@@ -173,7 +175,7 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
                             ) : (
                                 <>
                                     <span className={'hint__title'}>Подсказка {index + 1}</span>
-                                    {hint.taken ?
+                                    {takenHints[index] || hint.taken ?
                                         <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{hint?.text}</Markdown> :
                                         <Button type={'link'} onClick={() => {
                                             setOpenConfirm(true);
