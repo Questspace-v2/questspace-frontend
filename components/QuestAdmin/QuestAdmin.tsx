@@ -137,7 +137,11 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
                 </>
             )}
             {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard teams={leaderboardTabContent}/>}
-            <DynamicEditTaskGroup isOpen={isOpenModal} setIsOpen={setIsOpenModal}/>
+            <DynamicEditTaskGroup
+                questId={questData.quest.id}
+                isOpen={isOpenModal}
+                setIsOpen={setIsOpenModal}
+            />
         </div>
     );
 }

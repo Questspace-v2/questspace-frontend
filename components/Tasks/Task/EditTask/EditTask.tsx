@@ -187,6 +187,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupName, fil
                 task_groups: taskGroups
             }));
             setIsOpen(false);
+            await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
             return;
         }
 

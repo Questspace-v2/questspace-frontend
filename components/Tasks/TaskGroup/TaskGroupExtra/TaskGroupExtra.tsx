@@ -100,6 +100,7 @@ export default function TaskGroupExtra({questId, edit, taskGroupName}: {questId:
                 setFileList={setFileList}
             />
             <DynamicEditTaskGroup
+                questId={questId}
                 taskGroupName={taskGroupName}
                 isOpen={isOpenNameModal}
                 setIsOpen={setIsOpenNameModal}
