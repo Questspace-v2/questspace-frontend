@@ -34,7 +34,8 @@ export default function TaskEditButtons({questId, mobile526, taskGroupName, task
     };
 
     const handleDeleteTask = () => {
-        taskGroup.tasks = taskGroup.tasks.filter(item => item.pub_time !== task.pub_time);
+        taskGroup.tasks = taskGroup.tasks.filter(item =>
+            item.pub_time !== task.pub_time || item.id !== task.id);
         taskGroups[taskGroupIndex] = taskGroup;
         setContextData(prevState => ({
             task_groups: prevState.task_groups
