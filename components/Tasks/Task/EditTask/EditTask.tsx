@@ -143,7 +143,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupName, fil
         const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
         const imageValidation = fileList.length > 0;
-        const s3Response = imageValidation && await handleS3Request();
+        const s3Response = (imageValidation && await handleS3Request()) ?? false;
 
         const fields = form.getFieldsValue();
         const {taskName, taskText, taskPoints, hints, answers} = fields;
@@ -173,8 +173,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupName, fil
             reward: taskPoints,
             verification_type: 'auto'
         };
-        
-        if (s3Response ?? task?.media_link) {
+
+        if (s3Response || task?.media_link) {
             newTask.media_link = (s3Response as Response).url ?? task?.media_link;
         }
 
