@@ -10,9 +10,10 @@ import { ConfigProvider } from 'antd';
 import theme from '@/lib/theme/themeConfig';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import Background from '@/components/Background/Background';
+import { FRONTEND_URL } from '@/app/api/client/constants';
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://questspace.fun'),
+    metadataBase: new URL(FRONTEND_URL),
     keywords: ['Квестспейс', 'Questspace', 'Квест', 'Матмех', 'Мат-мех'],
     title: {
         default: 'Квестспейс',

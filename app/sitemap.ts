@@ -1,13 +1,14 @@
-export default function sitemap() {
-    const baseUrl = process.env.NEXTAUTH_URL;
+import { FRONTEND_URL } from '@/app/api/client/constants';
 
+
+export default function sitemap() {
     return [
         {
-            url: baseUrl,
+            url: FRONTEND_URL,
             lastModified: new Date(),
         },
         {
-            url: `${baseUrl}/auth`,
+            url: `${FRONTEND_URL}/auth`,
             lastModified: new Date(),
         },
     ]

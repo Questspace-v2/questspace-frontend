@@ -1,14 +1,13 @@
 import {MetadataRoute} from 'next';
+import { FRONTEND_URL } from '@/app/api/client/constants';
 
 export default function robots(): MetadataRoute.Robots {
-    const baseUrl = process.env.NEXTAUTH_URL;
-
     return {
         rules: {
             userAgent: '*',
             allow: ['/', '/auth'],
             disallow: []
         },
-        sitemap: `${baseUrl}/sitemap.xml`
+        sitemap: `${FRONTEND_URL}/sitemap.xml`
     }
 }

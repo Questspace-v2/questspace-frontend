@@ -17,7 +17,7 @@ import { IQuest } from '@/app/types/quest-interfaces';
 import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList';
 import { useInView } from 'react-intersection-observer';
 
-export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQuests: IQuest[], nextPageId: string}) {
+export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = true} : {fetchedAllQuests: IQuest[], nextPageId: string, isAuthorized?: boolean}) {
     const { xs} = useBreakpoint();
     const [selectedTab, setSelectedTab] = useState<SelectTab>('all');
     const [page, setPage] = useState(nextPageId);
@@ -51,7 +51,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
             </> :
             undefined;
 
-    const items: TabsProps['items'] = [
+    const items: TabsProps['items'] = isAuthorized ? [
         {
             key: 'all',
             label: 'Все квесты',
@@ -66,8 +66,12 @@ export default function QuestTabs({fetchedAllQuests, nextPageId} : {fetchedAllQu
             key: 'owned',
             label: 'Созданные квесты',
             children: getTabsChildren('owned'),
-        },
-    ];
+        }
+        ] : [{
+                key: 'all',
+                label: 'Все квесты',
+                children: getTabsChildren('all')
+            }];
 
     const selectOptions: {value: SelectTab, label: string}[] = [
         { value: 'all', label: 'Все квесты' },
