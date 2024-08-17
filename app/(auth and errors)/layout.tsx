@@ -12,12 +12,15 @@ import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import Background from '@/components/Background/Background';
 
 export const metadata: Metadata = {
-    title: 'Квестспейс',
-    description: 'Разработано и спроектировано МатМехом',
-    other: {
-        "msapplication-TileColor": "#428df4",
-        "msapplication-TileImage": "../mstile-150x150.png",
-        "msapplication-config": "../browserconfig.xml",
+    metadataBase: new URL(process.env.NEXTAUTH_URL!),
+    keywords: ['Квестспейс', 'Questspace', 'Квест', 'Матмех', 'Мат-мех'],
+    title: {
+        default: 'Квестспейс',
+        template: `%s | Квестспейс`
+    },
+    openGraph: {
+        description: 'Веб-приложение для организации и проведения квестов',
+        images: ['']
     },
 };
 
@@ -26,14 +29,6 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
 
     return (
         <html lang="ru">
-        <head>
-            <link rel="apple-touch-icon" sizes="180x180" href="../apple-icon.png" />
-            <link rel="icon" type="image/png" sizes="32x32" href="../icon2.png" />
-            <link rel="icon" type="image/png" sizes="16x16" href="../icon1.png" />
-            <link rel="mask-icon" href="../icon5.svg" color="#5bbad5" />
-            <meta name="msapplication-TileColor" content="#428df4" />
-            <meta name="theme-color" content="#ffffff" />
-        </head>
         <body className={`${manrope.variable} ${robotoFlex.variable}`}>
         <NextAuthProvider session={session}>
             <AntdRegistry>
@@ -43,9 +38,9 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
                         {children}
                     </div>
                 </ConfigProvider>
-                    </AntdRegistry>
-                </NextAuthProvider>
-            </body>
+            </AntdRegistry>
+        </NextAuthProvider>
+        </body>
         </html>
     );
 }
