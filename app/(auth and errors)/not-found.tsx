@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXTAUTH_URL!),
+    metadataBase: new URL('https://questspace.fun'),
     title: {
         default: 'Квест не найден',
         template: `%s | Квестспейс`

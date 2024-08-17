@@ -14,7 +14,7 @@ import Body from '@/components/Body/Body';
 import dynamic from 'next/dynamic';
 
 export const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXTAUTH_URL!),
+    metadataBase: new URL('https://questspace.fun'),
     keywords: ['Квестспейс', 'Questspace', 'Квест', 'Матмех', 'Мат-мех'],
     title: {
         default: 'Квестспейс',

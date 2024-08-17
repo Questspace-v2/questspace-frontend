@@ -12,7 +12,7 @@ import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import Background from '@/components/Background/Background';
 
 export const metadata: Metadata = {
-    metadataBase: new URL(process.env.NEXTAUTH_URL!),
+    metadataBase: new URL('https://questspace.fun'),
     keywords: ['Квестспейс', 'Questspace', 'Квест', 'Матмех', 'Мат-мех'],
     title: {
         default: 'Квестспейс',
