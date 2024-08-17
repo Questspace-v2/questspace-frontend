@@ -40,7 +40,16 @@ const nextConfig = {
             }
         ],
     },
-    output: "standalone"
+    output: "standalone",
+    experimental: {
+        turbotrace: {
+            // control the log level of the turbotrace, default is `error`
+            logDetail: true,
+            // show all log messages without limit
+            // turbotrace only show 1 log message for each category by default
+            logAll: true,
+        },
+    }
 };
 
 module.exports = nextConfig;

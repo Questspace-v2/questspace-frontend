@@ -10,7 +10,7 @@
     "npm": "^10.5.0"
   },
   "scripts": {
-    "dev": "next dev -H questspace.fun --experimental-https --experimental-https-key ./certificates/private_key.pem --experimental-https-cert certificates/questspace_cert.pem",
+    "dev": "next dev -H test.questspace.fun --experimental-https --experimental-https-key ./certificates/private_key.pem --experimental-https-cert certificates/questspace_cert.pem",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
