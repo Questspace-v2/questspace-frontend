@@ -4,9 +4,10 @@ import { Button } from 'antd';
 import Background from '@/components/Background/Background';
 import React from 'react';
 import { Metadata } from 'next';
+import { FRONTEND_URL } from '@/app/api/client/constants';
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://questspace.fun'),
+    metadataBase: new URL(FRONTEND_URL),
     title: {
         default: 'Квест не найден',
         template: `%s | Квестспейс`

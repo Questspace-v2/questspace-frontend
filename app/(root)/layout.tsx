@@ -2,8 +2,6 @@ import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { manrope, robotoFlex } from '@/lib/fonts';
 import { Metadata } from 'next';
-
-import './global.css';
 import { getServerSession } from 'next-auth';
 import NextAuthProvider from '@/components/NextAuthProvider/NextAuthProvider';
 import { ConfigProvider } from 'antd';
@@ -12,9 +10,13 @@ import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import dynamic from 'next/dynamic';
+import { FRONTEND_URL } from '@/app/api/client/constants';
+
+import './global.css';
+
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://questspace.fun'),
+    metadataBase: new URL(FRONTEND_URL),
     keywords: ['Квестспейс', 'Questspace', 'Квест', 'Матмех', 'Мат-мех'],
     title: {
         default: 'Квестспейс',
@@ -32,6 +34,7 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
     const session = await getServerSession(authOptions);
+    const isAuthorized = Boolean(session?.user);
 
     return (
         <html lang="ru">
@@ -40,7 +43,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
             <AntdRegistry>
                 <ConfigProvider theme={theme}>
                     <div className={'App'}>
-                        <Header isAuthorized={Boolean(session?.user)} />
+                        <Header isAuthorized={isAuthorized}/>
                         <Body>
                             {children}
                         </Body>
