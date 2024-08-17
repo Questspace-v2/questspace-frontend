@@ -232,6 +232,12 @@ h3 {
     }
 }
 
+body:has(.page__not-found) {
+    .page-header, .page-footer__wrapper {
+        display: none;
+    }
+}
+
 @media (max-width: 1279px) {
     h1 {
         &.responsive-header-h1 {
