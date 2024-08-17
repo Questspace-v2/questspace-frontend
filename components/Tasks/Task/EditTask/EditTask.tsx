@@ -32,10 +32,13 @@ import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvide
 import {ITask} from "@/app/types/quest-interfaces";
 import client from "@/app/api/client/client";
 import {ValidationStatus} from "@/lib/utils/modalTypes";
+import {useSession} from "next-auth/react";
+import {createTaskGroupsAndTasks} from "@/app/api/api";
 
 const {TextArea} = Input;
 
 interface TaskCreateModalProps {
+    questId: string,
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,
     taskGroupName: string,
@@ -52,7 +55,7 @@ export interface TaskForm {
     taskPoints: number
 }
 
-export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, setFileList, task}: TaskCreateModalProps) {
+export default function EditTask({questId, isOpen, setIsOpen, taskGroupName, fileList, setFileList, task}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs, md } = useBreakpoint();
@@ -67,6 +70,8 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
     const taskNameError = 'Введите название задания';
     const taskTextError = 'Введите текст задания';
     const answersError = 'Добавьте хотя бы один вариант ответа';
+
+    const {data: session} = useSession();
 
     useEffect(() => {
         if (task) {
@@ -138,7 +143,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
         const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
         const imageValidation = fileList.length > 0;
-        const s3Response = imageValidation && await handleS3Request();
+        const s3Response = (imageValidation && await handleS3Request()) ?? false;
 
         const fields = form.getFieldsValue();
         const {taskName, taskText, taskPoints, hints, answers} = fields;
@@ -168,8 +173,8 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
             reward: taskPoints,
             verification_type: 'auto'
         };
-        
-        if (s3Response ?? task?.media_link) {
+
+        if (s3Response || task?.media_link) {
             newTask.media_link = (s3Response as Response).url ?? task?.media_link;
         }
 
@@ -182,6 +187,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
                 task_groups: taskGroups
             }));
             setIsOpen(false);
+            await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
             return;
         }
 
@@ -194,6 +200,7 @@ export default function EditTask({isOpen, setIsOpen, taskGroupName, fileList, se
         form.resetFields();
         fileList.splice(0, fileList.length);
         setIsOpen(false);
+        await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
     }
 
     return (

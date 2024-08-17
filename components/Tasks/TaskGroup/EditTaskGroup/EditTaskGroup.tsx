@@ -6,8 +6,11 @@ import { getCenter } from '@/lib/utils/utils';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
+import {useSession} from "next-auth/react";
+import {createTaskGroupsAndTasks} from "@/app/api/api";
 
 interface TaskGroupModalProps {
+    questId: string;
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,
     taskGroupName?: string,
@@ -17,7 +20,7 @@ export interface TaskGroupForm {
     groupName: string
 }
 
-export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGroupModalProps) {
+export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupName}: TaskGroupModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs } = useBreakpoint();
@@ -29,16 +32,17 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
     const [errorMsg, setErrorMsg] = useState<string>('');
 
-    const taskGroups = contextData.task_groups ?? [];
-    const currentTaskGroup = taskGroups.find(item => item.name === taskGroupName)!;
-    const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
+    const {data: session} = useSession();
 
     const handleFieldChange = () => {
         setErrorMsg('');
         setValidationStatus('success');
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
+        const taskGroups = contextData.task_groups ?? [];
+        const currentTaskGroup = taskGroups.find(item => item.name === taskGroupName)!;
+        const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
         const groupName = form.getFieldValue('groupName') as string;
 
         if (!groupName) {
@@ -49,16 +53,23 @@ export default function EditTaskGroup({isOpen, setIsOpen, taskGroupName}: TaskGr
 
         if (taskGroupName) {
             taskGroups[taskGroupIndex].name = groupName;
-            setContextData({task_groups: taskGroups});
+            setContextData((prevState) => ({
+                ...prevState,
+                task_groups: taskGroups
+            }))
             setIsOpen(false);
+            await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
             return;
         }
 
         const pubTime = new Date();
-        setContextData({task_groups: [...taskGroups,
-                {name: groupName, tasks: [], pub_time: pubTime.toISOString()}
-            ]});
+        taskGroups.push({name: groupName, tasks: [], pub_time: pubTime.toISOString()});
+        setContextData((prevState) => ({
+            ...prevState,
+            task_groups: taskGroups
+        }));
         setIsOpen(false);
+        await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
     };
 
     const onCancel = () => {

@@ -9,6 +9,7 @@ import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvide
 import dynamic from "next/dynamic";
 
 interface TaskEditButtonsProps {
+    questId: string,
     mobile526: boolean,
     taskGroupName: string,
     task: ITask
@@ -17,7 +18,7 @@ interface TaskEditButtonsProps {
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
     {ssr: false});
 
-export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEditButtonsProps) {
+export default function TaskEditButtons({questId, mobile526, taskGroupName, task}: TaskEditButtonsProps) {
     const classname = mobile526 ? 'task-extra_small' : 'task-extra_large';
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -33,7 +34,8 @@ export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEd
     };
 
     const handleDeleteTask = () => {
-        taskGroup.tasks = taskGroup.tasks.filter(item => item.pub_time !== task.pub_time);
+        taskGroup.tasks = taskGroup.tasks.filter(item =>
+            item.pub_time !== task.pub_time || item.id !== task.id);
         taskGroups[taskGroupIndex] = taskGroup;
         setContextData(prevState => ({
             task_groups: prevState.task_groups
@@ -64,6 +66,7 @@ export default function TaskEditButtons({mobile526, taskGroupName, task}: TaskEd
                 <Button onClick={handleDeleteTask}><DeleteOutlined/>{!mobile526 && 'Удалить задачу'}</Button>
             </ConfigProvider>
             <DynamicEditTask
+                questId={questId}
                 isOpen={isOpenModal}
                 setIsOpen={setIsOpenModal}
                 taskGroupName={taskGroupName}

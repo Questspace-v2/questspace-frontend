@@ -6,10 +6,15 @@ export const enum TasksMode {
     PLAY = 'play'
 }
 
-export const getTaskExtra = (edit: boolean, mobile526: boolean, taskGroupName: string, task: ITask) => {
+export const getTaskExtra = (edit: boolean, mobile526: boolean, taskGroupName: string, task: ITask, questId: string) => {
     if (edit) {
         return (
-            <TaskEditButtons mobile526={mobile526} taskGroupName={taskGroupName} task={task} key={task.pub_time}/>
+            <TaskEditButtons
+                questId={questId}
+                mobile526={mobile526}
+                taskGroupName={taskGroupName}
+                task={task} key={task.pub_time}
+            />
         );
     }
 
