@@ -11,7 +11,7 @@ import { answerTaskPlayMode, takeHintPlayMode } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
-import './Task.css';
+import './Task.scss';
 import { useRouter } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

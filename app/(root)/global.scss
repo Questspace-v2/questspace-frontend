@@ -1,38 +1,18 @@
-:root {
-    --background-color: #F5F5F5;
-    --quit-color: #FF4D4F;
-    --green-color: #52C41A;
-    --primary-color: #1890FF;
-    --base-text-color: #262626;
-    --secondary-text-color: #1F1F1F;
-    --tertiary-text-color: #434343;
-    --task-background-color: #F0F0F0;
-    --side-margins-16: 16px;
-    --side-margins-24: 24px;
-    --side-margins-32: 32px;
-    --main-gap: 16px;
-    --max-items-width: 1250px;
-
-    /* fonts */
-    --large-font-size: 48px;
-    --medium-font-size: 32px;
-    --small-font-size: 24px;
-
-    /* columns */
-    --grid-column-640: 1fr 1fr;
-    --grid-column-960: 1fr 1fr 1fr;
-    --grid-column-1280: 1fr 1fr 1fr 1fr;
-
-    /* status color */
-    --status-color-registration: #1890FF;
-    --status-color-registration-done: #722ED1;
-    --status-color-running: #389E0D;
-    --status-color-wait-results: #D48806;
-    --status-color-finished: #434343;
-}
+@use '../../globals' as *;
 
 * {
     -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    --background-color: #{$cultured};
+    --quit-color: #{$red-orange-crayola};
+    --green-color: #{$kelly_green};
+    --primary-color: #{$dodger-blue};
+    --base-text-color: #{$raisin_black};
+    --secondary-text-color: #{$eerie_black};
+    --tertiary-text-color: #{$arsenic};
+    --task-background-color: #{$anti-flash-white};
 }
 
 html,
@@ -42,7 +22,7 @@ body {
     min-height: 100%;
     height: 100%;
     margin: 0;
-    font-family: var(--font-manrope);
+    font-family: $font-manrope;
     color: #262626;
 }
 
@@ -53,7 +33,7 @@ body {
     background: var(--background-color);
     width: 100%;
     min-height: 100%;
-    gap: var(--main-gap);
+    gap: $main-gap;
 }
 
 .roboto-flex-header {
@@ -61,7 +41,7 @@ body {
     color: var(--base-text-color);
     line-height: 95.2%;
     letter-spacing: -.01em;
-    font-family: var(--font-robotoflex);
+    font-family: $font-robotoflex;
     font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
@@ -88,30 +68,11 @@ body {
     height: 100vh;
     justify-content: center;
     align-items: center;
-}
 
-.content__wrapper.not-found__content-wrapper, .content__wrapper.invites-error__content-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 32px 24px 24px;
-    gap: 20px;
-    width: 378px;
-
-    background: #FFFFFF;
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.04);
-    border-radius: 16px;
-
-    p {
-        font-size: 24px;
-        margin: 0;
-    }
-}
-
-.content__wrapper.invites-error__content-wrapper {
     .roboto-flex-header {
+        color: var(--primary-color);
         font-size: 107px;
-  }
+    }
 }
 
 .ant-btn.return__button {
@@ -142,18 +103,18 @@ body {
 }
 
 h1 {
-    font-size: var(--medium-font-size);
+    font-size: $medium-font-size;
 
     &.responsive-header-h1 {
-        font-size: var(--large-font-size);
+        font-size: $large-font-size;
     }
 }
 
 h2 {
-    font-size: var(--small-font-size);
+    font-size: $small-font-size;
 
     &.responsive-header-h2 {
-        font-size: var(--medium-font-size);
+        font-size: $medium-font-size;
     }
 }
 
@@ -162,42 +123,42 @@ h3 {
 }
 
 .quest-header__status_registration {
-    color: var(--status-color-registration);
+    color: $status-color-registration;
 
     & circle {
-        fill: var(--status-color-registration);
+        fill: $status-color-registration;
     }
 }
 
 .quest-header__status_registration-done {
-    color: var(--status-color-registration-done);
+    color: $status-color-registration-done;
 
     & circle {
-        fill: var(--status-color-registration-done);
+        fill: $status-color-registration-done;
     }
 }
 
 .quest-header__status_running {
-    color: var(--status-color-running);
+    color: $status-color-running;
 
     & circle {
-        fill: var(--status-color-running);
+        fill: $status-color-running;
     }
 }
 
 .quest-header__status_wait-results {
-    color: var(--status-color-wait-results);
+    color: $status-color-wait-results;
 
     & circle {
-        fill: var(--status-color-wait-results);
+        fill: $status-color-wait-results;
     }
 }
 
 .quest-header__status_finished {
-    color: var(--status-color-finished);
+    color: $status-color-finished;
 
     & circle {
-        fill: var(--status-color-finished);
+        fill: $status-color-finished;
     }
 }
 
@@ -238,32 +199,18 @@ body:has(.page__not-found) {
     }
 }
 
-@media (max-width: 1279px) {
+@media (max-width: $xl-breakpoint-1279) {
     h1 {
         &.responsive-header-h1 {
-            font-size: var(--medium-font-size);
+            font-size: $medium-font-size;
         }
     }
 
     h2 {
         &.responsive-header-h2 {
-            font-size: var(--small-font-size);
+            font-size: $small-font-size;
         }
     }
 }
 
-@media (max-width: 525px) {
-    .content__wrapper.not-found__content-wrapper, .content__wrapper.invites-error__content-wrapper {
-        width: 320px;
 
-        p {
-            font-size: 20px;
-        }
-    }
-
-    .content__wrapper.invites-error__content-wrapper {
-        .roboto-flex-header {
-            font-size: 90px;
-        }
-    }
-}

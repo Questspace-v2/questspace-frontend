@@ -1,3 +1,5 @@
+@use "../../../globals" as *;
+
 .ant-btn.edit-profile__button {
     display: flex;
     align-items: center;
@@ -89,7 +91,7 @@
     }
 }
 
-@media (max-width: 639px) {
+@media (max-width: $m-breakpoint-639) {
     .ant-modal-root .ant-modal.edit-profile__modal {
         margin: 0;
         max-width: unset;

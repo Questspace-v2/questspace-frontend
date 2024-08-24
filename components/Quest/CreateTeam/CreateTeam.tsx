@@ -10,7 +10,7 @@ import { ITeam } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-import './CreateTeam.css'
+import './CreateTeam.scss'
 import {ModalProps, TeamModal, ValidationStatus} from '@/lib/utils/modalTypes';
 
 export default function CreateTeam({questId, currentModal, setCurrentModal}: ModalProps) {

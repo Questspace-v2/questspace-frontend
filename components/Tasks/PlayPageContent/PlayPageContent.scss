@@ -1,3 +1,5 @@
+@use "../../../globals" as *;
+
 .play-page {
     display: flex;
     flex-direction: column;
@@ -5,7 +7,6 @@
     max-width: 800px;
     width: 100%;
 
-    
     & input[type="text"] {
         font-size: 16px !important;
         line-height: normal;
@@ -50,7 +51,7 @@
     width: 100%;
 }
 
-@media (max-width: 799px) {
+@media (max-width: $xm-breakpoint-799) {
     .play-page__content-wrapper .responsive-header-h1 {
         font-size: 24px;
     }

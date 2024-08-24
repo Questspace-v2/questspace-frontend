@@ -1,13 +1,11 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-
-import './EditQuest.css';
 import { Button, Form, Tabs, TabsProps, UploadFile } from 'antd';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { useEffect, useRef, useState } from 'react';
 import QuestPreview from '@/components/Quest/EditQuest/QuestPreview/QuestPreview';
 import QuestEditor, { QuestAboutForm } from '@/components/Quest/EditQuest/QuestEditor/QuestEditor';
 import { IGetQuestResponse } from '@/app/types/quest-interfaces';

@@ -14,8 +14,6 @@ import {
     TrophyFilled,
 } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-
-import './Quest.css';
 import { Button, Card, ConfigProvider, message, Modal, Skeleton, Table } from 'antd';
 import {
     getQuestStatusButton,
@@ -315,8 +313,7 @@ function QuestTeam({team, session, status} : {team?: ITeam, session?: Session | 
                     <Button
                         className={'exit-team__button exit-team__large-screen'}
                         type={'text'}
-                        icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }} />}
-                        style={{ color: 'var(--quit-color)' }}
+                        icon={<LogoutOutlined />}
                         onClick={showConfirm}
                     >
                         Выйти из команды
@@ -348,8 +345,7 @@ function QuestTeam({team, session, status} : {team?: ITeam, session?: Session | 
                 <ConfigProvider theme={redOutlinedButton}>
                     <Button
                         className={'exit-team__button exit-team__small-screen'}
-                        icon={<LogoutOutlined style={{ color: 'var(--quit-color)' }}/>}
-                        style={{ color: 'var(--quit-color)' }}
+                        icon={<LogoutOutlined />}
                         block
                         onClick={showConfirm}
                     >

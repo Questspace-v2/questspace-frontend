@@ -7,7 +7,7 @@ import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { ITaskGroup } from '@/app/types/quest-interfaces';
 import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra/TaskGroupExtra';
 
-import './TaskGroup.css';
+import './TaskGroup.scss';
 
 interface TaskGroupProps {
     mode: TasksMode,

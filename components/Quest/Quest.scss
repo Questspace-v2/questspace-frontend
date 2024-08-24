@@ -1,5 +1,7 @@
+@use "../../globals" as *;
+
 .quest-page__content-wrapper {
-    padding: 24px var(--side-margins-32);
+    padding: 24px $side-margins-32;
     gap: 16px;
 }
 
@@ -197,7 +199,7 @@
     }
 
     .quest-header__interactive button.already-have-team {
-        color: var(--status-color-running);
+        color: $status-color-running;
     }
 
     .quest-header__interactive .already-have-team svg {
@@ -207,6 +209,7 @@
 
 .team__header button.ant-btn.ant-btn-text.exit-team__button.exit-team__large-screen {
     align-self: start;
+    color: var(--quit-color);
 }
 
 .team__members {

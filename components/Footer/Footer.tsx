@@ -1,7 +1,6 @@
 import Logotype from '@/components/Logotype/Logotype';
 import Background from '@/components/Background/Background';
 
-import './Footer.css';
 
 export default function Footer() {
     return (

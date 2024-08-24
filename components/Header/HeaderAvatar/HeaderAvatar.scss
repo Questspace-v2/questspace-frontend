@@ -1,8 +1,18 @@
+@use "../../../globals" as *;
+
 .header-avatar__frame {
     cursor: pointer;
 }
 
 .header-avatar__dropdown {
+
+
+    .dropdown__exit-button {
+        color: var(--quit-color) !important;
+    }
+}
+
+.header-avatar__button {
     display: flex;
     flex: 50px;
     align-items: center;
@@ -11,9 +21,6 @@
     padding: 0 8px;
     gap: 4px;
     transition: background-color .2s ease;
-}
-
-.header-avatar__button {
     cursor: pointer;
     border: none;
     background-color: transparent;

@@ -5,8 +5,6 @@ import { getCenter } from '@/lib/utils/utils';
 import { Input, message, Modal } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { CopyOutlined } from '@ant-design/icons';
-
-import './InviteModal.css'
 import {ModalProps, TeamModal} from '@/lib/utils/modalTypes';
 
 export default function InviteModal({inviteLink, currentModal, setCurrentModal}: ModalProps) {
@@ -36,7 +34,7 @@ export default function InviteModal({inviteLink, currentModal, setCurrentModal}:
             destroyOnClose
             onCancel={onCancel}
             width={xs ? '100%' : 400}
-            title={<h2 className={'roboto-flex-header responsive-header-h2'} style={{color: 'var(--green-color)'}}>Команда зарегистрирована</h2>}
+            title={<h2 className={'roboto-flex-header responsive-header-h2'}>Команда зарегистрирована</h2>}
             mousePosition={centerPosition}
             footer={null}
         >

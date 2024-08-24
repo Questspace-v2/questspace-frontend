@@ -7,7 +7,6 @@ import Link from 'next/link';
 import { Button } from 'antd';
 import { getRedirectParams } from '@/lib/utils/utils';
 
-import './Header.css';
 
 const pointerCursor: CSSProperties = {
     cursor: 'pointer',

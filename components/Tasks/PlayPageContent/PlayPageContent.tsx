@@ -8,7 +8,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import { ArrowLeftOutlined, HourglassOutlined, TeamOutlined } from '@ant-design/icons';
 
-import './PlayPageContent.css'
+import './PlayPageContent.scss'
 import { getLongTimeDiff, getRemainingVerb } from '@/components/Quest/Quest.helpers';
 
 export default function PlayPageContent({props}: {props: IQuestTaskGroupsResponse}) {

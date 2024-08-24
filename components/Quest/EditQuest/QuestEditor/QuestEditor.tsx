@@ -27,8 +27,6 @@ import { useSession } from 'next-auth/react';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useRouter } from 'next/navigation';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
-
-import './QuestEditor.css';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 
 dayjs.locale('ru')

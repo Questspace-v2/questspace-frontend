@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 'use client'
 
+import { useEffect, useState } from 'react';
 import { ConfigProvider, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import {
@@ -9,10 +8,7 @@ import {
     isSelectTab, SelectTab,
 } from '@/components/QuestTabs/QuestTabs.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { useEffect, useState } from 'react';
 import getBackendQuests from '@/components/QuestTabs/QuestTabs.server';
-
-import './QuestTabs.css';
 import { IQuest } from '@/app/types/quest-interfaces';
 import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList';
 import { useInView } from 'react-intersection-observer';
@@ -94,6 +90,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                 throw err;
             });
         }
+        /* eslint-disable-next-line react-hooks/exhaustive-deps */
     }, [inView]);
 
     const handleSelectTab = async (value: string) => {

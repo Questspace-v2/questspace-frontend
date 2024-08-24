@@ -6,8 +6,6 @@ import { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { QuestHeaderProps } from '@/components/Quest/Quest.helpers';
 import { QuestContent, QuestHeader } from '@/components/Quest/Quest';
-
-import './QuestPreview.css'
 import { QuestAboutForm } from '@/components/Quest/EditQuest/QuestEditor/QuestEditor';
 
 dayjs.locale('ru')
