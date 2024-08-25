@@ -12,6 +12,7 @@ import getBackendQuests from '@/components/QuestTabs/QuestTabs.server';
 import { IQuest } from '@/app/types/quest-interfaces';
 import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList';
 import { useInView } from 'react-intersection-observer';
+import { DownOutlined } from '@ant-design/icons';
 
 export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = true} : {fetchedAllQuests: IQuest[], nextPageId: string, isAuthorized?: boolean}) {
     const { xs} = useBreakpoint();
@@ -69,10 +70,12 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                 children: getTabsChildren('all')
             }];
 
-    const selectOptions: {value: SelectTab, label: string}[] = [
+    const selectOptions: {value: SelectTab, label: string}[] = isAuthorized ? [
         { value: 'all', label: 'Все квесты' },
         { value: 'registered', label: 'Мои квесты' },
         { value: 'owned', label: 'Созданные квесты' },
+    ] : [
+        { value: 'all', label: 'Все квесты' }
     ];
 
     const loadMoreQuests = async () => {
@@ -132,8 +135,10 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                                 style={{
                                     width: 'max-content',
                                     color: '#1890FF',
+                                    pointerEvents: isAuthorized ? 'auto' : 'none'
                                 }}
                                 dropdownStyle={{width: 'max-content'}}
+                                suffixIcon={isAuthorized ? <DownOutlined /> : <div/>}
                                 variant={'borderless'}
                                 options={selectOptions}
                                 onSelect={handleSelectTab}
@@ -161,6 +166,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                         width: '100%',
                         minHeight: '250px',
                         margin: '8px 0 24px 0',
+                        pointerEvents: isAuthorized ? 'auto' : 'none'
                     }}
                     onTabClick={handleSelectTab}
                     destroyInactiveTabPane

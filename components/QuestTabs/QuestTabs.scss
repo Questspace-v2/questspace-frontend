@@ -29,6 +29,7 @@
 
     .create-quest__button {
         color: var(--primary-color);
+        pointer-events: auto;
     }
 }
 
