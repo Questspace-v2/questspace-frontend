@@ -1,12 +1,12 @@
-:root {
-    --footer-height-lg: 256px;
-    --footer-height-md: 192px;
-}
+@use '../../globals' as *;
+
+$footer-height-lg: 256px;
+$footer-height-md: 192px;
 
 .page-footer__wrapper {
     display: flex;
     width: 100%;
-    height: var(--footer-height-lg);
+    height: $footer-height-lg;
     box-sizing: content-box;
     overflow: hidden;
     margin: 32px 0 0 0;
@@ -19,7 +19,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    height: var(--footer-height-lg);
+    height: $footer-height-lg;
     box-sizing: border-box;
     flex-shrink: 0;
     flex-grow: 0;
@@ -31,7 +31,7 @@
     justify-content: center;
     align-items: center;
     gap: 32px;
-    margin: 0 var(--side-margins-24);
+    margin: 0 $side-margins-24;
     flex-shrink: 0;
     flex-grow: 0;
     transition: ease gap .5s;
@@ -53,13 +53,13 @@
     user-select: none;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: $xl-breakpoint-1279) {
     .page-footer__wrapper {
-        height: var(--footer-height-md);
+        height: $footer-height-md;
     }
 
     .page-footer {
-        height: var(--footer-height-md);
+        height: $footer-height-md;
         justify-content: flex-start;
     }
 
@@ -77,7 +77,7 @@
     }
 }
 
-@media (min-width: 1921px) {
+@media (min-width: 1920px) {
     .footer-background {
         object-fit: cover;
         width: 100%;

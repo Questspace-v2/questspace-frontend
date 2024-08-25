@@ -1,3 +1,5 @@
+@use "../../globals" as *;
+
 .admin-page__content {
     display: contents;
 
@@ -32,7 +34,7 @@
     }
 }
 
-@media (max-width: 799px) {
+@media (max-width: $xm-breakpoint-799) {
     .delete-quest__button.ant-btn {
         gap: 8px;
 

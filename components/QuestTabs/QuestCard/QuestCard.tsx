@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Card } from 'antd';
 import Image from 'next/image';
 import {
@@ -6,8 +7,6 @@ import {
 } from '@/components/Quest/Quest.helpers';
 import Link from 'next/link';
 
-import './QuestCard.css';
-import { useState } from 'react';
 
 export default function QuestCard({props} : {props?: QuestHeaderProps}) {
     const [src, setSrc] = useState<string>(props?.media_link ?? 'https://storage.yandexcloud.net/questspace-img/assets/error-src.png');

@@ -25,7 +25,7 @@ import {
     UploadOutlined
 } from '@ant-design/icons';
 
-import './EditTask.css';
+import './EditTask.scss';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";

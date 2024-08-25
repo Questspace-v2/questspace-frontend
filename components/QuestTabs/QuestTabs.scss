@@ -1,7 +1,9 @@
+@use "../../globals" as *;
+
 .quest-tabs {
     .ant-tabs-tabpane {
         display: grid;
-        grid-template-columns: var(--grid-column-1280);
+        grid-template-columns: $grid-column-1280;
         justify-content: stretch;
         gap: 16px;
     }
@@ -24,6 +26,10 @@
         gap: 16px;
         padding-top: 12px;
     }
+
+    .create-quest__button {
+        color: var(--primary-color);
+    }
 }
 
 
@@ -32,18 +38,18 @@
     width: 100%;
     padding: 0 0 4px;
     justify-content: space-between;
-    border-bottom: 1px inset #f0f0f0;
+    border-bottom: 1px inset $anti-flash-white;
 }
 
 @media (max-width: 1279px) {
     .quest-tabs .ant-tabs-tabpane {
-        grid-template-columns: var(--grid-column-960);
+        grid-template-columns: $grid-column-960;
     }
 
 }
 
 @media (max-width: 959px) {
     .quest-tabs .ant-tabs-tabpane {
-        grid-template-columns: var(--grid-column-640);
+        grid-template-columns: $grid-column-640;
     }
 }

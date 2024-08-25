@@ -1,0 +1,45 @@
+@use 'colors' as *;
+
+html[data-theme="dark"] {
+  --background-color: red;
+  --quit-color: #{$red-orange-crayola};
+  --green-color: #{$kelly_green};
+  --primary-color: #{$dodger-blue};
+  --base-text-color: #{$raisin_black};
+  --secondary-text-color: #{$eerie_black};
+  --tertiary-text-color: #{$arsenic};
+  --task-background-color: #{$anti-flash-white};
+}
+
+html[data-theme="light"] {
+  --background-color: #{$cultured};
+  --quit-color: #{$red-orange-crayola};
+  --green-color: #{$kelly_green};
+  --primary-color: #{$dodger-blue};
+  --base-text-color: #{$raisin_black};
+  --secondary-text-color: #{$eerie_black};
+  --tertiary-text-color: #{$arsenic};
+  --task-background-color: #{$anti-flash-white};
+}
+
+//html[data-theme="dark"] {
+//  $background-color: red;
+//  $quit-color: $red-orange-crayola;
+//  $green-color: $kelly_green;
+//  $primary-color: $dodger-blue;
+//  $base-text-color: $raisin_black;
+//  $secondary-text-color: $eerie_black;
+//  $tertiary-text-color: $arsenic;
+//  $task-background-color: $anti-flash-white;
+//}
+//
+//html[data-theme="light"] {
+//  $background-color: red !global;
+//  $quit-color: $red-orange-crayola !default;
+//  $green-color: $kelly_green !default;
+//  $primary-color: $dodger-blue !default;
+//  $base-text-color: $raisin_black !default;
+//  $secondary-text-color: $eerie_black !default;
+//  $tertiary-text-color: $arsenic !default;
+//  $task-background-color: $anti-flash-white !default;
+//}

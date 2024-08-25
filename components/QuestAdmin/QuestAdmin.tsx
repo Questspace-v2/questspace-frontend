@@ -11,8 +11,6 @@ import { SelectAdminTabs } from '@/components/QuestAdmin/QuestAdmin.helpers';
 import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
-
-import './QuestAdmin.css';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
 import {createTaskGroupsAndTasks, deleteQuest, getLeaderboardAdmin} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
@@ -20,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import dynamic from 'next/dynamic';
+
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
     {ssr: false})

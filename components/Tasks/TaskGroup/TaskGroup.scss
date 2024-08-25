@@ -1,3 +1,5 @@
+@use "../../../globals" as *;
+
 .task-group__content-wrapper {
     padding-top: 24px;
     padding-bottom: 24px;
@@ -71,7 +73,7 @@
     }
 }
 
-@media (max-width: 959px) {
+@media (max-width: $l-breakpoint-959) {
     .task-group__collapse-buttons .ant-btn {
         gap: 8px;
 
@@ -81,13 +83,13 @@
     }
 }
 
-@media (max-width: 799px) {
+@media (max-width: $xm-breakpoint-799) {
     .task-group__name {
         font-size: 24px;
     }
 }
 
-@media (max-width: 525px) {
+@media (max-width: $s-breakpoint-525) {
     .task-group-extra__burger-button.ant-btn {
         display: unset;
     }

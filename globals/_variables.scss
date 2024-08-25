@@ -1,0 +1,37 @@
+@use 'colors' as *;
+
+// breakpoints
+$xss-breakpoint-319: 319px;
+$xs-breakpoint-374: 374px;
+$s-breakpoint-525: 525px;
+$m-breakpoint-639: 639px;
+$xm-breakpoint-799: 799px;
+$l-breakpoint-959: 959px;
+$xl-breakpoint-1279: 1279px;
+$xxl-breakpoint-1439: 1439px;
+
+// other
+$side-margins-16: 16px;
+$side-margins-24: 24px;
+$side-margins-32: 32px;
+$main-gap: 16px;
+$max-items-width: 1250px;
+
+// fonts
+$font-robotoflex: var(--font-robotoflex);
+$font-manrope: var(--font-manrope);
+$large-font-size: 48px;
+$medium-font-size: 32px;
+$small-font-size: 24px;
+
+// columns
+$grid-column-640: 1fr 1fr;
+$grid-column-960: 1fr 1fr 1fr;
+$grid-column-1280: 1fr 1fr 1fr 1fr;
+
+// status color
+$status-color-registration: $dodger-blue;
+$status-color-registration-done: $blue-violet;
+$status-color-running: $slimy-green;
+$status-color-wait-results: $harvest-gold;
+$status-color-finished: $arsenic;

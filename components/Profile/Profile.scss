@@ -1,3 +1,5 @@
+@use "../../globals" as *;
+
 .profile__content-wrapper {
     display: flex;
     flex-direction: row;
@@ -29,7 +31,7 @@
     user-select: none;
 }
 
-@media (max-width: 639px) {
+@media (max-width: $m-breakpoint-639) {
     .avatar__image {
         width: 96px;
         height: 96px;

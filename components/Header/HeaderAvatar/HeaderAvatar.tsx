@@ -1,20 +1,16 @@
 'use client'
 
-import React, { CSSProperties, useState } from 'react';
+import React, { useState } from 'react';
 import { ConfigProvider, Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 
-import './HeaderAvatar.css';
 
 export default function HeaderAvatar() {
     const {image: avatarUrl} = useSession().data!.user;
     const [open, setOpen] = useState(false);
-    const exitStyle: CSSProperties = {
-        color: 'var(--quit-color)',
-    };
     const openClassName: string = open ? 'header-dropdown_open' : '';
 
     const handleMenuClick: MenuProps['onClick'] = () => {
@@ -31,14 +27,12 @@ export default function HeaderAvatar() {
             key: '1',
         },
         {
-
-            label: <a href='/' onClick={
+            label: <Link href='/' className={'dropdown__exit-button'} onClick={
                 async (event) => {
                     event.preventDefault();
                     await signOut()}
-            }>Выйти</a>,
+            }>Выйти</Link>,
             key: '2',
-            style: exitStyle,
         },
     ];
 
@@ -46,7 +40,7 @@ export default function HeaderAvatar() {
         <div className={`header-avatar__frame`} aria-disabled={false}>
             <ConfigProvider theme={{ token: { borderRadius: 2 }}}>
                 <Dropdown
-                    className={'header-avatar__dropdown'}
+                    rootClassName={'header-avatar__dropdown'}
                     menu={{
                         items,
                         onClick: handleMenuClick,

@@ -2,9 +2,8 @@ import { Button, ConfigProvider } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import React from 'react';
 import { signOut } from 'next-auth/react';
-
-import './ExitButton.css';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
+
 
 interface ExitButtonProps {
     block?: boolean;

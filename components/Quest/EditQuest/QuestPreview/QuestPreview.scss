@@ -1,3 +1,5 @@
+@use "../../../../globals" as *;
+
 .quest-preview__wrapper {
     display: flex;
     flex-direction: column;
@@ -60,7 +62,7 @@
     height: auto;
 }
 
-@media (max-width: 525px) {
+@media (max-width: $s-breakpoint-525) {
     .quest-preview__wrapper {
         .quest-preview__information {
             flex-direction: column;

@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import { BackgroundProps } from '@/components/Background/Background.types';
 
-import './Background.css';
-
 export default function Background({ type, className = '' }: BackgroundProps) {
     switch (type) {
         case 'page':

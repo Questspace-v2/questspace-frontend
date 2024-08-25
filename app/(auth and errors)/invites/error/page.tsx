@@ -9,7 +9,7 @@ export default function InviteErrorPage() {
             <Background type={'page'} />
             <section className={'page__invites-error'}>
                 <ContentWrapper className={'invites-error__content-wrapper'}>
-                    <h1 className={'roboto-flex-header'} style={{color: 'var(--primary-color)'}}>Упс...</h1>
+                    <h1 className={'roboto-flex-header'}>Упс...</h1>
                     <p>Кажется, в этой команде закончились места 😢</p>
                     <Link href={'/'}>
                         <Button type={'primary'}>Вернуться на главную</Button>

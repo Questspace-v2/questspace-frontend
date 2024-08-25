@@ -12,7 +12,7 @@ import EditAvatar from '@/components/Profile/EditProfile/EditAvatar/EditAvatar';
 import EditName from '@/components/Profile/EditProfile/EditName/EditName';
 import EditPassword from '@/components/Profile/EditProfile/EditPassword/EditPassword';
 
-import './EditProfile.css';
+import './EditProfile.scss';
 import { getCenter } from '@/lib/utils/utils';
 
 export default function EditProfile() {

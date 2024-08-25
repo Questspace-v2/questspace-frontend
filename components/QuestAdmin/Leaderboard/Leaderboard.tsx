@@ -2,10 +2,8 @@ import { IAdminLeaderboardResponse } from '@/app/types/quest-interfaces';
 import { Table } from 'antd';
 import Column from 'antd/lib/table/Column';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
-import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-
-import './Leaderboard.css'
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
+import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 export default function Leaderboard({teams}: {teams: IAdminLeaderboardResponse}) {
     const {xs} = useBreakpoint();

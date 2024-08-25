@@ -5,8 +5,6 @@ import { Button, Form, Input, Modal } from 'antd';
 import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updatePassword } from '@/app/api/api';
-
-import '../EditProfile.css';
 import { IUser } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { getCenter } from '@/lib/utils/utils';

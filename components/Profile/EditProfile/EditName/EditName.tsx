@@ -4,8 +4,6 @@ import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updateUser } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
-
-import '../EditProfile.css';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
