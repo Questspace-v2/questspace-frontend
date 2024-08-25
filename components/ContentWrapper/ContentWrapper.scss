@@ -4,7 +4,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background: white;
+    background: var(--cw-background-color);
     max-width: $max-items-width;
     width: 100%;
     height: auto;

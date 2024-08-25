@@ -1,45 +1,25 @@
 @use 'colors' as *;
 
-html[data-theme="dark"] {
-  --background-color: red;
-  --quit-color: #{$red-orange-crayola};
-  --green-color: #{$kelly_green};
-  --primary-color: #{$dodger-blue};
-  --base-text-color: #{$raisin_black};
-  --secondary-text-color: #{$eerie_black};
-  --tertiary-text-color: #{$arsenic};
-  --task-background-color: #{$anti-flash-white};
-}
+//html[data-theme="dark"] {
+//  --background-color: #111;
+//  --quit-color: #{$red-orange-crayola};
+//  --green-color: #{$kelly-green};
+//  --primary-color: #{lighten($dodger-blue, 20%)};
+//  --base-text-color: #{lighten($raisin-black, 50%)};
+//  --secondary-text-color: #{lighten($raisin-black, 50%)};
+//  --tertiary-text-color: #{$arsenic};
+//  --task-background-color: #{$anti-flash-white};
+//  --cw-background-color: #333;
+//}
 
 html[data-theme="light"] {
   --background-color: #{$cultured};
   --quit-color: #{$red-orange-crayola};
-  --green-color: #{$kelly_green};
+  --green-color: #{$kelly-green};
   --primary-color: #{$dodger-blue};
-  --base-text-color: #{$raisin_black};
-  --secondary-text-color: #{$eerie_black};
+  --base-text-color: #{$raisin-black};
+  --secondary-text-color: #{$eerie-black};
   --tertiary-text-color: #{$arsenic};
   --task-background-color: #{$anti-flash-white};
+  --cw-background-color: #{$white};
 }
-
-//html[data-theme="dark"] {
-//  $background-color: red;
-//  $quit-color: $red-orange-crayola;
-//  $green-color: $kelly_green;
-//  $primary-color: $dodger-blue;
-//  $base-text-color: $raisin_black;
-//  $secondary-text-color: $eerie_black;
-//  $tertiary-text-color: $arsenic;
-//  $task-background-color: $anti-flash-white;
-//}
-//
-//html[data-theme="light"] {
-//  $background-color: red !global;
-//  $quit-color: $red-orange-crayola !default;
-//  $green-color: $kelly_green !default;
-//  $primary-color: $dodger-blue !default;
-//  $base-text-color: $raisin_black !default;
-//  $secondary-text-color: $eerie_black !default;
-//  $tertiary-text-color: $arsenic !default;
-//  $task-background-color: $anti-flash-white !default;
-//}

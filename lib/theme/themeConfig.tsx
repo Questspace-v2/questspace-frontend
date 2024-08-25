@@ -6,8 +6,6 @@ const theme: ThemeConfig = {
     token: {
         fontFamily: manrope.style.fontFamily,
         fontSize: 14,
-        colorPrimary: '#1890FF',
-        colorTextBase: '#262626',
         screenXSMin: 320,
         screenXS: 320,
         screenXSMax: 639,

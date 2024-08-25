@@ -36,6 +36,7 @@
         width: 100%;
         box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.016);
         border: 1px solid $cultured;
+        background-color: var(--cw-background-color);
         border-radius: 8px;
         overflow: hidden;
 
@@ -92,7 +93,7 @@ a.quest-card__anchor + div {
             flex-direction: row;
             justify-content: space-between;
             padding: 24px 32px;
-            background: white;
+            background: var(--cw-background-color);
             border-radius: 0 0 16px 16px;
         }
 
