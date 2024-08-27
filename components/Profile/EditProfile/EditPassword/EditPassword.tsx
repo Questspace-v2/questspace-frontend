@@ -4,11 +4,10 @@ import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditP
 import { Button, Form, Input, Modal } from 'antd';
 import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { updatePassword } from '@/app/api/api';
-import { IUser } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
+import UserService from "@/app/api/services/userService";
 
 export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
@@ -22,6 +21,8 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
 
+    const userService = new UserService();
+
     const handleError = (msg = 'Проверьте, правильно ли введен старый пароль') => {
         setErrorMsg(msg);
         setValidationStatus('error');
@@ -31,11 +32,10 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
         form.validateFields().catch(err => {throw err});
         const oldPassword = form.getFieldValue('oldPassword') as string;
         const newPassword = form.getFieldValue('password') as string;
-        const resp = await updatePassword(
+        const resp = await userService.updatePassword(
             id,
             {old_password: oldPassword, new_password: newPassword},
             accessToken)
-            .then(response => response as IUser)
             .catch((error) => {
                 handleError();
                 throw error;

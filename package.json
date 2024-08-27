@@ -37,7 +37,8 @@
     "react-virtualized-auto-sizer": "1.0.24",
     "react-window": "1.8.10",
     "react-window-infinite-loader": "1.0.9",
-    "remark-gfm": "4.0.0"
+    "remark-gfm": "4.0.0",
+    "wretch": "2.9.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.4.2",
