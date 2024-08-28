@@ -6,7 +6,7 @@ import {UpdateUserDataResponseDto} from '@/app/api/dto/userDto/update-user-data-
 import {UpdatePasswordDataDto} from '@/app/api/dto/userDto/update-password-data.dto';
 
 class UserService {
-    private readonly baseUsersUrl = `${BACKEND_URL}/users`;
+    private readonly baseUsersUrl = `${BACKEND_URL}/user`;
 
     public async getUserById(id: string): Promise<UserDto> {
         const url = `${this.baseUsersUrl}/${id}`;
@@ -22,10 +22,13 @@ class UserService {
         accessToken: string
     ): Promise<UpdateUserDataResponseDto> {
         const url = `${this.baseUsersUrl}/${id}`;
-        return wretch(url)
-            .auth(`Bearer ${accessToken}`)
-            .post(data)
-            .json()
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        }).then(response => response.json())
             .then(response => response as UpdateUserDataResponseDto);
     }
 
@@ -35,10 +38,13 @@ class UserService {
         accessToken: string
     ): Promise<UserDto> {
         const url = `${this.baseUsersUrl}/${id}/password`;
-        return wretch(url)
-            .auth(`Bearer ${accessToken}`)
-            .post(data)
-            .json()
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        }).then(response => response.json())
             .then(response => response as UserDto);
     }
 }

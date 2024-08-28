@@ -7,7 +7,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useSession } from 'next-auth/react';
 import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
-import UserService from "@/app/api/services/userService";
+import UserService from '@/app/api/services/userService';
 
 export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
@@ -32,10 +32,8 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
         form.validateFields().catch(err => {throw err});
         const oldPassword = form.getFieldValue('oldPassword') as string;
         const newPassword = form.getFieldValue('password') as string;
-        const resp = await userService.updatePassword(
-            id,
-            {old_password: oldPassword, new_password: newPassword},
-            accessToken)
+        const resp = await userService
+            .updatePassword(id, {old_password: oldPassword, new_password: newPassword}, accessToken)
             .catch((error) => {
                 handleError();
                 throw error;

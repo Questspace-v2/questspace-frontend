@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { message, Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { updateUser } from '@/app/api/api';
 import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import client from '@/app/api/client/client';
@@ -9,7 +8,7 @@ import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { useSession } from 'next-auth/react';
 import { RcFile } from 'antd/es/upload';
 import { getCenter, uid } from '@/lib/utils/utils';
-import { IUserUpdateResponse } from '@/app/types/user-interfaces';
+import UserService from "@/app/api/services/userService";
 
 export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
     const [messageApi, contextHolder] = message.useMessage();
@@ -19,6 +18,8 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
     const {id} = data!.user;
     const {accessToken} = data!;
     const { xs } = useBreakpoint();
+
+    const userService = new UserService();
 
     const error = () => {
         // eslint-disable-next-line no-void
@@ -49,17 +50,17 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
         }
 
         const key = `users/${uid()}`;
-
         const s3Response = await client.handleS3Request(key, fileType, file);
 
         if (s3Response.ok) {
-            const resp = await updateUser(
-                id,
-                {avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}`},
-                accessToken)
-                .catch((err) => {
+            const resp = await userService
+                .updateUserData(
+                    id,
+                    { avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}` },
+                    accessToken
+                ).catch((err) => {
                     throw err;
-                }) as IUserUpdateResponse;
+                });
             await update({image: resp.user.avatar_url, accessToken: resp.access_token});
         }
 

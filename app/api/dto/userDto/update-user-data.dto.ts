@@ -1,4 +1,4 @@
 export interface UpdateUserDataDto {
-    readonly avatar_url: string;
-    readonly username: string;
+    readonly username?: string;
+    readonly avatar_url?: string;
 }
