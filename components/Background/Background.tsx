@@ -8,7 +8,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                 <div className={'background__wrapper'}>
                     <Image
                         className={className}
-                        alt={'Yekaterinburg background'}
+                        alt={'Красивая карта Екатеринбурга'}
                         src={'/Questspace-Background.svg'}
                         quality={100}
                         fill
@@ -24,7 +24,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                 <div className={'background__wrapper background_footer'}>
                     <Image
                         className={className}
-                        alt={'Yekaterinburg footer'}
+                        alt={'Красивая карта Екатеринбурга'}
                         src={'/Questspace-Background.svg'}
                         width={1920}
                         height={1080}

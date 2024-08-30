@@ -35,6 +35,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# sass
+*.css
+*.css.map
+
 
 certificates
 /server.js

@@ -29,7 +29,16 @@
 
     .create-quest__button {
         color: var(--primary-color);
-        pointer-events: auto;
+    }
+}
+
+.quest-tabs__unauth {
+    .ant-tabs-ink-bar {
+        display: none;
+    }
+
+    .ant-tabs-nav-wrap {
+        pointer-events: none;
     }
 }
 

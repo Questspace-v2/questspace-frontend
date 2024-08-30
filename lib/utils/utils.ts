@@ -1,6 +1,8 @@
 import { ALLOWED_USERS_ID } from '@/app/api/client/constants';
 import { usePathname } from 'next/navigation';
 
+export const getClassnames = (...classes: string[]) : string => classes.join(' ').trim();
+
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
 export const getCenter = (clientWidth: number, clientHeight: number) => {

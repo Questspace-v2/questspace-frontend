@@ -19,11 +19,12 @@ import '../main.scss';
 
 export const metadata: Metadata = {
     metadataBase: new URL(FRONTEND_URL),
-    keywords: ['Квестспейс', 'Questspace', 'Квест', 'Матмех', 'Мат-мех'],
+    keywords: ['Квестспейс', 'Квест спейс', 'Questspace', 'Quest space', 'Квест', 'Матмех', 'Мат-мех'],
     title: {
         default: 'Квестспейс',
         template: `%s | Квестспейс`
     },
+    description: 'Веб-приложение для организации и проведения квестов',
     openGraph: {
         description: 'Веб-приложение для организации и проведения квестов',
         images: ['']
