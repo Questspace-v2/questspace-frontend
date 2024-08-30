@@ -18,14 +18,14 @@ export default function Logotype(props: LogotypeProps) {
         return (
             <Image
                 className={className}
-                alt={'questspace logotype'}
+                alt={'Текстовый логотип Квестспейса'}
                 src={'/Questspace-Text.svg'}
                 width={width}
                 height={width / aspectRatio}
                 quality={100}
                 draggable={false}
                 unselectable={'on'}
-                style={style && {height: 'auto'}}
+                style={style && {height: 'auto', userSelect: 'none'}}
                 loading={'eager'}
                 priority
             />
@@ -36,14 +36,14 @@ export default function Logotype(props: LogotypeProps) {
             return (
                 <Image
                     className={className}
-                    alt={'questspace logotype'}
+                    alt={'Иконка-логотип Квестспейса'}
                     src={'/Questspace-Icon.svg'}
                     width={width}
                     height={width}
                     quality={100}
                     draggable={false}
                     unselectable={'on'}
-                    style={style}
+                    style={style && {userSelect: 'none'}}
                     loading={'eager'}
                     priority
                 />

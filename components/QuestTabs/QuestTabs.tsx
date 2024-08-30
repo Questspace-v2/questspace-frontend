@@ -13,6 +13,7 @@ import { IQuest } from '@/app/types/quest-interfaces';
 import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList';
 import { useInView } from 'react-intersection-observer';
 import { DownOutlined } from '@ant-design/icons';
+import { getClassnames } from '@/lib/utils/utils';
 
 export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = true} : {fetchedAllQuests: IQuest[], nextPageId: string, isAuthorized?: boolean}) {
     const { xs} = useBreakpoint();
@@ -158,15 +159,14 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
             <ContentWrapper>
                 <ConfigProvider theme={themeConfig}>
                 <Tabs
-                    className={'quest-tabs'}
+                    className={getClassnames('quest-tabs', isAuthorized ? '' : 'quest-tabs__unauth')}
                     tabBarExtraContent={createQuestButton}
                     items={items}
                     activeKey={selectedTab}
                     style={{
                         width: '100%',
                         minHeight: '250px',
-                        margin: '8px 0 24px 0',
-                        pointerEvents: isAuthorized ? 'auto' : 'none'
+                        margin: '8px 0 24px 0'
                     }}
                     onTabClick={handleSelectTab}
                     destroyInactiveTabPane
