@@ -10,26 +10,14 @@ import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import dynamic from 'next/dynamic';
-import { FRONTEND_URL } from '@/app/api/client/constants';
+import mainMetadata from '@/app/metadata';
 import { ThemeProvider } from 'next-themes';
 
 import './global.scss';
 import '../main.scss';
 
 
-export const metadata: Metadata = {
-    metadataBase: new URL(FRONTEND_URL),
-    keywords: ['Квестспейс', 'Квест спейс', 'Questspace', 'Quest space', 'Квест', 'Матмех', 'Мат-мех'],
-    title: {
-        default: 'Квестспейс',
-        template: `%s | Квестспейс`
-    },
-    description: 'Веб-приложение для организации и проведения квестов',
-    openGraph: {
-        description: 'Веб-приложение для организации и проведения квестов',
-        images: ['']
-    },
-};
+export const metadata: Metadata = mainMetadata;
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
     ssr: false,
