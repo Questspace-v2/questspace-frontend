@@ -28,6 +28,7 @@ export default function Logotype(props: LogotypeProps) {
                 style={style && {height: 'auto', userSelect: 'none'}}
                 loading={'eager'}
                 priority
+                aria-hidden
             />
         );
     }
