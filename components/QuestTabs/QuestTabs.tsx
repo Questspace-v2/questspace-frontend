@@ -170,6 +170,7 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                     }}
                     onTabClick={handleSelectTab}
                     destroyInactiveTabPane
+                    tabIndex={-1}
                 />
                 </ConfigProvider>
             </ContentWrapper>

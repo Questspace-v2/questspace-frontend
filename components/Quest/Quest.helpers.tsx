@@ -135,9 +135,11 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
         return (
             <div className={'quest-header__interactive'}>
                 {team && (
-                    <Link href={`${pathname}/play`}><Button type={'primary'} style={{ backgroundColor: '#52C41A' }}>
-                        <PlayCircleFilled />Открыть задания
-                    </Button></Link>
+                    <Link href={`${pathname}/play`}>
+                        <Button type={'primary'} style={{ backgroundColor: '#52C41A' }} tabIndex={-1}>
+                            <PlayCircleFilled />Открыть задания
+                        </Button>
+                    </Link>
                 )}
                 <p>{`Финиш квеста в ${finishHourMinute}`}</p>
             </div>

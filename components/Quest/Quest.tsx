@@ -56,9 +56,9 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
     if (isCreator) {
         return (
             <ContentWrapper className={'quest-page__admin-panel'}>
-                <p>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
+                <p style={{userSelect: 'none'}}>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
                 <Link shallow href={`${currentPath}/edit`}>
-                    <Button type={'link'} size={'large'} style={{color: '#1890FF'}}><EditOutlined/>Редактировать квест</Button>
+                    <Button type={'link'} size={'large'} style={{color: '#1890FF'}} tabIndex={-1}><EditOutlined/>Редактировать квест</Button>
                 </Link>
 
             </ContentWrapper>
@@ -99,8 +99,9 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
             src={mediaLink}
             width={1000}
             height={0}
-            style={{ width: '100%', objectFit: 'contain', height: 'auto' }}
-            alt={'quest avatar'}
+            style={{ width: '100%', objectFit: 'contain', height: 'auto', userSelect: 'none' }}
+            alt={''}
+            aria-hidden
             loading={'eager'}
             onLoad={({ target }) => {
                 const { naturalWidth, naturalHeight } = target as HTMLImageElement;
@@ -125,21 +126,23 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                         <h1 className={'quest-header__name roboto-flex-header responsive-header-h1'}>{name}</h1>
                         <div className={'quest-preview__information'}>
                             <div className={'information__block'}>
-                                <Image src={avatarUrl} alt={'creator avatar'} priority draggable={false} width={16}
+                                <Image src={avatarUrl} alt={'Автор квеста:'} priority draggable={false} width={16}
                                        height={16} style={{ borderRadius: '8px' }} />
                                 <p>{username}</p>
                             </div>
                             <div className={'information__block'}>
-                                <CalendarOutlined />
+                                <CalendarOutlined aria-hidden />
+                                <span className="off-screen">Начало квеста: </span>
                                 <p className={'quest-header__start'}>{startDateLabel}</p>
                             </div>
                             <div className={'information__block'}>
-                                <HourglassOutlined />
+                                <HourglassOutlined aria-hidden />
+                                <span className="off-screen">Длительность: </span>
                                 <p className={'quest-header__start'}>{timeDiffLabel}</p>
                             </div>
                             <div className={'information__block'}>
-                                <TeamOutlined />
-                                <p className={'quest-header__start'}>макс. {maxTeamCap?.toString()} чел.</p>
+                                <TeamOutlined aria-hidden />
+                                <span className="off-screen">Ограничения по команде: </span><p className={'quest-header__start'}>макс. {maxTeamCap?.toString()} чел.</p>
                             </div>
                         </div>
                     </div>
@@ -323,7 +326,7 @@ function QuestTeam({team, session, status} : {team?: ITeam, session?: Session | 
                 <div className={'team__members'}>
                     {team.members.map((member) => (
                             <div key={uid()} className={`team-member__wrapper ${member.id === team.captain.id ? 'team-member__captain' : ''}`}>
-                                <Image src={member.avatar_url} alt={'member avatar'} width={128} height={128} style={{borderRadius: '50%'}}/>
+                                <Image src={member.avatar_url} alt={''} width={128} height={128} style={{borderRadius: '50%'}} aria-hidden />
                                 <span className={'team-member__name'}>{member.username}</span>
                                 {
                                     RELEASED_FEATURE && session?.user.id === team.captain.id && member.id !== team.captain.id &&

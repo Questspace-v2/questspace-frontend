@@ -30,6 +30,10 @@
     .create-quest__button {
         color: var(--primary-color);
     }
+
+    &.ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
+        overflow: unset;
+    }
 }
 
 .quest-tabs__unauth {

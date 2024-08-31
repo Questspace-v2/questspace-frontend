@@ -27,7 +27,7 @@ export default function QuestCard({props} : {props?: QuestHeaderProps}) {
     const startDateLabel = getStartDateText(startDate);
 
     return (
-        <Link href={`/quest/${id}`} className={'quest-card__anchor'} prefetch={false}>
+        <Link href={`/quest/${id}`} className={'quest-card__anchor'} prefetch={false} tabIndex={0}>
             <Card
                 className={'quest-card quest-card__mode_preview'}
                 cover={<Image
@@ -35,7 +35,7 @@ export default function QuestCard({props} : {props?: QuestHeaderProps}) {
                     fill
                     sizes={'100% 128px'}
                     style={{ objectFit: 'cover' }}
-                    alt={'quest avatar'}
+                    alt={''}
                     placeholder={'empty'}
                     priority
                     onError={() => setSrc('https://storage.yandexcloud.net/questspace-img/assets/error-src.png')}

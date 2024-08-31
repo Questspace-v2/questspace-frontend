@@ -1,2 +1,15 @@
 @use "../components/component-dir";
 
+*:focus-visible {
+  outline: 4px solid #91d5ff !important;
+  transition: outline-offset 0s, outline 0s !important;
+  border-radius: 2px !important;
+  outline-offset: 1px !important;
+  opacity: unset !important;
+}
+
+.off-screen {
+  position: absolute;
+  left: -99999rem;
+}
+
