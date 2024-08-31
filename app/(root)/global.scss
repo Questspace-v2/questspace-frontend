@@ -7,12 +7,13 @@
 html {
     --background-color: #{$cultured};
     --quit-color: #{$red-orange-crayola};
-    --green-color: #{$kelly_green};
+    --green-color: #{$kelly-green};
     --primary-color: #{$dodger-blue};
-    --base-text-color: #{$raisin_black};
-    --secondary-text-color: #{$eerie_black};
+    --base-text-color: #{$raisin-black};
+    --secondary-text-color: #{$eerie-black};
     --tertiary-text-color: #{$arsenic};
     --task-background-color: #{$anti-flash-white};
+    --cw-background-color: white;
 }
 
 html,
