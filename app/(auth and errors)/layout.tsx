@@ -8,25 +8,14 @@ import { ConfigProvider } from 'antd';
 import theme from '@/lib/theme/themeConfig';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import Background from '@/components/Background/Background';
-import { FRONTEND_URL } from '@/app/api/client/constants';
+import mainMetadata from '@/app/metadata';
 import { ThemeProvider } from 'next-themes';
 
 import '../(root)/global.scss';
 import '../main.scss';
 
 
-export const metadata: Metadata = {
-    metadataBase: new URL(FRONTEND_URL),
-    keywords: ['Квестспейс', 'Questspace', 'Квест', 'Матмех', 'Мат-мех'],
-    title: {
-        default: 'Квестспейс',
-        template: `%s | Квестспейс`
-    },
-    openGraph: {
-        description: 'Веб-приложение для организации и проведения квестов',
-        images: ['']
-    },
-};
+export const metadata: Metadata = mainMetadata;
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
     const session = await getServerSession(authOptions);
