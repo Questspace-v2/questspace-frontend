@@ -12,12 +12,13 @@ import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import {createTaskGroupsAndTasks, deleteQuest, getLeaderboardAdmin} from '@/app/api/api';
+import {createTaskGroupsAndTasks, getLeaderboardAdmin} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import dynamic from 'next/dynamic';
+import QuestService from "@/app/api/services/quest.service";
 
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
@@ -34,6 +35,12 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
     const [isOpenModal, setIsOpenModal] = useState(false);
+
+    if (!session) {
+        return null;
+    }
+
+    const questService = new QuestService();
 
     const tabs: TabsProps['items']  = [
         {
@@ -70,7 +77,8 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             centered: true,
             async onOk() {
                 try {
-                    await deleteQuest(questData.quest.id, session?.accessToken)
+                    await questService
+                        .deleteQuest(questData.quest.id, session?.accessToken)
                         .then(() => router.push(`${FRONTEND_URL}`, {scroll: false}));
                 } catch (err) {
                     error();

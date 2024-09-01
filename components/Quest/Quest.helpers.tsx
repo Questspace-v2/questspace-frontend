@@ -7,6 +7,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {TeamModal, TeamModalType} from '@/lib/utils/modalTypes';
+import {TeamDto} from "@/app/api/dto/teamDto/team.dto";
 
 export interface QuestHeaderProps {
     access: string,
@@ -84,7 +85,7 @@ const getStartDateText = (startDate: Date) => {
 
 const getQuestStatusButton = (startDate: Date, registrationDate: Date,
                               finishDate: Date, status: string, currentModal: TeamModalType,
-                              setCurrentModal: Dispatch<SetStateAction<TeamModalType>>, id: string, team?: ITeam) => {
+                              setCurrentModal: Dispatch<SetStateAction<TeamModalType>>, id: string, team?: TeamDto) => {
     const statusQuest = status as QuestStatus;
 
     if (statusQuest === QuestStatus.StatusOnRegistration) {

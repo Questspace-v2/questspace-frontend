@@ -7,7 +7,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { useSession } from 'next-auth/react';
 import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
-import UserService from '@/app/api/services/userService';
+import UserService from '@/app/api/services/user.service';
 
 export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;

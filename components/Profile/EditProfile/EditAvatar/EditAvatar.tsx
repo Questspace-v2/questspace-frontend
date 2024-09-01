@@ -8,7 +8,7 @@ import { UploadRequestOption } from 'rc-upload/lib/interface';
 import { useSession } from 'next-auth/react';
 import { RcFile } from 'antd/es/upload';
 import { getCenter, uid } from '@/lib/utils/utils';
-import UserService from "@/app/api/services/userService";
+import UserService from "@/app/api/services/user.service";
 
 export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
     const [messageApi, contextHolder] = message.useMessage();

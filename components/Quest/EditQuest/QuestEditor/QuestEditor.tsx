@@ -19,8 +19,6 @@ import { FileImageOutlined, MinusOutlined, PlusOutlined, ReloadOutlined, UploadO
 import dayjs from 'dayjs';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import 'dayjs/locale/ru';
-import { IQuest, IQuestCreate } from '@/app/types/quest-interfaces';
-import { createQuest, updateQuest } from '@/app/api/api';
 import client from '@/app/api/client/client';
 import { uid } from '@/lib/utils/utils';
 import { useSession } from 'next-auth/react';
@@ -28,6 +26,8 @@ import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useRouter } from 'next/navigation';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
+import QuestService from "@/app/api/services/quest.service";
+import {CreateQuestDto} from "@/app/api/dto/questDto/create-quest.dto";
 
 dayjs.locale('ru')
 
@@ -108,6 +108,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         access: 'success'
     };
     const [fieldsValidationStatus, setFieldsValidationStatus] = useState(defaultFieldsValidationStatus);
+
+    const questService = new QuestService();
 
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
@@ -197,7 +199,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     handleError();
                     return null;
                 }
-                const data: IQuestCreate = {
+                const data: CreateQuestDto = {
                     access: result.access,
                     description: result.description,
                     finish_time: result.finishTime,
@@ -221,8 +223,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
             return;
         }
         if (isNewQuest) {
-            const result = await createQuest(data, accessToken!)
-                .then(resp => resp as IQuest)
+            const result = await questService
+                .createQuest(data, accessToken!)
                 .catch(error => {
                     throw error;
                 });
@@ -230,8 +232,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                 router.replace(`${FRONTEND_URL}/quest/${result.id}`, {scroll: false});
             }
         } else {
-            const result = await updateQuest(questId!,data, accessToken)
-                .then(resp => resp as IQuest)
+            const result = await questService
+                .updateQuest(questId!, data, accessToken!)
                 .catch(err => {
                     throw err;
                 })

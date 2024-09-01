@@ -1,24 +1,13 @@
 import {
-    IPasswordUpdate,
     ISignIn,
     IUserCreate,
-    IUserUpdate,
 } from '@/app/types/user-interfaces';
 import {
     IHintRequest,
-    IQuestCreate,
-    IQuestTaskGroups,
     ITaskAnswer,
     ITaskGroupsCreateRequest,
 } from '@/app/types/quest-interfaces';
 import client from '@/app/api/client/client';
-
-export const getUserById = async (userId: string) =>
-    client.handleServerRequest(`/user/${userId}`);
-
-export const getQuestById = async (questId: string, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}`, 'GET', undefined,
-        undefined, 'same-origin', accessToken ? {'Authorization': `Bearer ${accessToken}`} : {});
 
 export const authWithGoogle = async (token: string) =>
     client.handleServerRequest('/auth/google', 'POST', {id_token: token});
@@ -29,35 +18,9 @@ export const authRegister = async (data: IUserCreate) =>
 export const authSignIn = async (data: ISignIn) =>
     client.handleServerRequest('/auth/sign-in', 'POST', data);
 
-export const createQuest = async (data: IQuestCreate, accessToken: string) =>
-    client.handleServerRequest('/quest', 'POST', data,
-        undefined, 'same-origin', {'Authorization': `Bearer ${accessToken}`});
-
-export const updateQuest = async (questId: string, data: IQuestCreate, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}`, 'POST', data, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-
-export const updateUser = async (id: string, data: IUserUpdate, accessToken: string) =>
-    client.handleServerRequest(`/user/${id}`, 'POST', data, undefined,'same-origin', {'Authorization': `Bearer ${accessToken}`});
-
-export const updatePassword = async (id: string, data: IPasswordUpdate, accessToken: string) =>
-    client.handleServerRequest(`/user/${id}/password`, 'POST', data, undefined,'same-origin', {'Authorization': `Bearer ${accessToken}`});
-
-export const deleteQuest = async (questId: string, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}`, 'DELETE', undefined, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const deleteUser = async (userId: string, accessToken?: string) =>
-    client.handleServerRequest(`/user/${userId}`, 'DELETE', undefined, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
 export const createTaskGroupsAndTasks = async (questId: string, data: ITaskGroupsCreateRequest, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/task-groups`, 'POST', data, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups) =>
-    client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data);
 
 export const getFilteredQuests = async (fields: string[], accessToken?: string, page_id?: string, page_size = '50') => {
     const params: Record<string, unknown> = {
@@ -79,9 +42,6 @@ export const getFilteredQuests = async (fields: string[], accessToken?: string, 
     );
 }
 
-export const getQuestTeams = async (questId: string) =>
-    client.handleServerRequest(`/quest/${questId}/teams`);
-
 export const createTeam = async (questId: string, data: { name: string }, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/teams`, 'POST', data,
         undefined, 'same-origin',
@@ -95,17 +55,6 @@ export const getQuestByTeamInvite = async (invitePath: string, accessToken?: str
     client.handleServerRequest(`/teams/join/${invitePath}/quest`,
         'GET', undefined, undefined, 'same-origin',
         accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const getTeamById = async (teamId: string) =>
-    client.handleServerRequest(`/teams/all/${teamId}`);
-
-export const updateTeam = async (teamId: string, data: { name: string }, accessToken?: string) =>
-    client.handleServerRequest(`/teams/all/${teamId}`, 'POST', data, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const deleteTeam = async (teamId: string, accessToken?: string) =>
-    client.handleServerRequest(`/teams/all/${teamId}`, 'DELETE', undefined, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const changeTeamCaptain = async (teamId: string, data: {
     new_captain_id: string

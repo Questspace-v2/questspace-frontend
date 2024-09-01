@@ -16,7 +16,7 @@ const DynamicProfile = dynamic(() => import('@/components/Profile/Profile'), {
 
 async function HomePage() {
     const fetchedData = await getBackendQuests('all');
-    const fetchedAllQuests = fetchedData?.quests;
+    const fetchedAllQuests = fetchedData?.quests ?? [];
     const nextPageId = fetchedData?.next_page_id;
     const session = await getServerSession(authOptions);
 
@@ -25,7 +25,7 @@ async function HomePage() {
     return (
         <>
             {isAuthorized && <DynamicProfile />}
-            <DynamicQuestTabs fetchedAllQuests={fetchedAllQuests ?? []} nextPageId={nextPageId ?? ''} isAuthorized={isAuthorized} />
+            <DynamicQuestTabs fetchedAllQuests={[...fetchedAllQuests]} nextPageId={nextPageId ?? ''} isAuthorized={isAuthorized} />
         </>
     );
 }

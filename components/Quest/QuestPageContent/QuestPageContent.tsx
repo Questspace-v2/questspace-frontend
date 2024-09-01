@@ -1,10 +1,10 @@
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
 import { QuestAdminPanel, QuestContent, QuestHeader, QuestResults, QuestTeam } from '@/components/Quest/Quest';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { QuestHeaderProps } from '@/components/Quest/Quest.helpers';
+import {QuestDetailsDto} from '@/app/api/dto/questDto/quest-details.dto';
 
-export default async function QuestPageContent({props, isCreator}: {props: IGetQuestResponse, isCreator: boolean}) {
+export default async function QuestPageContent({props, isCreator}: {props: QuestDetailsDto, isCreator: boolean}) {
     const {quest, team, leaderboard} = props;
     const session = await getServerSession(authOptions);
     return (

@@ -2,20 +2,25 @@
 
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
-import { getFilteredQuests } from '@/app/api/api';
-import { IFilteredQuestsResponse } from '@/app/types/quest-interfaces';
 import { SelectTab } from '@/components/QuestTabs/QuestTabs.helpers';
+import QuestService from '@/app/api/services/quest.service';
+import {PaginationDto} from '@/app/api/dto/questDto/pagination.dto';
 
 export default async function getBackendQuests(tab: SelectTab, pageId?: string, pageSize = '12') {
     const session = await getServerSession(authOptions);
     const accessToken = session?.accessToken;
-    const data = await getFilteredQuests(
-        [`${tab}`],
-        accessToken,
-        pageId,
-        pageSize
-    )
-        .then(res => res as IFilteredQuestsResponse)
+    const questService = new QuestService();
+    const params: PaginationDto = {
+        fields: [`${tab}`],
+        page_size: pageSize,
+    };
+
+    if (pageId) {
+        params.page_id = pageId;
+    }
+
+    const data = await questService
+        .getAllQuests(params, accessToken)
         .catch(err => {
             throw err;
         });
