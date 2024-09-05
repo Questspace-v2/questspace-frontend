@@ -2,7 +2,7 @@ import { QuestAdminPanel, QuestContent, QuestHeader, QuestResults, QuestTeam } f
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { QuestHeaderProps } from '@/components/Quest/Quest.helpers';
-import {QuestDetailsDto} from '@/app/api/dto/questDto/quest-details.dto';
+import {QuestDetailsDto} from '@/app/api/dto/quest-dto/quest-details.dto';
 
 export default async function QuestPageContent({props, isCreator}: {props: QuestDetailsDto, isCreator: boolean}) {
     const {quest, team, leaderboard} = props;

@@ -1,9 +1,9 @@
 import {BACKEND_URL} from '@/app/api/client/constants';
 import wretch from 'wretch';
-import {UserDto} from '@/app/api/dto/userDto/user.dto';
-import {UpdateUserDataDto} from '@/app/api/dto/userDto/update-user-data.dto';
-import {UpdateUserDataResponseDto} from '@/app/api/dto/userDto/update-user-data-response.dto';
-import {UpdatePasswordDataDto} from '@/app/api/dto/userDto/update-password-data.dto';
+import {UserDto} from '@/app/api/dto/user-dto/user.dto';
+import {UpdateUserDataDto} from '@/app/api/dto/user-dto/update-user-data.dto';
+import {UpdateUserDataResponseDto} from '@/app/api/dto/user-dto/update-user-data-response.dto';
+import {UpdatePasswordDataDto} from '@/app/api/dto/user-dto/update-password-data.dto';
 
 class UserService {
     private readonly baseUsersUrl = `${BACKEND_URL}/user`;

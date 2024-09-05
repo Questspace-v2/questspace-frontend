@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { SelectTab } from '@/components/QuestTabs/QuestTabs.helpers';
 import QuestService from '@/app/api/services/quest.service';
-import {PaginationDto} from '@/app/api/dto/questDto/pagination.dto';
+import {PaginationDto} from '@/app/api/dto/quest-dto/pagination.dto';
 
 export default async function getBackendQuests(tab: SelectTab, pageId?: string, pageSize = '12') {
     const session = await getServerSession(authOptions);

@@ -1,11 +1,11 @@
-import { IAdminLeaderboardResponse } from '@/app/types/quest-interfaces';
 import { Table } from 'antd';
 import Column from 'antd/lib/table/Column';
 import ColumnGroup from 'antd/lib/table/ColumnGroup';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
+import {AdminLeaderboardResponseDto} from '@/app/api/dto/play-mode-dto/admin-leaderboard-response.dto';
 
-export default function Leaderboard({teams}: {teams: IAdminLeaderboardResponse}) {
+export default function Leaderboard({teams}: {teams: AdminLeaderboardResponseDto}) {
     const {xs} = useBreakpoint();
     if (!teams.results?.length) {
         return null;

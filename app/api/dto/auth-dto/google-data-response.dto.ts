@@ -1,4 +1,4 @@
-import {UserDto} from '@/app/api/dto/userDto/user.dto';
+import {UserDto} from '@/app/api/dto/user-dto/user.dto';
 
 export interface GoogleDataResponseDto {
     readonly access_token: string;

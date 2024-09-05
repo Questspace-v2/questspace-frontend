@@ -1,11 +1,11 @@
 import {BACKEND_URL} from '@/app/api/client/constants';
-import {PaginationDto} from '@/app/api/dto/questDto/pagination.dto';
-import {CreateQuestDto} from '@/app/api/dto/questDto/create-quest.dto';
-import {QuestDto} from '@/app/api/dto/questDto/quest.dto';
-import {UpdateQuestDto} from '@/app/api/dto/questDto/update-quest.dto';
-import {QuestDetailsDto} from '@/app/api/dto/questDto/quest-details.dto';
+import {PaginationDto} from '@/app/api/dto/quest-dto/pagination.dto';
+import {CreateQuestDto} from '@/app/api/dto/quest-dto/create-quest.dto';
+import {QuestDto} from '@/app/api/dto/quest-dto/quest.dto';
+import {UpdateQuestDto} from '@/app/api/dto/quest-dto/update-quest.dto';
+import {QuestDetailsDto} from '@/app/api/dto/quest-dto/quest-details.dto';
 import buildParams from '@/app/api/utils/buildQueryParams';
-import {FilteredQuestsResponseDto} from '@/app/api/dto/questDto/filtered-quests-response.dto';
+import {FilteredQuestsResponseDto} from '@/app/api/dto/quest-dto/filtered-quests-response.dto';
 
 class QuestService {
     private readonly baseQuestUrl = `${BACKEND_URL}/quest`;

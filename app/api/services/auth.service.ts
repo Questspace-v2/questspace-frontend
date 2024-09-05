@@ -1,11 +1,11 @@
-import {RegisterDataDto} from '@/app/api/dto/authDto/register-data.dto';
+import {RegisterDataDto} from '@/app/api/dto/auth-dto/register-data.dto';
 import {BACKEND_URL} from '@/app/api/client/constants';
 import wretch from 'wretch'
-import {LoginDataDto} from '@/app/api/dto/authDto/login-data.dto';
-import {RegisterDataResponseDto} from '@/app/api/dto/authDto/register-data-response.dto';
-import {LoginDataResponseDto} from '@/app/api/dto/authDto/login-data-response.dto';
-import {GoogleDataDto} from '@/app/api/dto/authDto/google-data.dto';
-import {GoogleDataResponseDto} from '@/app/api/dto/authDto/google-data-response.dto';
+import {LoginDataDto} from '@/app/api/dto/auth-dto/login-data.dto';
+import {RegisterDataResponseDto} from '@/app/api/dto/auth-dto/register-data-response.dto';
+import {LoginDataResponseDto} from '@/app/api/dto/auth-dto/login-data-response.dto';
+import {GoogleDataDto} from '@/app/api/dto/auth-dto/google-data.dto';
+import {GoogleDataResponseDto} from '@/app/api/dto/auth-dto/google-data-response.dto';
 
 class AuthService {
     private readonly endpoints = {

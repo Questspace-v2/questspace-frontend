@@ -3,8 +3,6 @@ import {
     IUserCreate,
 } from '@/app/types/user-interfaces';
 import {
-    IHintRequest,
-    ITaskAnswer,
     ITaskGroupsCreateRequest,
 } from '@/app/types/quest-interfaces';
 import client from '@/app/api/client/client';
@@ -70,22 +68,6 @@ export const leaveTeam = async (teamId: string, accessToken?: string, new_captai
 export const deleteTeamMember = async (teamId: string, memberId: string, accessToken?: string) =>
     client.handleServerRequest(`/teams/all/${teamId}/${memberId}`, 'DELETE', undefined,
         undefined, 'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const answerTaskPlayMode = async (questId: string, data: ITaskAnswer, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}/answer`, 'POST', data, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const takeHintPlayMode = async (questId: string, data: IHintRequest, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}/hint`, 'POST', data, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const getTaskGroupsPlayMode = async (questId: string, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}/play`, 'GET', undefined, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-
-export const getLeaderboardAdmin = async (questId: string, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}/table`, 'GET', undefined, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const getTaskGroupsAdmin = async (questId: string, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/task-groups`, 'GET', undefined,

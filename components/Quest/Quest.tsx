@@ -35,8 +35,8 @@ import remarkGfm from 'remark-gfm';
 import { IFinalLeaderboardRow } from '@/app/types/quest-interfaces';
 import Column from 'antd/lib/table/Column';
 import {TeamModalType} from '@/lib/utils/modalTypes';
-import {TeamDto} from '@/app/api/dto/teamDto/team.dto';
-import {FinalLeaderboardDto} from '@/app/api/dto/questDto/final-leaderboard.dto';
+import {TeamDto} from '@/app/api/dto/team-dto/team.dto';
+import {FinalLeaderboardDto} from '@/app/api/dto/quest-dto/final-leaderboard.dto';
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
     ssr: false,

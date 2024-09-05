@@ -27,7 +27,7 @@ import { useRouter } from 'next/navigation';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 import QuestService from "@/app/api/services/quest.service";
-import {CreateQuestDto} from "@/app/api/dto/questDto/create-quest.dto";
+import {CreateQuestDto} from "@/app/api/dto/quest-dto/create-quest.dto";
 
 dayjs.locale('ru')
 

@@ -1,4 +1,4 @@
-import {PaginationDto} from '@/app/api/dto/questDto/pagination.dto';
+import {PaginationDto} from '@/app/api/dto/quest-dto/pagination.dto';
 
 function buildParams(data: PaginationDto) {
     const params = new URLSearchParams()

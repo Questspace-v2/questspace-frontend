@@ -1,6 +1,6 @@
 'use client';
 
-import {IAdminLeaderboardResponse, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
+import {ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
@@ -12,13 +12,15 @@ import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import {createTaskGroupsAndTasks, getLeaderboardAdmin} from '@/app/api/api';
+import {createTaskGroupsAndTasks} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import dynamic from 'next/dynamic';
-import QuestService from "@/app/api/services/quest.service";
+import QuestService from '@/app/api/services/quest.service';
+import PlayModeService from '@/app/api/services/play-mode.service';
+import {AdminLeaderboardResponseDto} from '@/app/api/dto/play-mode-dto/admin-leaderboard-response.dto';
 
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
@@ -28,7 +30,8 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const router = useRouter();
     const {data: contextData} = useTasksContext()!;
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
-    const [leaderboardTabContent, setLeaderboardTabContent] = useState<IAdminLeaderboardResponse>({results: []});
+    const [leaderboardTabContent, setLeaderboardTabContent] = useState<AdminLeaderboardResponseDto>({results: []});
+
     const aboutTabContent = <EditQuest questData={questData}/>;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData.task_groups} questId={questData.quest.id}/>;
     const {data: session} = useSession();
@@ -41,6 +44,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     }
 
     const questService = new QuestService();
+    const playModeService = new PlayModeService();
 
     const tabs: TabsProps['items']  = [
         {
@@ -93,7 +97,8 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             return;
         }
         if (valueTab === SelectAdminTabs.LEADERBOARD) {
-            const data = await getLeaderboardAdmin(questData.quest.id, session?.accessToken) as IAdminLeaderboardResponse;
+            const data = await playModeService
+                .getAdminLeaderboard(questData.quest.id, session?.accessToken);
             setLeaderboardTabContent(data);
         }
 

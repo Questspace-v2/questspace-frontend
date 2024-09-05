@@ -3,15 +3,15 @@ import Link from 'next/link';
 import { Button } from 'antd';
 import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
-import { IQuestTaskGroupsResponse} from '@/app/types/quest-interfaces';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
 import { ArrowLeftOutlined, HourglassOutlined, TeamOutlined } from '@ant-design/icons';
 
 import './PlayPageContent.scss'
 import { getLongTimeDiff, getRemainingVerb } from '@/components/Quest/Quest.helpers';
+import {TaskGroupsPlayModeResponseDto} from "@/app/api/dto/play-mode-dto/task-groups-play-mode-response.dto";
 
-export default function PlayPageContent({props}: {props: IQuestTaskGroupsResponse}) {
+export default function PlayPageContent({props}: {props: TaskGroupsPlayModeResponseDto}) {
     const {name: teamName} = props.team;
     const {name: questName, id: questId, finish_time: finishTime} = props.quest;
     const nowDate = new Date();

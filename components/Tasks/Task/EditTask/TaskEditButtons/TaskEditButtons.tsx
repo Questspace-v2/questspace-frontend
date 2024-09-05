@@ -1,18 +1,18 @@
 'use client';
 
-import {Button, ConfigProvider, UploadFile} from "antd";
-import {blueOutlinedButton, redOutlinedButton} from "@/lib/theme/themeConfig";
-import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import {useState} from "react";
-import {ITask} from "@/app/types/quest-interfaces";
-import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
-import dynamic from "next/dynamic";
+import {Button, ConfigProvider, UploadFile} from 'antd';
+import {blueOutlinedButton, redOutlinedButton} from '@/lib/theme/themeConfig';
+import {CopyOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {useState} from 'react';
+import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
+import dynamic from 'next/dynamic';
+import {TaskDto} from '@/app/api/dto/task-groups-dto/task.dto';
 
 interface TaskEditButtonsProps {
-    questId: string,
-    mobile526: boolean,
-    taskGroupName: string,
-    task: ITask
+    readonly questId: string,
+    readonly mobile526: boolean,
+    readonly taskGroupName: string,
+    readonly task: TaskDto
 }
 
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
@@ -44,7 +44,7 @@ export default function TaskEditButtons({questId, mobile526, taskGroupName, task
     };
 
     const handleCopyTask = () => {
-        const copiedTask: ITask = {
+        const copiedTask: TaskDto = {
             ...task,
             pub_time: new Date().toISOString()
         };

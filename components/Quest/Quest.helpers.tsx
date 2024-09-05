@@ -7,7 +7,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {TeamModal, TeamModalType} from '@/lib/utils/modalTypes';
-import {TeamDto} from "@/app/api/dto/teamDto/team.dto";
+import {TeamDto} from "@/app/api/dto/team-dto/team.dto";
 
 export interface QuestHeaderProps {
     access: string,

@@ -4,15 +4,15 @@ import { Collapse, CollapseProps } from 'antd';
 import Task from '@/components/Tasks/Task/Task';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
-import { ITaskGroup } from '@/app/types/quest-interfaces';
 import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra/TaskGroupExtra';
 
 import './TaskGroup.scss';
+import {TaskGroupDto} from '@/app/api/dto/task-groups-dto/task-group.dto';
 
 interface TaskGroupProps {
-    mode: TasksMode,
-    props: ITaskGroup,
-    questId: string
+    readonly mode: TasksMode,
+    readonly props: TaskGroupDto,
+    readonly questId: string
 }
 
 export default function TaskGroup({mode, props, questId} : TaskGroupProps) {

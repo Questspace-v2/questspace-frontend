@@ -1,4 +1,4 @@
-import {QuestDto} from '@/app/api/dto/questDto/quest.dto';
+import {QuestDto} from '@/app/api/dto/quest-dto/quest.dto';
 
 export interface FilteredQuests {
     readonly next_page_id: string,
