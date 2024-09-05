@@ -11,7 +11,6 @@ import Header from '@/components/Header/Header';
 import Body from '@/components/Body/Body';
 import dynamic from 'next/dynamic';
 import mainMetadata from '@/app/metadata';
-import { ThemeProvider } from 'next-themes';
 
 import './global.scss';
 import '../main.scss';
@@ -31,7 +30,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         <html lang="ru">
         <body className={`${manrope.variable} ${robotoFlex.variable}`}>
         <NextAuthProvider session={session}>
-            <ThemeProvider>
+            {/* <ThemeProvider> */}
                 <AntdRegistry>
                     <ConfigProvider theme={theme}>
                         <div className={'App'}>
@@ -43,7 +42,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
                         </div>
                     </ConfigProvider>
                 </AntdRegistry>
-            </ThemeProvider>
+            {/* </ThemeProvider> */}
         </NextAuthProvider>
         </body>
         </html>
