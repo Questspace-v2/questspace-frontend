@@ -6,19 +6,29 @@ import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
+import { createTaskGroupsAndTasks } from '@/app/api/api';
+import { useSession } from 'next-auth/react';
+import { ITaskGroup } from '@/app/types/quest-interfaces';
 
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
     {ssr: false});
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
     {ssr: false});
 
-export default function TaskGroupExtra({questId, edit, taskGroupName}: {questId: string, edit: boolean, taskGroupName: string}) {
+interface ITaskGroupExtra {
+    questId: string,
+    edit: boolean,
+    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
+}
+
+export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGroupExtra) {
     const [open, setOpen] = useState(false);
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [isOpenNameModal, setIsOpenNameModal] = useState(false);
+    const {data: session} = useSession();
 
-    const { updater: setContextData} = useTasksContext()!;
+    const {data: contextData, updater: setContextData} = useTasksContext()!;
 
     const handleMenuClick: MenuProps['onClick'] = () => {
         setOpen(false);
@@ -36,11 +46,18 @@ export default function TaskGroupExtra({questId, edit, taskGroupName}: {questId:
         setIsOpenCreateModal(true);
     };
 
-    const handleDeleteGroup = () => {
+    const handleDeleteGroup = async () => {
+        const newTaskGroups = contextData.task_groups.filter(
+            group => group.id !== taskGroupProps.id || group.pub_time !== taskGroupProps.pub_time
+        );
         setContextData((prevState) => ({
             ...prevState,
-            task_groups: prevState.task_groups.filter(group => group.name !== taskGroupName)
+            task_groups: newTaskGroups
         }));
+
+        await createTaskGroupsAndTasks(
+            questId, {...contextData, task_groups: newTaskGroups}, session?.accessToken
+        );
     };
 
     const items: MenuProps['items'] = [
@@ -59,6 +76,7 @@ export default function TaskGroupExtra({questId, edit, taskGroupName}: {questId:
 
             label: <><DeleteOutlined/>Удалить раздел</>,
             key: '3',
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick: handleDeleteGroup
         },
     ];
@@ -95,13 +113,13 @@ export default function TaskGroupExtra({questId, edit, taskGroupName}: {questId:
                 questId={questId}
                 isOpen={isOpenCreateModal}
                 setIsOpen={setIsOpenCreateModal}
-                taskGroupName={taskGroupName}
+                taskGroupProps={taskGroupProps}
                 fileList={fileList}
                 setFileList={setFileList}
             />
             <DynamicEditTaskGroup
                 questId={questId}
-                taskGroupName={taskGroupName}
+                taskGroupProps={taskGroupProps}
                 isOpen={isOpenNameModal}
                 setIsOpen={setIsOpenNameModal}
             />

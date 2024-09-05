@@ -8,26 +8,27 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 import {useSession} from "next-auth/react";
 import {createTaskGroupsAndTasks} from "@/app/api/api";
+import { ITaskGroup } from '@/app/types/quest-interfaces';
 
 interface TaskGroupModalProps {
     questId: string;
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,
-    taskGroupName?: string,
+    taskGroupProps?: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
 }
 
 export interface TaskGroupForm {
     groupName: string
 }
 
-export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupName}: TaskGroupModalProps) {
+export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProps}: TaskGroupModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs } = useBreakpoint();
     const [form] = Form.useForm<TaskGroupForm>();
 
     const {data: contextData, updater: setContextData} = useTasksContext()!;
-    const title = taskGroupName ? 'Изменить название раздела' : 'Название раздела';
+    const title = taskGroupProps ? 'Изменить название раздела' : 'Название раздела';
 
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
     const [errorMsg, setErrorMsg] = useState<string>('');
@@ -41,7 +42,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupName
 
     const handleSave = async () => {
         const taskGroups = contextData.task_groups ?? [];
-        const currentTaskGroup = taskGroups.find(item => item.name === taskGroupName)!;
+        const currentTaskGroup = taskGroups.find(item => item.id === taskGroupProps?.id && item.pub_time === taskGroupProps?.pub_time)!;
         const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
         const groupName = form.getFieldValue('groupName') as string;
 
@@ -51,7 +52,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupName
             return;
         }
 
-        if (taskGroupName) {
+        if (taskGroupProps) {
             taskGroups[taskGroupIndex].name = groupName;
             setContextData((prevState) => ({
                 ...prevState,
@@ -94,7 +95,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupName
               autoComplete={'off'}
               preserve={false}
               initialValues={{
-                  groupName: taskGroupName
+                  groupName: taskGroupProps?.name
               }}
           >
               <Form.Item name={'groupName'} validateStatus={validationStatus} help={errorMsg}>
