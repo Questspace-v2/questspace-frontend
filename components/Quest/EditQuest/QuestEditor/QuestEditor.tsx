@@ -156,18 +156,13 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const handleValidation = async () => {
         const imageValidation = fileList.length > 0;
         const s3Response = imageValidation && await handleS3Response();
-        if (!s3Response && !previousImage) {
-            setFieldsValidationStatus((prevState) => ({
-                ...prevState,
-                image: 'error'
-            }));
-            return;
-        }
+
         // eslint-disable-next-line consistent-return
         return form.validateFields()
             .then(values => {
                 if (!values.name || !values.description || !values.registrationDeadline
-                    || !values.startTime || !values.finishTime || !values.access) {
+                    || !values.startTime || !values.finishTime || !values.access
+                    || !s3Response && !previousImage) {
                     setFieldsValidationStatus((prevState) => ({
                         ...prevState,
                         name: !values.name ? 'error' : prevState.name,
@@ -175,7 +170,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         registrationDeadline: !values.registrationDeadline ? 'error' : prevState.registrationDeadline,
                         startTime: !values.startTime ? 'error' : prevState.startTime,
                         finishTime: !values.finishTime ? 'error' : prevState.finishTime,
-                        access: !values.access ? 'error' : prevState.access
+                        access: !values.access ? 'error' : prevState.access,
+                        image: !s3Response && !previousImage ? 'error': prevState.image,
                     }));
                     handleError();
                     return null;
@@ -258,7 +254,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     ]}
                     autoComplete={'off'}
                 >
-                    {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>}
+                    {errorMsg && <p className={'quest-editor__validation-error'}>{errorMsg}</p>}
                     <Form.Item<QuestAboutForm>
                         name={'name'}
                         label={'Название квеста'}
@@ -281,7 +277,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         name={'description'}
                         label={
                             <p className={'description__label'}>
-                                Описание <span style={{color: '#00000073'}}>поддерживает Markdown</span>
+                                Описание <span className={'light-description'}>поддерживает Markdown</span>
                             </p>
                         }
                         colon={false}
@@ -298,12 +294,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             }}
                         />
                     </Form.Item>
-                    {fieldsValidationStatus.image === 'error' ?? <p style={{color: 'red'}}>Добавьте обложку</p>}
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__image-form-item'}
                         label={'Обложка'}
                         colon={false}
-                        help={fieldsValidationStatus.image === 'error' ? <p style={{color: 'red'}}>Добавьте обложку</p> : ''}
+                        help={fieldsValidationStatus.image === 'error' && <p className={'quest-editor__validation-error'}>Добавьте обложку</p>}
                         validateStatus={fieldsValidationStatus.image}
                     >
                         <Upload maxCount={1} showUploadList={false}
@@ -427,8 +422,9 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         label={'Доступ к квесту'}
                         colon={false}
                         required
-                        help={fieldsValidationStatus.access === 'error' ?
-                            <p style={{color: 'red'}}>Выберите тип доступа</p> : ''}
+                        help={fieldsValidationStatus.access === 'error' &&
+                            <p className={'quest-editor__validation-error'}>Выберите тип доступа</p>}
+                        validateStatus={fieldsValidationStatus.access}
                     >
                     <Radio.Group
                         onChange={() => {
@@ -440,11 +436,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         }}>
                             <Radio value={'public'}>
                                 Публичный
-                                <p>Квест увидят все пользователи Квестспейса</p>
+                                <p className={'light-description'}>Квест увидят все пользователи Квестспейса</p>
                             </Radio>
                             <Radio value={'link_only'}>
                                 Только по ссылке
-                                <p>Квест увидят только пользователи, которые зарегистрировались на него</p>
+                                <p className={'light-description'}>Квест увидят только пользователи, которые зарегистрировались на него</p>
                             </Radio>
                         </Radio.Group>
                     </Form.Item>
