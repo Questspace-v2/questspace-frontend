@@ -199,6 +199,12 @@ body:has(.page__not-found) {
     }
 }
 
+body:has(.ant-modal-root) {
+    .App {
+        position: absolute;
+    }
+}
+
 @media (max-width: $xl-breakpoint-1279) {
     h1 {
         &.responsive-header-h1 {
