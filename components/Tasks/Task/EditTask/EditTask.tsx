@@ -29,6 +29,7 @@ import './EditTask.scss';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
+import { ITaskGroup } from '@/app/types/quest-interfaces';
 import client from '@/app/api/client/client';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
 import {useSession} from 'next-auth/react';
@@ -41,10 +42,10 @@ interface TaskCreateModalProps {
     readonly questId: string,
     readonly isOpen: boolean,
     readonly setIsOpen: Dispatch<SetStateAction<boolean>>,
-    readonly taskGroupName: string,
+    readonly taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>,
     readonly fileList: UploadFile[],
     readonly setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
-    readonly task?: TaskDto
+    readonly task?: TaskDto,
 }
 
 export interface TaskForm {
@@ -55,7 +56,7 @@ export interface TaskForm {
     taskPoints: number
 }
 
-export default function EditTask({questId, isOpen, setIsOpen, taskGroupName, fileList, setFileList, task}: TaskCreateModalProps) {
+export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fileList, setFileList, task}: TaskCreateModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs, md } = useBreakpoint();
@@ -139,7 +140,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupName, fil
     const handleSaveTask = async () => {
         const taskGroups = contextData.task_groups;
         const taskGroup = taskGroups
-            .find(group => group.name === taskGroupName)!;
+            .find(group => group.id === taskGroupProps.id && group.pub_time === taskGroupProps.pub_time)!;
         const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
         const imageValidation = fileList.length > 0;
@@ -191,7 +192,12 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupName, fil
             return;
         }
 
-        taskGroup.tasks.push(newTask);
+        if (taskGroup.tasks) {
+            taskGroup.tasks.push(newTask);
+        } else {
+            taskGroup.tasks = [newTask];
+        }
+
         taskGroups[taskGroupIndex] = taskGroup;
         setContextData((prevState) => ({
             ...prevState,

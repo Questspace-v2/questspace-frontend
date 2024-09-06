@@ -1,5 +1,6 @@
 import TaskEditButtons from '@/components/Tasks/Task/EditTask/TaskEditButtons/TaskEditButtons';
 import {TaskDto} from '@/app/api/dto/task-groups-dto/task.dto';
+import { ITaskGroup } from '@/app/types/quest-interfaces';
 
 export const enum TasksMode {
     EDIT = 'edit',
@@ -9,7 +10,7 @@ export const enum TasksMode {
 export const getTaskExtra = (
     edit: boolean,
     mobile526: boolean,
-    taskGroupName: string,
+    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>,
     task: TaskDto,
     questId: string
 ) => {
@@ -18,7 +19,7 @@ export const getTaskExtra = (
             <TaskEditButtons
                 questId={questId}
                 mobile526={mobile526}
-                taskGroupName={taskGroupName}
+                taskGroupProps={taskGroupProps}
                 task={task} key={task.pub_time}
             />
         );

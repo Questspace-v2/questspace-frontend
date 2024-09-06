@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { uid } from '@/lib/utils/utils';
 import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
-import { IHintRequest, ITaskAnswer } from '@/app/types/quest-interfaces';
+import { IHintRequest, ITaskAnswer, ITaskGroup } from '@/app/types/quest-interfaces';
 import { SendOutlined } from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
@@ -36,10 +36,10 @@ interface TaskProps {
     readonly mode: TasksMode,
     readonly props: TaskDto,
     readonly questId: string,
-    readonly taskGroupName: string
+    readonly taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>,
 }
 
-export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
+export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
     const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
@@ -154,7 +154,7 @@ export default function Task({mode, props, questId, taskGroupName}: TaskProps) {
             {contextHolder}
             <div className={'task__text-part'}>
                 <h4 className={'roboto-flex-header task__name'}>{name}</h4>
-                {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupName, props, questId)}
+                {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
             {mediaLink && (
