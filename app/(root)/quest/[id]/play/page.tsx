@@ -2,15 +2,16 @@ import { getServerSession } from 'next-auth';
 import React from 'react';
 import { notFound, redirect } from 'next/navigation';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
-import { IQuestTaskGroupsResponse } from '@/app/types/quest-interfaces';
 import PlayPageContent from '@/components/Tasks/PlayPageContent/PlayPageContent';
-import { getTaskGroupsPlayMode } from '@/app/api/api';
+import PlayModeService from '@/app/api/services/play-mode.service';
 
 
 export default async function PlayQuestPage({params}: {params: {id: string}}) {
     const session = await getServerSession(authOptions);
+    const playModeService = new PlayModeService();
 
-    const questData = await getTaskGroupsPlayMode(params.id, session?.accessToken) as IQuestTaskGroupsResponse;
+    const questData = await playModeService
+        .getTaskGroupsPlayMode(params.id, session?.accessToken);
 
     if (!questData || questData.error) {
         notFound();

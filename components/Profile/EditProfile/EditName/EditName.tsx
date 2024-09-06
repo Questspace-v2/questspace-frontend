@@ -2,11 +2,10 @@ import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditP
 import { Button, Form, Input, Modal } from 'antd';
 import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import { updateUser } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
-import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
+import UserService from "@/app/api/services/user.service";
 
 export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
@@ -20,6 +19,8 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
 
+    const userService = new UserService();
+
     const handleError = (msg = 'Логин уже занят') => {
         setValidationStatus('error');
         setErrorMsg(msg);
@@ -32,13 +33,15 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
             handleError('Логин не может быть пустым');
             return;
         }
-        const resp = await updateUser(id, { username }, accessToken)
-            .then(response => response as IUserUpdateResponse)
+
+        const resp = await userService
+            .updateUserData(id, { username }, accessToken)
             .catch((error) => {
                 throw error;
             });
         if (resp) {
-            await update({name: resp.user.username, accessToken: resp.access_token}).then(() => setCurrentModal!(ModalEnum.EDIT_PROFILE));
+            await update({name: resp.user.username, accessToken: resp.access_token})
+                .then(() => setCurrentModal!(ModalEnum.EDIT_PROFILE));
         } else {
             handleError();
         }

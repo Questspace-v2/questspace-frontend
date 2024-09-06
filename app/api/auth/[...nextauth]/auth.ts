@@ -2,9 +2,10 @@
 import { Account, NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { ISignIn, ISignInResponse, IUserCreate } from '@/app/types/user-interfaces';
-import { authRegister, authSignIn, authWithGoogle } from '@/app/api/api';
+import { ISignInResponse } from '@/app/types/user-interfaces';
 import { JWT } from 'next-auth/jwt';
+import AuthService from '@/app/api/services/auth.service';
+import {GoogleDataDto, LoginDataDto, RegisterDataDto} from '@/app/api/dto/auth-dto/auth';
 
 const authOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -23,13 +24,15 @@ const authOptions: NextAuthOptions = {
             },
             // @ts-expect-error все нормально, все под контролем
             async authorize(credentials) {
-                const {username, password} = credentials as ISignIn;
+                const {username, password} = credentials as LoginDataDto;
+                const authService = new AuthService();
+
                 if (!username || !password) {
                     return null;
                 }
 
-                const user = await authSignIn({username, password})
-                    .then(response => response as ISignInResponse)
+                const user = await authService
+                    .login({username, password})
                     .catch(() => null);
                 if (!user) {
                     return null;
@@ -47,12 +50,14 @@ const authOptions: NextAuthOptions = {
             },
             // @ts-expect-error все нормально, все под контролем
             async authorize(credentials) {
-                const {username, password} = credentials as IUserCreate;
+                const {username, password} = credentials as RegisterDataDto;
+                const authService = new AuthService();
+
                 if (!username || !password) {
                     return null;
                 }
-                const user = await authRegister({username, password})
-                    .then(response => response as ISignInResponse)
+                const user = await authService
+                    .register({username, password})
                     .catch(() => null);
 
                 if (!user) {
@@ -81,8 +86,12 @@ const authOptions: NextAuthOptions = {
             if (account?.provider === 'google') {
                 token.isOAuthProvider = true;
                 const googleToken = account.id_token;
+                const authService = new AuthService();
                 if (googleToken) {
-                    const backendResponse = await authWithGoogle(googleToken) as ISignInResponse;
+                    const data: GoogleDataDto = {
+                        id_token: googleToken,
+                    };
+                    const backendResponse = await authService.authWithGoogle(data);
                     if (backendResponse) {
                         token.accessToken = backendResponse.access_token;
                         token.id = backendResponse.user.id;

@@ -24,7 +24,6 @@ import {
 } from '@/components/Quest/Quest.helpers';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ITeam } from '@/app/types/user-interfaces';
 import Image from 'next/image';
 import { parseToMarkdown, uid } from '@/lib/utils/utils';
 import dynamic from 'next/dynamic';
@@ -33,9 +32,11 @@ import { Session } from 'next-auth';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import { RELEASED_FEATURE } from '@/app/api/client/constants';
 import remarkGfm from 'remark-gfm';
-import { IFinalLeaderboard, IFinalLeaderboardRow } from '@/app/types/quest-interfaces';
+import { IFinalLeaderboardRow } from '@/app/types/quest-interfaces';
 import Column from 'antd/lib/table/Column';
 import {TeamModalType} from '@/lib/utils/modalTypes';
+import {TeamDto} from '@/app/api/dto/team-dto/team.dto';
+import {FinalLeaderboardDto} from '@/app/api/dto/quest-dto/final-leaderboard.dto';
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/CreateTeam/CreateTeam'), {
     ssr: false,
@@ -68,7 +69,7 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
     return null;
 }
 
-function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
+function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: TeamDto}) {
     const [aspectRatio, setAspectRatio] = useState('0/1');
     const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
     if (!props) {
@@ -205,7 +206,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
     return null;
 }
 
-function QuestResults({ status, leaderboard }: { status: QuestStatus | string, leaderboard?: IFinalLeaderboard }) {
+function QuestResults({ status, leaderboard }: { status: QuestStatus | string, leaderboard?: FinalLeaderboardDto }) {
     const statusQuest = status as QuestStatus;
     if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
         return (
@@ -252,7 +253,7 @@ function QuestResults({ status, leaderboard }: { status: QuestStatus | string, l
     return null;
 }
 
-function QuestTeam({team, session, status} : {team?: ITeam, session?: Session | null, status?: string}) {
+function QuestTeam({team, session, status} : {team?: TeamDto, session?: Session | null, status?: string}) {
     const router = useRouter();
     const statusType = status as QuestStatus;
     const [modal, modalContextHolder] = Modal.useModal();

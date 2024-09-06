@@ -28,23 +28,24 @@ import {
 import './EditTask.scss';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
-import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
-import { ITask, ITaskGroup } from '@/app/types/quest-interfaces';
-import client from "@/app/api/client/client";
-import {ValidationStatus} from "@/lib/utils/modalTypes";
-import {useSession} from "next-auth/react";
-import {createTaskGroupsAndTasks} from "@/app/api/api";
+import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
+import { ITaskGroup } from '@/app/types/quest-interfaces';
+import client from '@/app/api/client/client';
+import {ValidationStatus} from '@/lib/utils/modalTypes';
+import {useSession} from 'next-auth/react';
+import {createTaskGroupsAndTasks} from '@/app/api/api';
+import {TaskDto} from '@/app/api/dto/task-groups-dto/task.dto';
 
 const {TextArea} = Input;
 
 interface TaskCreateModalProps {
-    questId: string,
-    isOpen: boolean,
-    setIsOpen: Dispatch<SetStateAction<boolean>>,
-    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
-    fileList: UploadFile[],
-    setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
-    task?: ITask
+    readonly questId: string,
+    readonly isOpen: boolean,
+    readonly setIsOpen: Dispatch<SetStateAction<boolean>>,
+    readonly taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>,
+    readonly fileList: UploadFile[],
+    readonly setFileList: React.Dispatch<React.SetStateAction<UploadFile[]>>,
+    readonly task?: TaskDto,
 }
 
 export interface TaskForm {
@@ -88,7 +89,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 taskText: question,
                 taskPoints: reward,
                 hints: hints as string[],
-                answers: correctAnswers
+                answers: [...correctAnswers]
             };
 
             form.setFieldsValue(formProps);
@@ -164,7 +165,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             return;
         }
 
-        const newTask: ITask = {
+        const newTask: TaskDto = {
             name: taskName,
             pub_time: pubTime.toISOString(),
             question: taskText,

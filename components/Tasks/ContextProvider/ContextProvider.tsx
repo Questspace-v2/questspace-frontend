@@ -1,17 +1,18 @@
 'use client'
 
 import React, { createContext, useContext, useState } from 'react';
-import {ITaskGroup, ITaskGroupsCreateRequest} from '@/app/types/quest-interfaces';
+import {TaskGroupDto} from '@/app/api/dto/task-groups-dto/task-group.dto';
+import {CreateTaskGroupsDto} from '@/app/api/dto/task-groups-dto/create-task-groups.dto';
 
 export interface IContext {
-    data: ITaskGroupsCreateRequest,
-    updater: React.Dispatch<React.SetStateAction<ITaskGroupsCreateRequest>>
+    data: CreateTaskGroupsDto,
+    updater: React.Dispatch<React.SetStateAction<CreateTaskGroupsDto>>
 }
 
 const TasksContext = createContext<IContext | null>(null);
 
-export default function ContextProvider({children, taskGroups}: {children: React.ReactNode, taskGroups: ITaskGroup[]}) {
-    const [state, setState] = useState<ITaskGroupsCreateRequest>(
+export default function ContextProvider({children, taskGroups}: {children: React.ReactNode, taskGroups: TaskGroupDto[]}) {
+    const [state, setState] = useState<CreateTaskGroupsDto>(
         {task_groups: taskGroups}
     );
 

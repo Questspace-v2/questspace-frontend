@@ -1,8 +1,14 @@
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
 import TaskGroup from '@/components/Tasks/TaskGroup/TaskGroup';
-import { ITaskGroup } from '@/app/types/quest-interfaces';
+import {TaskGroupDto} from '@/app/api/dto/task-groups-dto/task-group.dto';
 
-export default function Tasks({mode, props, questId} : {mode: TasksMode, props: ITaskGroup[], questId: string}) {
+interface TasksProps {
+    readonly mode: TasksMode;
+    readonly props: readonly TaskGroupDto[];
+    readonly questId: string;
+}
+
+export default function Tasks({mode, props, questId} : TasksProps) {
     return (
         <>
             {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}

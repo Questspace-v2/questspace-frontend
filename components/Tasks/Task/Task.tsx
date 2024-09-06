@@ -3,11 +3,10 @@
 import Image from 'next/image';
 import { uid } from '@/lib/utils/utils';
 import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
-import { IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
+import { IHintRequest, ITaskAnswer, ITaskGroup } from '@/app/types/quest-interfaces';
 import { SendOutlined } from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
-import { answerTaskPlayMode, takeHintPlayMode } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -15,6 +14,9 @@ import './Task.scss';
 import { useRouter } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import PlayModeService from '@/app/api/services/play-mode.service';
+import {TaskAnswerResponseDto} from '@/app/api/dto/play-mode-dto/task-answer-response.dto';
+import {TaskDto} from '@/app/api/dto/task-groups-dto/task.dto';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -31,10 +33,10 @@ const enum InputStates {
 }
 
 interface TaskProps {
-    mode: TasksMode,
-    props: ITask,
-    questId: string,
-    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
+    readonly mode: TasksMode,
+    readonly props: TaskDto,
+    readonly questId: string,
+    readonly taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>,
 }
 
 export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
@@ -61,6 +63,8 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     const [sendButtonContent, setSendButtonContent] = useState<JSX.Element | null>(<SendOutlined/>);
     const [inputValidationStatus, setInputValidationStatus] = useState<'success' | 'error' | ''>(teamAnswer ? 'success' : '');
     const [textColor, setTextColor] = useState(teamAnswer ? '#389e0d' : '#262626');
+
+    const playModeService = new PlayModeService();
 
     const onFinish: CountdownProps['onFinish'] = () => {
         setSendButtonContent(<SendOutlined/>);
@@ -90,7 +94,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
 
         setOpenConfirm(false);
         setOpenConfirmIndex(null);
-        await takeHintPlayMode(questId, data, session?.accessToken);
+        await playModeService.takeHint(questId, data, session?.accessToken);
         router.refresh();
     };
 
@@ -121,7 +125,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         }
     };
 
-    const handleAnswerValidation = (answerResponse: ITaskAnswerResponse) => {
+    const handleAnswerValidation = (answerResponse: TaskAnswerResponseDto) => {
         if (answerResponse.accepted) {
             setInputValidationStatus('success');
             handleAccept();
@@ -140,7 +144,8 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
 
         setSendButtonState(SendButtonStates.LOADING);
         setSendButtonContent(null);
-        const answerResponse = await answerTaskPlayMode(questId, data, session?.accessToken) as ITaskAnswerResponse;
+        const answerResponse = await playModeService
+            .answerTask(questId, data, session?.accessToken);
         handleAnswerValidation(answerResponse);
     };
 

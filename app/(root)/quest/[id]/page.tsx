@@ -2,23 +2,15 @@ import React from 'react';
 import { getServerSession } from 'next-auth';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { notFound } from 'next/navigation';
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
-import { getQuestById } from '@/app/api/api';
 import QuestPageContent from '@/components/Quest/QuestPageContent/QuestPageContent';
-
+import QuestService from "@/app/api/services/quest.service";
 
 // eslint-disable-next-line consistent-return
 export async function generateMetadata({params}: {params: {id: string}}) {
+    const questService = new QuestService();
     try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const response = await getQuestById(params.id);
-
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (response?.length <= 0) {
-            notFound();
-        }
-
-        const data = (response as IGetQuestResponse).quest;
+        const response = await questService.getQuestById(params.id);
+        const data = response.quest;
 
         return {
             title: data.name,
@@ -35,8 +27,14 @@ export async function generateMetadata({params}: {params: {id: string}}) {
 
 export default async function QuestPage({params}: {params: {id: string}}) {
     const session = await getServerSession(authOptions);
-    const questData = await getQuestById(params.id, session?.accessToken)
-        .then(res => res as IGetQuestResponse)
+
+    if (!session) {
+        return null;
+    }
+
+    const questService = new QuestService();
+    const questData = await questService
+        .getQuestById(params.id, session.accessToken)
         .catch(err => {
             throw err;
         })

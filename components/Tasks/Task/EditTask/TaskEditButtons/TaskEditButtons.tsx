@@ -1,20 +1,21 @@
 'use client';
 
-import {Button, ConfigProvider, UploadFile} from "antd";
-import {blueOutlinedButton, redOutlinedButton} from "@/lib/theme/themeConfig";
-import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import {useState} from "react";
-import { ITask, ITaskGroup } from '@/app/types/quest-interfaces';
-import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
-import dynamic from "next/dynamic";
+import {Button, ConfigProvider, UploadFile} from 'antd';
+import {blueOutlinedButton, redOutlinedButton} from '@/lib/theme/themeConfig';
+import {CopyOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
+import {useState} from 'react';
+import { ITaskGroup } from '@/app/types/quest-interfaces';
+import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
+import dynamic from 'next/dynamic';
+import {TaskDto} from '@/app/api/dto/task-groups-dto/task.dto';
 import { createTaskGroupsAndTasks } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 
 interface TaskEditButtonsProps {
-    questId: string,
-    mobile526: boolean,
-    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
-    task: ITask
+    readonly questId: string,
+    readonly mobile526: boolean,
+    readonly taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>,
+    readonly task: TaskDto
 }
 
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
@@ -48,7 +49,7 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
     };
 
     const handleCopyTask = async () => {
-        const copiedTask: ITask = {
+        const copiedTask: TaskDto = {
             ...task,
             pub_time: new Date().toISOString()
         };
