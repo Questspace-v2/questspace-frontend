@@ -156,18 +156,13 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const handleValidation = async () => {
         const imageValidation = fileList.length > 0;
         const s3Response = imageValidation && await handleS3Response();
-        if (!s3Response && !previousImage) {
-            setFieldsValidationStatus((prevState) => ({
-                ...prevState,
-                image: 'error'
-            }));
-            return;
-        }
+
         // eslint-disable-next-line consistent-return
         return form.validateFields()
             .then(values => {
                 if (!values.name || !values.description || !values.registrationDeadline
-                    || !values.startTime || !values.finishTime || !values.access) {
+                    || !values.startTime || !values.finishTime || !values.access
+                    || !s3Response && !previousImage) {
                     setFieldsValidationStatus((prevState) => ({
                         ...prevState,
                         name: !values.name ? 'error' : prevState.name,
@@ -175,7 +170,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         registrationDeadline: !values.registrationDeadline ? 'error' : prevState.registrationDeadline,
                         startTime: !values.startTime ? 'error' : prevState.startTime,
                         finishTime: !values.finishTime ? 'error' : prevState.finishTime,
-                        access: !values.access ? 'error' : prevState.access
+                        access: !values.access ? 'error' : prevState.access,
+                        image: !s3Response && !previousImage ? 'error': prevState.image,
                     }));
                     handleError();
                     return null;
