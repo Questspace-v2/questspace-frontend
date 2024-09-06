@@ -12,6 +12,21 @@
         width: 168px;
     }
 
+    .light-description {
+        color: var(--base-text-color);
+        opacity: .45;
+        margin: 0;
+    }
+
+    .quest-editor__validation-error {
+        color: var(--quit-color);
+        margin: 0;
+    }
+
+    .ant-form-item-explain-error .quest-editor__validation-error {
+        padding: 5px 0 0;
+    }
+
     .quest-editor__image-file {
         display: flex;
         margin: 0;
@@ -53,11 +68,6 @@
             margin: 3px 0 0;
             align-self: flex-start;
         }
-    }
-
-    .quest-editor__access-form-item p {
-        margin: 0;
-        color: #00000073;
     }
 
     .ant-form-item-control-input-content .ant-picker {

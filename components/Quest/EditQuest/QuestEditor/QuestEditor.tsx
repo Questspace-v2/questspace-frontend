@@ -254,7 +254,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     ]}
                     autoComplete={'off'}
                 >
-                    {errorMsg && <p style={{color: 'red'}}>{errorMsg}</p>}
+                    {errorMsg && <p className={'quest-editor__validation-error'}>{errorMsg}</p>}
                     <Form.Item<QuestAboutForm>
                         name={'name'}
                         label={'Название квеста'}
@@ -277,7 +277,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         name={'description'}
                         label={
                             <p className={'description__label'}>
-                                Описание <span style={{color: '#00000073'}}>поддерживает Markdown</span>
+                                Описание <span className={'light-description'}>поддерживает Markdown</span>
                             </p>
                         }
                         colon={false}
@@ -298,7 +298,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         className={'quest-editor__small-field quest-editor__image-form-item'}
                         label={'Обложка'}
                         colon={false}
-                        help={fieldsValidationStatus.image === 'error' ? <p style={{color: 'red', marginBottom: 0}}>Добавьте обложку</p> : ''}
+                        help={fieldsValidationStatus.image === 'error' && <p className={'quest-editor__validation-error'}>Добавьте обложку</p>}
                         validateStatus={fieldsValidationStatus.image}
                     >
                         <Upload maxCount={1} showUploadList={false}
@@ -311,13 +311,9 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                                     handleError('');
                                 }}>
                             {fileList.length > 0 ? (
-                                <Button danger={fieldsValidationStatus.image === 'error'}>
-                                    <ReloadOutlined />Заменить
-                                </Button>
+                                <Button><ReloadOutlined />Заменить</Button>
                             ) : (
-                                <Button danger={fieldsValidationStatus.image === 'error'}>
-                                    <UploadOutlined />Загрузить
-                                </Button>
+                                <Button><UploadOutlined />Загрузить</Button>
                             )}
 
                         </Upload>
@@ -426,8 +422,9 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         label={'Доступ к квесту'}
                         colon={false}
                         required
-                        help={fieldsValidationStatus.access === 'error' ?
-                            <p style={{color: 'red'}}>Выберите тип доступа</p> : ''}
+                        help={fieldsValidationStatus.access === 'error' &&
+                            <p className={'quest-editor__validation-error'}>Выберите тип доступа</p>}
+                        validateStatus={fieldsValidationStatus.access}
                     >
                     <Radio.Group
                         onChange={() => {
@@ -439,11 +436,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         }}>
                             <Radio value={'public'}>
                                 Публичный
-                                <p>Квест увидят все пользователи Квестспейса</p>
+                                <p className={'light-description'}>Квест увидят все пользователи Квестспейса</p>
                             </Radio>
                             <Radio value={'link_only'}>
                                 Только по ссылке
-                                <p>Квест увидят только пользователи, которые зарегистрировались на него</p>
+                                <p className={'light-description'}>Квест увидят только пользователи, которые зарегистрировались на него</p>
                             </Radio>
                         </Radio.Group>
                     </Form.Item>
