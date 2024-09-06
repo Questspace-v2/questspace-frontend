@@ -294,12 +294,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             }}
                         />
                     </Form.Item>
-                    {fieldsValidationStatus.image === 'error' ?? <p style={{color: 'red'}}>Добавьте обложку</p>}
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__image-form-item'}
                         label={'Обложка'}
                         colon={false}
-                        help={fieldsValidationStatus.image === 'error' ? <p style={{color: 'red'}}>Добавьте обложку</p> : ''}
+                        help={fieldsValidationStatus.image === 'error' ? <p style={{color: 'red', marginBottom: 0}}>Добавьте обложку</p> : ''}
                         validateStatus={fieldsValidationStatus.image}
                     >
                         <Upload maxCount={1} showUploadList={false}
@@ -312,9 +311,13 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                                     handleError('');
                                 }}>
                             {fileList.length > 0 ? (
-                                <Button><ReloadOutlined />Заменить</Button>
+                                <Button danger={fieldsValidationStatus.image === 'error'}>
+                                    <ReloadOutlined />Заменить
+                                </Button>
                             ) : (
-                                <Button><UploadOutlined />Загрузить</Button>
+                                <Button danger={fieldsValidationStatus.image === 'error'}>
+                                    <UploadOutlined />Загрузить
+                                </Button>
                             )}
 
                         </Upload>
