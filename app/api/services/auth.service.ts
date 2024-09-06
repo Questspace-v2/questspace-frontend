@@ -1,11 +1,11 @@
-import {RegisterDataDto} from '@/app/api/dto/auth-dto/register-data.dto';
+import {
+    AuthResponseDto,
+    GoogleDataDto,
+    LoginDataDto,
+    RegisterDataDto,
+} from '@/app/api/dto/auth-dto/auth';
 import {BACKEND_URL} from '@/app/api/client/constants';
-import wretch from 'wretch'
-import {LoginDataDto} from '@/app/api/dto/auth-dto/login-data.dto';
-import {RegisterDataResponseDto} from '@/app/api/dto/auth-dto/register-data-response.dto';
-import {LoginDataResponseDto} from '@/app/api/dto/auth-dto/login-data-response.dto';
-import {GoogleDataDto} from '@/app/api/dto/auth-dto/google-data.dto';
-import {GoogleDataResponseDto} from '@/app/api/dto/auth-dto/google-data-response.dto';
+
 
 class AuthService {
     private readonly endpoints = {
@@ -14,28 +14,31 @@ class AuthService {
         google: `${BACKEND_URL}/auth/google`,
     };
 
-    public async register(data: RegisterDataDto): Promise<RegisterDataResponseDto> {
+    public async register(data: RegisterDataDto): Promise<AuthResponseDto> {
         const url = this.endpoints.register;
-        return wretch(url)
-            .post(data)
-            .json()
-            .then(response => response as RegisterDataResponseDto);
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+            .then(response => response as AuthResponseDto);
     }
 
-    public async login(data: LoginDataDto): Promise<LoginDataResponseDto> {
+    public async login(data: LoginDataDto): Promise<AuthResponseDto> {
         const url = this.endpoints.login;
-        return wretch(url)
-            .post(data)
-            .json()
-            .then(response => response as LoginDataResponseDto);
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+            .then(response => response as AuthResponseDto);
     }
 
-    public async authWithGoogle(data: GoogleDataDto): Promise<GoogleDataResponseDto> {
+    public async authWithGoogle(data: GoogleDataDto): Promise<AuthResponseDto> {
         const url = this.endpoints.google;
-        return wretch(url)
-            .post(data)
-            .json()
-            .then(response => response as GoogleDataResponseDto);
+        return fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        }).then(response => response.json())
+            .then(response => response as AuthResponseDto);
     }
 }
 

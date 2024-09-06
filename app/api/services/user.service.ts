@@ -1,5 +1,4 @@
 import {BACKEND_URL} from '@/app/api/client/constants';
-import wretch from 'wretch';
 import {UserDto} from '@/app/api/dto/user-dto/user.dto';
 import {UpdateUserDataDto} from '@/app/api/dto/user-dto/update-user-data.dto';
 import {UpdateUserDataResponseDto} from '@/app/api/dto/user-dto/update-user-data-response.dto';
@@ -7,14 +6,6 @@ import {UpdatePasswordDataDto} from '@/app/api/dto/user-dto/update-password-data
 
 class UserService {
     private readonly baseUsersUrl = `${BACKEND_URL}/user`;
-
-    public async getUserById(id: string): Promise<UserDto> {
-        const url = `${this.baseUsersUrl}/${id}`;
-        return wretch(url)
-            .get()
-            .json()
-            .then(response => response as UserDto);
-    }
 
     public async updateUserData(
         id: string,

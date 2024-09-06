@@ -1,17 +1,10 @@
 import {
     ISignIn,
-    IUserCreate,
 } from '@/app/types/user-interfaces';
 import {
     ITaskGroupsCreateRequest,
 } from '@/app/types/quest-interfaces';
 import client from '@/app/api/client/client';
-
-export const authWithGoogle = async (token: string) =>
-    client.handleServerRequest('/auth/google', 'POST', {id_token: token});
-
-export const authRegister = async (data: IUserCreate) =>
-    client.handleServerRequest('/auth/register', 'POST', data);
 
 export const authSignIn = async (data: ISignIn) =>
     client.handleServerRequest('/auth/sign-in', 'POST', data);
