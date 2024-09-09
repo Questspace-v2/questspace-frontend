@@ -8,7 +8,7 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 import {useSession} from "next-auth/react";
 import {createTaskGroupsAndTasks} from "@/app/api/api";
-import { ITaskGroup } from '@/app/types/quest-interfaces';
+import {ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
 
 interface TaskGroupModalProps {
     questId: string;
@@ -54,23 +54,28 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
 
         if (taskGroupProps) {
             taskGroups[taskGroupIndex].name = groupName;
-            setContextData((prevState) => ({
-                ...prevState,
-                task_groups: taskGroups
-            }))
             setIsOpen(false);
-            await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
+
+            const data = await createTaskGroupsAndTasks(
+                questId, {task_groups: taskGroups}, session?.accessToken
+            ) as ITaskGroupsAdminResponse;
+
+            setContextData({
+                task_groups: data.task_groups,
+            });
             return;
         }
 
         const pubTime = new Date();
         taskGroups.push({name: groupName, tasks: [], pub_time: pubTime.toISOString()});
-        setContextData((prevState) => ({
-            ...prevState,
-            task_groups: taskGroups
-        }));
+        const data = await createTaskGroupsAndTasks(
+            questId, {task_groups: taskGroups}, session?.accessToken
+        ) as ITaskGroupsAdminResponse;
+
+        setContextData({
+            task_groups: data.task_groups,
+        });
         setIsOpen(false);
-        await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
     };
 
     const onCancel = () => {

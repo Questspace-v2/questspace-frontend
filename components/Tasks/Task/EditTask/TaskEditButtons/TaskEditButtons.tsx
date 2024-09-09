@@ -4,7 +4,7 @@ import {Button, ConfigProvider, UploadFile} from "antd";
 import {blueOutlinedButton, redOutlinedButton} from "@/lib/theme/themeConfig";
 import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useState} from "react";
-import { ITask, ITaskGroup } from '@/app/types/quest-interfaces';
+import {ITask, ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import dynamic from "next/dynamic";
 import { createTaskGroupsAndTasks } from '@/app/api/api';
@@ -40,11 +40,14 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
         taskGroup.tasks = taskGroup.tasks.filter(item =>
             item.pub_time !== task.pub_time || item.id !== task.id);
         taskGroups[taskGroupIndex] = taskGroup;
-        setContextData(prevState => ({
-            task_groups: prevState.task_groups
-                .map((item, index) => index === taskGroupIndex ? taskGroup : item)
-        }));
-        await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
+
+        const data = await createTaskGroupsAndTasks(
+            questId, {task_groups: taskGroups}, session?.accessToken
+        ) as ITaskGroupsAdminResponse;
+
+        setContextData({
+            task_groups: data.task_groups,
+        });
     };
 
     const handleCopyTask = async () => {
@@ -54,11 +57,14 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
         };
         taskGroup.tasks.push(copiedTask);
         taskGroups[taskGroupIndex] = taskGroup;
-        setContextData(prevState => ({
-            ...prevState,
-            task_groups: taskGroups
-        }));
-        await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
+
+        const data = await createTaskGroupsAndTasks(
+            questId, {task_groups: taskGroups}, session?.accessToken
+        ) as ITaskGroupsAdminResponse;
+
+        setContextData({
+            task_groups: data.task_groups,
+        });
     };
 
     return (

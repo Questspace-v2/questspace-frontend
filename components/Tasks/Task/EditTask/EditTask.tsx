@@ -29,7 +29,7 @@ import './EditTask.scss';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
-import { ITask, ITaskGroup } from '@/app/types/quest-interfaces';
+import {ITask, ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
 import client from "@/app/api/client/client";
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 import {useSession} from "next-auth/react";
@@ -182,12 +182,15 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             const index = taskGroup.tasks.indexOf(task);
             taskGroup.tasks[index] = newTask;
             taskGroups[taskGroupIndex] = taskGroup;
-            setContextData((prevState) => ({
-                ...prevState,
-                task_groups: taskGroups
-            }));
+
+            const data = await createTaskGroupsAndTasks(
+                questId, {task_groups: taskGroups}, session?.accessToken
+            ) as ITaskGroupsAdminResponse;
+
+            setContextData({
+                task_groups: data.task_groups,
+            });
             setIsOpen(false);
-            await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
             return;
         }
 
@@ -198,14 +201,17 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         }
 
         taskGroups[taskGroupIndex] = taskGroup;
-        setContextData((prevState) => ({
-            ...prevState,
-            task_groups: taskGroups
-        }));
+
+        const data = await createTaskGroupsAndTasks(
+            questId, {task_groups: taskGroups}, session?.accessToken
+        ) as ITaskGroupsAdminResponse;
+
+        setContextData({
+            task_groups: data.task_groups,
+        });
         form.resetFields();
         fileList.splice(0, fileList.length);
         setIsOpen(false);
-        await createTaskGroupsAndTasks(questId, contextData, session?.accessToken);
     }
 
     return (

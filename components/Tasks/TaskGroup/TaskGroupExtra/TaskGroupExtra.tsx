@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 import { createTaskGroupsAndTasks } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
-import { ITaskGroup } from '@/app/types/quest-interfaces';
+import {ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
 
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
     {ssr: false});
@@ -50,14 +50,14 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
         const newTaskGroups = contextData.task_groups.filter(
             group => group.id !== taskGroupProps.id || group.pub_time !== taskGroupProps.pub_time
         );
-        setContextData((prevState) => ({
-            ...prevState,
-            task_groups: newTaskGroups
-        }));
 
-        await createTaskGroupsAndTasks(
-            questId, {...contextData, task_groups: newTaskGroups}, session?.accessToken
-        );
+        const data = await createTaskGroupsAndTasks(
+            questId, {task_groups: newTaskGroups}, session?.accessToken
+        ) as ITaskGroupsAdminResponse;
+
+        setContextData({
+            task_groups: data.task_groups,
+        });
     };
 
     const items: MenuProps['items'] = [
