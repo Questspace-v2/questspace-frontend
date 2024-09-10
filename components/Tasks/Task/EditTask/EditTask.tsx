@@ -10,7 +10,7 @@ import {
     Modal,
     Row,
     Upload,
-    UploadFile
+    UploadFile, UploadProps
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
@@ -70,8 +70,11 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const taskNameError = 'Введите название задания';
     const taskTextError = 'Введите текст задания';
     const answersError = 'Добавьте хотя бы один вариант ответа';
+    const fileIsTooBigError = 'Файл слишком большой';
 
     const {data: session} = useSession();
+
+    const [fileIsTooBig, setFileIsTooBig] = useState(false);
 
     useEffect(() => {
         if (task) {
@@ -124,10 +127,16 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         setValidationStatus('error');
     };
 
+    const handleUploadValueChange: UploadProps['onChange'] = (info) => {
+        const isLessThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 < 5);
+        setFileList(info.fileList);
+        setFileIsTooBig(!isLessThan5Mb);
+    };
+
     const handleS3Request = async () => {
         const file = fileList[0].originFileObj as File;
         const fileType = file.type;
-        if (!fileType.startsWith('image/')) {
+        if (!fileType.startsWith('image/') || fileIsTooBig) {
             return;
         }
 
@@ -161,6 +170,11 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
         if (!answers?.length || !answers.some(item => item)) {
             handleError(answersError);
+            return;
+        }
+
+        if (fileIsTooBig) {
+            handleError(fileIsTooBigError);
             return;
         }
 
@@ -285,11 +299,15 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             <span>Картинка</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
+                            <Form.Item
+                                validateStatus={fileIsTooBig ? 'error' : ''}
+                                help={fileIsTooBig &&
+                                    <p>Файл слишком большой</p>}
+                            >
                                 <Upload
                                     maxCount={1}
                                     showUploadList={false}
-                                    fileList={fileList} onChange={({ fileList: fllst }) => setFileList(fllst)}>
+                                    fileList={fileList} onChange={handleUploadValueChange}>
                                     {/* eslint-disable-next-line no-constant-condition */}
                                     {fileList.length > 0 ? (
                                         <Button><ReloadOutlined />Заменить</Button>
@@ -298,7 +316,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                     )}
                                 </Upload>
                                 {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
-                            </FormItem>
+                            </Form.Item>
                         </Col>
                     </Row>
                     <Row>
