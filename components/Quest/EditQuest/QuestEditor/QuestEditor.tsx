@@ -142,6 +142,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const handleUploadValueChange: UploadProps['onChange'] = (info) => {
         const isLessThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 < 5);
         setFileList(info.fileList);
+        handleError('');
         if (isLessThan5Mb) {
             setFieldsValidationStatus((prevState) => ({
                 ...prevState,
