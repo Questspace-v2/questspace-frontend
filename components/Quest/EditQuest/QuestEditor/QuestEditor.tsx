@@ -12,7 +12,7 @@ import {
     Radio,
     ThemeConfig,
     Upload,
-    UploadFile,
+    UploadFile, UploadProps,
 } from 'antd';
 import React, { useState } from 'react';
 import { FileImageOutlined, MinusOutlined, PlusOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
@@ -109,6 +109,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     };
     const [fieldsValidationStatus, setFieldsValidationStatus] = useState(defaultFieldsValidationStatus);
 
+    const [fileIsTooBig, setFileIsTooBig] = useState(false);
+
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
     };
@@ -137,10 +139,24 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         });
     };
 
+    const handleUploadValueChange: UploadProps['onChange'] = (info) => {
+        const isLessThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 < 5);
+        setFileList(info.fileList);
+        if (isLessThan5Mb) {
+            setFieldsValidationStatus((prevState) => ({
+                ...prevState,
+                image: 'success'
+            }));
+            setFileIsTooBig(false);
+        } else {
+            setFileIsTooBig(true);
+        }
+    };
+
     const handleS3Response = () => {
         const file = fileList[0].originFileObj as File;
         const fileType = file.type;
-        if (!fileType.startsWith('image/')) {
+        if (!fileType.startsWith('image/') || fileIsTooBig) {
             return;
         }
 
@@ -173,7 +189,6 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         access: !values.access ? 'error' : prevState.access,
                         image: !s3Response && !previousImage ? 'error': prevState.image,
                     }));
-                    handleError();
                     return null;
                 }
 
@@ -190,7 +205,6 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const handleRequest = () => handleValidation()
             .then(result => {
                 if (!result) {
-                    handleError();
                     return null;
                 }
                 const data: IQuestCreate = {
@@ -213,7 +227,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const handleSubmit = async () => {
         const data = await handleRequest();
         if (!data) {
-            handleError();
+            handleError(fileIsTooBig ? 'Проверьте файл обложки' : undefined);
             return;
         }
         if (isNewQuest) {
@@ -298,18 +312,16 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         className={'quest-editor__small-field quest-editor__image-form-item'}
                         label={'Обложка'}
                         colon={false}
-                        help={fieldsValidationStatus.image === 'error' && <p className={'quest-editor__validation-error'}>Добавьте обложку</p>}
-                        validateStatus={fieldsValidationStatus.image}
+                        help={
+                            fileIsTooBig ?
+                                <p className={'quest-editor__validation-error'}>Файл слишком большой</p> :
+                                fieldsValidationStatus.image === 'error' &&
+                                <p className={'quest-editor__validation-error'}>Добавьте обложку</p>
+                        }
+                        validateStatus={fileIsTooBig ? 'error' : fieldsValidationStatus.image}
                     >
                         <Upload maxCount={1} showUploadList={false}
-                                fileList={fileList} onChange={({ fileList: fllst }) => {
-                                    setFileList(fllst);
-                                    setFieldsValidationStatus((prevState) => ({
-                                        ...prevState,
-                                        image: 'success'
-                                    }));
-                                    handleError('');
-                                }}>
+                                fileList={fileList} onChange={handleUploadValueChange}>
                             {fileList.length > 0 ? (
                                 <Button><ReloadOutlined />Заменить</Button>
                             ) : (
