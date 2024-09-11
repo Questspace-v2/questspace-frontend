@@ -7,6 +7,37 @@
         width: 184px;
     }
 
+    .edit-task__image-form-item .ant-form-item-control-input-content {
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+    }
+
+    .edit-task__image {
+        display: flex;
+        margin: 0;
+        gap: 8px;
+        min-width: 0;
+        order: -1;
+    }
+
+    .edit-task__image p {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        align-content: center;
+    }
+
+    .edit-task__image-validation-error {
+        color: var(--quit-color);
+        margin: 0;
+    }
+
+    .ant-form-item-explain-error .edit-task__image-validation-error {
+        padding: 5px 0 0;
+    }
+
     .ant-input-suffix {
         color: #d9d9d9;
         transition-behavior: normal;

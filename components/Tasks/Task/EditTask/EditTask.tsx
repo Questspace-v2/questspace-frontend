@@ -302,7 +302,9 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             <Form.Item
                                 validateStatus={fileIsTooBig ? 'error' : ''}
                                 help={fileIsTooBig &&
-                                    <p>Файл слишком большой</p>}
+                                    <p className={'edit-task__image-validation-error'}>Файл слишком большой</p>}
+                                colon={false}
+                                className={'edit-task__image-form-item'}
                             >
                                 <Upload
                                     maxCount={1}
@@ -315,7 +317,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                         <Button><UploadOutlined />Загрузить</Button>
                                     )}
                                 </Upload>
-                                {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
+                                {fileList.length > 0 && <div className={'edit-task__image'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
                             </Form.Item>
                         </Col>
                     </Row>
