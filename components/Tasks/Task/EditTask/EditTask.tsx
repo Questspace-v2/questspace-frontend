@@ -10,7 +10,7 @@ import {
     Modal,
     Row,
     Upload,
-    UploadFile
+    UploadFile, UploadProps
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
@@ -26,7 +26,7 @@ import {
 } from '@ant-design/icons';
 
 import './EditTask.scss';
-import theme from '@/lib/theme/themeConfig';
+import theme, { blueOutlinedButton } from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import {ITask, ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
@@ -70,8 +70,13 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const taskNameError = 'Введите название задания';
     const taskTextError = 'Введите текст задания';
     const answersError = 'Добавьте хотя бы один вариант ответа';
+    const fileIsTooBigError = 'Файл слишком большой';
+    const unsupportedFileTypeError = 'Неподдерживаемый тип файла';
 
     const {data: session} = useSession();
+
+    const [fileIsTooBig, setFileIsTooBig] = useState(false);
+    const [unsupportedFileType, setUnsupportedFileType] = useState(false);
 
     useEffect(() => {
         if (task) {
@@ -110,6 +115,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         setValidationStatus('success');
         if (!task) {
             form.resetFields();
+            setFileList([]);
         }
         setIsOpen(false);
     };
@@ -124,10 +130,18 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         setValidationStatus('error');
     };
 
+    const handleUploadValueChange: UploadProps['onChange'] = (info) => {
+        const isMoreThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 >= 20);
+        const isFileTypeUnsupported = !info.file.type?.startsWith('image/');
+        setFileList(info.fileList);
+        setFileIsTooBig(isMoreThan5Mb);
+        setUnsupportedFileType(isFileTypeUnsupported);
+    };
+
     const handleS3Request = async () => {
         const file = fileList[0].originFileObj as File;
         const fileType = file.type;
-        if (!fileType.startsWith('image/')) {
+        if (unsupportedFileType || fileIsTooBig) {
             return;
         }
 
@@ -161,6 +175,16 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
         if (!answers?.length || !answers.some(item => item)) {
             handleError(answersError);
+            return;
+        }
+
+        if (fileIsTooBig) {
+            handleError(fileIsTooBigError);
+            return;
+        }
+
+        if (unsupportedFileType) {
+            handleError(unsupportedFileTypeError);
             return;
         }
 
@@ -210,8 +234,17 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             task_groups: data.task_groups,
         });
         form.resetFields();
-        fileList.splice(0, fileList.length);
+        setFileList([]);
         setIsOpen(false);
+    }
+
+    const getImageErrorText = () => {
+        if (unsupportedFileType) {
+            return unsupportedFileTypeError;
+        }
+
+        return fileIsTooBigError;
+
     }
 
     return (
@@ -285,65 +318,45 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             <span>Картинка</span>
                         </Col>
                         <Col flex={'auto'}>
-                            <FormItem>
+                            <Form.Item
+                                validateStatus={fileIsTooBig || unsupportedFileType ? 'error' : ''}
+                                help={fileIsTooBig || unsupportedFileType &&
+                                    <p className={'edit-task__image-validation-error'}>{getImageErrorText()}</p>}
+                                colon={false}
+                                className={'edit-task__image-form-item'}
+                            >
                                 <Upload
                                     maxCount={1}
+                                    accept={'image/*'}
                                     showUploadList={false}
-                                    fileList={fileList} onChange={({ fileList: fllst }) => setFileList(fllst)}>
-                                    {/* eslint-disable-next-line no-constant-condition */}
+                                    fileList={fileList}
+                                    onChange={handleUploadValueChange}
+                                >
                                     {fileList.length > 0 ? (
                                         <Button><ReloadOutlined />Заменить</Button>
                                     ) : (
                                         <Button><UploadOutlined />Загрузить</Button>
                                     )}
                                 </Upload>
-                                {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
-                            </FormItem>
+                                {fileList.length > 0 && <div className={'edit-task__image'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
+                            </Form.Item>
                         </Col>
                     </Row>
                     <Row>
                         <Col className={'edit-task__labels'}>
-                            <span>Подсказки (max 3)<span style={{ color: '#00000073' }}><br/>поддерживает Markdown</span></span>
+                            <span>
+                                Варианты ответа
+                                <span style={{ color: '#00000073' }}><br />Ответы принимаются регистронезависимо</span>
+                            </span>
                         </Col>
-                        <Col flex={'auto'}>
-                            <Form.List name={'hints'}>
-                                {(fields, { add, remove }) => (
-                                    <>
-                                        {fields.map((field, index) => (
-                                            <Form.Item label={`${index + 1}`} key={field.key}>
-                                                <Form.Item key={field.key} name={field.name}>
-                                                    <Input
-                                                        placeholder={'Введите подсказку'}
-                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
-                                                    />
-                                                </Form.Item>
-                                            </Form.Item>
-                                        ))}
-                                        <FormItem>
-                                            <Button
-                                                onClick={() => add()}
-                                                disabled={fields.length >= 3}
-                                            >
-                                                <PlusOutlined/> Добавить подсказку
-                                            </Button>
-                                        </FormItem>
-                                    </>
-                                )}
-                            </Form.List>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className={'edit-task__labels'}>
-                            <span>Варианты ответа</span>
-                        </Col>
-                        <Col flex={'auto'}>
-                            <Form.List name={'answers'}>
+                        <Col flex={'auto'} className={'edit-task__answers-list'}>
+                        <Form.List name={'answers'}>
                                 {(fields, { add, remove }) => (
                                     <>
                                         {errorMsg === answersError
                                             && <p style={{color: 'red'}}>{errorMsg}</p>}
                                         {fields.map((field, index) => (
-                                            <Form.Item label={`${index + 1}`} key={field.key}>
+                                            <Form.Item key={field.key}>
                                                 <Form.Item
                                                     key={field.key}
                                                     name={field.name}
@@ -361,14 +374,20 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                                 </Form.Item>
                                             </Form.Item>
                                         ))}
-                                        <FormItem>
-                                            <Button onClick={() => {
-                                                add();
-                                                handleFieldChange();
-                                            }}>
-                                                <PlusOutlined/> Добавить вариант ответа
-                                            </Button>
-                                        </FormItem>
+                                        <Form.Item>
+                                            <ConfigProvider theme={blueOutlinedButton}>
+                                                <Button
+                                                    className={'edit-task__add-button'}
+                                                    onClick={() => {
+                                                        add();
+                                                        handleFieldChange();
+                                                    }}
+                                                    type={'link'}
+                                                >
+                                                    <PlusOutlined/> Добавить вариант ответа
+                                                </Button>
+                                            </ConfigProvider>
+                                        </Form.Item>
                                     </>
                                 )}
                             </Form.List>
@@ -397,6 +416,41 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                     }}
                                 />
                             </FormItem>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col className={'edit-task__labels'}>
+                            <span>Подсказки (max 3)<span style={{ color: '#00000073' }}><br/>поддерживает Markdown</span></span>
+                        </Col>
+                        <Col flex={'auto'} className={'edit-task__hints-list'}>
+                            <Form.List name={'hints'}>
+                                {(fields, { add, remove }) => (
+                                    <>
+                                        {fields.map((field) => (
+                                            <Form.Item key={field.key}>
+                                                <Form.Item key={field.key} name={field.name}>
+                                                    <Input
+                                                        placeholder={'Введите подсказку'}
+                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                                    />
+                                                </Form.Item>
+                                            </Form.Item>
+                                        ))}
+                                        <Form.Item>
+                                            <ConfigProvider theme={blueOutlinedButton}>
+                                                <Button
+                                                    className={'edit-task__add-button'}
+                                                    onClick={() => add()}
+                                                    disabled={fields.length >= 3}
+                                                    type={'link'}
+                                                >
+                                                    <PlusOutlined/> Добавить подсказку
+                                                </Button>
+                                            </ConfigProvider>
+                                        </Form.Item>
+                                    </>
+                                )}
+                            </Form.List>
                         </Col>
                     </Row>
                 </Form>

@@ -12,7 +12,7 @@ import {
     Radio,
     ThemeConfig,
     Upload,
-    UploadFile,
+    UploadFile, UploadProps,
 } from 'antd';
 import React, { useState } from 'react';
 import { FileImageOutlined, MinusOutlined, PlusOutlined, ReloadOutlined, UploadOutlined } from '@ant-design/icons';
@@ -109,6 +109,13 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     };
     const [fieldsValidationStatus, setFieldsValidationStatus] = useState(defaultFieldsValidationStatus);
 
+    const noImageError = 'Добавьте обложку';
+    const fileIsTooBigError = 'Файл слишком большой';
+    const unsupportedFileTypeError = 'Неподдерживаемый тип файла';
+
+    const [fileIsTooBig, setFileIsTooBig] = useState(false);
+    const [unsupportedFileType, setUnsupportedFileType] = useState(false);
+
     const expandTeamCapacity = () => {
         setTeamCapacity((prev) => prev + 1);
     };
@@ -137,10 +144,27 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         });
     };
 
+    const handleUploadValueChange: UploadProps['onChange'] = (info) => {
+        const isMoreThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 >= 5);
+        const isFileTypeUnsupported = !info.file.type?.startsWith('image/');
+        setFileList(info.fileList);
+        handleError('');
+
+        if (!isMoreThan5Mb && !isFileTypeUnsupported) {
+            setFieldsValidationStatus((prevState) => ({
+                ...prevState,
+                image: 'success'
+            }));
+        }
+
+        setFileIsTooBig(isMoreThan5Mb);
+        setUnsupportedFileType(isFileTypeUnsupported);
+    };
+
     const handleS3Response = () => {
         const file = fileList[0].originFileObj as File;
         const fileType = file.type;
-        if (!fileType.startsWith('image/')) {
+        if (unsupportedFileType || fileIsTooBig) {
             return;
         }
 
@@ -171,14 +195,19 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         startTime: !values.startTime ? 'error' : prevState.startTime,
                         finishTime: !values.finishTime ? 'error' : prevState.finishTime,
                         access: !values.access ? 'error' : prevState.access,
-                        image: !s3Response && !previousImage ? 'error': prevState.image,
+                        image: !s3Response && !previousImage && !fileIsTooBig ? 'error' : prevState.image,
                     }));
-                    handleError();
                     return null;
                 }
 
                 return {
-                    ...values,
+                    access: values.access,
+                    description: values.description,
+                    finish_time: values.finishTime,
+                    max_team_cap: values.maxTeamCap,
+                    name: values.name,
+                    registration_deadline: values.registrationDeadline,
+                    start_time: values.startTime,
                     media_link: (s3Response as Response).url ?? previousImage
                 };
             })
@@ -187,35 +216,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
             });
     };
 
-    const handleRequest = () => handleValidation()
-            .then(result => {
-                if (!result) {
-                    handleError();
-                    return null;
-                }
-                const data: IQuestCreate = {
-                    access: result.access,
-                    description: result.description,
-                    finish_time: result.finishTime,
-                    max_team_cap: result.maxTeamCap,
-                    media_link: result.media_link,
-                    name: result.name,
-                    registration_deadline: result.registrationDeadline,
-                    start_time: result.startTime
-                };
-
-                return data;
-            })
-            .catch(error => {
-                throw error;
-            });
-
-    const handleSubmit = async () => {
-        const data = await handleRequest();
-        if (!data) {
-            handleError();
-            return;
-        }
+    const handleRequest = async (data: IQuestCreate) => {
         if (isNewQuest) {
             const result = await createQuest(data, accessToken!)
                 .then(resp => resp as IQuest)
@@ -237,6 +238,28 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
             }
         }
     };
+
+    const handleSubmit = async () => {
+        const data = await handleValidation();
+        if (!data) {
+            handleError();
+            return;
+        }
+
+        await handleRequest(data);
+    }
+
+    const getImageErrorText = () => {
+        if (unsupportedFileType) {
+            return unsupportedFileTypeError;
+        }
+
+        if (fileIsTooBig) {
+            return fileIsTooBigError;
+        }
+
+        return noImageError;
+    }
 
     return (
         <div className={'quest-editor__wrapper'}>
@@ -298,27 +321,25 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__image-form-item'}
-                        label={'Обложка'}
+                        label={<>Обложка<span className={'light-description'}>&nbsp;(до 5 МБ)</span></>}
                         colon={false}
-                        help={fieldsValidationStatus.image === 'error' &&
-                            <p className={'quest-editor__validation-error'}>Добавьте обложку</p>}
-                        validateStatus={fieldsValidationStatus.image}
+                        help={
+                            fieldsValidationStatus.image === 'error' || fileIsTooBig || unsupportedFileType &&
+                            <p className={'quest-editor__validation-error'}>{getImageErrorText()}</p>
+                        }
+                        validateStatus={fileIsTooBig ? 'error' : fieldsValidationStatus.image}
                     >
-                        <Upload maxCount={1} showUploadList={false}
-                                fileList={fileList} onChange={({ fileList: fllst }) => {
-                            setFileList(fllst);
-                            setFieldsValidationStatus((prevState) => ({
-                                ...prevState,
-                                image: 'success'
-                            }));
-                            handleError('');
-                        }}>
+                        <Upload maxCount={1}
+                                showUploadList={false}
+                                fileList={fileList}
+                                onChange={handleUploadValueChange}
+                                accept={'image/*'}
+                        >
                             {fileList.length > 0 ? (
                                 <Button><ReloadOutlined />Заменить</Button>
                             ) : (
                                 <Button><UploadOutlined />Загрузить</Button>
                             )}
-
                         </Upload>
                         {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined />
                             <p>{fileList[0].originFileObj?.name}</p></div>}
