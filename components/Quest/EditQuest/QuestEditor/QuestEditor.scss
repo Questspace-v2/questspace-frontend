@@ -5,6 +5,11 @@
     flex-direction: column;
     gap: 16px;
 
+    .quest-editor__subheader {
+        padding: 16px 0 0;
+        font-size: 18px;
+    }
+
     .description__label {
         display: flex;
         flex-wrap: wrap;

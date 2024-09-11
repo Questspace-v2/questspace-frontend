@@ -244,10 +244,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                 <Form
                     form={form}
                     requiredMark={false}
-                    initialValues={{'maxTeamCap': initialTeamCapacity ?? 3}}
+                    initialValues={{ 'maxTeamCap': initialTeamCapacity ?? 3 }}
                     fields={[
-                        {name: 'maxTeamCap', value: teamCapacity},
-                        {name: 'registrationDeadline', value: registrationDeadlineChecked ?
+                        { name: 'maxTeamCap', value: teamCapacity },
+                        {
+                            name: 'registrationDeadline', value: registrationDeadlineChecked ?
                                 form.getFieldValue('startTime') as Date :
                                 form.getFieldValue('registrationDeadline') as Date
                         }
@@ -255,6 +256,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     autoComplete={'off'}
                 >
                     {errorMsg && <p className={'quest-editor__validation-error'}>{errorMsg}</p>}
+                    <h3 className={'roboto-flex-header quest-editor__subheader'}>Описание квеста</h3>
                     <Form.Item<QuestAboutForm>
                         name={'name'}
                         label={'Название квеста'}
@@ -284,7 +286,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         validateStatus={fieldsValidationStatus.description}
                     >
                         <TextArea
-                            style={{resize: 'none', height: '320px'}}
+                            style={{ resize: 'none', height: '320px' }}
                             onChange={() => {
                                 handleValueChange('description');
                                 setFieldsValidationStatus((prevState) => ({
@@ -298,18 +300,19 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         className={'quest-editor__small-field quest-editor__image-form-item'}
                         label={'Обложка'}
                         colon={false}
-                        help={fieldsValidationStatus.image === 'error' && <p className={'quest-editor__validation-error'}>Добавьте обложку</p>}
+                        help={fieldsValidationStatus.image === 'error' &&
+                            <p className={'quest-editor__validation-error'}>Добавьте обложку</p>}
                         validateStatus={fieldsValidationStatus.image}
                     >
                         <Upload maxCount={1} showUploadList={false}
                                 fileList={fileList} onChange={({ fileList: fllst }) => {
-                                    setFileList(fllst);
-                                    setFieldsValidationStatus((prevState) => ({
-                                        ...prevState,
-                                        image: 'success'
-                                    }));
-                                    handleError('');
-                                }}>
+                            setFileList(fllst);
+                            setFieldsValidationStatus((prevState) => ({
+                                ...prevState,
+                                image: 'success'
+                            }));
+                            handleError('');
+                        }}>
                             {fileList.length > 0 ? (
                                 <Button><ReloadOutlined />Заменить</Button>
                             ) : (
@@ -317,14 +320,43 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             )}
 
                         </Upload>
-                        {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
+                        {fileList.length > 0 && <div className={'quest-editor__image-file'}><FileImageOutlined />
+                            <p>{fileList[0].originFileObj?.name}</p></div>}
+                    </Form.Item>
+                    <h3 className={'roboto-flex-header quest-editor__subheader'}>Регистрация</h3>
+                    <Form.Item<QuestAboutForm>
+                        className={'quest-editor__small-field'}
+                        name={'maxTeamCap'}
+                        labelAlign={'left'}
+                        label={'Размер команды'}
+                        colon={false}
+                    >
+                        <InputNumber
+                            addonBefore={
+                                <MinusOutlined
+                                    onClick={shrinkTeamCapacity}
+                                />}
+                            addonAfter={
+                                <PlusOutlined
+                                    onClick={expandTeamCapacity}
+                                />}
+                            controls={false}
+                            min={initialTeamCapacity ?? 1}
+                            style={{ width: '128px', textAlignLast: 'center' }}
+                            onChange={(value) => {
+                                setTeamCapacity(value ?? (initialTeamCapacity ?? 1));
+                                handleValueChange('maxTeamCap')
+                            }}
+                        />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         name={'registrationDeadline'}
                         className={'quest-editor__small-field'}
                         label={'Дедлайн регистрации'}
                         colon={false}
-                        extra={<Checkbox checked={registrationDeadlineChecked} onClick={() => setRegistrationDeadlineChecked((prev) => !prev)} style={{padding: '5px 0'}}>Совпадает с началом квеста</Checkbox>}
+                        extra={<Checkbox checked={registrationDeadlineChecked}
+                                         onClick={() => setRegistrationDeadlineChecked((prev) => !prev)}
+                                         style={{ padding: '5px 0' }}>Совпадает с началом квеста</Checkbox>}
                         validateStatus={fieldsValidationStatus.registrationDeadline}
                     >
                         <DatePicker
@@ -346,8 +378,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                                 }));
                             }}
                         />
-
                     </Form.Item>
+                    <h3 className={'roboto-flex-header quest-editor__subheader'}>Время квеста</h3>
                     <Form.Item<QuestAboutForm>
                         name={'startTime'}
                         className={'quest-editor__small-field'}
@@ -390,31 +422,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             }}
                         />
                     </Form.Item>
-                    <Form.Item<QuestAboutForm>
-                        className={'quest-editor__small-field'}
-                        name={'maxTeamCap'}
-                        labelAlign={'left'}
-                        label={'Размер команды'}
-                        colon={false}
-                    >
-                        <InputNumber
-                            addonBefore={
-                                <MinusOutlined
-                                    onClick={shrinkTeamCapacity}
-                                />}
-                            addonAfter={
-                                <PlusOutlined
-                                    onClick={expandTeamCapacity}
-                                />}
-                            controls={false}
-                            min={initialTeamCapacity ?? 1}
-                            style={{width: '128px', textAlignLast: 'center'}}
-                            onChange={(value) => {
-                                setTeamCapacity(value ?? (initialTeamCapacity ?? 1));
-                                handleValueChange('maxTeamCap')
-                            }}
-                        />
-                    </Form.Item>
+                    <h3 className={'roboto-flex-header quest-editor__subheader'}>Другие настройки</h3>
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__access-form-item'}
                         name={'access'}
@@ -426,27 +434,28 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             <p className={'quest-editor__validation-error'}>Выберите тип доступа</p>}
                         validateStatus={fieldsValidationStatus.access}
                     >
-                    <Radio.Group
-                        onChange={() => {
-                            handleValueChange('access');
-                            setFieldsValidationStatus((prevState) => ({
-                                ...prevState,
-                                access: 'success'
-                            }));
-                        }}>
+                        <Radio.Group
+                            onChange={() => {
+                                handleValueChange('access');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    access: 'success'
+                                }));
+                            }}>
                             <Radio value={'public'}>
                                 Публичный
                                 <p className={'light-description'}>Квест увидят все пользователи Квестспейса</p>
                             </Radio>
                             <Radio value={'link_only'}>
                                 Только по ссылке
-                                <p className={'light-description'}>Квест увидят только пользователи, которые зарегистрировались на него</p>
+                                <p className={'light-description'}>Квест увидят только пользователи, которые
+                                    зарегистрировались на него</p>
                             </Radio>
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item className={'quest-editor__controls'}>
                         {contextHolder}
-                        <QuestEditorButtons handleSubmit={handleSubmit} isNewQuest={isNewQuest}/>
+                        <QuestEditorButtons handleSubmit={handleSubmit} isNewQuest={isNewQuest} />
                     </Form.Item>
                 </Form>
             </ConfigProvider>

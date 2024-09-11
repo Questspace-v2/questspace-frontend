@@ -106,12 +106,12 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
             <EditQuestHeader isNewQuest={!questData}/>
             <div className={'edit-quest__body__content'}>
                 <section>
-                    <h2 className={'roboto-flex-header'} style={{marginBottom: '16px'}}>Редактор</h2>
+                    <h2 className={'roboto-flex-header'} style={{marginBottom: '6px'}}>Редактор</h2>
                     {editor}
                 </section>
                 <div className={'content__separator'}/>
                 <section>
-                    <h2 className={'roboto-flex-header'} style={{ marginBottom: '16px' }}>Предпросмотр</h2>
+                    <h2 className={'roboto-flex-header'} style={{ marginBottom: '22px' }}>Предпросмотр</h2>
                     {preview}
                 </section>
             </div>
