@@ -7,8 +7,14 @@ import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvi
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 import {useSession} from "next-auth/react";
-import {createTaskGroupsAndTasks} from "@/app/api/api";
-import {ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
+import {patchTaskGroups} from "@/app/api/api";
+import {
+    IQuestTaskGroups,
+    ITaskGroup,
+    ITaskGroupsAdminResponse,
+    ITaskGroupsCreate,
+    ITaskGroupsUpdate
+} from '@/app/types/quest-interfaces';
 
 interface TaskGroupModalProps {
     questId: string;
@@ -53,11 +59,25 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
         }
 
         if (taskGroupProps) {
+            const taskGroup = taskGroups[taskGroupIndex];
             taskGroups[taskGroupIndex].name = groupName;
             setIsOpen(false);
 
-            const data = await createTaskGroupsAndTasks(
-                questId, {task_groups: taskGroups}, session?.accessToken
+            const updateTaskGroup: ITaskGroupsUpdate = {
+                ...taskGroup,
+                id: taskGroup.id!,
+                pub_time: taskGroup.pub_time!,
+                name: groupName,
+                order_idx: taskGroupIndex,
+                tasks: {}
+            };
+
+            const requestData: IQuestTaskGroups = {
+                update: [updateTaskGroup]
+            };
+
+            const data = await patchTaskGroups(
+                questId, requestData, session?.accessToken
             ) as ITaskGroupsAdminResponse;
 
             setContextData({
@@ -68,8 +88,20 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
 
         const pubTime = new Date();
         taskGroups.push({name: groupName, tasks: [], pub_time: pubTime.toISOString()});
-        const data = await createTaskGroupsAndTasks(
-            questId, {task_groups: taskGroups}, session?.accessToken
+
+        const newGroup: ITaskGroupsCreate = {
+            name: groupName,
+            tasks: [],
+            pub_time: pubTime.toISOString(),
+            order_idx: taskGroups.length - 1,
+        };
+
+        const requestData: IQuestTaskGroups = {
+            create: [newGroup]
+        };
+
+        const data = await patchTaskGroups(
+            questId, requestData, session?.accessToken
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
