@@ -56,8 +56,10 @@ export const createTaskGroupsAndTasks = async (questId: string, data: ITaskGroup
     client.handleServerRequest(`/quest/${questId}/task-groups`, 'POST', data, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups) =>
-    client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data);
+export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data,
+        undefined, 'same-origin',
+        accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
 export const getFilteredQuests = async (fields: string[], accessToken?: string, page_id?: string, page_size = '50') => {
     const params: Record<string, unknown> = {
