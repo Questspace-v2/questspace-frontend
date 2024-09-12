@@ -6,9 +6,9 @@ import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
-import { createTaskGroupsAndTasks } from '@/app/api/api';
+import {patchTaskGroups} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
-import {ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
+import {IQuestTaskGroups, ITaskGroup, ITaskGroupsAdminResponse, ITaskGroupsDelete} from '@/app/types/quest-interfaces';
 
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
     {ssr: false});
@@ -28,7 +28,7 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
     const [isOpenNameModal, setIsOpenNameModal] = useState(false);
     const {data: session} = useSession();
 
-    const {data: contextData, updater: setContextData} = useTasksContext()!;
+    const {updater: setContextData} = useTasksContext()!;
 
     const handleMenuClick: MenuProps['onClick'] = () => {
         setOpen(false);
@@ -47,12 +47,16 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
     };
 
     const handleDeleteGroup = async () => {
-        const newTaskGroups = contextData.task_groups.filter(
-            group => group.id !== taskGroupProps.id || group.pub_time !== taskGroupProps.pub_time
-        );
+        const deletedTaskGroup: ITaskGroupsDelete = {
+            id: taskGroupProps.id!
+        };
 
-        const data = await createTaskGroupsAndTasks(
-            questId, {task_groups: newTaskGroups}, session?.accessToken
+        const requestData: IQuestTaskGroups = {
+            delete: [deletedTaskGroup]
+        };
+
+        const data = await patchTaskGroups(
+            questId, requestData, session?.accessToken
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
