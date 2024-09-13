@@ -12,7 +12,7 @@ import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import {createTaskGroupsAndTasks, deleteQuest, getLeaderboardAdmin} from '@/app/api/api';
+import {deleteQuest, getLeaderboardAdmin} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
@@ -92,10 +92,6 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         setSelectedTab(valueTab);
     }
 
-    const handleSaveRequest = async () => {
-        await createTaskGroupsAndTasks(questData.quest.id, contextData, session?.accessToken);
-    };
-
     const handleAddTaskGroup = () => {
         setIsOpenModal(true);
     };
@@ -131,7 +127,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
                     {tasksTabContent}
                     <div style={{display: 'flex', gap: '8px', padding: '24px 32px'}}>
                         <Button onClick={handleAddTaskGroup}><PlusOutlined/>Добавить раздел</Button>
-                        <Button type={'primary'} onClick={handleSaveRequest}>Сохранить</Button>
+                        {/* <Button type={'primary'} onClick={handleSaveRequest}>Сохранить</Button> */}
                     </div>
                 </>
             )}
