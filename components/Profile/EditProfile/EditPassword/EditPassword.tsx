@@ -2,18 +2,15 @@
 
 import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
 import { Button, Form, Input } from 'antd';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updatePassword } from '@/app/api/api';
 import { IUser } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
-import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
 import CustomModal from '@/components/CustomModal/CustomModal';
 
 export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
-    const {clientWidth, clientHeight} = document.body;
-    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data} = useSession();
@@ -56,7 +53,6 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
                width={xs ? '100%' : 400}
                centered
                title={<h2 className={'edit-profile-header roboto-flex-header responsive-header-h2'}>Изменить пароль</h2>}
-               mousePosition={centerPosition}
                footer={null}
         >
             <Form form={form} autoComplete={'off'} preserve={false}>

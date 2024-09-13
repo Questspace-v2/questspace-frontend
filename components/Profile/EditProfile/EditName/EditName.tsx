@@ -6,7 +6,8 @@ import { updateUser } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
-import CustomModal from '@/components/CustomModal/CustomModal';
+import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
+import classNames from 'classnames';
 
 export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
     const [form] = Form.useForm();
@@ -60,7 +61,7 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
                onCancel={onCancel}
                width={xs ? '100%' : 400}
                centered
-               title={<h2 className={'edit-profile-header roboto-flex-header responsive-header-h2'}>Изменить
+               title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Изменить
                    логин</h2>}
                footer={null}
         >

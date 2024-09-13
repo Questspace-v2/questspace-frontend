@@ -135,7 +135,7 @@ export const takeHintPlayMode = async (questId: string, data: IHintRequest, acce
 
 export const editTeamPenalty = async (questId: string, data: IEditPenaltyRequest, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/penalty`, 'POST', data, undefined,
-        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}, true);
 
 export const getTaskGroupsPlayMode = async (questId: string, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/play`, 'GET', undefined, undefined,

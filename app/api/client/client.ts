@@ -99,7 +99,8 @@ class Client {
         data?: DataType, // Жесть, потом придумаю получше
         queryParams?: Record<string, unknown>,
         credentials = 'same-origin',
-        headers: Record<string, string> = {}
+        headers: Record<string, string> = {},
+        returnsNoBody = false
     ) {
         const paramsString = Client.buildQueryString(queryParams);
         const url = paramsString ? `${this.backendUrl}${endpoint}?${paramsString}` : `${this.backendUrl}${endpoint}`;
@@ -108,8 +109,7 @@ class Client {
         return fetch(url, config)
             .then(res => {
                 if (res.ok) {
-                    const contentLength = res.headers.get('content-length');
-                    return method !== 'DELETE' && contentLength && Number(contentLength) > 0? res.json() : res.status;
+                    return method !== 'DELETE' && !returnsNoBody ? res.json() : res.status;
                 }
                 return null;
             })

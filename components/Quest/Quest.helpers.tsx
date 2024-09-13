@@ -1,8 +1,6 @@
 import { Button } from 'antd';
 import { CheckOutlined, FlagFilled, PlayCircleFilled } from '@ant-design/icons';
 import { ITeam, IUser } from '@/app/types/user-interfaces';
-
-import '@/components/QuestTabs/QuestCard/QuestCard.scss';
 import React, { Dispatch, SetStateAction } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';

@@ -20,34 +20,12 @@
         }
     }
 
-    .ant-modal-close {
-        width: 24px;
-        height: 24px;
-
-        & svg {
-            width: 24px;
-            height: 24px;
-        }
-    }
-
-    .ant-modal-footer {
-        display: none;
+    .custom-modal-header-large {
+        margin-bottom: 16px;
     }
 
     .ant-form-item {
         margin: 0;
-    }
-
-    .ant-form-item:not(.ant-form-item:first-child) {
-        margin-top: 16px;
-    }
-
-    .ant-modal-header {
-        margin-bottom: 16px;
-    }
-
-    .ant-modal-title h2 {
-        font-size: 32px;
     }
 
     .ant-modal-body {

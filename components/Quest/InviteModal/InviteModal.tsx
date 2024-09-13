@@ -1,15 +1,14 @@
 'use client'
 
-import React, { useMemo } from 'react';
-import { getCenter } from '@/lib/utils/utils';
-import { Input, message, Modal } from 'antd';
+import React from 'react';
+import { Input, message } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { CopyOutlined } from '@ant-design/icons';
 import {ModalProps, TeamModal} from '@/lib/utils/modalTypes';
+import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
+import classNames from 'classnames';
 
 export default function InviteModal({inviteLink, currentModal, setCurrentModal}: ModalProps) {
-    const {clientWidth, clientHeight} = document.body;
-    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs } = useBreakpoint();
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -26,16 +25,14 @@ export default function InviteModal({inviteLink, currentModal, setCurrentModal}:
     };
 
     return (
-        <Modal
-            className={'invite-modal'}
+        <CustomModal
             classNames={{content: 'invite-modal__content'}}
             open={currentModal === TeamModal.INVITE_LINK}
             centered
             destroyOnClose
             onCancel={onCancel}
             width={xs ? '100%' : 400}
-            title={<h2 className={'roboto-flex-header responsive-header-h2'}>Команда зарегистрирована</h2>}
-            mousePosition={centerPosition}
+            title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Команда зарегистрирована</h2>}
             footer={null}
         >
             <span className={'invite-content__span'}>Пригласите друзей в свою команду</span>
@@ -49,6 +46,6 @@ export default function InviteModal({inviteLink, currentModal, setCurrentModal}:
                     navigator.clipboard.writeText(inviteLink!).then(() => success()).catch(err => {throw err});
                 }}/>}
             />
-        </Modal>
+        </CustomModal>
     );
 }

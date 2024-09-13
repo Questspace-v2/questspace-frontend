@@ -7,14 +7,13 @@ import {
     Form,
     Input,
     InputNumber,
-    Modal,
     Row,
     Upload,
     UploadFile, UploadProps
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import React, {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-import {getCenter, uid} from '@/lib/utils/utils';
+import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {uid} from '@/lib/utils/utils';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {
     DeleteOutlined,
@@ -24,8 +23,6 @@ import {
     ReloadOutlined,
     UploadOutlined
 } from '@ant-design/icons';
-
-import './EditTask.scss';
 import theme, { blueOutlinedButton } from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
@@ -40,6 +37,8 @@ import client from "@/app/api/client/client";
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 import {useSession} from "next-auth/react";
 import {patchTaskGroups} from "@/app/api/api";
+import classNames from 'classnames';
+import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 
 const {TextArea} = Input;
 
@@ -62,8 +61,6 @@ export interface TaskForm {
 }
 
 export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fileList, setFileList, task}: TaskCreateModalProps) {
-    const {clientWidth, clientHeight} = document.body;
-    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs, md } = useBreakpoint();
 
     const [pointsAmount, setPointsAmount] = useState(task?.reward ?? 100);
@@ -287,15 +284,13 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
     return (
         <ConfigProvider theme={theme} locale={ru_RU}>
-            <Modal
-                className={'edit-task__modal'}
+            <CustomModal
                 classNames={{content: 'edit-task__content'}}
                 open={isOpen}
                 width={xs ?? md ? '100%': 800}
                 centered
                 destroyOnClose
-                mousePosition={centerPosition}
-                title={<h3 className={'roboto-flex-header'}>Редактирование задачи</h3>}
+                title={<h3 className={classNames(`${customModalClassname}-header`, 'roboto-flex-header')}>Редактирование задачи</h3>}
                 onCancel={onCancel}
                 footer={[
                     <Button key={'save'} type={'primary'} onClick={handleSaveTask}>
@@ -492,7 +487,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                         </Col>
                     </Row>
                 </Form>
-            </Modal>
+            </CustomModal>
         </ConfigProvider>
     );
 }

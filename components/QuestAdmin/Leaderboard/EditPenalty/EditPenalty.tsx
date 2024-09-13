@@ -14,7 +14,7 @@ export default function EditPenalty({record, questId}: {record: IAdminLeaderboar
     const {data: session} = useSession();
     const [form] = Form.useForm();
     const [currentValue, setCurrentValue] =
-        useState<number>(-1 * record.penalty ?? 0);
+        useState<number>(-1 * record.penalty);
 
     const handleFieldChange = () => {
         setCurrentValue(Number(form.getFieldValue('penalty')));
@@ -30,7 +30,7 @@ export default function EditPenalty({record, questId}: {record: IAdminLeaderboar
         }
 
         const data: IEditPenaltyRequest  = {
-            penalty: -1 * (Number(record.penalty) + Number(currentValue)),
+            penalty: -1 * (record.penalty + currentValue),
             team_id: `${record.team_id}`
         };
 
@@ -53,7 +53,7 @@ export default function EditPenalty({record, questId}: {record: IAdminLeaderboar
                          onCancel={onCancel}
                          width={xs ? '100%' : 400}
                          centered
-                         title={<h2 className={classNames(`${customModalClassname}-header`, 'roboto-flex-header', 'responsive-header-h2')}>Бонус
+                         title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Бонус
                              команде</h2>}
                          footer={null}
             >
@@ -67,7 +67,7 @@ export default function EditPenalty({record, questId}: {record: IAdminLeaderboar
                             type={'number'}
                             style={{ borderRadius: '2px', width: '100%' }}
                             step={100}
-                            defaultValue={-1 * record.penalty ?? 0}
+                            defaultValue={-1 * record.penalty}
                             value={currentValue}
                             placeholder={'Количество баллов'}
                             onChange={handleFieldChange}

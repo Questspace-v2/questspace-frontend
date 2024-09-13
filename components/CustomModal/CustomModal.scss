@@ -17,13 +17,23 @@
 
     &-header {
         margin: 0 0 24px;
+        font-size: $small-font-size;
+    }
+
+    &-header-large {
+        margin: 0 0 24px;
+        font-size: $medium-font-size;
+
+        @media (max-width: $xl-breakpoint-1279) {
+            font-size: $small-font-size;
+        }
     }
 
     .ant-form-item {
         margin: 0;
     }
 
-    .ant-form-item:not(.ant-form-item:first-child) {
+    :not(.ant-col, .ant-row) >.ant-form-item:not(.ant-form-item:first-child) {
         margin-top: 16px;
     }
 }

@@ -10,8 +10,6 @@ import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { answerTaskPlayMode, takeHintPlayMode } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-
-import './Task.scss';
 import { useRouter } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

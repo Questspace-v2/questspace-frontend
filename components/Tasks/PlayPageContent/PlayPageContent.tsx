@@ -5,11 +5,9 @@ import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { IQuestTaskGroupsResponse} from '@/app/types/quest-interfaces';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-
 import { ArrowLeftOutlined, HourglassOutlined, TeamOutlined } from '@ant-design/icons';
-
-import './PlayPageContent.scss'
 import { getLongTimeDiff, getRemainingVerb } from '@/components/Quest/Quest.helpers';
+
 
 export default function PlayPageContent({props}: {props: IQuestTaskGroupsResponse}) {
     const {name: teamName} = props.team;

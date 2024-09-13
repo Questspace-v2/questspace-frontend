@@ -39,9 +39,9 @@ export default function Leaderboard({teams, questId}: {teams: IAdminLeaderboardR
             dataIndex: 'penalty',
             key: 'penalty',
             className: 'leaderboard__penalty',
-            render: (text, record) => (
+            render: (_, record) => (
                 RELEASED_FEATURE ? <>
-                    {-1*Number((record as IAdminLeaderboardResult).penalty)}
+                    {-1 * (record as IAdminLeaderboardResult).penalty}
                     <EditPenalty record={(record as IAdminLeaderboardResult)} questId={questId} />
                 </> : <span>{(record as IAdminLeaderboardResult).penalty}</span>
             )

@@ -2,7 +2,6 @@
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 
-import './Profile.scss';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import EditProfile from '@/components/Profile/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
