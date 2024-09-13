@@ -24,7 +24,7 @@ export interface ITask {
     pub_time: string,
     question: string,
     reward: number,
-    verification_type: string,
+    verification: string,
     answer?: string
 }
 
@@ -46,7 +46,8 @@ export type IQuestCreate = Omit<IQuest, 'creator' | 'status' | 'id'>
 export interface ITaskGroupsCreate {
     name: string,
     order_idx: number,
-    pub_time: string
+    pub_time: string,
+    tasks: ITask[]
 }
 
 export interface ITaskGroupsCreateRequest {
@@ -57,7 +58,31 @@ export interface ITaskGroupsDelete {
     id: string
 }
 
-export interface ITaskGroupsUpdate extends ITaskGroupsCreate {
+export interface ITaskGroupsUpdate {
+    id: string,
+    name: string,
+    order_idx: number,
+    pub_time: string,
+    tasks: ITasksUpdateRequest
+}
+
+export interface ITasksUpdateRequest {
+    create?: ITaskCreate[],
+    delete?: ITaskDelete[],
+    update?: ITaskUpdate[]
+}
+
+export interface ITaskUpdate extends ITask {
+    group_id: string,
+    order_idx: number,
+}
+
+export interface ITaskCreate extends ITask {
+    group_id: string,
+    order_idx: number,
+}
+
+export interface ITaskDelete {
     id: string
 }
 

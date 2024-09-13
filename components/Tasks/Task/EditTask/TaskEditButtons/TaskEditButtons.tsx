@@ -4,10 +4,16 @@ import {Button, ConfigProvider, UploadFile} from "antd";
 import {blueOutlinedButton, redOutlinedButton} from "@/lib/theme/themeConfig";
 import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useState} from "react";
-import {ITask, ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
+import {
+    IQuestTaskGroups,
+    ITask, ITaskDelete,
+    ITaskGroup,
+    ITaskGroupsAdminResponse,
+    ITaskGroupsUpdate
+} from '@/app/types/quest-interfaces';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import dynamic from "next/dynamic";
-import { createTaskGroupsAndTasks } from '@/app/api/api';
+import {patchTaskGroups} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 
 interface TaskEditButtonsProps {
@@ -41,8 +47,26 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
             item.pub_time !== task.pub_time || item.id !== task.id);
         taskGroups[taskGroupIndex] = taskGroup;
 
-        const data = await createTaskGroupsAndTasks(
-            questId, {task_groups: taskGroups}, session?.accessToken
+        const deletedTask: ITaskDelete = {
+            id: task.id!
+        };
+
+        const updateTaskGroup: ITaskGroupsUpdate = {
+            id: taskGroup.id!,
+            name: taskGroup.name,
+            order_idx: taskGroup.order_idx!,
+            pub_time: taskGroup.pub_time!,
+            tasks: {
+                delete: [deletedTask]
+            }
+        };
+
+        const requestData: IQuestTaskGroups = {
+            update: [updateTaskGroup]
+        };
+
+        const data = await patchTaskGroups(
+            questId, requestData, session?.accessToken
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
@@ -52,14 +76,40 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
 
     const handleCopyTask = async () => {
         const copiedTask: ITask = {
-            ...task,
+            correct_answers: task.correct_answers,
+            hints: task.hints,
+            name: task.name,
+            question: task.question,
+            reward: task.reward,
+            verification: task.verification ?? 'auto',
             pub_time: new Date().toISOString()
         };
+
+        if (task.media_link) {
+            copiedTask.media_link = task.media_link;
+        }
+
         taskGroup.tasks.push(copiedTask);
         taskGroups[taskGroupIndex] = taskGroup;
 
-        const data = await createTaskGroupsAndTasks(
-            questId, {task_groups: taskGroups}, session?.accessToken
+        const updateTaskGroup: ITaskGroupsUpdate = {
+            id: taskGroup.id!,
+            name: taskGroup.name,
+            order_idx: taskGroup.order_idx!,
+            pub_time: taskGroup.pub_time!,
+            tasks: {
+                create: [
+                    {...copiedTask, group_id: taskGroup.id!, order_idx: taskGroup.tasks.length - 1}
+                ]
+            }
+        };
+
+        const requestData: IQuestTaskGroups = {
+            update: [updateTaskGroup]
+        };
+
+        const data = await patchTaskGroups(
+            questId, requestData, session?.accessToken
         ) as ITaskGroupsAdminResponse;
 
         setContextData({

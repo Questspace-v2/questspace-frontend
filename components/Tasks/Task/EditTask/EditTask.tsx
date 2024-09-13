@@ -29,11 +29,17 @@ import './EditTask.scss';
 import theme, { blueOutlinedButton } from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
-import {ITask, ITaskGroup, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
+import {
+    IQuestTaskGroups,
+    ITask,
+    ITaskGroup,
+    ITaskGroupsAdminResponse,
+    ITaskGroupsUpdate,
+} from '@/app/types/quest-interfaces';
 import client from "@/app/api/client/client";
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 import {useSession} from "next-auth/react";
-import {createTaskGroupsAndTasks} from "@/app/api/api";
+import {patchTaskGroups} from "@/app/api/api";
 
 const {TextArea} = Input;
 
@@ -195,7 +201,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             correct_answers: answers.filter(answer => answer),
             hints: hints && hints.some(item => item) ? hints.filter(hint => hint) : [],
             reward: taskPoints,
-            verification_type: 'auto'
+            verification: 'auto'
         };
 
         if (s3Response || task?.media_link) {
@@ -207,8 +213,24 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             taskGroup.tasks[index] = newTask;
             taskGroups[taskGroupIndex] = taskGroup;
 
-            const data = await createTaskGroupsAndTasks(
-                questId, {task_groups: taskGroups}, session?.accessToken
+            const updateTaskGroup: ITaskGroupsUpdate = {
+                id: taskGroup.id!,
+                name: taskGroup.name,
+                order_idx: taskGroup.order_idx!,
+                pub_time: taskGroup.pub_time!,
+                tasks: {
+                    update: [
+                        {...newTask, group_id: taskGroup.id!, order_idx: index, id: task.id}
+                    ]
+                }
+            };
+
+            const requestData: IQuestTaskGroups = {
+                update: [updateTaskGroup],
+            };
+
+            const data = await patchTaskGroups(
+                questId, requestData, session?.accessToken
             ) as ITaskGroupsAdminResponse;
 
             setContextData({
@@ -226,8 +248,24 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
         taskGroups[taskGroupIndex] = taskGroup;
 
-        const data = await createTaskGroupsAndTasks(
-            questId, {task_groups: taskGroups}, session?.accessToken
+        const updateTaskGroup: ITaskGroupsUpdate = {
+            id: taskGroup.id!,
+            name: taskGroup.name,
+            order_idx: taskGroup.order_idx!,
+            pub_time: taskGroup.pub_time!,
+            tasks: {
+                create: [
+                    {...newTask, group_id: taskGroup.id!, order_idx: taskGroup.tasks.length - 1}
+                ]
+            }
+        };
+
+        const requestData: IQuestTaskGroups = {
+            update: [updateTaskGroup]
+        };
+
+        const data = await patchTaskGroups(
+            questId, requestData, session?.accessToken
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
