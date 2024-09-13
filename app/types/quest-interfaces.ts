@@ -147,13 +147,18 @@ export interface IHintRequest {
     task_id: string
 }
 
+export interface IEditPenaltyRequest {
+    penalty: number,
+    team_id: string,
+}
+
 export interface IAdminLeaderboardResponse {
     results: IAdminLeaderboardResult[],
     task_groups?: IAdminTaskGroup[] & {order_idx: number}
 }
 
 export type IAdminLeaderboardResult = {
-    id: string,
+    team_id: string,
     team_name: string,
     penalty: number,
     total_score: 0

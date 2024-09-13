@@ -11,6 +11,7 @@ import createHttpError, {
 import { Data } from '@/app/types/json-data';
 import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
 import {
+    IEditPenaltyRequest,
     IHintRequest,
     IQuestCreate,
     IQuestTaskGroups,
@@ -28,7 +29,7 @@ interface IBaseInit {
 
 type DataType = Data | IUserCreate| IUserUpdate | IQuestTaskGroups|
     IQuestCreate | IPasswordUpdate| ITaskGroupsCreateRequest | ITaskAnswer |
-    IHintRequest | string;
+    IHintRequest | IEditPenaltyRequest | string;
 
 class Client {
     backendUrl: string;
@@ -107,7 +108,8 @@ class Client {
         return fetch(url, config)
             .then(res => {
                 if (res.ok) {
-                    return method !== 'DELETE' ? res.json() : res.status;
+                    const contentLength = res.headers.get('content-length');
+                    return method !== 'DELETE' && contentLength && Number(contentLength) > 0? res.json() : res.status;
                 }
                 return null;
             })

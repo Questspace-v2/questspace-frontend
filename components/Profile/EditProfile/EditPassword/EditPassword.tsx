@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
-import { Button, Form, Input, Modal } from 'antd';
+import { Button, Form, Input } from 'antd';
 import React, { useMemo, useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updatePassword } from '@/app/api/api';
@@ -9,6 +9,7 @@ import { IUser } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
+import CustomModal from '@/components/CustomModal/CustomModal';
 
 export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
@@ -48,7 +49,7 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
     }
 
     return (
-        <Modal className={'edit-profile__modal edit-password__modal'}
+        <CustomModal
                open={currentModal === ModalEnum.EDIT_PASSWORD}
                destroyOnClose
                onCancel={() => setCurrentModal!(ModalEnum.EDIT_PROFILE)}
@@ -86,6 +87,6 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
                     <Button type={'primary'} htmlType={'submit'} block onClick={handleSubmit}>Сохранить</Button>
                 </Form.Item>
             </Form>
-        </Modal>
+        </CustomModal>
     );
 }

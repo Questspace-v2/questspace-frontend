@@ -1,7 +1,7 @@
 'use client';
 
-import { Button, Modal } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { Button } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { EditOutlined } from '@ant-design/icons';
@@ -11,13 +11,10 @@ import { ModalEnum, ModalType } from '@/components/Profile/EditProfile/EditProfi
 import EditAvatar from '@/components/Profile/EditProfile/EditAvatar/EditAvatar';
 import EditName from '@/components/Profile/EditProfile/EditName/EditName';
 import EditPassword from '@/components/Profile/EditProfile/EditPassword/EditPassword';
+import CustomModal from '@/components/CustomModal/CustomModal';
 
-import './EditProfile.scss';
-import { getCenter } from '@/lib/utils/utils';
 
 export default function EditProfile() {
-    const {clientWidth, clientHeight} = document.body;
-    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const {data: session} = useSession();
     const isOAuth = session?.isOAuthProvider;
     const {name: username, image: avatarUrl} = session!.user;
@@ -55,7 +52,7 @@ export default function EditProfile() {
                 <EditOutlined />
                 Редактировать профиль
             </Button>
-            <Modal className={'edit-profile__modal'}
+            <CustomModal
                    open={currentModal === ModalEnum.EDIT_PROFILE}
                    destroyOnClose={
                         currentModal !== ModalEnum.EDIT_AVATAR && currentModal !== ModalEnum.EDIT_PROFILE}
@@ -67,7 +64,7 @@ export default function EditProfile() {
                    >
                        Редактирование<br />профиля
                    </h2>}
-                   mousePosition={centerPosition}
+
             >
 
                 <div className={'edit-profile__avatar'}>
@@ -100,7 +97,7 @@ export default function EditProfile() {
                         Изменить пароль
                     </Button>
                 }
-            </Modal>
+            </CustomModal>
             <EditName setCurrentModal={setCurrentModal} currentModal={currentModal}/>
             <EditPassword setCurrentModal={setCurrentModal} currentModal={currentModal}/>
         </>

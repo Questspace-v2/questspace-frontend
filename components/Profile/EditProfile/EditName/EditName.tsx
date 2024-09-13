@@ -1,16 +1,14 @@
 import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
-import { Button, Form, Input, Modal } from 'antd';
-import React, { useMemo, useState } from 'react';
+import { Button, Form, Input } from 'antd';
+import React, { useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updateUser } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
-import { getCenter } from '@/lib/utils/utils';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
+import CustomModal from '@/components/CustomModal/CustomModal';
 
 export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
-    const {clientWidth, clientHeight} = document.body;
-    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data, update} = useSession();
@@ -56,7 +54,7 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
     };
 
     return (
-        <Modal className={'edit-profile__modal edit-name__modal'}
+        <CustomModal
                open={currentModal === ModalEnum.EDIT_NAME}
                destroyOnClose
                onCancel={onCancel}
@@ -64,7 +62,6 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
                centered
                title={<h2 className={'edit-profile-header roboto-flex-header responsive-header-h2'}>Изменить
                    логин</h2>}
-               mousePosition={centerPosition}
                footer={null}
         >
             <Form form={form} autoComplete={'off'} preserve={false}>
@@ -81,6 +78,6 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
                     <Button type={'primary'} htmlType={'submit'} block onClick={handleSubmit}>Сохранить</Button>
                 </Form.Item>
             </Form>
-        </Modal>
+        </CustomModal>
     );
 }
