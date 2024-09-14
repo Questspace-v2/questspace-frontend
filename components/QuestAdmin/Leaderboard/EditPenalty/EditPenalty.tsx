@@ -87,7 +87,6 @@ export default function EditPenalty({record, questId, setShouldUpdateTable}: Edi
     return (
         <>
             {contextHolder}
-            <div className={'flex-container'} />
             <button
                 className={'leaderboard__edit-penalty'}
                 aria-label={'Редактировать бонус'}
