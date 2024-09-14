@@ -5,14 +5,20 @@ import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
 import { Button, ConfigProvider, message, Modal, Tabs, TabsProps } from 'antd';
-import { ArrowLeftOutlined, DeleteOutlined, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+    ArrowLeftOutlined,
+    DeleteOutlined,
+    ExclamationCircleOutlined,
+    NotificationOutlined,
+    PlusOutlined,
+} from '@ant-design/icons';
 import React, { useState } from 'react';
 import { SelectAdminTabs } from '@/components/QuestAdmin/QuestAdmin.helpers';
 import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
-import { redOutlinedButton } from '@/lib/theme/themeConfig';
+import theme, { redOutlinedButton } from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import {deleteQuest, getLeaderboardAdmin} from '@/app/api/api';
+import { deleteQuest, finishQuest, getLeaderboardAdmin } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
@@ -34,6 +40,12 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
     const [isOpenModal, setIsOpenModal] = useState(false);
+
+    const publishResults = () => finishQuest(questData.quest.id, session?.accessToken);
+    const publishResultsButton =
+        <Button type={'primary'} className={'publish-results'} onClick={publishResults}>
+            <NotificationOutlined />Опубликовать результаты
+        </Button>;
 
     const tabs: TabsProps['items']  = [
         {
@@ -113,12 +125,19 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
                     </ConfigProvider>
                 </div>
                 <h1 className={'roboto-flex-header responsive-header-h1'}>Управление квестом</h1>
-                <Tabs
-                    items={tabs}
-                    activeKey={selectedTab}
-                    defaultActiveKey={selectedTab}
-                    onTabClick={handleSelectTab}
-                />
+                <ConfigProvider theme={theme}>
+                    <Tabs
+                        rootClassName={'quest-admin__tabs'}
+                        items={tabs}
+                        activeKey={selectedTab}
+                        defaultActiveKey={selectedTab}
+                        onTabClick={handleSelectTab}
+                        tabBarExtraContent={selectedTab === SelectAdminTabs.LEADERBOARD &&
+                            questData.quest.status === 'WAIT_RESULTS' && publishResultsButton}
+                    />
+                    {selectedTab === SelectAdminTabs.LEADERBOARD &&
+                        questData.quest.status === 'WAIT_RESULTS' && publishResultsButton}
+                </ConfigProvider>
             </div>
         </ContentWrapper>
             {selectedTab === SelectAdminTabs.ABOUT && aboutTabContent}
