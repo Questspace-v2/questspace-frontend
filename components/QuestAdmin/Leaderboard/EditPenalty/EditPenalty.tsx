@@ -1,4 +1,4 @@
-import React, {Dispatch, SetStateAction, useState} from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { EditOutlined } from '@ant-design/icons';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 import { IAdminLeaderboardResult, IEditPenaltyRequest } from '@/app/types/quest-interfaces';
@@ -17,11 +17,22 @@ interface EditPenaltyProps {
 export default function EditPenalty({record, questId, setShouldUpdateTable}: EditPenaltyProps) {
     const [showModal, setShowModal] = useState(false);
     const {xs} = useBreakpoint();
+    const inputRef = useRef(null);
     const {data: session} = useSession();
     const [form] = Form.useForm();
     const [currentValue, setCurrentValue] =
         useState<number>(-1 * record.penalty);
     const [messageApi, contextHolder] = message.useMessage();
+
+    useEffect(() => {
+        if (showModal && inputRef.current) {
+            setTimeout(() => {
+                // @ts-expect-error нужно для автофокуса на вводе бонуса
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                inputRef.current.focus();
+            }, 0);
+        }
+    }, [showModal, inputRef]);
 
     const success = () => {
         // eslint-disable-next-line no-void
@@ -59,7 +70,7 @@ export default function EditPenalty({record, questId, setShouldUpdateTable}: Edi
         }
 
         const data: IEditPenaltyRequest  = {
-            penalty: -1 * (record.penalty + currentValue),
+            penalty: -1 * currentValue,
             team_id: `${record.team_id}`
         };
 
@@ -85,7 +96,6 @@ export default function EditPenalty({record, questId, setShouldUpdateTable}: Edi
                 <EditOutlined />
             </button>
             <CustomModal open={showModal}
-                         destroyOnClose
                          onCancel={onCancel}
                          width={xs ? '100%' : 400}
                          centered
@@ -102,15 +112,18 @@ export default function EditPenalty({record, questId, setShouldUpdateTable}: Edi
                     autoComplete={'off'}
                     preserve={false}
                     initialValues={{'penalty': -1 * record.penalty}}
+                    noValidate
                 >
                     <Form.Item name={'penalty'} rules={[{ required: true, message: 'Введите количество баллов' }]}>
                         <InputNumber
+                            autoFocus
                             type={'number'}
                             style={{ borderRadius: '2px', width: '100%' }}
                             step={100}
                             value={currentValue}
                             placeholder={'Количество баллов'}
                             onChange={handleFieldChange}
+                            ref={inputRef}
                         />
                     </Form.Item>
                     <Form.Item>

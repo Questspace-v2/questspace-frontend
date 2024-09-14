@@ -6,7 +6,6 @@ import {
 import { Table, TableColumnsType } from 'antd';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import { RELEASED_FEATURE } from '@/app/api/client/constants';
 import EditPenalty from '@/components/QuestAdmin/Leaderboard/EditPenalty/EditPenalty';
 import {useEffect, useState} from 'react';
 import {getLeaderboardAdmin} from '@/app/api/api';
@@ -19,16 +18,20 @@ export default function Leaderboard({teams, questId}: {teams: IAdminLeaderboardR
     const [leaderboardContent, setLeaderboardContent] = useState(teams);
 
     useEffect(() => {
-        const fetchTable = async () => {
-            const result =
-                await getLeaderboardAdmin(questId, session?.accessToken) as IAdminLeaderboardResponse;
-            setLeaderboardContent(result);
-        };
+        if (shouldUpdatePenalty) {
+            const fetchTable = async () => {
+                const result =
+                    await getLeaderboardAdmin(questId, session?.accessToken) as IAdminLeaderboardResponse;
+                setLeaderboardContent(result);
+            };
 
-        fetchTable()
-            .catch(err => {
-                throw err;
-            });
+            fetchTable()
+                .catch(err => {
+                    throw err;
+                });
+
+            setShouldUpdatePenalty(false);
+        }
     }, [session, questId, shouldUpdatePenalty]);
 
     if (!leaderboardContent.results?.length) {
@@ -54,19 +57,19 @@ export default function Leaderboard({teams, questId}: {teams: IAdminLeaderboardR
             key: 'task_score',
         },
         {
-            title: RELEASED_FEATURE ? 'Бонус' : 'Штраф',
+            title: 'Бонус',
             dataIndex: 'penalty',
             key: 'penalty',
             className: 'leaderboard__penalty',
             render: (_, record) => (
-                RELEASED_FEATURE ? <>
+                <>
                     {-1 * (record as IAdminLeaderboardResult).penalty}
                     <EditPenalty
                         record={(record as IAdminLeaderboardResult)}
                         questId={questId}
                         setShouldUpdateTable={setShouldUpdatePenalty}
                     />
-                </> : <span>{(record as IAdminLeaderboardResult).penalty}</span>
+                </>
             )
         },
         ...leaderboardContent.task_groups!.map((group, group_index) => ({
