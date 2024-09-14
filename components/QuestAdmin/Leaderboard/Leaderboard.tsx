@@ -8,11 +8,30 @@ import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { RELEASED_FEATURE } from '@/app/api/client/constants';
 import EditPenalty from '@/components/QuestAdmin/Leaderboard/EditPenalty/EditPenalty';
+import {useEffect, useState} from 'react';
+import {getLeaderboardAdmin} from '@/app/api/api';
+import {useSession} from 'next-auth/react';
 
 export default function Leaderboard({teams, questId}: {teams: IAdminLeaderboardResponse, questId: string}) {
     const {xs} = useBreakpoint();
+    const [shouldUpdatePenalty, setShouldUpdatePenalty] = useState(false);
+    const {data: session} = useSession();
+    const [leaderboardContent, setLeaderboardContent] = useState(teams);
 
-    if (!teams.results?.length) {
+    useEffect(() => {
+        const fetchTable = async () => {
+            const result =
+                await getLeaderboardAdmin(questId, session?.accessToken) as IAdminLeaderboardResponse;
+            setLeaderboardContent(result);
+        };
+
+        fetchTable()
+            .catch(err => {
+                throw err;
+            });
+    }, [session, questId, shouldUpdatePenalty]);
+
+    if (!leaderboardContent.results?.length) {
         return null;
     }
 
@@ -42,11 +61,15 @@ export default function Leaderboard({teams, questId}: {teams: IAdminLeaderboardR
             render: (_, record) => (
                 RELEASED_FEATURE ? <>
                     {-1 * (record as IAdminLeaderboardResult).penalty}
-                    <EditPenalty record={(record as IAdminLeaderboardResult)} questId={questId} />
+                    <EditPenalty
+                        record={(record as IAdminLeaderboardResult)}
+                        questId={questId}
+                        setShouldUpdateTable={setShouldUpdatePenalty}
+                    />
                 </> : <span>{(record as IAdminLeaderboardResult).penalty}</span>
             )
         },
-        ...teams.task_groups!.map((group, group_index) => ({
+        ...leaderboardContent.task_groups!.map((group, group_index) => ({
             title: group.name,
             key: group.id,
             children: group.tasks?.map((task, task_index) => ({
@@ -62,7 +85,7 @@ export default function Leaderboard({teams, questId}: {teams: IAdminLeaderboardR
     return (
         <ContentWrapper className={'leaderboard__content-wrapper'}>
         <div className={'leaderboard__wrapper'}>
-            <Table className={'leaderboard__table'} dataSource={teams.results} columns={columns} pagination={false} bordered scroll={{ x: true}} rowKey={'team_name'} />
+            <Table className={'leaderboard__table'} dataSource={leaderboardContent.results} columns={columns} pagination={false} bordered scroll={{ x: true}} rowKey={'team_name'} />
         </div>
         </ContentWrapper>
     );
