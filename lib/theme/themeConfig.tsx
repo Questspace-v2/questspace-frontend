@@ -25,11 +25,15 @@ const theme: ThemeConfig = {
             borderRadiusLG: 2,
         },
         Tabs: {
+            itemActiveColor: '#1890FF',
+            itemSelectedColor: '#1890FF',
+            inkBarColor: '#1890FF',
             boxShadow: '0',
             boxShadowSecondary: '0',
             boxShadowTertiary: '0',
         },
         Button: {
+            colorPrimary: '#1890FF',
             borderRadius: 2,
             borderRadiusLG: 2,
         }
@@ -39,8 +43,8 @@ const theme: ThemeConfig = {
 export const redOutlinedButton: ThemeConfig = {
     token: {
         colorText: '#FF4D4F',
-            colorPrimaryHover: '#FF4D4F',
-            colorPrimaryActive: '#FF4D4F'
+        colorPrimaryHover: '#FF4D4F',
+        colorPrimaryActive: '#FF4D4F'
     },
 }
 

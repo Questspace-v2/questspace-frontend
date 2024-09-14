@@ -16,6 +16,23 @@
         flex-direction: column;
         gap: 8px;
     }
+
+    &:has(.quest-admin__header__content > .publish-results) {
+        @media screen and (max-width: $xm-breakpoint-799) {
+            padding-bottom: 16px;
+        }
+    }
+}
+
+.quest-admin__header__content > .publish-results {
+    display: none;
+    margin-top: 8px;
+}
+
+.quest-admin__tabs.ant-tabs {
+    .ant-tabs-nav {
+        margin-bottom: 0;
+    }
 }
 
 .quest-admin__upper-wrapper {
@@ -34,7 +51,7 @@
     }
 }
 
-@media (max-width: $xm-breakpoint-799) {
+@media screen and (max-width: $xm-breakpoint-799) {
     .delete-quest__button.ant-btn {
         gap: 8px;
 
@@ -42,4 +59,14 @@
             display: none;
         }
     }
+
+    .quest-admin__tabs .ant-tabs-extra-content {
+        display: none;
+    }
+
+    .quest-admin__header__content .publish-results {
+        display: block;
+    }
+
+
 }

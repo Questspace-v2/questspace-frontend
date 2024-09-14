@@ -49,6 +49,10 @@ export const deleteQuest = async (questId: string, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}`, 'DELETE', undefined, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
+export const finishQuest = async (questId: string, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/finish`, 'POST', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}, true);
+
 export const deleteUser = async (userId: string, accessToken?: string) =>
     client.handleServerRequest(`/user/${userId}`, 'DELETE', undefined, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
