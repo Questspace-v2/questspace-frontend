@@ -5,6 +5,7 @@ import {
     IUserUpdate,
 } from '@/app/types/user-interfaces';
 import {
+    IEditPenaltyRequest,
     IHintRequest,
     IQuestCreate,
     IQuestTaskGroups,
@@ -131,6 +132,10 @@ export const answerTaskPlayMode = async (questId: string, data: ITaskAnswer, acc
 export const takeHintPlayMode = async (questId: string, data: IHintRequest, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/hint`, 'POST', data, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
+
+export const editTeamPenalty = async (questId: string, data: IEditPenaltyRequest, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/penalty`, 'POST', data, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}, true);
 
 export const getTaskGroupsPlayMode = async (questId: string, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/play`, 'GET', undefined, undefined,

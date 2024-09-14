@@ -2,12 +2,12 @@
 @use 'Background/Background';
 @use 'Body/Body';
 @use 'ContentWrapper/ContentWrapper';
+@use 'CustomModal/CustomModal';
 @use 'ExitButton/ExitButton';
 @use 'Footer/Footer';
 @use 'Header';
 @use 'Profile';
 @use 'Quest';
-@use "QuestAdmin";
-@use "QuestTabs";
+@use 'QuestAdmin';
+@use 'QuestTabs';
 @use 'Tasks';
-

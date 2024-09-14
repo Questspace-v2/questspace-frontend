@@ -11,6 +11,7 @@ import createHttpError, {
 import { Data } from '@/app/types/json-data';
 import { IPasswordUpdate, IUserCreate, IUserUpdate } from '@/app/types/user-interfaces';
 import {
+    IEditPenaltyRequest,
     IHintRequest,
     IQuestCreate,
     IQuestTaskGroups,
@@ -28,7 +29,7 @@ interface IBaseInit {
 
 type DataType = Data | IUserCreate| IUserUpdate | IQuestTaskGroups|
     IQuestCreate | IPasswordUpdate| ITaskGroupsCreateRequest | ITaskAnswer |
-    IHintRequest | string;
+    IHintRequest | IEditPenaltyRequest | string;
 
 class Client {
     backendUrl: string;
@@ -98,7 +99,8 @@ class Client {
         data?: DataType, // Жесть, потом придумаю получше
         queryParams?: Record<string, unknown>,
         credentials = 'same-origin',
-        headers: Record<string, string> = {}
+        headers: Record<string, string> = {},
+        returnsNoBody = false
     ) {
         const paramsString = Client.buildQueryString(queryParams);
         const url = paramsString ? `${this.backendUrl}${endpoint}?${paramsString}` : `${this.backendUrl}${endpoint}`;
@@ -107,7 +109,7 @@ class Client {
         return fetch(url, config)
             .then(res => {
                 if (res.ok) {
-                    return method !== 'DELETE' ? res.json() : res.status;
+                    return method !== 'DELETE' && !returnsNoBody ? res.json() : res.status;
                 }
                 return null;
             })

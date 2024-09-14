@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import { getCenter } from '@/lib/utils/utils';
-import { Button, Form, Input, Modal } from 'antd';
+import React, { useState } from 'react';
+import { Button, Form, Input } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { createTeam } from '@/app/api/api';
@@ -10,12 +9,11 @@ import { ITeam } from '@/app/types/user-interfaces';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-import './CreateTeam.scss'
 import {ModalProps, TeamModal, ValidationStatus} from '@/lib/utils/modalTypes';
+import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
+import classNames from 'classnames';
 
 export default function CreateTeam({questId, currentModal, setCurrentModal}: ModalProps) {
-    const {clientWidth, clientHeight} = document.body;
-    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data} = useSession();
@@ -66,16 +64,14 @@ export default function CreateTeam({questId, currentModal, setCurrentModal}: Mod
     };
 
     return (
-        <Modal
-            className={'create-team-modal'}
+        <CustomModal
             classNames={{content: 'create-team-modal__content'}}
             open={currentModal === TeamModal.CREATE_TEAM}
             centered
             destroyOnClose
             onCancel={onCancel}
             width={xs ? '100%' : 400}
-            title={<h2 className={'roboto-flex-header'}>Регистрация команды</h2>}
-            mousePosition={centerPosition}
+            title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Регистрация команды</h2>}
             footer={null}
         >
             <span className={'create-team-content__span'}>Укажите название команды</span>
@@ -100,6 +96,6 @@ export default function CreateTeam({questId, currentModal, setCurrentModal}: Mod
                     >Зарегистрировать команду</Button>
                 </FormItem>
             </Form>
-        </Modal>
+        </CustomModal>
     );
 }

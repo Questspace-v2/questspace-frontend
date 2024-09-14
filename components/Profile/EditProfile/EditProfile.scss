@@ -10,36 +10,6 @@
     }
 }
 
-.edit-profile__modal, .img-crop-modal {
-    .ant-modal-content {
-        padding: 32px 32px 40px 32px !important;
-
-        .ant-modal-close {
-            width: 24px;
-            height: 24px;
-
-            & svg {
-                width: 24px;
-                height: 24px;
-            }
-        }
-    }
-}
-
-.edit-name__modal, .edit-password__modal {
-    &.ant-modal .ant-modal-footer {
-        display: none;
-    }
-
-    .ant-form-item {
-        margin: 0;
-    }
-
-    .ant-form-item:not(.ant-form-item:first-child) {
-        margin-top: 16px;
-    }
-}
-
 .img-crop-modal {
     .ant-modal-header {
         display: none;

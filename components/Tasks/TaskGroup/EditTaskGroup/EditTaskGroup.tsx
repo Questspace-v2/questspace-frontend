@@ -1,8 +1,7 @@
 'use client';
 
-import {Button, Form, Input, Modal} from 'antd';
-import {Dispatch, SetStateAction, useMemo, useState} from 'react';
-import { getCenter } from '@/lib/utils/utils';
+import {Button, Form, Input} from 'antd';
+import {Dispatch, SetStateAction, useState} from 'react';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
@@ -15,6 +14,7 @@ import {
     ITaskGroupsCreate,
     ITaskGroupsUpdate
 } from '@/app/types/quest-interfaces';
+import CustomModal from '@/components/CustomModal/CustomModal';
 
 interface TaskGroupModalProps {
     questId: string;
@@ -28,8 +28,6 @@ export interface TaskGroupForm {
 }
 
 export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProps}: TaskGroupModalProps) {
-    const {clientWidth, clientHeight} = document.body;
-    const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { xs } = useBreakpoint();
     const [form] = Form.useForm<TaskGroupForm>();
 
@@ -117,13 +115,12 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
     }
 
     return (
-      <Modal
+      <CustomModal
           open={isOpen}
           centered
           destroyOnClose
           width={xs ? '100%' : 400}
           title={<h2 className={'roboto-flex-header'}>{title}</h2>}
-          mousePosition={centerPosition}
           footer={null}
           onCancel={onCancel}
       >
@@ -149,6 +146,6 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                   </Button>
               </Form.Item>
           </Form>
-      </Modal>
+      </CustomModal>
     );
 }
