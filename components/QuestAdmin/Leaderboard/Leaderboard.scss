@@ -18,21 +18,19 @@
     }
 }
 
-td.ant-table-cell.leaderboard__penalty {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    column-gap: 8px;
+.ant-table-wrapper .ant-table-tbody>tr>td.ant-table-cell.leaderboard__penalty {
+    padding: 16px 32px 16px 16px;
 }
 
 .leaderboard__edit-penalty {
     font-size: 16px;
     background: transparent;
     border: none;
-    position: relative;
-    opacity: .45;
-    padding: 0;
-    margin-right: -8px;
+    position: absolute;
+    top: calc(50% - 8px);
+    right: 8px;
+    opacity: 0.45;
+    padding: 0 0 0 8px;
     display: inline-flex;
     cursor: pointer;
 
