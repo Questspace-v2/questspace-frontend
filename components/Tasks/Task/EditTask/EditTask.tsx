@@ -309,6 +309,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                     ]}
                     autoComplete={'off'}
                     preserve={false}
+                    noValidate
                 >
                     <Row>
                         <Col className={'edit-task__labels'}>
@@ -441,8 +442,10 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                         <PlusOutlined
                                             onClick={increasePointsAmount}
                                         />}
+                                    type={'number'}
                                     controls={false}
-                                    min={task?.reward ?? 1}
+                                    step={100}
+                                    min={0}
                                     style={{width: '128px', textAlignLast: 'center'}}
                                     onChange={(value) => {
                                         setPointsAmount(value ?? (task?.reward ?? 100));
