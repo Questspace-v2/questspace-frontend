@@ -16,7 +16,7 @@ import React, { useState } from 'react';
 import { SelectAdminTabs } from '@/components/QuestAdmin/QuestAdmin.helpers';
 import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Tasks.helpers';
-import theme, { redOutlinedButton } from '@/lib/theme/themeConfig';
+import theme from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
 import { deleteQuest, finishQuest, getLeaderboardAdmin } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
@@ -120,9 +120,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
                             <ArrowLeftOutlined />{questData.quest.name}
                         </Button>
                     </Link>
-                    <ConfigProvider theme={redOutlinedButton}>
-                        <Button className={'delete-quest__button'} onClick={handleDelete}><DeleteOutlined/>Удалить квест</Button>
-                    </ConfigProvider>
+                    <Button className={'delete-quest__button'} onClick={handleDelete} danger><DeleteOutlined/>Удалить квест</Button>
                 </div>
                 <h1 className={'roboto-flex-header responsive-header-h1'}>Управление квестом</h1>
                 <ConfigProvider theme={theme}>

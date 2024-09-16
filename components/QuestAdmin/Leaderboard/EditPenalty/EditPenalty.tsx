@@ -65,7 +65,7 @@ export default function EditPenalty({record, questId, setShouldUpdateTable}: Edi
     };
 
     const editPenalty = async () => {
-        if (!currentValue) {
+        if (!currentValue && currentValue !== 0) {
             return;
         }
 

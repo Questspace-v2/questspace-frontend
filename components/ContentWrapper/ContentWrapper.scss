@@ -4,7 +4,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--cw-background-color);
+    background: var(--background-primary);
     max-width: $max-items-width;
     width: 100%;
     height: auto;
@@ -36,7 +36,7 @@
 .content__wrapper.invites-error__content-wrapper {
     .roboto-flex-header {
         font-size: 107px;
-        color: var(--primary-color);
+        color: var(--text-blue);
     }
 }
 

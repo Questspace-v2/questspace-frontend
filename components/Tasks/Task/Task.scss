@@ -14,6 +14,7 @@
 
     .task__name {
         font-size: 24px;
+        word-break: break-word;
     }
 
     .task__question {
@@ -21,21 +22,21 @@
     }
 
     .task__question.line-break {
-        white-space: pre-wrap;
-        user-select: text;
+        overflow-wrap: anywhere;
     }
+
     .task__question p {
         margin: 0;
     }
 
     .task__question a:not(a:visited) {
-        color: var(--primary-color);
+        color: var(--text-blue);
     }
 }
 
 .task-image__container {
     display: flex;
-    background-color: var(--task-background-color);
+    background-color: var(--background-secondary);
     max-height: 300px;
     height: 300px;
     align-items: center;
@@ -61,7 +62,7 @@
     flex-direction: column;
     min-height: 148px;
     width: 230px;
-    background-color: var(--task-background-color);
+    background-color: var(--background-secondary);
     border-radius: 8px;
     justify-content: center;
     gap: 8px;
@@ -75,6 +76,10 @@
 
     .hint__text {
         font-size: 16px;
+
+        &.line-break {
+            overflow-wrap: anywhere;
+        }
     }
 
     & span {
@@ -83,8 +88,8 @@
 }
 
 .task-hint__container_confirm {
-    background-color: white;
-    border: 1px solid #D9D9D9;
+    background-color: var(--background-primary);
+    border: 1px solid var(--stroke-secondary);
     column-gap: 0;
     row-gap: 12px;
     padding: 16px;
@@ -110,24 +115,22 @@
 }
 
 .task-hint__container_taken {
-    background-color: white;
-    border: 1px solid #D9D9D9;
+    background-color: var(--background-primary);
+    border: 1px solid var(--stroke-secondary);
     padding: 16px;
+    justify-content: flex-start;
 
     .hint__title {
         text-align: left;
+        line-height: 24px;
     }
 
-    .hint__text.line-break {
-        white-space: pre-wrap;
-        user-select: text;
-    }
     .hint__text p {
         margin: 0;
     }
 
     .hint__text a:not(a:visited) {
-        color: var(--primary-color);
+        color: var(--text-blue);
     }
 }
 
@@ -138,6 +141,10 @@
 
     .ant-form-item {
         margin-inline-end: unset;
+    }
+
+    .ant-input-status-success {
+        color: var(--text-green);
     }
 }
 
@@ -188,7 +195,7 @@
             gap: 16px;
         }
 
-        .task-hint__container {
+        .task-hint__container:not(.task-hint__container_taken) {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
@@ -214,15 +221,18 @@
     }
 
     .task-hint__container {
-        flex-direction: row;
+        min-height: 88px;
         justify-content: space-between;
         align-items: center;
-        min-height: 88px;
         width: auto;
         padding: 16px;
 
         .hint__title {
             text-align: start;
+        }
+
+        &:not(.task-hint__container_taken) {
+            flex-direction: row;
         }
     }
 

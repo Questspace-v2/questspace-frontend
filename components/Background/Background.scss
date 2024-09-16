@@ -23,6 +23,10 @@
     width: 100%;
 }
 
-//html[data-theme="dark"] .background_footer >img {
-//    filter: grayscale(100%) invert(100%);
-//}
+html[data-theme="dark"] {
+    .background_footer, .background__wrapper {
+        >img {
+            filter: hue-rotate(-180deg) invert(100%) grayscale(50%) brightness(200%);
+        }
+    }
+}

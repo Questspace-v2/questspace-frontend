@@ -42,7 +42,7 @@
     }
 
     .error-message_unauthorized {
-        color: var(--quit-color);
+        color: var(--text-red);
         font-size: 12px;
         font-weight: bold;
         margin: 0;
@@ -84,13 +84,13 @@
         border-radius: 2px;
 
         svg {
-            fill: var(--base-text-color);
+            fill: var(--text-default);
         }
     }
 
     .ant-input-status-error {
         svg {
-            fill: var(--base-text-color);
+            fill: var(--text-default);
         }
     }
 }

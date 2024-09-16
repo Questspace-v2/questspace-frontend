@@ -1,19 +1,52 @@
 @use '../../globals' as *;
 
-* {
-    -webkit-tap-highlight-color: transparent;
-}
-
 html {
-    --background-color: #{$cultured};
-    --quit-color: #{$red-orange-crayola};
-    --green-color: #{$kelly-green};
-    --primary-color: #{$dodger-blue};
-    --base-text-color: #{$raisin-black};
-    --secondary-text-color: #{$eerie-black};
-    --tertiary-text-color: #{$arsenic};
-    --task-background-color: #{$anti-flash-white};
-    --cw-background-color: white;
+    /* backgrounds */
+    --background-default: #{$cultured};
+    --background-primary: #{$white};
+    --background-secondary: #{$anti-flash-white};
+    --background-disabled: #{$cultured};
+    --background-red: #{$deep-carmine-pink};
+    --background-green: #{$kelly-green};
+    --background-blue: #{$dodger-blue};
+    --background-yellow: #{$dark-tangerine};
+
+    /* strokes */
+    --stroke-primary: #{$dark-charcoal};
+    --stroke-secondary: #{$light-silver};
+
+    /* texts */
+    --text-default: #{$eerie-black};
+    --text-primary: #{$white};
+    --text-secondary: #{$granite-gray};
+    --text-disabled: #{$philippine_gray};
+    --text-red: #{$lava};
+    --text-green: #{$slimy-green};
+    --text-blue: #{$dodger-blue};
+    --text-yellow: #{$dark-tangerine};
+    --text-purple: #{$american-violet};
+
+    /* filled icons */
+    --icon-filled-default: #{$eerie-black};
+    --icon-filled-primary: #{$white};
+    --icon-filled-secondary: #{$granite-gray};
+    --icon-filled-disabled: #{$philippine_gray};
+    --icon-filled-red: #{$deep-carmine-pink};
+    --icon-filled-green: #{$kelly-green};
+    --icon-filled-blue: #{$dodger-blue};
+    --icon-filled-yellow: #{$dark-tangerine};
+    --icon-filled-purple: #{$blue-violet};
+
+    /* outlined icons */
+    --icon-outlined-default: #{$eerie-black};
+    --icon-outlined-primary: #{$white};
+    --icon-outlined-secondary: #{$granite-gray};
+    --icon-outlined-disabled: #{$philippine_gray};
+    --icon-outlined-red: #{$lava};
+    --icon-outlined-green: #{$slimy-green};
+    --icon-outlined-blue: #{$dodger-blue};
+    --icon-outlined-yellow: #{$dark-tangerine};
+    --icon-outlined-purple: #{$american-violet};
 }
 
 html,
@@ -31,7 +64,7 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    background: var(--background-color);
+    background: var(--background-default);
     width: 100%;
     min-height: 100%;
     gap: $main-gap;
@@ -39,7 +72,7 @@ body {
 
 .roboto-flex-header {
     margin: 0;
-    color: var(--base-text-color);
+    color: var(--text-default);
     line-height: 95.2%;
     letter-spacing: -.01em;
     font-family: $font-robotoflex;
@@ -70,13 +103,13 @@ body {
     align-items: center;
 
     .roboto-flex-header {
-        color: var(--primary-color);
+        color: var(--text-blue);
         font-size: 107px;
     }
 }
 
 .ant-btn.return__button {
-    color: var(--primary-color);
+    color: var(--text-blue);
     display: flex;
     border: none;
     padding: 4px 15px 4px 0;
@@ -123,43 +156,23 @@ h3 {
 }
 
 .quest-header__status_registration {
-    color: $status-color-registration;
-
-    & circle {
-        fill: $status-color-registration;
-    }
+    @include status-color('blue');
 }
 
 .quest-header__status_registration-done {
-    color: $status-color-registration-done;
-
-    & circle {
-        fill: $status-color-registration-done;
-    }
+    @include status-color('purple');
 }
 
 .quest-header__status_running {
-    color: $status-color-running;
-
-    & circle {
-        fill: $status-color-running;
-    }
+    @include status-color('green');
 }
 
 .quest-header__status_wait-results {
-    color: $status-color-wait-results;
-
-    & circle {
-        fill: $status-color-wait-results;
-    }
+    @include status-color('yellow');
 }
 
 .quest-header__status_finished {
-    color: $status-color-finished;
-
-    & circle {
-        fill: $status-color-finished;
-    }
+    @include status-color('disabled');
 }
 
 .confirm-delete__modal.ant-modal {
@@ -169,17 +182,7 @@ h3 {
 
     .ant-modal-confirm-title {
         font-weight: 500;
-        color: var(--base-text-color);
-    }
-
-    .ant-btn-default:not(:disabled):hover {
-        color: var(--quit-color);
-        border-color: var(--quit-color);
-    }
-
-    .ant-btn-default:not(:disabled):active {
-        color: var(--quit-color);
-        border-color: var(--quit-color);
+        color: var(--text-default);
     }
 
     .ant-modal-confirm-btns {
@@ -190,6 +193,10 @@ h3 {
 
     .ant-modal-confirm-btns .ant-btn+.ant-btn {
         margin-inline-start: 0;
+    }
+
+    svg {
+        fill: var(--icon-outlined-yellow);
     }
 }
 

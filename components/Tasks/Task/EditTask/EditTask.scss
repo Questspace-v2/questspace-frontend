@@ -1,10 +1,9 @@
 @use "globals" as *;
 
 .edit-task__content {
-    padding: 32px 32px 40px 32px !important;
-
     .edit-task__labels {
         width: 184px;
+        color: var(--text-default);
     }
 
     .edit-task__image-form-item .ant-form-item-control-input-content {
@@ -30,7 +29,7 @@
     }
 
     .edit-task__image-validation-error {
-        color: var(--quit-color);
+        color: var(--text-red);
         margin: 0;
     }
 
@@ -64,7 +63,7 @@
     .ant-input-affix-wrapper-readonly {
         &:hover, &:focus, &:focus-within {
             .ant-input-suffix {
-                color: var(--primary-color);
+                color: var(--text-blue);
             }
         }
     }

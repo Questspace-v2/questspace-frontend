@@ -31,39 +31,37 @@ export default function HeaderAvatar() {
                 async (event) => {
                     event.preventDefault();
                     await signOut()}
-            }>Выйти</Link>,
+            } style={{color: 'var(--text-red)'}}>Выйти</Link>,
             key: '2',
         },
     ];
 
     return (
         <div className={`header-avatar__frame`} aria-disabled={false}>
-            <ConfigProvider theme={{ token: { borderRadius: 2 }}}>
-                <Dropdown
-                    rootClassName={'header-avatar__dropdown'}
-                    menu={{
-                        items,
-                        onClick: handleMenuClick,
-                    }}
-                    onOpenChange={handleOpenChange}
-                    open={open}
-                    placement={'bottomRight'}
-                    openClassName={openClassName}
-                >
-                    <button type={'button'} className={'header-avatar__button'}>
-                        <Image
-                            className={'header-avatar__image'}
-                            alt={'avatar'}
-                            width={32}
-                            height={32}
-                            style={{borderRadius: '16px'}}
-                            src={avatarUrl!}
-                            priority
-                        />
-                        <DownOutlined />
-                    </button>
-                </Dropdown>
-            </ConfigProvider>
+            <Dropdown
+                rootClassName={'header-avatar__dropdown'}
+                menu={{
+                    items,
+                    onClick: handleMenuClick,
+                }}
+                onOpenChange={handleOpenChange}
+                open={open}
+                placement={'bottomRight'}
+                openClassName={openClassName}
+            >
+                <button type={'button'} className={'header-avatar__button'}>
+                    <Image
+                        className={'header-avatar__image'}
+                        alt={'avatar'}
+                        width={32}
+                        height={32}
+                        style={{borderRadius: '16px'}}
+                        src={avatarUrl!}
+                        priority
+                    />
+                    <DownOutlined />
+                </button>
+            </Dropdown>
         </div>
     );
 }

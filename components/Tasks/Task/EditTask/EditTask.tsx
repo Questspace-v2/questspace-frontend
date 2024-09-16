@@ -380,7 +380,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                         <Col className={'edit-task__labels'}>
                             <span>
                                 Варианты ответа
-                                <span style={{ color: '#00000073' }}><br />Ответы принимаются регистронезависимо</span>
+                                <span className={'light-description'}><br />Ответы принимаются регистронезависимо</span>
                             </span>
                         </Col>
                         <Col flex={'auto'} className={'edit-task__answers-list'}>
@@ -456,7 +456,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                     </Row>
                     <Row>
                         <Col className={'edit-task__labels'}>
-                            <span>Подсказки (max 3)<span style={{ color: '#00000073' }}><br/>поддерживает Markdown</span></span>
+                            <span>Подсказки (max 3)<span className={'light-description'}><br/>поддерживает Markdown</span></span>
                         </Col>
                         <Col flex={'auto'} className={'edit-task__hints-list'}>
                             <Form.List name={'hints'}>

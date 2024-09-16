@@ -11,15 +11,113 @@
 //  --task-background-color: #{$anti-flash-white};
 //  --cw-background-color: #333;
 //}
+//
+//html[data-theme="light"] {
+//  --background-color: #{$cultured};
+//  --quit-color: #{$red-orange-crayola};
+//  --green-color: #{$kelly-green};
+//  --primary-color: #{$dodger-blue};
+//  --base-text-color: #{$raisin-black};
+//  --secondary-text-color: #{$eerie-black};
+//  --tertiary-text-color: #{$arsenic};
+//  --task-background-color: #{$anti-flash-white};
+//  --cw-background-color: #{$white};
+//}
 
 html[data-theme="light"] {
-  --background-color: #{$cultured};
-  --quit-color: #{$red-orange-crayola};
-  --green-color: #{$kelly-green};
-  --primary-color: #{$dodger-blue};
-  --base-text-color: #{$raisin-black};
-  --secondary-text-color: #{$eerie-black};
-  --tertiary-text-color: #{$arsenic};
-  --task-background-color: #{$anti-flash-white};
-  --cw-background-color: #{$white};
+  /* backgrounds */
+  --background-default: #{$cultured};
+  --background-primary: #{$white};
+  --background-secondary: #{$anti-flash-white};
+  --background-disabled: #{$cultured};
+  --background-red: #{$deep-carmine-pink};
+  --background-green: #{$kelly-green};
+  --background-blue: #{$dodger-blue};
+  --background-yellow: #{$dark-tangerine};
+
+  /* strokes */
+  --stroke-primary: #{$dark-charcoal};
+  --stroke-secondary: #{$light-silver};
+
+  /* texts */
+  --text-default: #{$eerie-black};
+  --text-primary: #{$white};
+  --text-secondary: #{$granite-gray};
+  --text-disabled: #{$philippine_gray};
+  --text-red: #{$lava};
+  --text-green: #{$slimy-green};
+  --text-blue: #{$dodger-blue};
+  --text-yellow: #{$dark-tangerine};
+  --text-purple: #{$american-violet};
+
+  /* filled icons */
+  --icon-filled-default: #{$eerie-black};
+  --icon-filled-primary: #{$white};
+  --icon-filled-secondary: #{$granite-gray};
+  --icon-filled-disabled: #{$philippine_gray};
+  --icon-filled-red: #{$deep-carmine-pink};
+  --icon-filled-green: #{$kelly-green};
+  --icon-filled-blue: #{$dodger-blue};
+  --icon-filled-yellow: #{$dark-tangerine};
+  --icon-filled-purple: #{$blue-violet};
+
+  /* outlined icons */
+  --icon-outlined-default: #{$eerie-black};
+  --icon-outlined-primary: #{$white};
+  --icon-outlined-secondary: #{$granite-gray};
+  --icon-outlined-disabled: #{$philippine_gray};
+  --icon-outlined-red: #{$lava};
+  --icon-outlined-green: #{$slimy-green};
+  --icon-outlined-blue: #{$dodger-blue};
+  --icon-outlined-yellow: #{$dark-tangerine};
+  --icon-outlined-purple: #{$american-violet};
+}
+
+html[data-theme="dark"] {
+  /* backgrounds */
+  --background-default: #{$black};
+  --background-primary: #{$dark-charcoal};
+  --background-secondary: #{$raisin-black};
+  --background-disabled: #{$dark-liver};
+  --background-red: #{$deep-carmine-pink};
+  --background-green: #{$dark-kelly-green};
+  --background-blue: #{$light-dodger-blue};
+  --background-yellow: #{$gamboge};
+
+  /* strokes */
+  --stroke-primary: #{$dark-philippine_gray};
+  --stroke-secondary: #{$eerie-black};
+
+  /* texts */
+  --text-default: #{$white};
+  --text-primary: #{$white};
+  --text-secondary: #{$silver-chalice};
+  --text-disabled: #{$gray};
+  --text-red: #{$pastel-red};
+  --text-green: #{$kelly-green};
+  --text-blue: #{$light-dodger-blue};
+  --text-yellow: #{$gamboge};
+  --text-purple: #{$lavender};
+
+  /* filled icons */
+  --icon-filled-default: #{$white};
+  --icon-filled-primary: #{$white};
+  --icon-filled-secondary: #{$silver-chalice};
+  --icon-filled-disabled: #{$gray};
+  --icon-filled-red: #{$deep-carmine-pink};
+  --icon-filled-green: #{$dark-kelly-green};
+  --icon-filled-blue: #{$light-dodger-blue};
+  --icon-filled-yellow: #{$gamboge};
+  --icon-filled-purple: #{$medium-purple};
+
+  /* outlined icons */
+  --icon-outlined-default: #{$white};
+  --icon-outlined-primary: #{$white};
+  --icon-outlined-secondary: #{$silver-chalice};
+  --icon-outlined-disabled: #{$gray};
+  --icon-outlined-red: #{$pastel-red};
+  --icon-outlined-green: #{$kelly-green};
+  --icon-outlined-blue: #{$light-dodger-blue};
+  --icon-outlined-yellow: #{$gamboge};
+  --icon-outlined-purple: #{$lavender};
 }

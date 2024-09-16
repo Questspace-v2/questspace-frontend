@@ -15,7 +15,7 @@
     .ant-input-affix-wrapper-readonly {
         &:hover, &:focus, &:focus-within {
             .ant-input-suffix {
-                color: var(--primary-color);
+                color: var(--text-blue);
             }
         }
     }
@@ -44,6 +44,6 @@
     max-width: unset;
 
     .roboto-flex-header {
-        color: var(--green-color);
+        color: var(--text-green);
     }
 }

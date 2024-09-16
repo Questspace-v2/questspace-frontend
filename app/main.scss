@@ -1,4 +1,9 @@
 @use "../components/component-dir";
+@use '../globals' as *;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
 
 *:focus-visible {
   outline: 4px solid #91d5ff;
@@ -11,5 +16,20 @@
 .off-screen {
   position: absolute;
   left: -99999rem;
+}
+
+.ant-btn.ant-btn-default.ant-btn-dangerous {
+  border-color: var(--stroke-secondary);
+}
+
+.light-description {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.line-break {
+  white-space: pre-wrap;
+  user-select: text;
+  overflow-wrap: break-word;
 }
 

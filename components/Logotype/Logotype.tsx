@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { CSSProperties } from 'react';
+import classNames from 'classnames';
 
 interface LogotypeProps {
     className?: string;
@@ -17,7 +18,7 @@ export default function Logotype(props: LogotypeProps) {
         const aspectRatio = 809/104;
         return (
             <Image
-                className={className}
+                className={classNames(className, 'logotype_text')}
                 alt={'Текстовый логотип Квестспейса'}
                 src={'/Questspace-Text.svg'}
                 width={width}
@@ -36,7 +37,7 @@ export default function Logotype(props: LogotypeProps) {
     if (type === 'icon') {
             return (
                 <Image
-                    className={className}
+                    className={classNames(className, 'logotype_icon')}
                     alt={'Иконка-логотип Квестспейса'}
                     src={'/Questspace-Icon.svg'}
                     width={width}

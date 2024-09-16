@@ -3,7 +3,7 @@
 .quest-card {
     .quest-card__name {
         margin: 0;
-        color: var(--secondary-text-color);
+        color: var(--text-default);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -35,8 +35,8 @@
     .ant-card {
         width: 100%;
         box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.016);
-        border: 1px solid $cultured;
-        background-color: var(--cw-background-color);
+        border: 1px solid var(--stroke-secondary);
+        background-color: var(--background-primary);
         border-radius: 8px;
         overflow: hidden;
 
@@ -48,7 +48,7 @@
     .quest-card__start {
         font-size: 12px;
         font-weight: 400;
-        color: var(--tertiary-text-color);
+        color: var(--text-secondary);
     }
 
     .status__wrapper {
@@ -93,7 +93,7 @@ a.quest-card__anchor + div {
             flex-direction: row;
             justify-content: space-between;
             padding: 24px 32px;
-            background: var(--cw-background-color);
+            background: var(--background-primary);
             border-radius: 0 0 16px 16px;
         }
 
