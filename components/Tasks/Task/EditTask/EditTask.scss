@@ -9,6 +9,12 @@
     .edit-task__image-form-item .ant-form-item-control-input-content {
         display: flex;
         gap: 16px;
+        justify-content: space-between;
+    }
+
+    .edit-task__image-form-item-new .ant-form-item-control-input-content {
+        display: flex;
+        gap: 16px;
         align-items: flex-end;
     }
 
