@@ -57,6 +57,7 @@ const theme: ThemeConfig = {
             colorErrorBorderHover: 'var(--text-red)',
             defaultGhostColor: 'var(--text-blue)',
             defaultGhostBorderColor: 'var(--stroke-secondary)',
+            colorBorder: 'var(--stroke-secondary)',
             colorLink: 'var(--text-blue)',
             borderRadius: 2,
             borderRadiusLG: 2,
