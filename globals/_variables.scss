@@ -29,9 +29,11 @@ $grid-column-640: 1fr 1fr;
 $grid-column-960: 1fr 1fr 1fr;
 $grid-column-1280: 1fr 1fr 1fr 1fr;
 
-// status color
-$status-color-registration: $dodger-blue;
-$status-color-registration-done: $blue-violet;
-$status-color-running: $slimy-green;
-$status-color-wait-results: $harvest-gold;
-$status-color-finished: $arsenic;
+@mixin status-color($color) {
+    color: var(--text-#{$color});
+    font-weight: 500;
+
+    & circle {
+        fill: var(--icon-filled-#{$color});
+    }
+}

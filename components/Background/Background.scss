@@ -23,6 +23,11 @@
     width: 100%;
 }
 
-//html[data-theme="dark"] .background_footer >img {
-//    filter: grayscale(100%) invert(100%);
-//}
+html[data-theme="dark"] {
+    .background_footer, .background__wrapper {
+        >img {
+            content: url('/Questspace-Background-Dark.svg');
+        }
+
+    }
+}

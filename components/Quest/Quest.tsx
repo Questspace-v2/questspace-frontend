@@ -14,7 +14,7 @@ import {
     TrophyFilled,
 } from '@ant-design/icons';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import { Button, Card, ConfigProvider, message, Modal, Skeleton, Table } from 'antd';
+import { Button, Card, message, Modal, Skeleton, Table } from 'antd';
 import {
     getQuestStatusButton,
     getStartDateText,
@@ -30,7 +30,6 @@ import { parseToMarkdown, uid } from '@/lib/utils/utils';
 import dynamic from 'next/dynamic';
 import { changeTeamCaptain, deleteTeamMember, leaveTeam } from '@/app/api/api';
 import { Session } from 'next-auth';
-import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import { RELEASED_FEATURE } from '@/app/api/client/constants';
 import remarkGfm from 'remark-gfm';
 import { IFinalLeaderboard, IFinalLeaderboardRow } from '@/app/types/quest-interfaces';
@@ -58,7 +57,7 @@ function QuestAdminPanel({isCreator} : {isCreator: boolean}) {
             <ContentWrapper className={'quest-page__admin-panel'}>
                 <p style={{userSelect: 'none'}}>Сейчас вы смотрите на квест как обычный пользователь Квестспейса</p>
                 <Link shallow href={`${currentPath}/edit`}>
-                    <Button type={'link'} size={'large'} style={{color: '#1890FF'}} tabIndex={-1}><EditOutlined/>Редактировать квест</Button>
+                    <Button type={'link'} size={'large'} tabIndex={-1}><EditOutlined/>Редактировать квест</Button>
                 </Link>
 
             </ContentWrapper>
@@ -345,16 +344,15 @@ function QuestTeam({team, session, status} : {team?: ITeam, session?: Session | 
                         navigator.clipboard.writeText(inviteLink).then(() => success()).catch(err => {throw err});
                     }}>{inviteLink} <CopyOutlined style={{marginInlineStart: '3px'}} /></Button>
                 </div>
-                <ConfigProvider theme={redOutlinedButton}>
-                    <Button
-                        className={'exit-team__button exit-team__small-screen'}
-                        icon={<LogoutOutlined />}
-                        block
-                        onClick={showConfirm}
-                    >
-                        Выйти из команды
-                    </Button>
-                </ConfigProvider>
+                <Button
+                    className={'exit-team__button exit-team__small-screen'}
+                    icon={<LogoutOutlined />}
+                    block
+                    onClick={showConfirm}
+                    danger
+                >
+                    Выйти из команды
+                </Button>
             </ContentWrapper>
         );
     }
@@ -396,7 +394,7 @@ function QuestContent({ description, mode}: QuestContentProps) {
         return (
             <>
                 {description && <h2 className={'roboto-flex-header'}>О квесте</h2>}
-                <Markdown className={'line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{description}</Markdown>
+                <Markdown className={'line-break quest-preview__about'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{description}</Markdown>
             </>
         );
     }

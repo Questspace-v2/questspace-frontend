@@ -1,15 +1,11 @@
 @use "../../../globals" as *;
 
-.header-avatar__frame {
-    cursor: pointer;
+.header-avatar__dropdown.ant-dropdown .ant-dropdown-menu {
+    padding: 4px 0;
 }
 
-.header-avatar__dropdown {
-
-
-    .dropdown__exit-button {
-        color: var(--quit-color) !important;
-    }
+.header-avatar__frame {
+    cursor: pointer;
 }
 
 .header-avatar__button {
@@ -35,6 +31,6 @@
 }
 
 .header-dropdown_open {
-    background-color: #E6F7FF;
+    background-color: var(--background-secondary);
     transition: background-color .2s ease;
 }

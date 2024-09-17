@@ -131,7 +131,7 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const pathname = usePathname();
         return (
-            <div className={'quest-header__interactive'}>
+            <div className={'quest-header__interactive quest-header__interactive_play'}>
                 {team && (
                     <Link href={`${pathname}/play`}>
                         <Button type={'primary'} style={{ backgroundColor: '#52C41A' }} tabIndex={-1}>
@@ -146,7 +146,7 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
 
     if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
         return (
-            <div className={'quest-header__interactive'}>
+            <div className={'quest-header__interactive quest-header__interactive_finished'}>
                 <Button disabled size={'large'}><FlagFilled />Квест завершен</Button>
             </div>
         );

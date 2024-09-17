@@ -17,14 +17,8 @@
         width: 168px;
     }
 
-    .light-description {
-        color: var(--base-text-color);
-        opacity: .45;
-        margin: 0;
-    }
-
     .quest-editor__validation-error {
-        color: var(--quit-color);
+        color: var(--text-red);
         margin: 0;
     }
 
@@ -101,6 +95,15 @@
     .ant-input-number-group .ant-input-number-group-addon {
         padding: 0;
         width: 32px;
+        z-index: 1;
+
+        &:hover {
+            border-color: var(--ant-input-number-hover-border-color);
+        }
+
+        &:active {
+            border-color: var(--ant-input-number-active-border-color);
+        }
     }
 
     .ant-input-number-group .ant-input-number-group-addon span {

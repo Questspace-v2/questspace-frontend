@@ -1,8 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Button, ConfigProvider, Dropdown, MenuProps, UploadFile} from 'antd';
-import { blueOutlinedButton, redOutlinedButton } from '@/lib/theme/themeConfig';
+import {Button, Dropdown, MenuProps, UploadFile} from 'antd';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
@@ -91,13 +90,9 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
 
     return (
         <div className={'task-group__collapse-buttons'}>
-            <ConfigProvider theme={blueOutlinedButton}>
-                <Button onClick={handleChangeName}><EditOutlined/>Изменить название</Button>
-                <Button onClick={handleAddTask}><PlusOutlined/>Добавить задачу</Button>
-            </ConfigProvider>
-            <ConfigProvider theme={redOutlinedButton}>
-                <Button onClick={handleDeleteGroup}><DeleteOutlined/>Удалить раздел</Button>
-            </ConfigProvider>
+                <Button onClick={handleChangeName} ghost><EditOutlined/>Изменить название</Button>
+                <Button onClick={handleAddTask} ghost><PlusOutlined/>Добавить задачу</Button>
+                <Button onClick={handleDeleteGroup} danger><DeleteOutlined/></Button>
             <Dropdown
                 rootClassName={'task-group-extra__dropdown'}
                 className={'task-group-extra__burger-button'}

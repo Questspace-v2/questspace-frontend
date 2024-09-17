@@ -9,7 +9,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                     <Image
                         className={className}
                         alt={'Красивая карта Екатеринбурга'}
-                        src={'/Questspace-Background.svg'}
+                        src={'/Questspace-Background-Light.svg'}
                         quality={100}
                         fill
                         style={{objectFit: 'cover'}}
@@ -25,7 +25,7 @@ export default function Background({ type, className = '' }: BackgroundProps) {
                     <Image
                         className={className}
                         alt={'Красивая карта Екатеринбурга'}
-                        src={'/Questspace-Background.svg'}
+                        src={'/Questspace-Background-Light.svg'}
                         width={1920}
                         height={1080}
                         style={{objectFit: 'cover', aspectRatio: 0}}

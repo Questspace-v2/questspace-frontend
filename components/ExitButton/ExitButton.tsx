@@ -1,8 +1,7 @@
-import { Button, ConfigProvider } from 'antd';
+import { Button } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import React from 'react';
 import { signOut } from 'next-auth/react';
-import { redOutlinedButton } from '@/lib/theme/themeConfig';
 
 
 interface ExitButtonProps {
@@ -18,20 +17,17 @@ export default function ExitButton(props: ExitButtonProps) {
     }
 
     return (
-        <ConfigProvider
-            theme={redOutlinedButton}
+        <Button
+            className={'exit__button'}
+            size={'middle'}
+            danger
+            style={{borderRadius: '2px'}}
+            block={block}
+            /* eslint-disable-next-line @typescript-eslint/no-misused-promises */
+            onClick={handleClick}
         >
-            <Button
-                className={'exit__button'}
-                size={'middle'}
-                style={{borderRadius: '2px'}}
-                block={block}
-                /* eslint-disable-next-line @typescript-eslint/no-misused-promises */
-                onClick={handleClick}
-            >
-                <LogoutOutlined />
-                Выйти
-            </Button>
-        </ConfigProvider>
+            <LogoutOutlined />
+            Выйти
+        </Button>
     );
 }

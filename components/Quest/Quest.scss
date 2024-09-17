@@ -6,17 +6,13 @@
 }
 
 .quest-page__content {
-    .line-break {
-        white-space: pre-wrap;
-        user-select: text;
-    }
     & p {
         margin: 0;
-        color: var(--base-text-color);
+        color: var(--text-default);
     }
 
     & a:not(a:visited) {
-        color: var(--primary-color);
+        color: var(--text-blue);
     }
 }
 
@@ -55,7 +51,7 @@
         padding: 0;
         margin: 0;
         font-weight: 500;
-        color: var(--base-text-color);
+        color: var(--text-default);
     }
 
     .invite-link__link {
@@ -63,7 +59,7 @@
         display: flex;
         align-items: center;
         font-size: 16px;
-        color: var(--primary-color);
+        color: var(--text-blue);
     }
 
     .invite-link__link span {
@@ -81,7 +77,7 @@
 }
 
 .ant-btn-text:not(:disabled):not(.ant-btn-disabled).exit-team__button:hover {
-    background: var(--quit-color);
+    background: var(--background-red);
     transition: ease background-color .2s;
 
     & span {
@@ -96,7 +92,7 @@
 }
 
 .content__wrapper.quest-page__admin-panel {
-    background-color: #E6F7FF;
+    background-color: var(--background-blue-secondary);
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -112,7 +108,7 @@
 .quest-header {
     .quest-header__name {
         margin: 0;
-        color: var(--secondary-text-color);
+        color: var(--text-default);
     }
 
     & p {
@@ -137,7 +133,7 @@
         font-weight: 500;
 
         .ant-card-cover {
-            background-color: var(--cw-background-color);
+            background-color: var(--background-primary);
             width: 100%;
             height: auto;
             display: flex;
@@ -156,7 +152,7 @@
             justify-content: space-between;
             column-gap: 24px;
             padding: 24px 32px;
-            background: var(--cw-background-color);
+            background: var(--background-primary);
             border-radius: 0 0 16px 16px;
         }
 
@@ -170,7 +166,7 @@
         gap: 24px;
         padding-top: 12px;
         text-wrap: nowrap;
-        color: var(--base-text-color);
+        color: var(--text-default);
 
         .information__block {
             display: flex;
@@ -197,28 +193,24 @@
             width: 240px;
         }
 
-        & .already-have-team {
-            border: 1px dashed #D9D9D9;
-        }
-
         & p {
             text-wrap: nowrap;
-            color: var(--base-text-color);
+            color: var(--text-default);
         }
     }
 
     .quest-header__interactive button.already-have-team {
-        color: $status-color-running;
-    }
+        color: var(--text-green);
 
-    .quest-header__interactive .already-have-team svg {
-        fill: var(--green-color);
+        svg {
+            fill: var(--icon-outlined-green);
+        }
     }
 }
 
 .team__header button.ant-btn.ant-btn-text.exit-team__button.exit-team__large-screen {
     align-self: start;
-    color: var(--quit-color);
+    color: var(--text-red);
 }
 
 .team__members {
@@ -238,7 +230,7 @@
 
     .team-member__name {
         word-break: break-word;
-        color: var(--base-text-color);
+        color: var(--text-default);
     }
 
     .team-member__captain::after {

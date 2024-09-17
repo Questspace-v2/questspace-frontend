@@ -1,7 +1,6 @@
 'use client';
 
-import {Button, ConfigProvider, UploadFile} from "antd";
-import {blueOutlinedButton, redOutlinedButton} from "@/lib/theme/themeConfig";
+import {Button, UploadFile} from "antd";
 import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useState} from "react";
 import {
@@ -119,13 +118,9 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
 
     return (
         <div className={`task__edit-buttons ${classname}`}>
-            <ConfigProvider theme={blueOutlinedButton}>
-                <Button onClick={handleEditTask}><EditOutlined/>{!mobile526 && 'Редактировать задачу'}</Button>
-                <Button onClick={handleCopyTask}><CopyOutlined/>{!mobile526 && 'Создать копию задачи'}</Button>
-            </ConfigProvider>
-            <ConfigProvider theme={redOutlinedButton}>
-                <Button onClick={handleDeleteTask}><DeleteOutlined/>{!mobile526 && 'Удалить задачу'}</Button>
-            </ConfigProvider>
+                <Button onClick={handleEditTask} ghost><EditOutlined/>{!mobile526 && 'Редактировать задачу'}</Button>
+                <Button onClick={handleCopyTask} ghost><CopyOutlined/>{!mobile526 && 'Создать копию задачи'}</Button>
+                <Button onClick={handleDeleteTask} danger><DeleteOutlined/>{!mobile526 && 'Удалить задачу'}</Button>
             <DynamicEditTask
                 questId={questId}
                 isOpen={isOpenModal}

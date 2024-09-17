@@ -23,7 +23,7 @@ import {
     ReloadOutlined,
     UploadOutlined
 } from '@ant-design/icons';
-import theme, { blueOutlinedButton } from '@/lib/theme/themeConfig';
+import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import {
@@ -380,7 +380,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                         <Col className={'edit-task__labels'}>
                             <span>
                                 Варианты ответа
-                                <span style={{ color: '#00000073' }}><br />Ответы принимаются регистронезависимо</span>
+                                <span className={'light-description'}><br />Ответы принимаются регистронезависимо</span>
                             </span>
                         </Col>
                         <Col flex={'auto'} className={'edit-task__answers-list'}>
@@ -409,18 +409,16 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                             </Form.Item>
                                         ))}
                                         <Form.Item>
-                                            <ConfigProvider theme={blueOutlinedButton}>
-                                                <Button
-                                                    className={'edit-task__add-button'}
-                                                    onClick={() => {
-                                                        add();
-                                                        handleFieldChange();
-                                                    }}
-                                                    type={'link'}
-                                                >
-                                                    <PlusOutlined/> Добавить вариант ответа
-                                                </Button>
-                                            </ConfigProvider>
+                                            <Button
+                                                className={'edit-task__add-button'}
+                                                onClick={() => {
+                                                    add();
+                                                    handleFieldChange();
+                                                }}
+                                                type={'link'}
+                                            >
+                                                <PlusOutlined/> Добавить вариант ответа
+                                            </Button>
                                         </Form.Item>
                                     </>
                                 )}
@@ -456,7 +454,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                     </Row>
                     <Row>
                         <Col className={'edit-task__labels'}>
-                            <span>Подсказки (max 3)<span style={{ color: '#00000073' }}><br/>поддерживает Markdown</span></span>
+                            <span>Подсказки (max 3)<span className={'light-description'}><br/>поддерживает Markdown</span></span>
                         </Col>
                         <Col flex={'auto'} className={'edit-task__hints-list'}>
                             <Form.List name={'hints'}>
@@ -473,16 +471,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                             </Form.Item>
                                         ))}
                                         <Form.Item>
-                                            <ConfigProvider theme={blueOutlinedButton}>
-                                                <Button
-                                                    className={'edit-task__add-button'}
-                                                    onClick={() => add()}
-                                                    disabled={fields.length >= 3}
-                                                    type={'link'}
-                                                >
-                                                    <PlusOutlined/> Добавить подсказку
-                                                </Button>
-                                            </ConfigProvider>
+                                            <Button
+                                                className={'edit-task__add-button'}
+                                                onClick={() => add()}
+                                                disabled={fields.length >= 3}
+                                                type={'link'}
+                                            >
+                                                <PlusOutlined/> Добавить подсказку
+                                            </Button>
                                         </Form.Item>
                                     </>
                                 )}

@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import classNames from 'classnames';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -58,7 +59,6 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     const [inputState, setInputState] = useState<InputStates>(teamAnswer ? InputStates.ACCEPTED : InputStates.BASIC);
     const [sendButtonContent, setSendButtonContent] = useState<JSX.Element | null>(<SendOutlined/>);
     const [inputValidationStatus, setInputValidationStatus] = useState<'success' | 'error' | ''>(teamAnswer ? 'success' : '');
-    const [textColor, setTextColor] = useState(teamAnswer ? '#389e0d' : '#262626');
 
     const onFinish: CountdownProps['onFinish'] = () => {
         setSendButtonContent(<SendOutlined/>);
@@ -100,12 +100,11 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         setSendButtonContent(<Countdown
             value={deadline}
             format={'ss'}
-            valueStyle={{fontSize: '14px', color: '#1890ff'}}
+            valueStyle={{fontSize: '14px', color: 'var(--text-blue)'}}
             onFinish={onFinish}/>)
     };
 
     const handleAccept = () => {
-        setTextColor('#389e0d');
         setInputState(InputStates.ACCEPTED);
         setSendButtonContent(<SendOutlined/>);
         setSendButtonState(SendButtonStates.DISABLED);
@@ -122,6 +121,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     const handleAnswerValidation = (answerResponse: ITaskAnswerResponse) => {
         if (answerResponse.accepted) {
             setInputValidationStatus('success');
+            form.setFieldValue('task-answer', answerResponse.text);
             handleAccept();
         } else {
             setInputValidationStatus('error');
@@ -138,7 +138,9 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
 
         setSendButtonState(SendButtonStates.LOADING);
         setSendButtonContent(null);
-        const answerResponse = await answerTaskPlayMode(questId, data, session?.accessToken) as ITaskAnswerResponse;
+        const answerResponse = editMode ?
+            {accepted: correctAnswers.includes(answer), text: answer, score: 0} :
+            await answerTaskPlayMode(questId, data, session?.accessToken) as ITaskAnswerResponse;
         handleAnswerValidation(answerResponse);
     };
 
@@ -200,8 +202,8 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                            validateStatus={inputValidationStatus}
                            hasFeedback>
                     <Input
+                        className={classNames(InputStates.ACCEPTED && 'task__answer-part_right')}
                         placeholder={'Ответ'}
-                        style={{borderRadius: 2, color: textColor}}
                         onChange={handleValueChange}
                         disabled={inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
                 </Form.Item>

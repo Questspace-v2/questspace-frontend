@@ -6,21 +6,21 @@
     gap: 16px;
     padding-bottom: 16px;
 
-    .line-break {
-        white-space: pre-wrap;
-        user-select: text;
-    }
-
     .quest-preview__information {
         display: flex;
         column-gap: 24px;
         row-gap: 4px;
         flex-wrap: wrap;
+        color: var(--text-default);
 
         .information__block {
             display: flex;
             gap: 8px;
         }
+    }
+
+    .quest-preview__about {
+        color: var(--text-default);
     }
 }
 

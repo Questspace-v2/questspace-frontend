@@ -26,7 +26,6 @@ import { uid } from '@/lib/utils/utils';
 import { useSession } from 'next-auth/react';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useRouter } from 'next/navigation';
-import { redOutlinedButton } from '@/lib/theme/themeConfig';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
 
 dayjs.locale('ru')
@@ -81,9 +80,7 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
             >
                 {createBtnText}
             </Button>
-            <ConfigProvider theme={redOutlinedButton}>
-                <Button href={'/'}>Отменить</Button>
-            </ConfigProvider>
+            <Button href={'/'} danger>Отменить</Button>
         </div>
     );
 }

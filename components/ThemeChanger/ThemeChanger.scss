@@ -1,0 +1,32 @@
+.theme-changer {
+    display: flex;
+    flex-direction: column;
+}
+
+.theme-changer__header {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    color: var(--text-default);
+    margin: 0;
+    height: 26px;
+}
+
+.theme-changer__radio-group.ant-radio-group {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.ant-dropdown:has(.theme-changer) {
+    .ant-dropdown-menu .ant-dropdown-menu-item:has(.theme-changer) {
+        &:hover, &:active, &:focus-visible {
+            background-color: unset;
+        }
+    }
+
+    .ant-dropdown-menu .ant-dropdown-menu-item-divider {
+        margin: 0 12px 5px 12px;
+
+    }
+}
