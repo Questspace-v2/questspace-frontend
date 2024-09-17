@@ -9,7 +9,7 @@
     .edit-task__image-form-item .ant-form-item-control-input-content {
         display: flex;
         gap: 16px;
-        justify-content: space-between;
+        align-items: flex-end;
     }
 
     .edit-task__image {
@@ -49,6 +49,26 @@
     }
 
     .edit-task__add-button {
+        padding: 4px 0;
+    }
+
+    .edit-task__file-extensions {
+        color: var(--text-secondary);
+        padding: 0 0 6px;
+        margin: 0;
+    }
+
+    .edit-task__delete-image-button {
+        color: var(--icon-outlined-red);
+        padding-left: 8px;
+    }
+
+    .ant-form-item-control-input-content .ant-upload-wrapper {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .edit-task__add-file-button {
         padding: 4px 0;
     }
 

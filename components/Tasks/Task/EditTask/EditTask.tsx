@@ -20,8 +20,6 @@ import {
     FileImageOutlined,
     MinusOutlined,
     PlusOutlined,
-    ReloadOutlined,
-    UploadOutlined
 } from '@ant-design/icons';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
@@ -39,6 +37,7 @@ import {useSession} from "next-auth/react";
 import {patchTaskGroups} from "@/app/api/api";
 import classNames from 'classnames';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
+import {ItemRender} from "antd/es/upload/interface";
 
 const {TextArea} = Input;
 
@@ -279,8 +278,20 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         }
 
         return fileIsTooBigError;
-
     }
+    
+    const renderImageListItem: ItemRender = (
+        originNode,
+        file,
+        _,
+        { remove }
+    ) => (
+        <div className={'edit-task__image'}>
+            <FileImageOutlined/>
+            <p>{file.name}</p>
+            <DeleteOutlined onClick={() => remove()} className={'edit-task__delete-image-button'} />
+        </div>
+    );
 
     return (
         <ConfigProvider theme={theme} locale={ru_RU}>
@@ -349,7 +360,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                     </Row>
                     <Row>
                         <Col className={'edit-task__labels'}>
-                            <span>Картинка</span>
+                            <span>Файлы (max 5)</span>
                         </Col>
                         <Col flex={'auto'}>
                             <Form.Item
@@ -360,19 +371,15 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                 className={'edit-task__image-form-item'}
                             >
                                 <Upload
-                                    maxCount={1}
+                                    maxCount={5}
                                     accept={'image/*'}
-                                    showUploadList={false}
                                     fileList={fileList}
                                     onChange={handleUploadValueChange}
+                                    itemRender={renderImageListItem}
                                 >
-                                    {fileList.length > 0 ? (
-                                        <Button><ReloadOutlined />Заменить</Button>
-                                    ) : (
-                                        <Button><UploadOutlined />Загрузить</Button>
-                                    )}
+                                    <Button type={'link'} className={'edit-task__add-file-button'}><PlusOutlined/> Добавить файл</Button>
                                 </Upload>
-                                {fileList.length > 0 && <div className={'edit-task__image'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
+                                <p className={'edit-task__file-extensions'}>jpg, jpeg, png, gif, mp3, wav до 20Мб</p>
                             </Form.Item>
                         </Col>
                     </Row>
