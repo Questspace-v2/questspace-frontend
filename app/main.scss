@@ -33,3 +33,17 @@
   overflow-wrap: break-word;
 }
 
+.ant-radio-wrapper .ant-radio {
+  --ant-radio-radio-color: var(--text-blue);
+
+   .ant-radio-inner {
+    background-color: transparent;
+    border-color: var(--stroke-secondary);
+
+  }
+
+  &.ant-radio-checked .ant-radio-inner {
+    background-color: transparent;
+    border-color: var(--text-blue);
+  }
+}

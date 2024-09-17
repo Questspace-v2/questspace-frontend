@@ -23,7 +23,7 @@ import {
     ReloadOutlined,
     UploadOutlined
 } from '@ant-design/icons';
-import theme, { blueOutlinedButton } from '@/lib/theme/themeConfig';
+import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import {
@@ -409,18 +409,16 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                             </Form.Item>
                                         ))}
                                         <Form.Item>
-                                            <ConfigProvider theme={blueOutlinedButton}>
-                                                <Button
-                                                    className={'edit-task__add-button'}
-                                                    onClick={() => {
-                                                        add();
-                                                        handleFieldChange();
-                                                    }}
-                                                    type={'link'}
-                                                >
-                                                    <PlusOutlined/> Добавить вариант ответа
-                                                </Button>
-                                            </ConfigProvider>
+                                            <Button
+                                                className={'edit-task__add-button'}
+                                                onClick={() => {
+                                                    add();
+                                                    handleFieldChange();
+                                                }}
+                                                type={'link'}
+                                            >
+                                                <PlusOutlined/> Добавить вариант ответа
+                                            </Button>
                                         </Form.Item>
                                     </>
                                 )}
@@ -473,16 +471,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                             </Form.Item>
                                         ))}
                                         <Form.Item>
-                                            <ConfigProvider theme={blueOutlinedButton}>
-                                                <Button
-                                                    className={'edit-task__add-button'}
-                                                    onClick={() => add()}
-                                                    disabled={fields.length >= 3}
-                                                    type={'link'}
-                                                >
-                                                    <PlusOutlined/> Добавить подсказку
-                                                </Button>
-                                            </ConfigProvider>
+                                            <Button
+                                                className={'edit-task__add-button'}
+                                                onClick={() => add()}
+                                                disabled={fields.length >= 3}
+                                                type={'link'}
+                                            >
+                                                <PlusOutlined/> Добавить подсказку
+                                            </Button>
                                         </Form.Item>
                                     </>
                                 )}

@@ -100,7 +100,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         setSendButtonContent(<Countdown
             value={deadline}
             format={'ss'}
-            valueStyle={{fontSize: '14px', color: '#1890ff'}}
+            valueStyle={{fontSize: '14px', color: 'var(--text-blue)'}}
             onFinish={onFinish}/>)
     };
 

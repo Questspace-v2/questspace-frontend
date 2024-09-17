@@ -1,11 +1,12 @@
 'use client'
 
 import React, { useState } from 'react';
-import { ConfigProvider, Dropdown, MenuProps } from 'antd';
+import { Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
+import ThemeChanger from '@/components/ThemeChanger/ThemeChanger';
 
 
 export default function HeaderAvatar() {
@@ -33,6 +34,13 @@ export default function HeaderAvatar() {
                     await signOut()}
             } style={{color: 'var(--text-red)'}}>Выйти</Link>,
             key: '2',
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: '3',
+            label: <ThemeChanger />,
         },
     ];
 

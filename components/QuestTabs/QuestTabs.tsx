@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { ConfigProvider, Select, Tabs, TabsProps, ThemeConfig } from 'antd';
+import { Select, Tabs, TabsProps } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import {
     createQuestButton,
@@ -26,20 +26,6 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
     const [tabsMap, setTabsMap] = useState(initialTabsMap);
 
     const { ref, inView } = useInView();
-
-    const themeConfig: ThemeConfig = {
-        components: {
-            Select: {
-                colorTextPlaceholder: '#1890FF',
-                colorPrimary: '#1890FF',
-                colorPrimaryTextActive: '#1890FF',
-                colorTextHeading: '#1890FF',
-                fontWeightStrong: 400,
-                colorIcon: '#1890FF',
-                colorIconHover: '#1890FF',
-            }
-        },
-    };
 
     const getTabsChildren = (tabName: string) =>
         selectedTab === tabName && tabsMap.has(tabName) ?
@@ -128,23 +114,20 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                     <div
                         className={'quest-tabs__header'}
                     >
-                        <ConfigProvider theme={themeConfig}>
-                            <Select
-                                tabIndex={0}
-                                defaultValue={selectedTab}
-                                defaultActiveFirstOption={false}
-                                style={{
-                                    width: 'max-content',
-                                    color: '#1890FF',
-                                    pointerEvents: isAuthorized ? 'auto' : 'none'
-                                }}
-                                dropdownStyle={{width: 'max-content'}}
-                                suffixIcon={isAuthorized ? <DownOutlined /> : <div/>}
-                                variant={'borderless'}
-                                options={selectOptions}
-                                onSelect={handleSelectTab}
-                            />
-                        </ConfigProvider>
+                        <Select
+                            tabIndex={0}
+                            defaultValue={selectedTab}
+                            defaultActiveFirstOption={false}
+                            style={{
+                                width: 'max-content',
+                                pointerEvents: isAuthorized ? 'auto' : 'none'
+                            }}
+                            dropdownStyle={{width: 'max-content'}}
+                            suffixIcon={isAuthorized ? <DownOutlined /> : <div/>}
+                            variant={'borderless'}
+                            options={selectOptions}
+                            onSelect={handleSelectTab}
+                        />
                         {createQuestButton}
                     </div>
                     <div className={'quest-tabpane'}>
@@ -157,7 +140,6 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
     }
     return (
             <ContentWrapper>
-                <ConfigProvider theme={themeConfig}>
                 <Tabs
                     className={getClassnames('quest-tabs', isAuthorized ? '' : 'quest-tabs__unauth')}
                     tabBarExtraContent={createQuestButton}
@@ -172,7 +154,6 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                     destroyInactiveTabPane
                     tabIndex={-1}
                 />
-                </ConfigProvider>
             </ContentWrapper>
         )
 }

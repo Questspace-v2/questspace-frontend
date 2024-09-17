@@ -19,7 +19,7 @@ html {
     --text-default: #{$eerie-black};
     --text-primary: #{$white};
     --text-secondary: #{$granite-gray};
-    --text-disabled: #{$philippine_gray};
+    --text-disabled: #{$philippine-gray};
     --text-red: #{$lava};
     --text-green: #{$slimy-green};
     --text-blue: #{$dodger-blue};
@@ -30,7 +30,7 @@ html {
     --icon-filled-default: #{$eerie-black};
     --icon-filled-primary: #{$white};
     --icon-filled-secondary: #{$granite-gray};
-    --icon-filled-disabled: #{$philippine_gray};
+    --icon-filled-disabled: #{$philippine-gray};
     --icon-filled-red: #{$deep-carmine-pink};
     --icon-filled-green: #{$kelly-green};
     --icon-filled-blue: #{$dodger-blue};
@@ -41,7 +41,7 @@ html {
     --icon-outlined-default: #{$eerie-black};
     --icon-outlined-primary: #{$white};
     --icon-outlined-secondary: #{$granite-gray};
-    --icon-outlined-disabled: #{$philippine_gray};
+    --icon-outlined-disabled: #{$philippine-gray};
     --icon-outlined-red: #{$lava};
     --icon-outlined-green: #{$slimy-green};
     --icon-outlined-blue: #{$dodger-blue};
@@ -57,7 +57,7 @@ body {
     height: 100%;
     margin: 0;
     font-family: $font-manrope;
-    color: #262626;
+    color: var(--text-default);
 }
 
 .App {

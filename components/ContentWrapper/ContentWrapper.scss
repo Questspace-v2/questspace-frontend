@@ -13,6 +13,8 @@
 
     padding-left: $side-margins-32;
     padding-right: $side-margins-32;
+
+    transition: all var(--ant-motion-duration-mid) var(--ant-motion-ease-in);
 }
 
 .content__wrapper.not-found__content-wrapper, .content__wrapper.invites-error__content-wrapper {
@@ -23,7 +25,7 @@
     gap: 20px;
     width: 378px;
 
-    background: #FFFFFF;
+    background: var(--background-primary);
     box-shadow: 0 16px 32px rgba(0, 0, 0, 0.04);
     border-radius: 16px;
 

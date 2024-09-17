@@ -9,6 +9,7 @@ import theme from '@/lib/theme/themeConfig';
 import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import Background from '@/components/Background/Background';
 import mainMetadata from '@/app/metadata';
+import { ThemeProvider } from 'next-themes';
 
 import '../(root)/global.scss';
 import '../main.scss';
@@ -23,7 +24,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
         <html lang="ru" suppressHydrationWarning>
         <body className={`${manrope.variable} ${robotoFlex.variable}`}>
         <NextAuthProvider session={session}>
-            {/* <ThemeProvider> */}
+            <ThemeProvider>
                 <AntdRegistry>
                     <ConfigProvider theme={theme}>
                         <div className={'App'}>
@@ -32,7 +33,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
                         </div>
                     </ConfigProvider>
                 </AntdRegistry>
-            {/* </ThemeProvider> */}
+            </ThemeProvider>
         </NextAuthProvider>
         </body>
         </html>

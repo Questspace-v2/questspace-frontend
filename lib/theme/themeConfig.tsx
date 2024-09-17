@@ -95,13 +95,14 @@ const theme: ThemeConfig = {
             borderRadiusLG: 2,
             colorBgElevated: 'var(--background-primary)',
             colorText: 'var(--text-default)',
-            controlItemBgHover: 'var(--background-secondary)'
+            controlItemBgHover: 'var(--background-secondary)',
+            colorSplit: 'var(--stroke-secondary)'
         },
         DatePicker: {
             activeBg: 'transparent',
             colorText: 'var(--text-default)',
             colorTextHeading: 'var(--text-default)',
-            colorBgContainer: 'var(--background-primary)',
+            colorBgContainer: 'transparent',
             colorBgElevated: 'var(--background-primary)',
             colorBorder: 'var(--stroke-secondary)',
             colorPrimary: 'var(--background-blue)',
@@ -112,26 +113,29 @@ const theme: ThemeConfig = {
             controlItemBgActive: 'var(--background-blue)',
             colorIcon: 'var(--icon-outlined-disabled)',
             colorIconHover: 'var(--icon-outlined-secondary)',
-            colorTextDescription: 'var(--icon-filled-secondary)'
+            colorTextDescription: 'var(--icon-filled-secondary)',
+            colorTextPlaceholder: 'var(--text-disabled)',
         },
         Radio: {
             colorPrimary: 'var(--icon-filled-blue)',
-            colorText: 'var(--text-default)'
+            colorText: 'var(--text-default)',
+            buttonSolidCheckedBg: 'var(--text-default)',
         },
         Checkbox: {
             colorText: 'var(--text-default)',
             colorBgContainer: 'transparent',
             colorBorder: 'var(--stroke-secondary)'
+        },
+        Select: {
+            colorTextPlaceholder: 'var(--text-blue)',
+            colorPrimary: 'var(--text-blue)',
+            colorPrimaryTextActive: 'var(--text-blue)',
+            colorTextHeading: 'var(--text-blue)',
+            fontWeightStrong: 400,
+            colorIcon: 'var(--icon-outlined-blue)',
+            colorIconHover: 'var(--icon-outlined-blue)',
         }
     },
 };
-
-export const blueOutlinedButton: ThemeConfig = {
-    token: {
-        colorText: '#1890FF',
-        colorPrimaryHover: '#1890FF',
-        colorPrimaryActive: '#1890FF'
-    },
-}
 
 export default theme;
