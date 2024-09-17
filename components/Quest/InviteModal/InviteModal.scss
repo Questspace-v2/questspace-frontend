@@ -4,7 +4,7 @@
     padding: 32px 32px 40px 32px !important;
 
     .ant-input-suffix {
-        color: #d9d9d9;
+        color: var(--stroke-secondary);
         transition-behavior: normal;
         transition-delay: 0s;
         transition-duration: 0.2s;

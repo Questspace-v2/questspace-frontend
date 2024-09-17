@@ -72,7 +72,7 @@ export default function Leaderboard({teams, questId}: {teams: IAdminLeaderboardR
                 </>
             )
         },
-        ...leaderboardContent.task_groups!.map((group, group_index) => ({
+        ...(leaderboardContent.task_groups ?? []).map((group, group_index) => ({
             title: group.name,
             key: group.id,
             children: group.tasks?.map((task, task_index) => ({

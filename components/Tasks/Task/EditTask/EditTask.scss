@@ -18,6 +18,7 @@
         gap: 8px;
         min-width: 0;
         order: -1;
+        color: var(--text-default);
     }
 
     .edit-task__image p {
@@ -52,7 +53,7 @@
     }
 
     .ant-input-suffix {
-        color: #d9d9d9;
+        color: var(--stroke-secondary);
         transition-behavior: normal;
         transition-delay: 0s;
         transition-duration: 0.2s;
