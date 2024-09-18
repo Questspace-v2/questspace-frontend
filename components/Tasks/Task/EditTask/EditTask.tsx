@@ -42,6 +42,14 @@ import {RELEASED_FEATURE} from '@/app/api/client/constants';
 
 const {TextArea} = Input;
 
+const supportedFileTypes = [
+    'image/gif',
+    'image/jpeg',
+    'image/png',
+    'audio/wav',
+    'audio/mpeg'
+];
+
 interface TaskCreateModalProps {
     questId: string,
     isOpen: boolean,
@@ -135,7 +143,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
     const handleUploadValueChange: UploadProps['onChange'] = (info) => {
         const isMoreThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 >= 20);
-        const isFileTypeUnsupported = !info.file.type?.startsWith('image/');
+        const isFileTypeUnsupported = supportedFileTypes
+            .filter(value => info.file.type === value).length === 0;
         setFileList(info.fileList);
         setFileIsTooBig(isMoreThan5Mb);
         setUnsupportedFileType(isFileTypeUnsupported);
@@ -376,7 +385,6 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                         <>
                                             <Upload
                                                 maxCount={5}
-                                                accept={'image/*'}
                                                 fileList={fileList}
                                                 onChange={handleUploadValueChange}
                                                 itemRender={renderImageListItem}
