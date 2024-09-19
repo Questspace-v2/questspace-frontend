@@ -37,7 +37,16 @@ interface TaskProps {
 }
 
 export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
-    const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
+    const {
+        name,
+        question,
+        hints,
+        media_link: mediaLink,
+        correct_answers: correctAnswers,
+        id: taskId,
+        answer: teamAnswer,
+        score,
+    } = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
@@ -148,7 +157,10 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         <div className={'task__wrapper'}>
             {contextHolder}
             <div className={'task__text-part'}>
-                <h4 className={'roboto-flex-header task__name'}>{name}</h4>
+                <h4 className={classNames('roboto-flex-header task__name', score > 0 && 'accepted')}>
+                    {name}
+                    {score > 0 && <span>(+{score})</span>}
+                </h4>
                 {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
@@ -193,9 +205,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                 className={'task__answer-part'}
                 layout={'inline'}
                 form={form}
-                initialValues={[
-                    {name: 'task-answer', value: teamAnswer ?? ''}
-                ]}
+                initialValues={{'task-answer': teamAnswer ?? ''}}
             >
                 <Form.Item required
                            name={'task-answer'}
