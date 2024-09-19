@@ -15,10 +15,12 @@
     .task__name {
         font-size: 24px;
         word-break: break-word;
+        display: flex;
+        gap: 16px;
+    }
 
-        .accepted {
-            color: var(--text-green);
-        }
+    .task__name.accepted {
+        color: var(--text-green);
     }
 
     .task__question {

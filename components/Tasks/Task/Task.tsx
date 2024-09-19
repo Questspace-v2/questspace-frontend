@@ -9,7 +9,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
 import { answerTaskPlayMode, takeHintPlayMode } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import {Dispatch, SetStateAction, useState} from 'react';
 import { useRouter } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -34,9 +34,10 @@ interface TaskProps {
     props: ITask,
     questId: string,
     taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
+    setAcceptedTasks?: Dispatch<SetStateAction<number>>,
 }
 
-export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
+export default function Task({mode, props, questId, taskGroupProps, setAcceptedTasks}: TaskProps) {
     const {
         name,
         question,
@@ -117,6 +118,9 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         setInputState(InputStates.ACCEPTED);
         setSendButtonContent(<SendOutlined/>);
         setSendButtonState(SendButtonStates.DISABLED);
+        if (setAcceptedTasks) {
+            setAcceptedTasks(prevState => prevState + 1);
+        }
         success();
     };
 
