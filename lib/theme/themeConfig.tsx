@@ -135,6 +135,10 @@ const theme: ThemeConfig = {
             fontWeightStrong: 400,
             colorIcon: 'var(--icon-outlined-blue)',
             colorIconHover: 'var(--icon-outlined-blue)',
+            colorBgElevated: 'var(--background-primary)',
+            colorText: 'var(--text-default)',
+            optionSelectedBg: 'var(--background-blue)',
+            optionActiveBg: 'var(--background-secondary)'
         }
     },
 };
