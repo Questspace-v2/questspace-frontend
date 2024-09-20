@@ -1,19 +1,21 @@
 'use client';
 
 import Image from 'next/image';
-import { uid } from '@/lib/utils/utils';
-import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
-import { IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
-import { SendOutlined } from '@ant-design/icons';
+import {uid} from '@/lib/utils/utils';
+import {Button, CountdownProps, Form, Input, message, Statistic} from 'antd';
+import {IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup} from '@/app/types/quest-interfaces';
+import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
-import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
-import { answerTaskPlayMode, takeHintPlayMode } from '@/app/api/api';
-import { useSession } from 'next-auth/react';
-import {Dispatch, SetStateAction, useState} from 'react';
-import { useRouter } from 'next/navigation';
+import {getTaskExtra, TasksMode} from '@/components/Tasks/Tasks.helpers';
+import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
+import {useSession} from 'next-auth/react';
+import {useState} from 'react';
+import {useRouter} from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import classNames from 'classnames';
+import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
+import {RELEASED_FEATURE} from '@/app/api/client/constants';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -34,10 +36,9 @@ interface TaskProps {
     props: ITask,
     questId: string,
     taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
-    setAcceptedTasks?: Dispatch<SetStateAction<number>>,
 }
 
-export default function Task({mode, props, questId, taskGroupProps, setAcceptedTasks}: TaskProps) {
+export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
     const {
         name,
         question,
@@ -47,6 +48,7 @@ export default function Task({mode, props, questId, taskGroupProps, setAcceptedT
         id: taskId,
         answer: teamAnswer,
         score,
+        reward
     } = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
@@ -65,10 +67,15 @@ export default function Task({mode, props, questId, taskGroupProps, setAcceptedT
     const [messageApi, contextHolder] = message.useMessage();
     const router = useRouter();
 
+    const { updater: setContextData} = useTasksContext()!;
+    const currentTaskGroupId = taskGroupProps.id;
+
     const [sendButtonState, setSendButtonState] = useState<SendButtonStates>(teamAnswer ? SendButtonStates.DISABLED : SendButtonStates.BASIC);
     const [inputState, setInputState] = useState<InputStates>(teamAnswer ? InputStates.ACCEPTED : InputStates.BASIC);
     const [sendButtonContent, setSendButtonContent] = useState<JSX.Element | null>(<SendOutlined/>);
     const [inputValidationStatus, setInputValidationStatus] = useState<'success' | 'error' | ''>(teamAnswer ? 'success' : '');
+
+    const [accepted, setAccepted] = useState(Boolean(score && score > 0));
 
     const onFinish: CountdownProps['onFinish'] = () => {
         setSendButtonContent(<SendOutlined/>);
@@ -118,9 +125,7 @@ export default function Task({mode, props, questId, taskGroupProps, setAcceptedT
         setInputState(InputStates.ACCEPTED);
         setSendButtonContent(<SendOutlined/>);
         setSendButtonState(SendButtonStates.DISABLED);
-        if (setAcceptedTasks) {
-            setAcceptedTasks(prevState => prevState + 1);
-        }
+        setAccepted(true);
         success();
     };
 
@@ -135,6 +140,24 @@ export default function Task({mode, props, questId, taskGroupProps, setAcceptedT
         if (answerResponse.accepted) {
             setInputValidationStatus('success');
             form.setFieldValue('task-answer', answerResponse.text);
+            setContextData(prevState => {
+                if (currentTaskGroupId && RELEASED_FEATURE) {
+                    const taskGroups = prevState.task_groups;
+                    const taskGroup = taskGroups
+                        .find(item => item.id === currentTaskGroupId)!;
+                    const taskGroupIndex = taskGroups.indexOf(taskGroup);
+                    const currentTaskIndex = taskGroup.tasks.indexOf(props);
+                    taskGroup.tasks[currentTaskIndex] = {
+                        ...props,
+                        score: answerResponse.score,
+                    };
+                    taskGroups[taskGroupIndex] = taskGroup;
+                    return {
+                        task_groups: taskGroups,
+                    };
+                }
+                return prevState;
+            })
             handleAccept();
         } else {
             setInputValidationStatus('error');
@@ -161,10 +184,14 @@ export default function Task({mode, props, questId, taskGroupProps, setAcceptedT
         <div className={'task__wrapper'}>
             {contextHolder}
             <div className={'task__text-part'}>
-                <h4 className={classNames('roboto-flex-header task__name', score > 0 && 'accepted')}>
-                    {name}
-                    {score > 0 && <span>(+{score})</span>}
-                </h4>
+                {
+                    RELEASED_FEATURE && mode === TasksMode.PLAY ?
+                        <h4 className={classNames('roboto-flex-header task__name', accepted && 'accepted')}>
+                            {name}
+                            {accepted && <span>(+{reward})</span>}
+                        </h4> :
+                        <h4 className={'roboto-flex-header task__name'}>{name}</h4>
+                }
                 {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>

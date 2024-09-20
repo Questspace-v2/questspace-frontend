@@ -5,6 +5,7 @@ import authOptions from '@/app/api/auth/[...nextauth]/auth';
 import { IQuestTaskGroupsResponse } from '@/app/types/quest-interfaces';
 import PlayPageContent from '@/components/Tasks/PlayPageContent/PlayPageContent';
 import { getTaskGroupsPlayMode } from '@/app/api/api';
+import ContextProvider from '@/components/Tasks/ContextProvider/ContextProvider';
 
 
 export default async function PlayQuestPage({params}: {params: {id: string}}) {
@@ -21,6 +22,8 @@ export default async function PlayQuestPage({params}: {params: {id: string}}) {
     }
 
     return (
-        <PlayPageContent props={questData}/>
+        <ContextProvider taskGroups={questData.task_groups}>
+            <PlayPageContent props={questData}/>
+        </ContextProvider>
     );
 }
