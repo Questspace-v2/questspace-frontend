@@ -146,8 +146,10 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         const isFileTypeUnsupported = supportedFileTypes
             .filter(value => info.file.type === value).length === 0;
         setFileList(info.fileList);
+        const hasUnsupportedFileTypes = info.fileList
+            .some(item => !supportedFileTypes.includes(item.type ?? ''));
         setFileIsTooBig(isMoreThan5Mb);
-        setUnsupportedFileType(isFileTypeUnsupported);
+        setUnsupportedFileType(isFileTypeUnsupported || hasUnsupportedFileTypes);
     };
 
     const handleS3Request = async () => {
@@ -388,6 +390,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                                 fileList={fileList}
                                                 onChange={handleUploadValueChange}
                                                 itemRender={renderImageListItem}
+                                                accept={supportedFileTypes.join(',')}
                                             >
                                                 <Button type={'link'} className={'edit-task__add-file-button'}><PlusOutlined/> Добавить файл</Button>
                                             </Upload>
