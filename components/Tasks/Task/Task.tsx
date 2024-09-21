@@ -48,6 +48,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         id: taskId,
         answer: teamAnswer,
         score,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         reward
     } = props;
     const [openConfirm, setOpenConfirm] = useState(false);
@@ -188,7 +189,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     RELEASED_FEATURE && mode === TasksMode.PLAY ?
                         <h4 className={classNames('roboto-flex-header task__name', accepted && 'task__accepted')}>
                             {name}
-                            {accepted && <span>(+{reward})</span>}
+                            {/* {accepted && <span>(+{reward})</span>} */}
                         </h4> :
                         <h4 className={'roboto-flex-header task__name'}>{name}</h4>
                 }

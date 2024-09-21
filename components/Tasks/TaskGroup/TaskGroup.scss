@@ -15,6 +15,7 @@
     .ant-collapse-item >.ant-collapse-header.task-group__name {
         align-items: center;
         padding: 0;
+        line-height: 0.94;
     }
 
     &.ant-collapse .ant-collapse-content>.ant-collapse-content-box {
@@ -74,6 +75,8 @@
     }
 
     .task-group__score {
+        display: block;
+        font-family: $font-manrope;
         font-size: 16px;
         color: var(--text-green);
     }
