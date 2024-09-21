@@ -37,8 +37,22 @@ import {useSession} from "next-auth/react";
 import {patchTaskGroups} from "@/app/api/api";
 import classNames from 'classnames';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
-import {ItemRender} from 'antd/es/upload/interface';
 import {RELEASED_FEATURE} from '@/app/api/client/constants';
+import type { DragEndEvent } from '@dnd-kit/core';
+import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    useSortable,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { ItemRender } from 'antd/es/upload/interface';
+
+interface DraggableUploadListItemProps {
+    remove: () => void;
+    file: UploadFile<unknown>;
+}
 
 const {TextArea} = Input;
 
@@ -68,8 +82,34 @@ export interface TaskForm {
     taskPoints: number
 }
 
+function DraggableUploadListItem({ file, remove }: DraggableUploadListItemProps) {
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+        id: file.uid,
+    });
+
+    const style: React.CSSProperties = {
+        transform: CSS.Translate.toString(transform),
+        transition,
+        cursor: 'move',
+    };
+
+    return (
+        <div
+            className={'edit-task__image'}
+            ref={setNodeRef}
+            style={style}
+            {...attributes}
+            {...listeners}
+        >
+            <FileImageOutlined/>
+            <p>{file.name}</p>
+            <DeleteOutlined onClick={() => remove()} className={'edit-task__delete-image-button'}/>
+        </div>
+    );
+}
+
 export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fileList, setFileList, task}: TaskCreateModalProps) {
-    const { xs, md } = useBreakpoint();
+    const {xs, md} = useBreakpoint();
 
     const [pointsAmount, setPointsAmount] = useState(task?.reward ?? 100);
     const {data: contextData, updater: setContextData} = useTasksContext()!;
@@ -88,6 +128,20 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
     const [fileIsTooBig, setFileIsTooBig] = useState(false);
     const [unsupportedFileType, setUnsupportedFileType] = useState(false);
+
+    const sensor = useSensor(PointerSensor, {
+        activationConstraint: { distance: 10 },
+    });
+
+    const onDragEnd = ({ active, over }: DragEndEvent) => {
+        if (active.id !== over?.id) {
+            setFileList((prev) => {
+                const activeIndex = prev.findIndex((i) => i.uid === active.id);
+                const overIndex = prev.findIndex((i) => i.uid === over?.id);
+                return arrayMove(prev, activeIndex, overIndex);
+            });
+        }
+    };
 
     useEffect(() => {
         if (task) {
@@ -282,7 +336,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         form.resetFields();
         setFileList([]);
         setIsOpen(false);
-    }
+    };
 
     const getImageErrorText = () => {
         if (unsupportedFileType) {
@@ -290,20 +344,10 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         }
 
         return fileIsTooBigError;
-    }
-    
-    const renderImageListItem: ItemRender = (
-        originNode,
-        file,
-        _,
-        { remove }
-    ) => (
-        <div className={'edit-task__image'}>
-            <FileImageOutlined/>
-            <p>{file.name}</p>
-            <DeleteOutlined onClick={() => remove()} className={'edit-task__delete-image-button'} />
-        </div>
-    );
+    };
+
+    const renderUploadListItem: ItemRender = (_originNode, file, _, { remove }) =>
+        <DraggableUploadListItem file={file} remove={remove} />;
 
     return (
         <ConfigProvider theme={theme} locale={ru_RU}>
@@ -385,15 +429,20 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                 {
                                     RELEASED_FEATURE ?
                                         <>
-                                            <Upload
-                                                maxCount={5}
-                                                fileList={fileList}
-                                                onChange={handleUploadValueChange}
-                                                itemRender={renderImageListItem}
-                                                accept={supportedFileTypes.join(',')}
-                                            >
-                                                <Button type={'link'} className={'edit-task__add-file-button'}><PlusOutlined/> Добавить файл</Button>
-                                            </Upload>
+                                            <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                                                <SortableContext items={fileList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
+                                                    <Upload
+                                                        maxCount={5}
+                                                        fileList={fileList}
+                                                        onChange={handleUploadValueChange}
+                                                        className={'edit-task__drag'}
+                                                        itemRender={renderUploadListItem}
+                                                        accept={supportedFileTypes.join(',')}
+                                                    >
+                                                        <Button type={'link'} className={'edit-task__add-file-button'}><PlusOutlined/> Добавить файл</Button>
+                                                    </Upload>
+                                                </SortableContext>
+                                            </DndContext>
                                             <p className={'edit-task__file-extensions'}>jpg, jpeg, png, gif, mp3, wav до 20Мб</p>
                                         </>
                                         :

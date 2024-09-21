@@ -40,6 +40,10 @@
         margin: 0;
     }
 
+    .edit-task__drag {
+        touch-action: pan-y;
+    }
+
     .ant-form-item-explain-error .edit-task__image-validation-error {
         padding: 5px 0 0;
     }
