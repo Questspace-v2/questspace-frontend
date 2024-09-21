@@ -91,6 +91,7 @@ function DraggableUploadListItem({ file, remove }: DraggableUploadListItemProps)
         transform: CSS.Translate.toString(transform),
         transition,
         cursor: 'move',
+        touchAction: 'none'
     };
 
     return (
@@ -102,7 +103,7 @@ function DraggableUploadListItem({ file, remove }: DraggableUploadListItemProps)
             {...listeners}
         >
             <FileImageOutlined/>
-            <p>{file.name}</p>
+            <p className={'edit-task__image__name'}>{file.name}</p>
             <DeleteOutlined onClick={() => remove()} className={'edit-task__delete-image-button'}/>
         </div>
     );
@@ -428,23 +429,24 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             >
                                 {
                                     RELEASED_FEATURE ?
-                                        <>
-                                            <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
-                                                <SortableContext items={fileList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
-                                                    <Upload
-                                                        maxCount={5}
-                                                        fileList={fileList}
-                                                        onChange={handleUploadValueChange}
-                                                        className={'edit-task__drag'}
-                                                        itemRender={renderUploadListItem}
-                                                        accept={supportedFileTypes.join(',')}
-                                                    >
-                                                        <Button type={'link'} className={'edit-task__add-file-button'}><PlusOutlined/> Добавить файл</Button>
-                                                    </Upload>
-                                                </SortableContext>
-                                            </DndContext>
-                                            <p className={'edit-task__file-extensions'}>jpg, jpeg, png, gif, mp3, wav до 20Мб</p>
-                                        </>
+                                        <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                                            <SortableContext items={fileList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
+                                                <Upload
+                                                    maxCount={5}
+                                                    fileList={fileList}
+                                                    onChange={handleUploadValueChange}
+                                                    className={'edit-task__drag'}
+                                                    itemRender={renderUploadListItem}
+                                                    accept={supportedFileTypes.join(',')}
+                                                >
+                                                    <Button type={'link'}
+                                                            className={'edit-task__add-file-button'}><PlusOutlined /> Добавить
+                                                        файл</Button>
+                                                    <p className={'edit-task__file-extensions'}>jpg, jpeg, png, gif,
+                                                        mp3, wav до 20Мб</p>
+                                                </Upload>
+                                            </SortableContext>
+                                        </DndContext>
                                         :
                                         <>
                                             <Upload

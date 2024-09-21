@@ -33,6 +33,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         align-content: center;
+        flex: 1;
     }
 
     .edit-task__image-validation-error {
@@ -42,6 +43,7 @@
 
     .edit-task__drag {
         touch-action: pan-y;
+        max-width: 100%;
     }
 
     .ant-form-item-explain-error .edit-task__image-validation-error {
