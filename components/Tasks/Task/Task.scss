@@ -15,9 +15,16 @@
     .task__name {
         font-size: 24px;
         word-break: break-word;
+        display: flex;
+        gap: 16px;
+    }
+
+    .task__name.task__accepted {
+        color: var(--text-green);
     }
 
     .task__question {
+        font-size: 16px;
         margin: 0;
     }
 
