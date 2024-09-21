@@ -27,7 +27,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
         <TaskGroupExtra questId={questId} edit={mode === TasksMode.EDIT} taskGroupProps={{id, pub_time: pubTime, name}}/> :
         null;
     const totalScoreExtra = isGroupClosed && RELEASED_FEATURE ?
-        <span className={'score'}>+{totalScore}</span> :
+        <span className={'task-group__score'}>+{totalScore}</span> :
         null;
 
     const items: CollapseProps['items'] = [

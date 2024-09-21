@@ -186,7 +186,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
             <div className={'task__text-part'}>
                 {
                     RELEASED_FEATURE && mode === TasksMode.PLAY ?
-                        <h4 className={classNames('roboto-flex-header task__name', accepted && 'accepted')}>
+                        <h4 className={classNames('roboto-flex-header task__name', accepted && 'task__accepted')}>
                             {name}
                             {accepted && <span>(+{reward})</span>}
                         </h4> :
@@ -243,7 +243,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                            validateStatus={inputValidationStatus}
                            hasFeedback>
                     <Input
-                        className={classNames(InputStates.ACCEPTED && 'task__answer-part_right')}
+                        className={classNames(inputState === InputStates.ACCEPTED && 'task__answer-part_right')}
                         placeholder={'Ответ'}
                         onChange={handleValueChange}
                         disabled={inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
