@@ -82,6 +82,11 @@ export interface TaskForm {
     taskPoints: number
 }
 
+interface FileObject {
+    uid: string;
+    name: string;
+}
+
 function DraggableUploadListItem({ file, remove }: DraggableUploadListItemProps) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
         id: file.uid,
@@ -129,6 +134,15 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
     const [fileIsTooBig, setFileIsTooBig] = useState(false);
     const [unsupportedFileType, setUnsupportedFileType] = useState(false);
+
+    const defaultFileObjects = task?.media_links?.map((link, index) => {
+        const fileName = decodeURIComponent(link.split('__')[1] ?? 'no-name');
+        return {
+            uid: index.toString(),
+            name: fileName,
+        };
+    });
+    const [defaultFileList, setDefaultFileList] = useState<FileObject[]>(defaultFileObjects ?? []);
 
     const sensor = useSensor(PointerSensor, {
         activationConstraint: { distance: 10 },
@@ -197,26 +211,29 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     };
 
     const handleUploadValueChange: UploadProps['onChange'] = (info) => {
-        const isMoreThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 >= 20);
-        const isFileTypeUnsupported = supportedFileTypes
-            .filter(value => info.file.type === value).length === 0;
-        setFileList(info.fileList);
-        const hasUnsupportedFileTypes = info.fileList
-            .some(item => !supportedFileTypes.includes(item.type ?? ''));
-        setFileIsTooBig(isMoreThan5Mb);
-        setUnsupportedFileType(isFileTypeUnsupported || hasUnsupportedFileTypes);
+        if (info.file.type) {
+            const isMoreThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 >= 20);
+            const isFileTypeUnsupported = supportedFileTypes
+                .filter(value => info.file.type === value).length === 0;
+            setFileList(info.fileList.filter(item => item.type));
+            const hasUnsupportedFileTypes = info.fileList
+                .some(item => item.type && !supportedFileTypes.includes(item.type ?? ''));
+            setFileIsTooBig(isMoreThan5Mb);
+            setUnsupportedFileType(isFileTypeUnsupported || hasUnsupportedFileTypes);
+        } else {
+            setDefaultFileList(prevState => prevState.filter(item => item.uid !== info.file.uid))
+        }
     };
 
     const handleS3Request = async () => {
-        const file = fileList[0].originFileObj as File;
-        const fileType = file.type;
+        const pureFileList = fileList.map(item => item.originFileObj as File);
+        const fileTypes = pureFileList.map(item => item.type);
         if (unsupportedFileType || fileIsTooBig) {
             return;
         }
-
-        const key = `/tasks/${uid()}`;
-        // eslint-disable-next-line consistent-return
-        return client.handleS3Request(key, fileType, file);
+        const keys = pureFileList.map(item => `tasks/${uid()}__${encodeURIComponent(item.name)}`);
+        const promises = pureFileList.map((file, index) => client.handleS3Request(keys[index], fileTypes[index], file));
+        return Promise.all(promises);
     };
 
     const handleSaveTask = async () => {
@@ -267,9 +284,18 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             verification: 'auto'
         };
 
-        if (s3Response || task?.media_link) {
-            newTask.media_link = (s3Response as Response).url ?? task?.media_link;
+        const oldImagesLinks = defaultFileList.map(item => task?.media_links ? task?.media_links[Number(item.uid)] : '');
+        const links = [...oldImagesLinks];
+
+        if (links.length === 0) {
+            newTask.media_link = '';
         }
+
+        if (s3Response) {
+            links.push(...(s3Response as Response[]).map(item => item.url));
+        }
+
+        newTask.media_links = links;
 
         if (task) {
             const index = taskGroup.tasks.indexOf(task);
@@ -433,7 +459,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                             <SortableContext items={fileList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
                                                 <Upload
                                                     maxCount={5}
-                                                    fileList={fileList}
+                                                    defaultFileList={defaultFileList}
                                                     onChange={handleUploadValueChange}
                                                     className={'edit-task__drag'}
                                                     itemRender={renderUploadListItem}

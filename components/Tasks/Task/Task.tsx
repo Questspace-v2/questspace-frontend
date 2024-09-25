@@ -37,7 +37,7 @@ interface TaskProps {
 }
 
 export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
-    const {name, question, hints, media_link: mediaLink, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
+    const {name, question, hints, media_links: mediaLinks, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
@@ -152,11 +152,11 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                 {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
-            {mediaLink && (
-                <div className={'task__image-part task-image__container'}>
-                    <Image src={mediaLink} alt={'task image'} width={300} height={300}/>
+            {mediaLinks?.map((link, index) => (
+                <div className={'task__image-part task-image__container'} key={`${link}__${index}`}>
+                    <Image src={link} alt={'task image'} width={300} height={300}/>
                 </div>
-            )}
+            ))}
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
@@ -202,7 +202,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                            validateStatus={inputValidationStatus}
                            hasFeedback>
                     <Input
-                        className={classNames(InputStates.ACCEPTED && 'task__answer-part_right')}
+                        className={classNames(inputState === InputStates.ACCEPTED && 'task__answer-part_right')}
                         placeholder={'Ответ'}
                         onChange={handleValueChange}
                         disabled={inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>

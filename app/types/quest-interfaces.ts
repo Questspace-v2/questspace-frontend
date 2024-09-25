@@ -19,6 +19,7 @@ export interface ITask {
     hints: IHint[] | string[],
     id?: string,
     media_link?: string,
+    media_links?: string[],
     name: string,
     order_idx?: number,
     pub_time: string,
