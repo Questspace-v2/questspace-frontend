@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import classNames from 'classnames';
+import { RELEASED_FEATURE } from '@/app/api/client/constants';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -37,7 +38,7 @@ interface TaskProps {
 }
 
 export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
-    const {name, question, hints, media_links: mediaLinks, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
+    const {name, question, hints, media_link: mediaLink, media_links: mediaLinks, correct_answers: correctAnswers, id: taskId, answer: teamAnswer} = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
@@ -152,11 +153,21 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                 {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
-            {mediaLinks?.map((link, index) => (
-                <div className={'task__image-part task-image__container'} key={`${link}__${index}`}>
-                    <Image src={link} alt={'task image'} width={300} height={300}/>
-                </div>
-            ))}
+            {RELEASED_FEATURE ?
+                mediaLinks?.map(link => {
+                    if (link.split('__')[1]?.endsWith('mp3') || link.split('__')[1]?.endsWith('wav')) {
+                        return <p key={link}>Музыка!</p>
+                    }
+                    return (<div className={'task__image-part task-image__container'} key={link}>
+                        <Image src={link} alt={'task image'} width={300} height={300}/>
+                        </div>);
+                }) :
+                (mediaLink && (
+                    <div className={'task__image-part task-image__container'}>
+                        <Image src={mediaLink} alt={'task image'} width={300} height={300}/>
+                    </div>
+                ))
+            }
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>

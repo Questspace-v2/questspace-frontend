@@ -225,7 +225,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         }
     };
 
-    const handleS3Request = async () => {
+    const handleS3RequestMany = async () => {
         const pureFileList = fileList.map(item => item.originFileObj as File);
         const fileTypes = pureFileList.map(item => item.type);
         if (unsupportedFileType || fileIsTooBig) {
@@ -233,7 +233,20 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         }
         const keys = pureFileList.map(item => `tasks/${uid()}__${encodeURIComponent(item.name)}`);
         const promises = pureFileList.map((file, index) => client.handleS3Request(keys[index], fileTypes[index], file));
+        // eslint-disable-next-line consistent-return
         return Promise.all(promises);
+    };
+
+    const handleS3Request = async () => {
+        const file = fileList[0].originFileObj as File;
+        const fileType = file.type;
+        if (unsupportedFileType || fileIsTooBig) {
+            return;
+        }
+
+        const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
+        // eslint-disable-next-line consistent-return
+        return client.handleS3Request(key, fileType, file);
     };
 
     const handleSaveTask = async () => {
@@ -284,18 +297,23 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             verification: 'auto'
         };
 
-        const oldImagesLinks = defaultFileList.map(item => task?.media_links ? task?.media_links[Number(item.uid)] : '');
-        const links = [...oldImagesLinks];
+        if (RELEASED_FEATURE) {
+            const s3ResponseMany = (imageValidation && await handleS3RequestMany()) ?? false;
+            const oldImagesLinks = defaultFileList.map(item => task?.media_links ? task?.media_links[Number(item.uid)] : '');
+            const links = [...oldImagesLinks];
 
-        if (links.length === 0) {
-            newTask.media_link = '';
+            if (links.length === 0) {
+                newTask.media_link = '';
+            }
+
+            if (s3Response) {
+                links.push(...(s3ResponseMany as Response[]).map(item => item.url));
+            }
+
+            newTask.media_links = links;
+        } else if (s3Response || task?.media_link) {
+            newTask.media_link = (s3Response as Response).url ?? task?.media_link;
         }
-
-        if (s3Response) {
-            links.push(...(s3Response as Response[]).map(item => item.url));
-        }
-
-        newTask.media_links = links;
 
         if (task) {
             const index = taskGroup.tasks.indexOf(task);
