@@ -25,6 +25,7 @@ export interface ITask {
     pub_time: string,
     question: string,
     reward: number,
+    score?: number,
     verification: string,
     answer?: string
 }
@@ -175,4 +176,34 @@ export interface IAdminTask {
     id: string,
     name: string,
     score: number
+}
+
+export interface IGetTaskGroupsPlayMode {
+    quest: IQuest;
+    task_groups: ITaskGroupPlayMode[];
+    team: ITeam;
+}
+
+export interface ITaskGroupPlayMode {
+    id?: string,
+    name: string,
+    order_idx?: number,
+    pub_time?: string,
+    tasks: ITaskPlayMode[]
+}
+
+export interface ITaskPlayMode {
+    accepted: boolean;
+    answer: string;
+    hints: IHint[];
+    id: string;
+    media_link: string;
+    name: string;
+    order_idx: number;
+    pub_time: string;
+    question: string;
+    reward: number;
+    score: number;
+    verification: string;
+    verification_type: string;
 }

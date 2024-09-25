@@ -15,6 +15,7 @@
     .ant-collapse-item >.ant-collapse-header.task-group__name {
         align-items: center;
         padding: 0;
+        line-height: 0.94;
     }
 
     &.ant-collapse .ant-collapse-content>.ant-collapse-content-box {
@@ -41,6 +42,24 @@
     }
 }
 
+.ant-collapse-item .task-group__name.roboto-flex-header.closed-group {
+    .ant-collapse-header-text {
+        color: var(--text-green);
+    }
+}
+
+.ant-collapse-item .green-check-circle {
+    width: 24px;
+    height: 24px;
+    color: var(--icon-filled-green);
+}
+
+.closed-group__title {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 .task-group__name {
     font-size: 32px;
 
@@ -53,6 +72,13 @@
     & .ant-collapse-arrow>svg {
         width: 24px;
         height: 24px;
+    }
+
+    .task-group__score {
+        display: block;
+        font-family: $font-manrope;
+        font-size: 16px;
+        color: var(--text-green);
     }
 }
 
