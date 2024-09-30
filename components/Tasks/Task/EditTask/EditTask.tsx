@@ -318,18 +318,17 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             const links = allFilesList
                 .map(item => {
                     if (Array.isArray(s3ResponseMany) && s3ResponseMany.some(res => res.url.endsWith(item.name))) {
-                        const fileUrl = s3ResponseMany.find(res => res.url.endsWith(item.name))?.url;
+                        const fileUrl = s3ResponseMany.find(res => res.url.endsWith(item.name))?.url ?? '';
                         return fileUrl;
                     }
-                    return item.url;
-                })
-                .filter(item => item !== undefined);
+                    return item.url ?? '';
+                });
 
             if (links.length === 0) {
                 newTask.media_link = '';
             }
 
-            newTask.media_links = links;
+            newTask.media_links = links.filter(item => item.length > 0);
         } else if (s3Response || task?.media_link) {
             newTask.media_link = (s3Response as Response).url ?? task?.media_link;
         }
