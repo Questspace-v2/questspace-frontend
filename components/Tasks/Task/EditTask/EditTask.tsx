@@ -315,17 +315,18 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
         if (RELEASED_FEATURE) {
             const s3ResponseMany = (imageValidation && await handleS3RequestMany()) ?? false;
-            const oldImagesLinks = allFilesList
-                .filter(item => item.url)
-                .map(item => item.url ?? '');
-            const links = [...oldImagesLinks];
+            const links = allFilesList
+                .map(item => {
+                    if (Array.isArray(s3ResponseMany) && s3ResponseMany.some(res => res.url.endsWith(item.name))) {
+                        const fileUrl = s3ResponseMany.find(res => res.url.endsWith(item.name))?.url;
+                        return fileUrl;
+                    }
+                    return item.url;
+                })
+                .filter(item => item !== undefined);
 
             if (links.length === 0) {
                 newTask.media_link = '';
-            }
-
-            if (s3ResponseMany) {
-                links.push(...s3ResponseMany.map(item => item.url));
             }
 
             newTask.media_links = links;
