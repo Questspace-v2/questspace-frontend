@@ -85,6 +85,7 @@ export interface TaskForm {
 interface FileObject {
     uid: string;
     name: string;
+    url: string;
 }
 
 function DraggableUploadListItem({ file, remove }: DraggableUploadListItemProps) {
@@ -140,9 +141,11 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         return {
             uid: index.toString(),
             name: fileName,
+            url: link,
         };
     });
     const [defaultFileList, setDefaultFileList] = useState<FileObject[]>(defaultFileObjects ?? []);
+    const [allFilesList, setAllFilesList] = useState([...defaultFileList, ...fileList]);
 
     const sensor = useSensor(PointerSensor, {
         activationConstraint: { distance: 10 },
@@ -150,13 +153,22 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
     const onDragEnd = ({ active, over }: DragEndEvent) => {
         if (active.id !== over?.id) {
-            setFileList((prev) => {
+            setAllFilesList((prev) => {
                 const activeIndex = prev.findIndex((i) => i.uid === active.id);
                 const overIndex = prev.findIndex((i) => i.uid === over?.id);
                 return arrayMove(prev, activeIndex, overIndex);
             });
         }
     };
+
+    // const defaultFieldsValidationStatus: Record<string, ValidationStatus> = {
+    //     taskName: 'success',
+    //     taskText: 'success',
+    //     hints: 'success',
+    //     answers: 'success',
+    //     taskPoints: 'success',
+    //     files: 'success',
+    // };
 
     useEffect(() => {
         if (task) {
@@ -179,6 +191,10 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             form.setFieldsValue(formProps);
         }
     }, [form, task]);
+
+    useEffect(() => {
+        setAllFilesList(() => [...defaultFileList, ...fileList]);
+    }, [defaultFileList, fileList]);
 
     const increasePointsAmount = () => {
         setPointsAmount((prevAmount) => prevAmount + 1);
@@ -215,13 +231,13 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             const isMoreThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 >= 20);
             const isFileTypeUnsupported = supportedFileTypes
                 .filter(value => info.file.type === value).length === 0;
-            setFileList(info.fileList.filter(item => item.type));
+            setFileList(() => info.fileList.filter(item => item.type));
             const hasUnsupportedFileTypes = info.fileList
                 .some(item => item.type && !supportedFileTypes.includes(item.type ?? ''));
             setFileIsTooBig(isMoreThan5Mb);
             setUnsupportedFileType(isFileTypeUnsupported || hasUnsupportedFileTypes);
         } else {
-            setDefaultFileList(prevState => prevState.filter(item => item.uid !== info.file.uid))
+            setDefaultFileList(prevState => prevState.filter(item => item.uid !== info.file.uid));
         }
     };
 
@@ -299,15 +315,17 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
         if (RELEASED_FEATURE) {
             const s3ResponseMany = (imageValidation && await handleS3RequestMany()) ?? false;
-            const oldImagesLinks = defaultFileList.map(item => task?.media_links ? task?.media_links[Number(item.uid)] : '');
+            const oldImagesLinks = allFilesList
+                .filter(item => item.url)
+                .map(item => item.url ?? '');
             const links = [...oldImagesLinks];
 
             if (links.length === 0) {
                 newTask.media_link = '';
             }
 
-            if (s3Response) {
-                links.push(...(s3ResponseMany as Response[]).map(item => item.url));
+            if (s3ResponseMany) {
+                links.push(...s3ResponseMany.map(item => item.url));
             }
 
             newTask.media_links = links;
@@ -474,10 +492,10 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                 {
                                     RELEASED_FEATURE ?
                                         <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
-                                            <SortableContext items={fileList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
+                                            <SortableContext items={allFilesList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
                                                 <Upload
                                                     maxCount={5}
-                                                    defaultFileList={defaultFileList}
+                                                    fileList={allFilesList}
                                                     onChange={handleUploadValueChange}
                                                     className={'edit-task__drag'}
                                                     itemRender={renderUploadListItem}
