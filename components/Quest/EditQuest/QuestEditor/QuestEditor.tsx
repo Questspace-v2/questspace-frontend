@@ -224,7 +224,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                 router.replace(`${FRONTEND_URL}/quest/${result.id}`, {scroll: false});
             }
         } else {
-            const result = await updateQuest(questId!,data, accessToken)
+            const result = await updateQuest(questId!, data, accessToken)
                 .then(resp => resp as IQuest)
                 .catch(err => {
                     throw err;
@@ -264,14 +264,17 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                 <Form
                     form={form}
                     requiredMark={false}
-                    initialValues={{ 'maxTeamCap': initialTeamCapacity ?? 3 }}
+                    initialValues={{
+                        'maxTeamCap': initialTeamCapacity ?? 3,
+                        'access': isNewQuest && 'link_only'
+                    }}
                     fields={[
                         { name: 'maxTeamCap', value: teamCapacity },
                         {
                             name: 'registrationDeadline', value: registrationDeadlineChecked ?
                                 form.getFieldValue('startTime') as Date :
                                 form.getFieldValue('registrationDeadline') as Date
-                        }
+                        },
                     ]}
                     autoComplete={'off'}
                 >

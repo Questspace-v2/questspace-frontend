@@ -83,7 +83,8 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
         finish_time: finishTime,
         media_link: mediaLink,
         status,
-        max_team_cap: maxTeamCap
+        max_team_cap: maxTeamCap,
+        has_brief: hasBrief
     } = props;
     const {username, avatar_url: avatarUrl} = creator;
 
@@ -145,7 +146,7 @@ function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page
                             </div>
                         </div>
                     </div>
-                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, currentModal, setCurrentModal, id, team)}
+                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, currentModal, setCurrentModal, id, team, hasBrief)}
                     <DynamicCreateTeam questId={id} currentModal={currentModal} setCurrentModal={setCurrentModal}/>
                     {team?.invite_link && <DynamicInviteModal inviteLink={team.invite_link} currentModal={currentModal} setCurrentModal={setCurrentModal}/>}
                 </Card>

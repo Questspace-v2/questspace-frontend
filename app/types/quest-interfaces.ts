@@ -11,7 +11,9 @@ export interface IQuest {
     name: string,
     registration_deadline: string | Date,
     start_time: string | Date,
-    status: string
+    status: string,
+    has_brief?: boolean,
+    brief?: string,
 }
 
 export interface ITask {
@@ -87,7 +89,7 @@ export interface ITaskDelete {
     id: string
 }
 
-export interface IQuestTaskGroups {
+export interface IBulkEditTaskGroups {
     create?: ITaskGroupsCreate[],
     delete?: ITaskGroupsDelete[],
     update?: ITaskGroupsUpdate[]
@@ -101,6 +103,11 @@ export interface IQuestTaskGroupsResponse extends ITaskGroupsUpdate {
 }
 
 export interface ITaskGroupsAdminResponse {
+    quest: IQuest,
+    task_groups: ITaskGroup[]
+}
+
+export interface IQuestTaskGroups {
     quest: IQuest,
     task_groups: ITaskGroup[]
 }

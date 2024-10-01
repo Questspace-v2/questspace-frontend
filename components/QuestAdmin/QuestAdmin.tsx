@@ -9,13 +9,12 @@ import {
     ArrowLeftOutlined,
     DeleteOutlined,
     ExclamationCircleOutlined,
-    NotificationOutlined,
-    PlusOutlined,
+    NotificationOutlined, PlusOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { SelectAdminTabs } from '@/components/QuestAdmin/QuestAdmin.helpers';
 import Tasks from '@/components/Tasks/Tasks';
-import { TasksMode } from '@/components/Tasks/Tasks.helpers';
+import { TasksMode } from '@/components/Tasks/Task/Task.helpers';
 import theme from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
 import { deleteQuest, finishQuest, getLeaderboardAdmin } from '@/app/api/api';
@@ -24,6 +23,7 @@ import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import dynamic from 'next/dynamic';
+import classNames from 'classnames';
 
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
@@ -34,8 +34,8 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const {data: contextData} = useTasksContext()!;
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
     const [leaderboardTabContent, setLeaderboardTabContent] = useState<IAdminLeaderboardResponse>({results: []});
-    const aboutTabContent = <EditQuest questData={questData}/>;
-    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData.task_groups} questId={questData.quest.id}/>;
+    const aboutTabContent = <EditQuest questData={contextData.quest} />;
+    const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
@@ -43,9 +43,30 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
 
     const publishResults = () => finishQuest(questData.quest.id, session?.accessToken);
     const publishResultsButton =
-        <Button type={'primary'} className={'publish-results'} onClick={publishResults}>
+        <Button type={'primary'} className={classNames('quest-admin__extra-button', 'publish-results__button')} onClick={publishResults}>
             <NotificationOutlined />Опубликовать результаты
         </Button>;
+
+    const addTaskGroup = () => {
+        setIsOpenModal(true);
+    };
+    const addTaskGroupButton =
+        <Button type={'primary'} className={classNames('quest-admin__extra-button', 'add-task-group__button')} onClick={addTaskGroup}>
+            <PlusOutlined /> Добавить уровень
+        </Button>;
+
+    const getTabBarExtraButton = () => {
+        if (selectedTab === SelectAdminTabs.LEADERBOARD &&
+            questData.quest.status === 'WAIT_RESULTS') {
+            return publishResultsButton;
+        }
+
+        if (selectedTab === SelectAdminTabs.TASKS) {
+            return addTaskGroupButton;
+        }
+
+        return null;
+    }
 
     const tabs: TabsProps['items']  = [
         {
@@ -104,10 +125,6 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         setSelectedTab(valueTab);
     }
 
-    const handleAddTaskGroup = () => {
-        setIsOpenModal(true);
-    };
-
     return (
         <div className={'admin-page__content'}>
             {modalContextHolder}
@@ -130,24 +147,14 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
                         activeKey={selectedTab}
                         defaultActiveKey={selectedTab}
                         onTabClick={handleSelectTab}
-                        tabBarExtraContent={selectedTab === SelectAdminTabs.LEADERBOARD &&
-                            questData.quest.status === 'WAIT_RESULTS' && publishResultsButton}
+                        tabBarExtraContent={getTabBarExtraButton()}
                     />
-                    {selectedTab === SelectAdminTabs.LEADERBOARD &&
-                        questData.quest.status === 'WAIT_RESULTS' && publishResultsButton}
+                    {getTabBarExtraButton()}
                 </ConfigProvider>
             </div>
         </ContentWrapper>
             {selectedTab === SelectAdminTabs.ABOUT && aboutTabContent}
-            {selectedTab === SelectAdminTabs.TASKS && (
-                <>
-                    {tasksTabContent}
-                    <div style={{display: 'flex', gap: '8px', padding: '24px 32px'}}>
-                        <Button onClick={handleAddTaskGroup}><PlusOutlined/>Добавить раздел</Button>
-                        {/* <Button type={'primary'} onClick={handleSaveRequest}>Сохранить</Button> */}
-                    </div>
-                </>
-            )}
+            {selectedTab === SelectAdminTabs.TASKS && tasksTabContent}
             {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard questId={questData.quest.id} teams={leaderboardTabContent}/>}
             <DynamicEditTaskGroup
                 questId={questData.quest.id}
