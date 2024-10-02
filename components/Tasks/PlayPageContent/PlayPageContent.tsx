@@ -1,17 +1,25 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { Button } from 'antd';
 import Tasks from '@/components/Tasks/Tasks';
-import { TasksMode } from '@/components/Tasks/Tasks.helpers';
+import { TasksMode } from '@/components/Tasks/Task/Task.helpers';
 import { IQuestTaskGroupsResponse} from '@/app/types/quest-interfaces';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { ArrowLeftOutlined, HourglassOutlined, TeamOutlined } from '@ant-design/icons';
 import { getLongTimeDiff, getRemainingVerb } from '@/components/Quest/Quest.helpers';
+import classNames from 'classnames';
+import dynamic from 'next/dynamic';
+
+const Countdown = dynamic(() => import('../../CustomCountdown/CustomCountdown'), {
+    ssr: false
+})
 
 
 export default function PlayPageContent({props}: {props: IQuestTaskGroupsResponse}) {
     const {name: teamName} = props.team;
-    const {name: questName, id: questId, finish_time: finishTime} = props.quest;
+    const {name: questName, id: questId, finish_time: finishTime, status, start_time: startTime} = props.quest;
     const nowDate = new Date();
     const timeLabel = getLongTimeDiff(nowDate, new Date(finishTime));
     const remainingVerb = getRemainingVerb(nowDate, new Date(finishTime));
@@ -31,17 +39,27 @@ export default function PlayPageContent({props}: {props: IQuestTaskGroupsRespons
                             <TeamOutlined />
                             <span className={'quest-header__start'}>{teamName}</span>
                         </div>
-                        <div className={'information__block'}>
-                            <HourglassOutlined />
-                            <span className={'quest-header__start'}>
-                                {remainingVerb} {timeLabel}
-                            </span>
-                        </div>
+                        {status === 'RUNNING' && (
+                            <div className={'information__block'}>
+                                <HourglassOutlined />
+                                <span className={'quest-header__start'}>
+                                    {remainingVerb} {timeLabel}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </ContentWrapper>
             <div className={`play-page__tasks`}>
-                <Tasks mode={TasksMode.PLAY} props={props.task_groups} questId={questId} />
+                {status === 'REGISTRATION_DONE' && (
+                    <ContentWrapper className={classNames('tasks__content-wrapper')}>
+                        <div className={'before-start__wrapper'}>
+                            <h2 className={classNames('before-start__text', 'roboto-flex-header', 'responsive-header-h2')}>До старта</h2>
+                            <Countdown className={classNames('before-start__countdown', 'roboto-flex-header')} date={new Date(startTime)} daysInHours />
+                        </div>
+                    </ContentWrapper>
+                )}
+                <Tasks mode={TasksMode.PLAY} props={props} />
             </div>
         </div>
     );

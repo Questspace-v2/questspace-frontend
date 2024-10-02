@@ -1,0 +1,65 @@
+@use "../../../globals" as *;
+
+.brief__extra__content {
+    font-family: $font-manrope;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--text-default);
+}
+
+.ant-collapse>.ant-collapse-item:has(.brief__name_off) >.ant-collapse-header {
+    color: var(--text-disabled);
+}
+
+.brief__edit {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px 32px;
+    border-top: 1px solid var(--stroke-secondary);
+    padding-top: 24px;
+    padding-bottom: 16px;
+}
+
+.brief__edit-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.brief__edit-input.ant-input {
+    font-size: 16px;
+}
+
+.brief__edit-error {
+    color: var(--text-red);
+}
+
+.brief__text {
+    font-size: 16px;
+
+    &:not(.brief__text_edit) {
+        padding-top: 24px;
+        padding-bottom: 16px;
+        border-top: 1px solid var(--stroke-secondary);
+    }
+
+    p {
+        margin: 0;
+    }
+}
+
+@media screen and (max-width: $s-breakpoint-525) {
+    .brief__extra__content {
+        display: none;
+    }
+
+    .brief__edit {
+        flex-direction: column;
+        padding-bottom: 0;
+    }
+
+    .brief__edit-buttons {
+        flex-direction: row;
+    }
+}

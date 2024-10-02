@@ -4,7 +4,7 @@ import {Button, UploadFile} from "antd";
 import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {useState} from "react";
 import {
-    IQuestTaskGroups,
+    IBulkEditTaskGroups,
     ITask, ITaskDelete,
     ITaskGroup,
     ITaskGroupsAdminResponse,
@@ -14,6 +14,7 @@ import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvide
 import dynamic from "next/dynamic";
 import {patchTaskGroups} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
+import classNames from 'classnames';
 
 interface TaskEditButtonsProps {
     questId: string,
@@ -60,7 +61,7 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
             }
         };
 
-        const requestData: IQuestTaskGroups = {
+        const requestData: IBulkEditTaskGroups = {
             update: [updateTaskGroup]
         };
 
@@ -69,6 +70,7 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
+            ...contextData,
             task_groups: data.task_groups,
         });
     };
@@ -103,7 +105,7 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
             }
         };
 
-        const requestData: IQuestTaskGroups = {
+        const requestData: IBulkEditTaskGroups = {
             update: [updateTaskGroup]
         };
 
@@ -112,15 +114,25 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
+            ...contextData,
             task_groups: data.task_groups,
         });
     };
 
     return (
-        <div className={`task__edit-buttons ${classname}`}>
-                <Button onClick={handleEditTask} ghost><EditOutlined/>{!mobile526 && 'Редактировать задачу'}</Button>
-                <Button onClick={handleCopyTask} ghost><CopyOutlined/>{!mobile526 && 'Создать копию задачи'}</Button>
-                <Button onClick={handleDeleteTask} danger><DeleteOutlined/>{!mobile526 && 'Удалить задачу'}</Button>
+        <div className={classNames('task__edit-buttons', 'tasks__edit-buttons', classname)}>
+            <Button onClick={handleEditTask} ghost>
+                <EditOutlined/>
+                <span className={'tasks__edit-buttons__text'}>Редактировать задачу</span>
+            </Button>
+                <Button onClick={handleCopyTask} ghost>
+                    <CopyOutlined/>
+                    <span className={'tasks__edit-buttons__text'}>Создать копию задачи</span>
+                </Button>
+            <Button onClick={handleDeleteTask} danger>
+                <DeleteOutlined />
+                <span className={'tasks__edit-buttons__text'}>Удалить задачу</span>
+            </Button>
             <DynamicEditTask
                 questId={questId}
                 isOpen={isOpenModal}

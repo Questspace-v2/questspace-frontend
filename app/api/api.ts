@@ -8,7 +8,7 @@ import {
     IEditPenaltyRequest,
     IHintRequest,
     IQuestCreate,
-    IQuestTaskGroups,
+    IBulkEditTaskGroups,
     ITaskAnswer,
     ITaskGroupsCreateRequest,
 } from '@/app/types/quest-interfaces';
@@ -61,7 +61,7 @@ export const createTaskGroupsAndTasks = async (questId: string, data: ITaskGroup
     client.handleServerRequest(`/quest/${questId}/task-groups`, 'POST', data, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
-export const patchTaskGroups = async (questId: string, data: IQuestTaskGroups, accessToken?: string) =>
+export const patchTaskGroups = async (questId: string, data: IBulkEditTaskGroups, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/task-groups/bulk`, 'PATCH', data,
         undefined, 'same-origin',
         accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});

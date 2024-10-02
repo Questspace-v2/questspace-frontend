@@ -8,7 +8,7 @@ import Link from 'next/link';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import QuestPreview from '@/components/Quest/EditQuest/QuestPreview/QuestPreview';
 import QuestEditor, { QuestAboutForm } from '@/components/Quest/EditQuest/QuestEditor/QuestEditor';
-import { IGetQuestResponse } from '@/app/types/quest-interfaces';
+import { IQuest } from '@/app/types/quest-interfaces';
 import dayjs from 'dayjs';
 
 function EditQuestHeader({isNewQuest}: {isNewQuest: boolean}) {
@@ -27,7 +27,7 @@ function EditQuestHeader({isNewQuest}: {isNewQuest: boolean}) {
     return null;
 }
 
-export default function EditQuest({ questData }: { questData?: IGetQuestResponse }) {
+export default function EditQuest({ questData }: { questData?: IQuest }) {
     const [selectedTab, setSelectedTab] = useState<string>('editor');
     const [form] = Form.useForm<QuestAboutForm>();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -37,7 +37,6 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
 
     useEffect(() => {
         if (questData) {
-            const { quest } = questData;
             const {
                 name,
                 description,
@@ -47,7 +46,7 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
                 media_link: image,
                 max_team_cap: maxTeamCap,
                 registration_deadline: registrationDeadline
-            } = quest;
+            } = questData;
 
             const formProps: QuestAboutForm = {
                 // @ts-expect-error жалуется на dayjs
@@ -64,15 +63,15 @@ export default function EditQuest({ questData }: { questData?: IGetQuestResponse
                      fileList={fileList}
                      setFileList={setFileList}
                      isNewQuest={!questData}
-                     questId={questData?.quest.id}
-                     previousImage={questData?.quest.media_link}
-                     initialTeamCapacity={questData?.quest.max_team_cap}
+                     questId={questData?.id}
+                     previousImage={questData?.media_link}
+                     initialTeamCapacity={questData?.max_team_cap}
         />;
     const preview =
         <QuestPreview
             form={watch}
             file={fileListRef.current}
-            previousImage={questData?.quest.media_link}
+            previousImage={questData?.media_link}
         />;
 
     const items: TabsProps['items'] = [

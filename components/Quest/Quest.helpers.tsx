@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { CheckOutlined, FlagFilled, PlayCircleFilled } from '@ant-design/icons';
+import { ArrowRightOutlined, CheckOutlined, FlagFilled, PlayCircleFilled } from '@ant-design/icons';
 import { ITeam, IUser } from '@/app/types/user-interfaces';
 import React, { Dispatch, SetStateAction } from 'react';
 import Link from 'next/link';
@@ -16,7 +16,8 @@ export interface QuestHeaderProps {
     name: string,
     registration_deadline: string | Date,
     status: string,
-    max_team_cap?: number
+    max_team_cap?: number,
+    has_brief?: boolean
 }
 
 export const enum QuestStatus {
@@ -82,7 +83,7 @@ const getStartDateText = (startDate: Date) => {
 
 const getQuestStatusButton = (startDate: Date, registrationDate: Date,
                               finishDate: Date, status: string, currentModal: TeamModalType,
-                              setCurrentModal: Dispatch<SetStateAction<TeamModalType>>, id: string, team?: ITeam) => {
+                              setCurrentModal: Dispatch<SetStateAction<TeamModalType>>, id: string, team?: ITeam, hasBrief?: boolean) => {
     const statusQuest = status as QuestStatus;
 
     if (statusQuest === QuestStatus.StatusOnRegistration) {
@@ -119,6 +120,22 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
     }
 
     if (statusQuest === QuestStatus.StatusRegistrationDone) {
+        if (hasBrief) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const pathname = usePathname();
+            return (
+                <div className={'quest-header__interactive quest-header__interactive_brief'}>
+                    {team && (
+                        <Link href={`${pathname}/play`}>
+                            <Button tabIndex={-1} ghost>
+                                Перейти к брифу <ArrowRightOutlined />
+                            </Button>
+                        </Link>
+                    )}
+                </div>
+            );
+        }
+
         return (
             <div className={'quest-header__interactive'}>
                 <Button disabled size={'large'}>Регистрация завершена</Button>
@@ -134,7 +151,7 @@ const getQuestStatusButton = (startDate: Date, registrationDate: Date,
             <div className={'quest-header__interactive quest-header__interactive_play'}>
                 {team && (
                     <Link href={`${pathname}/play`}>
-                        <Button type={'primary'} style={{ backgroundColor: '#52C41A' }} tabIndex={-1}>
+                        <Button type={'primary'} style={{ backgroundColor: 'var(--background-green)' }} tabIndex={-1}>
                             <PlayCircleFilled />Открыть задания
                         </Button>
                     </Link>

@@ -1,45 +1,9 @@
 @use "../../../globals" as *;
 
-.task-group__content-wrapper {
-    padding-top: 24px;
-    padding-bottom: 24px;
-}
-
 .task-group__task {
     display: flex;
     gap: 32px;
     border-top: 1px solid var(--stroke-secondary);
-}
-
-.task-group__collapse {
-    .ant-collapse-item >.ant-collapse-header.task-group__name {
-        align-items: center;
-        padding: 0;
-        line-height: 0.94;
-    }
-
-    &.ant-collapse .ant-collapse-content>.ant-collapse-content-box {
-        padding: 0;
-    }
-
-    &.ant-collapse-ghost >.ant-collapse-item >.ant-collapse-content >.ant-collapse-content-box {
-        padding-block-end: 0;
-    }
-
-    .task-group__collapse-buttons {
-        display: flex;
-        gap: 8px;
-    }
-}
-
-.task-group__collapse-buttons .ant-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    .anticon+span {
-        margin-inline-start: 0;
-    }
 }
 
 .ant-collapse-item .task-group__name.roboto-flex-header.closed-group {
@@ -60,29 +24,14 @@
     align-items: center;
 }
 
-.task-group__name {
-    font-size: 32px;
-
-    .ant-collapse-header-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    & .ant-collapse-arrow>svg {
-        width: 24px;
-        height: 24px;
-    }
-
-    .task-group__score {
-        display: block;
-        font-family: $font-manrope;
-        font-size: 16px;
-        color: var(--text-green);
-    }
+.task-group__name .task-group__score {
+    display: block;
+    font-family: $font-manrope;
+    font-size: 16px;
+    color: var(--text-green);
 }
 
-.task-group-extra__burger-button.ant-btn {
+.task-group__collapse-buttons .task-group-extra__burger-button.ant-btn {
     display: none;
 }
 
@@ -109,18 +58,12 @@
     }
 }
 
-@media (max-width: $xm-breakpoint-799) {
-    .task-group__name {
-        font-size: 24px;
-    }
-}
-
 @media (max-width: $s-breakpoint-525) {
-    .task-group-extra__burger-button.ant-btn {
+    .task-group__collapse-buttons .task-group-extra__burger-button.ant-btn {
         display: unset;
     }
 
-    .task-group__collapse-buttons .ant-btn:not(.task-group-extra__burger-button) {
+    .task-group__collapse-buttons.tasks__collapse-buttons .ant-btn:not(.task-group-extra__burger-button) {
         display: none;
     }
 }

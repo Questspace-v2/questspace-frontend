@@ -6,7 +6,7 @@ import {Button, CountdownProps, Form, Input, message, Statistic} from 'antd';
 import {IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup} from '@/app/types/quest-interfaces';
 import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
-import {getTaskExtra, TasksMode} from '@/components/Tasks/Tasks.helpers';
+import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
 import {useSession} from 'next-auth/react';
 import {useState} from 'react';
@@ -154,6 +154,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     };
                     taskGroups[taskGroupIndex] = taskGroup;
                     return {
+                        ...prevState,
                         task_groups: taskGroups,
                     };
                 }
