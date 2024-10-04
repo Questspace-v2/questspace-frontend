@@ -137,7 +137,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const [unsupportedFileType, setUnsupportedFileType] = useState(false);
 
     const defaultFileObjects = task?.media_links?.map((link, index) => {
-        const fileName = decodeURIComponent(link.split('__')[1] ?? 'no-name');
+        const fileName = decodeURIComponent(link.split('__')[1] ?? 'file');
         return {
             uid: index.toString(),
             name: fileName,
@@ -241,16 +241,17 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         }
     };
 
-    const handleS3RequestMany = async () => {
-        const pureFileList = fileList.map(item => item.originFileObj as File);
-        const fileTypes = pureFileList.map(item => item.type);
-        if (unsupportedFileType || fileIsTooBig) {
-            return;
-        }
-        const keys = pureFileList.map(item => `tasks/${uid()}__${encodeURIComponent(item.name)}`);
-        const promises = pureFileList.map((file, index) => client.handleS3Request(keys[index], fileTypes[index], file));
-        // eslint-disable-next-line consistent-return
-        return Promise.all(promises);
+    const getFileLinks = async () => {
+        const links = allFilesList.map(item => {
+            if (!item.url) {
+                const file = (item as UploadFile<unknown>).originFileObj as File;
+                const fileType = file.type;
+                const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
+                return client.handleS3Request(key, fileType, file).then(resp => resp.url);
+            }
+            return Promise.resolve(item.url);
+        });
+        return Promise.all(links);
     };
 
     const handleS3Request = async () => {
@@ -314,21 +315,11 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         };
 
         if (RELEASED_FEATURE) {
-            const s3ResponseMany = (imageValidation && await handleS3RequestMany()) ?? false;
-            const links = allFilesList
-                .map(item => {
-                    if (Array.isArray(s3ResponseMany) && s3ResponseMany.some(res => res.url.endsWith(item.name))) {
-                        const fileUrl = s3ResponseMany.find(res => res.url.endsWith(item.name))?.url ?? '';
-                        return fileUrl;
-                    }
-                    return item.url ?? '';
-                });
-
-            if (links.length === 0) {
+            const fileLinks = await getFileLinks();
+            newTask.media_links = fileLinks;
+            if (fileLinks.length === 0) {
                 newTask.media_link = '';
             }
-
-            newTask.media_links = links.filter(item => item.length > 0);
         } else if (s3Response || task?.media_link) {
             newTask.media_link = (s3Response as Response).url ?? task?.media_link;
         }
