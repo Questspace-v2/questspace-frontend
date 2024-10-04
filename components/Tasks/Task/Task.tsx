@@ -44,6 +44,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         question,
         hints,
         media_link: mediaLink,
+        media_links: mediaLinks,
         correct_answers: correctAnswers,
         id: taskId,
         answer: teamAnswer,
@@ -197,11 +198,21 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                 {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
-            {mediaLink && (
-                <div className={'task__image-part task-image__container'}>
-                    <Image src={mediaLink} alt={'task image'} width={300} height={300}/>
-                </div>
-            )}
+            {RELEASED_FEATURE ?
+                mediaLinks?.map(link => {
+                    if (link.split('__')[1]?.endsWith('mp3') || link.split('__')[1]?.endsWith('wav')) {
+                        return <p key={link}>Музыка!</p>
+                    }
+                    return (<div className={'task__image-part task-image__container'} key={link}>
+                        <Image src={link} alt={'task image'} width={300} height={300}/>
+                        </div>);
+                }) :
+                (mediaLink && (
+                    <div className={'task__image-part task-image__container'}>
+                        <Image src={mediaLink} alt={'task image'} width={300} height={300}/>
+                    </div>
+                ))
+            }
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
