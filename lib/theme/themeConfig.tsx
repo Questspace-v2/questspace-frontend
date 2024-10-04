@@ -24,6 +24,7 @@ const theme: ThemeConfig = {
             borderRadiusSM: 2,
             borderRadiusXS: 2,
             borderRadiusLG: 2,
+            borderRadius: 2,
             colorBgContainer: 'transparent',
             colorTextPlaceholder: 'var(--text-disabled)',
             colorBorder: 'var(--stroke-secondary)',
@@ -139,6 +140,17 @@ const theme: ThemeConfig = {
             colorText: 'var(--text-default)',
             optionSelectedBg: 'var(--background-blue)',
             optionActiveBg: 'var(--background-secondary)'
+        },
+        Message: {
+            contentBg: 'var(--background-primary)',
+            colorText: 'var(--text-default)',
+            colorError: 'var(--icon-filled-red)',
+            colorSuccess: 'var(--icon-filled-green)',
+            colorInfo: 'var(--icon-filled-blue)',
+            colorWarning: 'var(--icon-filled-yellow)',
+        },
+        Switch: {
+            colorPrimary: 'var(--text-blue)',
         }
     },
 };

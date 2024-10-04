@@ -3,11 +3,10 @@
 import { Collapse, CollapseProps } from 'antd';
 import Task from '@/components/Tasks/Task/Task';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import { getTaskExtra, TasksMode } from '@/components/Tasks/Tasks.helpers';
+import { getTaskExtra, TasksMode } from '@/components/Tasks/Task/Task.helpers';
 import { ITaskGroup } from '@/app/types/quest-interfaces';
 import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra/TaskGroupExtra';
 import classNames from 'classnames';
-import { CheckCircleFilled } from '@ant-design/icons';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 import {RELEASED_FEATURE} from '@/app/api/client/constants';
 
@@ -32,12 +31,8 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
 
     const items: CollapseProps['items'] = [
         {
-            key: '1',
-            label: isGroupClosed && RELEASED_FEATURE ?
-                <span className={'closed-group__title'}>
-                    {name}
-                    <CheckCircleFilled className={'green-check-circle'}/>
-                </span> : name,
+            key: id,
+            label: name,
             children: tasks &&
                 <>
                     {(tasks.map((task) =>
@@ -54,7 +49,9 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                     ))}
                 </>,
             headerClass: classNames(
-                'task-group__name roboto-flex-header',
+                'tasks__name',
+                'task-group__name',
+                'roboto-flex-header',
                 isGroupClosed && RELEASED_FEATURE && 'closed-group'
             ),
             extra: collapseExtra ?? totalScoreExtra
@@ -62,13 +59,13 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
     ];
 
     return (
-        <ContentWrapper className={'task-group__content-wrapper'}>
+        <ContentWrapper className={'tasks__content-wrapper'}>
             <Collapse
                 ghost
                 items={items}
-                className={'task-group__collapse'}
+                className={classNames('task-group__collapse', 'tasks__collapse')}
                 collapsible={'header'}
-                defaultActiveKey={mode === TasksMode.EDIT ? '1' : undefined}
+                defaultActiveKey={mode === TasksMode.EDIT ? id : undefined}
             />
         </ContentWrapper>
     );

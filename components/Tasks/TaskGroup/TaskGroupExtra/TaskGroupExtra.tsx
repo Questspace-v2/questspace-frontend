@@ -7,7 +7,8 @@ import dynamic from 'next/dynamic';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 import {patchTaskGroups} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
-import {IQuestTaskGroups, ITaskGroup, ITaskGroupsAdminResponse, ITaskGroupsDelete} from '@/app/types/quest-interfaces';
+import {IBulkEditTaskGroups, ITaskGroup, ITaskGroupsAdminResponse, ITaskGroupsDelete} from '@/app/types/quest-interfaces';
+import classNames from 'classnames';
 
 const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
     {ssr: false});
@@ -50,7 +51,7 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
             id: taskGroupProps.id!
         };
 
-        const requestData: IQuestTaskGroups = {
+        const requestData: IBulkEditTaskGroups = {
             delete: [deletedTaskGroup]
         };
 
@@ -58,9 +59,10 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
             questId, requestData, session?.accessToken
         ) as ITaskGroupsAdminResponse;
 
-        setContextData({
+        setContextData((prevContextData) => ({
+            ...prevContextData,
             task_groups: data.task_groups,
-        });
+        }));
     };
 
     const items: MenuProps['items'] = [
@@ -89,7 +91,7 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
     }
 
     return (
-        <div className={'task-group__collapse-buttons'}>
+        <div className={classNames('task-group__collapse-buttons', 'tasks__collapse-buttons')}>
                 <Button onClick={handleChangeName} ghost><EditOutlined/>Изменить название</Button>
                 <Button onClick={handleAddTask} ghost><PlusOutlined/>Добавить задачу</Button>
                 <Button onClick={handleDeleteGroup} danger><DeleteOutlined/></Button>

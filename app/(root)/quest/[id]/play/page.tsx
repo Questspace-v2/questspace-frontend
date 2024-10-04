@@ -12,8 +12,9 @@ export default async function PlayQuestPage({params}: {params: {id: string}}) {
     const session = await getServerSession(authOptions);
 
     const questData = await getTaskGroupsPlayMode(params.id, session?.accessToken) as IQuestTaskGroupsResponse;
+    const hasNoBrief = questData?.quest?.status === 'REGISTRATION_DONE' && (!questData?.quest?.has_brief || !questData?.quest?.brief);
 
-    if (!questData || questData.error) {
+    if (!questData || hasNoBrief || questData.error) {
         notFound();
     }
 
@@ -22,7 +23,7 @@ export default async function PlayQuestPage({params}: {params: {id: string}}) {
     }
 
     return (
-        <ContextProvider taskGroups={questData.task_groups}>
+        <ContextProvider questData={questData}>
             <PlayPageContent props={questData}/>
         </ContextProvider>
     );

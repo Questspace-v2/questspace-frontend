@@ -14,7 +14,7 @@ import {
     IEditPenaltyRequest,
     IHintRequest,
     IQuestCreate,
-    IQuestTaskGroups,
+    IBulkEditTaskGroups,
     ITaskAnswer,
     ITaskGroupsCreateRequest,
 } from '@/app/types/quest-interfaces';
@@ -27,7 +27,7 @@ interface IBaseInit {
     headers?: Record<string, string>,
 }
 
-type DataType = Data | IUserCreate| IUserUpdate | IQuestTaskGroups|
+type DataType = Data | IUserCreate| IUserUpdate | IBulkEditTaskGroups|
     IQuestCreate | IPasswordUpdate| ITaskGroupsCreateRequest | ITaskAnswer |
     IHintRequest | IEditPenaltyRequest | string;
 

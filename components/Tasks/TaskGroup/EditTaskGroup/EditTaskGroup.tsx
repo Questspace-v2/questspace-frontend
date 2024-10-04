@@ -8,7 +8,7 @@ import {ValidationStatus} from "@/lib/utils/modalTypes";
 import {useSession} from "next-auth/react";
 import {patchTaskGroups} from "@/app/api/api";
 import {
-    IQuestTaskGroups,
+    IBulkEditTaskGroups,
     ITaskGroup,
     ITaskGroupsAdminResponse,
     ITaskGroupsCreate,
@@ -70,7 +70,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 tasks: {}
             };
 
-            const requestData: IQuestTaskGroups = {
+            const requestData: IBulkEditTaskGroups = {
                 update: [updateTaskGroup]
             };
 
@@ -79,6 +79,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
             ) as ITaskGroupsAdminResponse;
 
             setContextData({
+                ...contextData,
                 task_groups: data.task_groups,
             });
             return;
@@ -94,7 +95,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
             order_idx: taskGroups.length - 1,
         };
 
-        const requestData: IQuestTaskGroups = {
+        const requestData: IBulkEditTaskGroups = {
             create: [newGroup]
         };
 
@@ -103,6 +104,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
+            ...contextData,
             task_groups: data.task_groups,
         });
         setIsOpen(false);

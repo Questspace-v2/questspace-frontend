@@ -25,7 +25,7 @@ import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import {
-    IQuestTaskGroups,
+    IBulkEditTaskGroups,
     ITask,
     ITaskGroup,
     ITaskGroupsAdminResponse,
@@ -350,7 +350,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 }
             };
 
-            const requestData: IQuestTaskGroups = {
+            const requestData: IBulkEditTaskGroups = {
                 update: [updateTaskGroup],
             };
 
@@ -359,6 +359,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             ) as ITaskGroupsAdminResponse;
 
             setContextData({
+                ...contextData,
                 task_groups: data.task_groups,
             });
             setIsOpen(false);
@@ -385,7 +386,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             }
         };
 
-        const requestData: IQuestTaskGroups = {
+        const requestData: IBulkEditTaskGroups = {
             update: [updateTaskGroup]
         };
 
@@ -394,6 +395,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         ) as ITaskGroupsAdminResponse;
 
         setContextData({
+            ...contextData,
             task_groups: data.task_groups,
         });
         form.resetFields();

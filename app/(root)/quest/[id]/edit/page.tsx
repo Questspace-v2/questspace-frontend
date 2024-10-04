@@ -28,7 +28,7 @@ export default async function EditQuestPage({params}: {params: {id: string}}) {
     }
 
     return (
-        <ContextProvider taskGroups={questData.task_groups}>
+        <ContextProvider questData={questData}>
             <QuestAdmin questData={questData}/>
         </ContextProvider>
     );

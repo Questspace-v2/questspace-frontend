@@ -17,14 +17,14 @@
         gap: 8px;
     }
 
-    &:has(.quest-admin__header__content > .publish-results) {
+    &:has(.quest-admin__header__content > .quest-admin__extra-button) {
         @media screen and (max-width: $xm-breakpoint-799) {
             padding-bottom: 16px;
         }
     }
 }
 
-.quest-admin__header__content > .publish-results {
+.quest-admin__header__content > .quest-admin__extra-button {
     display: none;
     margin-top: 8px;
 }
@@ -64,7 +64,7 @@
         display: none;
     }
 
-    .quest-admin__header__content .publish-results {
+    .quest-admin__header__content .quest-admin__extra-button {
         display: block;
     }
 

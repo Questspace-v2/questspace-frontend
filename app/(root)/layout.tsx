@@ -28,7 +28,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
     const isAuthorized = Boolean(session?.user);
 
     return (
-        <html lang="ru">
+        <html lang="ru" suppressHydrationWarning>
         <body className={`${manrope.variable} ${robotoFlex.variable}`}>
         <NextAuthProvider session={session}>
             <ThemeProvider>

@@ -1,0 +1,86 @@
+@use "../../globals" as *;
+
+.tasks__content-wrapper {
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.tasks__collapse {
+    background: red;
+    .ant-collapse-item >.ant-collapse-header.tasks__name {
+        align-items: center;
+        padding: 0;
+        line-height: 0.94;
+    }
+
+    &.ant-collapse .ant-collapse-content>.ant-collapse-content-box {
+        padding: 0;
+    }
+
+    &.ant-collapse-ghost >.ant-collapse-item >.ant-collapse-content >.ant-collapse-content-box {
+        padding-block-end: 0;
+    }
+
+    .tasks__collapse-buttons {
+        display: flex;
+        gap: 8px;
+    }
+}
+
+.tasks__collapse-buttons .ant-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .anticon+span {
+        margin-inline-start: 0;
+    }
+}
+
+.tasks__name {
+    font-size: 32px;
+
+    .ant-collapse-header-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    & .ant-collapse-arrow>svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.tasks__edit-buttons {
+    width: 210px;
+    flex: 0 0 auto;
+}
+
+.tasks__edit-buttons__text {
+    display: unset;
+}
+
+@media (max-width: $xm-breakpoint-799) {
+    .tasks__name {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: $s-breakpoint-525) {
+    .task-group-extra__burger-button.ant-btn {
+        display: unset;
+    }
+
+    .task-group__collapse-buttons .ant-btn:not(.task-group-extra__burger-button) {
+        display: none;
+    }
+
+    .tasks__edit-buttons {
+        width: 100%;
+    }
+
+    .ant-btn >span.tasks__edit-buttons__text {
+        display: none;
+    }
+}
