@@ -122,9 +122,6 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [form] = Form.useForm<TaskForm>();
 
-    const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
-    const [errorMsg, setErrorMsg] = useState<string>('');
-
     const taskNameError = 'Введите название задания';
     const taskTextError = 'Введите текст задания';
     const answersError = 'Добавьте хотя бы один вариант ответа';
@@ -161,14 +158,13 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         }
     };
 
-    // const defaultFieldsValidationStatus: Record<string, ValidationStatus> = {
-    //     taskName: 'success',
-    //     taskText: 'success',
-    //     hints: 'success',
-    //     answers: 'success',
-    //     taskPoints: 'success',
-    //     files: 'success',
-    // };
+    const defaultFieldsValidationStatus: Record<string, ValidationStatus> = {
+        taskName: 'success',
+        taskText: 'success',
+        answers: 'success',
+        files: 'success',
+    };
+    const [fieldsValidationStatus, setFieldsValidationStatus] = useState(defaultFieldsValidationStatus);
 
     useEffect(() => {
         if (task) {
@@ -190,7 +186,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
             form.setFieldsValue(formProps);
         }
-    }, [form, task]);
+    }, [form, task, isOpen]);
 
     useEffect(() => {
         setAllFilesList(() => [...defaultFileList, ...fileList]);
@@ -207,23 +203,19 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     };
 
     const onCancel = () => {
-        setErrorMsg('');
-        setValidationStatus('success');
         if (!task) {
             form.resetFields();
             setFileList([]);
         }
+        setFieldsValidationStatus(() => defaultFieldsValidationStatus);
         setIsOpen(false);
     };
 
-    const handleFieldChange = () => {
-        setValidationStatus('success');
-        setErrorMsg('');
-    };
-
-    const handleError = (msg: string) => {
-        setErrorMsg(msg);
-        setValidationStatus('error');
+    const handleFieldChange = (fieldName: string) => {
+        setFieldsValidationStatus(prevState => ({
+            ...prevState,
+            [fieldName]: 'success',
+        }));
     };
 
     const handleUploadValueChange: UploadProps['onChange'] = (info) => {
@@ -266,6 +258,26 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         return client.handleS3Request(key, fileType, file);
     };
 
+    const handleValidation = async () => 
+        form.validateFields()
+            .then(values => {
+                if (!values.taskName || !values.taskText || !values.answers ||
+                    !values.answers.some(item => item) || fileIsTooBig || unsupportedFileType) {
+                        setFieldsValidationStatus(prevState => ({
+                            ...prevState,
+                            taskName: !values.taskName ? 'error' : prevState.taskName,
+                            taskText: !values.taskText ? 'error' : prevState.taskText,
+                            answers: (!values.answers || !values.answers.some(item => item)) ? 'error' : prevState.answers,
+                            files: (fileIsTooBig || unsupportedFileType) ? 'error' : prevState.files,
+                        }));
+                        return null;
+                }
+                return values;
+            })
+            .catch(err => {
+                throw err
+            });
+
     const handleSaveTask = async () => {
         const taskGroups = contextData.task_groups;
         const taskGroup = taskGroups
@@ -279,28 +291,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         const {taskName, taskText, taskPoints, hints, answers} = fields;
         const pubTime = new Date();
 
-        if (!taskName) {
-            handleError(taskNameError);
-            return;
-        }
-
-        if (!taskText) {
-            handleError(taskTextError);
-            return;
-        }
-
-        if (!answers?.length || !answers.some(item => item)) {
-            handleError(answersError);
-            return;
-        }
-
-        if (fileIsTooBig) {
-            handleError(fileIsTooBigError);
-            return;
-        }
-
-        if (unsupportedFileType) {
-            handleError(unsupportedFileTypeError);
+        const formData = await handleValidation();
+        if (!formData) {
             return;
         }
 
@@ -441,13 +433,13 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                         <Col flex={'auto'}>
                             <Form.Item
                                 name={'taskName'}
-                                help={errorMsg === taskNameError ? errorMsg : ''}
-                                validateStatus={errorMsg === taskNameError ? validationStatus : 'success'}
+                                help={fieldsValidationStatus.taskName === 'error' ? taskNameError : ''}
+                                validateStatus={fieldsValidationStatus.taskName}
                             >
                                 <Input
                                     type={'text'}
                                     placeholder={'Название задания'}
-                                    onChange={handleFieldChange}
+                                    onChange={() => handleFieldChange('taskName')}
                                 />
                             </Form.Item>
                         </Col>
@@ -459,13 +451,13 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                         <Col flex={'auto'}>
                             <Form.Item
                                 name={'taskText'}
-                                help={errorMsg === taskTextError ? errorMsg : ''}
-                                validateStatus={errorMsg === taskTextError ? validationStatus : 'success'}
+                                help={fieldsValidationStatus.taskText === 'error' ? taskTextError : ''}
+                                validateStatus={fieldsValidationStatus.taskText}
                             >
                                 <TextArea
                                     placeholder={'Текст задания'}
                                     style={{resize: 'none', height: '320px'}}
-                                    onChange={handleFieldChange}
+                                    onChange={() => handleFieldChange('taskText')}
                                 />
                             </Form.Item>
                         </Col>
@@ -476,7 +468,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                         </Col>
                         <Col flex={'auto'}>
                             <Form.Item
-                                validateStatus={fileIsTooBig || unsupportedFileType ? 'error' : ''}
+                                validateStatus={fieldsValidationStatus.files}
                                 help={fileIsTooBig || unsupportedFileType &&
                                     <p className={'edit-task__image-validation-error'}>{getImageErrorText()}</p>}
                                 colon={false}
@@ -531,26 +523,25 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             </span>
                         </Col>
                         <Col flex={'auto'} className={'edit-task__answers-list'}>
+                        {fieldsValidationStatus.answers === 'error' &&
+                            <p className='edit-task__answers-error'>{answersError}</p>}
                         <Form.List name={'answers'}>
                                 {(fields, { add, remove }) => (
                                     <>
-                                        {errorMsg === answersError
-                                            && <p style={{color: 'red'}}>{errorMsg}</p>}
                                         {fields.map((field, index) => (
                                             <Form.Item key={field.key}>
                                                 <Form.Item
                                                     key={field.key}
                                                     name={field.name}
-                                                    validateStatus={index === 0 &&
-                                                        errorMsg === answersError ? validationStatus : 'success'}
+                                                    validateStatus={index === 0 ? fieldsValidationStatus.answers : 'success'}
                                                 >
                                                     <Input
                                                         placeholder={'Введите вариант ответа'}
                                                         suffix={<DeleteOutlined onClick={() => {
                                                             remove(field.name);
-                                                            handleFieldChange();
+                                                            handleFieldChange('answers');
                                                         }}/>}
-                                                        onChange={handleFieldChange}
+                                                        onChange={() => handleFieldChange('answers')}
                                                     />
                                                 </Form.Item>
                                             </Form.Item>
@@ -560,7 +551,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                                 className={'edit-task__add-button'}
                                                 onClick={() => {
                                                     add();
-                                                    handleFieldChange();
+                                                    handleFieldChange('answers');
                                                 }}
                                                 type={'link'}
                                             >
