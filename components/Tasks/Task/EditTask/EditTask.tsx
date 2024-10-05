@@ -523,7 +523,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             </span>
                         </Col>
                         <Col flex={'auto'} className={'edit-task__answers-list'}>
-                        {fieldsValidationStatus.answers === 'error' && <p style={{color: 'red'}}>{answersError}</p>}
+                        {fieldsValidationStatus.answers === 'error' &&
+                            <p className='edit-task__answers-error'>{answersError}</p>}
                         <Form.List name={'answers'}>
                                 {(fields, { add, remove }) => (
                                     <>
