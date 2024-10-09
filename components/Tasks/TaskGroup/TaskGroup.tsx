@@ -21,18 +21,23 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
     const {data: contextData} = useTasksContext()!;
     const tasks = contextData.task_groups.find(item => item.id === id)?.tasks ?? [];
     const totalScore = tasks.reduce((a, b) => a + b.reward, 0);
-    const isGroupClosed = tasks.every(item => item.score && item.score > 0);
+    const isGroupClosed = tasks.length > 0 && tasks
+        .every(item => item.score !== undefined && (item.score > 0 || mode === TasksMode.EDIT));
     const collapseExtra = mode === TasksMode.EDIT ?
         <TaskGroupExtra questId={questId} edit={mode === TasksMode.EDIT} taskGroupProps={{id, pub_time: pubTime, name}}/> :
         null;
     const totalScoreExtra = isGroupClosed && RELEASED_FEATURE ?
         <span className={'task-group__score'}>+{totalScore}</span> :
         null;
+    const label = <div className='task-group__name-with-score'>
+        <span>{name}</span>
+        {totalScoreExtra}
+    </div>
 
     const items: CollapseProps['items'] = [
         {
             key: id,
-            label: name,
+            label: RELEASED_FEATURE ? label : name,
             children: tasks &&
                 <>
                     {(tasks.map((task) =>
@@ -54,7 +59,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                 'roboto-flex-header',
                 isGroupClosed && RELEASED_FEATURE && 'closed-group'
             ),
-            extra: collapseExtra ?? totalScoreExtra
+            extra: collapseExtra
         },
     ];
 

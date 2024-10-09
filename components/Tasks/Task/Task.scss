@@ -16,10 +16,21 @@
         font-size: 24px;
         word-break: break-word;
         display: flex;
-        gap: 16px;
+        justify-content: space-between;
     }
 
     .task__name.task__accepted {
+        color: var(--text-green);
+    }
+
+    .task__reward, .task__reward-accepted {
+        font-size: 16px;
+        font-family: $font-manrope;
+        font-weight: 400;
+        line-height: 24px;
+    }
+    
+    .task__reward-accepted {
         color: var(--text-green);
     }
 
@@ -251,6 +262,11 @@
 }
 
 @media (max-width: 525px) {
+    .task__name {
+        flex-direction: column;
+        gap: 8px;
+    }
+
     .task-hint__container {
         min-height: 120px;
     }
