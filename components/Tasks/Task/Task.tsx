@@ -190,7 +190,9 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     RELEASED_FEATURE && mode === TasksMode.PLAY ?
                         <h4 className={classNames('roboto-flex-header task__name', accepted && 'task__accepted')}>
                             {name}
-                            {/* {accepted && <span>(+{reward})</span>} */}
+                            {accepted ?
+                                <span className='task__reward-accepted'>+{reward}</span> :
+                                <span className='task__reward'>{reward}</span>}
                         </h4> :
                         <h4 className={'roboto-flex-header task__name'}>{name}</h4>
                 }

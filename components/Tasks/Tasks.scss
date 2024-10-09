@@ -68,6 +68,10 @@
 }
 
 @media (max-width: $s-breakpoint-525) {
+    .tasks__content-wrapper {
+        padding-bottom: 16px;
+    }
+
     .task-group-extra__burger-button.ant-btn {
         display: unset;
     }
@@ -82,5 +86,11 @@
 
     .ant-btn >span.tasks__edit-buttons__text {
         display: none;
+    }
+
+    .tasks__collapse {
+        .ant-collapse-item >.ant-collapse-header.tasks__name {
+            align-items: flex-start;
+        }
     }
 }
