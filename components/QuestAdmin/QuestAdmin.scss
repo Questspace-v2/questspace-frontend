@@ -5,6 +5,11 @@
 
     .task__wrapper {
         flex: 1;
+        max-width: calc(100% - 242px);
+
+        @media screen and (max-width: $s-breakpoint-525) {
+            max-width: 100%;
+        }
     }
 }
 

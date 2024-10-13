@@ -5,6 +5,44 @@
     flex-direction: column;
     padding: 24px 0 16px;
     gap: 16px;
+
+    .swiper {
+        max-width: 100%;
+        background-color: var(--background-secondary);
+        border-radius: 8px;
+
+        .swiper-button-prev, .swiper-button-next {
+            color: var(--icon-outlined-default);
+
+            &:after, &:before {
+                font-size: 24px;
+            }
+        }
+
+        .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
+            background-color: var(--icon-outlined-disabled);
+        }
+
+        .swiper-pagination-bullet-active {
+            background: var(--icon-filled-blue);
+        }
+    }
+
+    .swiper-slide {
+        display: flex;
+        max-height: 300px;
+        height: 300px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        overflow: hidden;
+
+        & img {
+            max-width: 100%;
+            object-fit: contain;
+            width: auto;
+        }
+    }
 }
 
 .task__text-part {

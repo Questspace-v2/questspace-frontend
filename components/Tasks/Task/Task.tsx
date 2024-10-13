@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import {uid} from '@/lib/utils/utils';
-import {Button, CountdownProps, Form, Input, message, Statistic} from 'antd';
+import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
 import {IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup} from '@/app/types/quest-interfaces';
 import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
@@ -16,6 +16,12 @@ import remarkGfm from 'remark-gfm';
 import classNames from 'classnames';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 import {RELEASED_FEATURE} from '@/app/api/client/constants';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Navigation } from 'swiper/modules';
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -198,21 +204,45 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                 {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
-            {RELEASED_FEATURE ?
-                mediaLinks?.map(link => {
-                    if (link.split('__')[1]?.endsWith('mp3') || link.split('__')[1]?.endsWith('wav')) {
-                        return <p key={link}>Музыка!</p>
-                    }
-                    return (<div className={'task__image-part task-image__container'} key={link}>
-                        <Image src={link} alt={'task image'} width={300} height={300}/>
-                        </div>);
-                }) :
-                (mediaLink && (
+            {mediaLinks && mediaLinks.length > 0 ? (
+                <>
+                    {mediaLinks.map(link => {
+                        if (link.split('__')[1]?.endsWith('mp3') || link.split('__')[1]?.endsWith('wav')) {
+                            return (
+                                // eslint-disable-next-line jsx-a11y/media-has-caption
+                                <audio key={link} controls src={link} style={{width: '100%'}}/>
+                            );
+                        }
+                        return null;
+                    })}
+                    <Swiper
+                        slidesPerView={1}
+                        spaceBetween={30}
+                        loop
+                        pagination
+                        navigation
+                        modules={[Pagination, Navigation]}
+                    >
+                        {mediaLinks.map((link, index) => {
+                            if (!link.split('__')[1]?.endsWith('mp3') && !link.split('__')[1]?.endsWith('wav')) {
+                                return (
+                                    <SwiperSlide key={`${link + index}`}>
+                                        <Image src={link} alt={'task image'} width={300} height={300} />
+                                    </SwiperSlide>
+                                )
+                            }
+
+                            return null;
+                        })}
+                    </Swiper>
+                </>
+            ) : (
+                mediaLink && (
                     <div className={'task__image-part task-image__container'}>
                         <Image src={mediaLink} alt={'task image'} width={300} height={300}/>
                     </div>
-                ))
-            }
+                )
+            )}
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
