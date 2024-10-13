@@ -1,0 +1,12 @@
+@use "../../../globals" as *;
+
+.quest-page__description {
+    & p {
+        margin: 0;
+        color: var(--text-default);
+    }
+
+    & a:not(a:visited) {
+        color: var(--text-blue);
+    }
+}

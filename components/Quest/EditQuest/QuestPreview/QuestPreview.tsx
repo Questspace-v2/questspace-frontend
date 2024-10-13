@@ -4,9 +4,9 @@ import { UploadFile } from 'antd';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import { useSession } from 'next-auth/react';
-import { QuestHeaderProps } from '@/components/Quest/Quest.helpers';
-import { QuestContent, QuestHeader } from '@/components/Quest/Quest';
 import { QuestAboutForm } from '@/components/Quest/EditQuest/QuestEditor/QuestEditor';
+import QuestHeader, { QuestHeaderProps } from '@/components/Quest/QuestHeader/QuestHeader';
+import QuestDescription from '@/components/Quest/QuestDescription/QuestDescription';
 
 dayjs.locale('ru')
 
@@ -54,7 +54,7 @@ export default function QuestPreview({form, file, previousImage}: QuestEditorPro
     return (
         <div className={'quest-preview__wrapper'}>
             <QuestHeader mode={'edit'} props={props} />
-            <QuestContent mode={'edit'} description={description} />
+            <QuestDescription mode={'edit'} description={description} />
         </div>
     );
 }

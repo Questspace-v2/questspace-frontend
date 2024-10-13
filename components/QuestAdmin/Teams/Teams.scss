@@ -1,0 +1,34 @@
+@use "../../../globals" as *;
+
+.teams__content-wrapper {
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.teams__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .approved-teams__wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .approved-teams__header {
+        font-size: 24px;
+        line-height: 32px;
+    }
+}
+
+
+
+@media screen and (max-width: $xm-breakpoint-799) {
+    .teams__wrapper {
+        .approved-teams__header {
+            font-size: 20px;
+            line-height: 28px;
+        }
+    }
+}

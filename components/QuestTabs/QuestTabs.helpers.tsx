@@ -27,7 +27,8 @@ export const createQuestButton = (
 
 export const customizedEmpty = () => (
     <Empty
-        image={<SmileOutlined style={{ fontSize: 48, opacity: 0.5 }} />}
+        className={'empty__quests-not-found'}
+        image={<SmileOutlined />}
         description={
             <span>
                 Квесты не найдены
@@ -41,15 +42,6 @@ export const customizedEmpty = () => (
                 </Link>
             </span>
         }
-        style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '48px 0',
-            gridColumn: '1/5'
-        }}
-        imageStyle={{ height: 'auto' }}
     />
 );
 

@@ -1,0 +1,38 @@
+@use "../../../globals" as *;
+
+.results__title {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    margin: 0;
+}
+
+.results__table .ant-table-content {
+    column-count: 2;
+
+    @media screen and (max-width: $xm-breakpoint-799) {
+        column-count: 1;
+    }
+
+    & .ant-table-row .results__team-index.ant-table-cell {
+        padding-right: 0;
+    }
+
+    & .ant-table-row .results__team-place.ant-table-cell {
+        padding-right: 2px;
+        padding-left: 0;
+    }
+}
+
+.results__content_waiting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .anticon-clock-circle > svg{
+        width: 112px;
+        height: 112px;
+        padding: 16px;
+    }
+}
