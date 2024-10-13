@@ -21,6 +21,10 @@
     }
 }
 
+.content__wrapper.page-auth__content-wrapper:has(.page-auth__change-button) {
+    padding: 0;
+}
+
 .auth-form__header {
     display: flex;
     flex-direction: column;

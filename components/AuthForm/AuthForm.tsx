@@ -197,16 +197,18 @@ export default function AuthForm() {
                     </FormItem>
                 </Form>
             </ContentWrapper>
-            <Button className={'page-auth__change-button'} shape={'round'} onClick={handleChangeClick} block style={{
-                border: 'none',
-                boxShadow: 'unset',
-                fontWeight: 500,
-                padding: '6.4px 15px',
-                height: 'unset',
-            }}>
-                {dictionary.changeFormButton}
-                <RightOutlined style={{marginInlineStart: '4px'}}/>
-            </Button>
+            <ContentWrapper className={'page-auth__content-wrapper'}>
+                <Button className={'page-auth__change-button'} shape={'round'} onClick={handleChangeClick} block style={{
+                    border: 'none',
+                    boxShadow: 'unset',
+                    fontWeight: 500,
+                    padding: '6.4px 15px',
+                    height: 'unset',
+                }}>
+                    {dictionary.changeFormButton}
+                    <RightOutlined style={{marginInlineStart: '4px'}}/>
+                </Button>
+            </ContentWrapper>
         </section>
     );
 }

@@ -17,13 +17,15 @@ import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Task/Task.helpers';
 import theme from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import { deleteQuest, finishQuest, getLeaderboardAdmin } from '@/app/api/api';
+import { deleteQuest, finishQuest, getLeaderboardAdmin, getQuestTeams } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import dynamic from 'next/dynamic';
 import classNames from 'classnames';
+import Teams from '@/components/QuestAdmin/Teams/Teams';
+import { ITeam } from '@/app/types/user-interfaces';
 
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
@@ -33,9 +35,12 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const router = useRouter();
     const {data: contextData} = useTasksContext()!;
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
-    const [leaderboardTabContent, setLeaderboardTabContent] = useState<IAdminLeaderboardResponse>({results: []});
+    const [leaderboardContent, setLeaderboardContent] = useState<IAdminLeaderboardResponse>({results: []});
+    const [teamsContent, setTeamsContent] = useState<ITeam[]>([]);
     const aboutTabContent = <EditQuest questData={contextData.quest} />;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
+    const teamsTabContent = <Teams teams={teamsContent} questId={questData.quest.id} />
+    const leaderboardTabContent = <Leaderboard questId={questData.quest.id} teams={leaderboardContent}/>;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
@@ -76,6 +81,10 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         {
             key: 'tasks',
             label: 'Задания',
+        },
+        {
+            key: 'teams',
+            label: 'Участники',
         },
         {
             key: 'leaderboard',
@@ -119,7 +128,12 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         }
         if (valueTab === SelectAdminTabs.LEADERBOARD) {
             const data = await getLeaderboardAdmin(questData.quest.id, session?.accessToken) as IAdminLeaderboardResponse;
-            setLeaderboardTabContent(data);
+            setLeaderboardContent(data);
+        }
+
+        if (valueTab === SelectAdminTabs.TEAMS) {
+            const data = await getQuestTeams(questData.quest.id) as ITeam[];
+            setTeamsContent(data);
         }
 
         setSelectedTab(valueTab);
@@ -155,7 +169,8 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         </ContentWrapper>
             {selectedTab === SelectAdminTabs.ABOUT && aboutTabContent}
             {selectedTab === SelectAdminTabs.TASKS && tasksTabContent}
-            {selectedTab === SelectAdminTabs.LEADERBOARD && <Leaderboard questId={questData.quest.id} teams={leaderboardTabContent}/>}
+            {selectedTab === SelectAdminTabs.TEAMS && teamsTabContent}
+            {selectedTab === SelectAdminTabs.LEADERBOARD && leaderboardTabContent}
             <DynamicEditTaskGroup
                 questId={questData.quest.id}
                 isOpen={isOpenModal}

@@ -1,0 +1,126 @@
+@use "../../../globals" as *;
+
+.quest-header__wrapper {
+    padding: 0 !important;
+    border-radius: 16px;
+    background: transparent;
+
+    .ant-card:not(.ant-card-bordered) {
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .ant-card {
+        border-radius: 16px;
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 500;
+
+        .ant-card-cover {
+            background-color: var(--background-primary);
+            width: 100%;
+            height: auto;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .ant-card-cover img {
+            border-radius: 16px 16px 0 0;
+        }
+
+        .ant-card-body {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            column-gap: 24px;
+            padding: 24px 32px;
+            background: var(--background-primary);
+            border-radius: 0 0 16px 16px;
+        }
+
+        .ant-card-body:after, .ant-card-body:before {
+            display: none;
+        }
+    }
+
+    .quest-preview__information {
+        display: flex;
+        gap: 24px;
+        padding-top: 12px;
+        text-wrap: nowrap;
+        color: var(--text-default);
+
+        .information__block {
+            display: flex;
+            gap: 8px;
+
+            & img {
+                align-self: center;
+            }
+        }
+    }
+
+    .quest-header {
+        .quest-header__name {
+            margin: 0;
+            color: var(--text-default);
+        }
+
+        & p {
+            margin: 0;
+        }
+    }
+
+    .quest-header__interactive {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 4px;
+        justify-content: flex-end;
+
+        .ant-btn {
+            transition: none;
+        }
+
+        & button {
+            width: 240px;
+        }
+
+        & p {
+            text-wrap: nowrap;
+            color: var(--text-default);
+        }
+    }
+
+    .quest-header__interactive button.already-have-team {
+        color: var(--text-green);
+
+        svg {
+            fill: var(--icon-outlined-green);
+        }
+    }
+
+    @media screen and (max-width: $xm-breakpoint-799) {
+        .ant-card .ant-card-body {
+            flex-direction: column;
+
+            .quest-header__interactive {
+                padding-top: 16px;
+
+                & button {
+                    width: 100%;
+                }
+            }
+        }
+
+        .quest-header {
+            .quest-preview__information {
+                flex-direction: column;
+                gap: 4px;
+                padding-top: 16px;
+            }
+        }
+    }
+}

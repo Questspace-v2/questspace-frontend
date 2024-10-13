@@ -1,9 +1,14 @@
 @forward 'Quest';
 
-@forward 'CreateTeam/CreateTeam';
-
 @forward 'EditQuest/EditQuest';
 @forward 'EditQuest/QuestPreview/QuestPreview';
 @forward 'EditQuest/QuestEditor/QuestEditor';
 
-@forward 'InviteModal/InviteModal';
+@forward "QuestAdminPanel/QuestAdminPanel";
+@forward "QuestAllTeams/QuestAllTeams";
+@forward "QuestDescription/QuestDescription";
+@forward "QuestHeader/QuestHeader";
+@forward "QuestResults/QuestResults";
+@forward "QuestTeam/QuestTeam";
+@forward 'QuestTeam/CreateTeam/CreateTeam';
+@forward 'QuestTeam/InviteModal/InviteModal';

@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { Card } from 'antd';
 import Image from 'next/image';
-import {
-    getQuestStatusLabel, getStartDateText,
-    QuestHeaderProps,
-} from '@/components/Quest/Quest.helpers';
+import { getQuestStatusLabel } from '@/components/Quest/Quest.helpers';
 import Link from 'next/link';
+import { QuestHeaderProps } from '@/components/Quest/QuestHeader/QuestHeader';
+import { getStartDateText } from '@/components/Quest/QuestHeader/QuestHeader.helpers';
 
 
 export default function QuestCard({props} : {props?: QuestHeaderProps}) {

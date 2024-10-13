@@ -34,6 +34,27 @@
     &.ant-tabs .ant-tabs-nav .ant-tabs-nav-wrap {
         overflow: unset;
     }
+
+    .empty__quests-not-found {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 48px 0;
+        grid-column: 1/5;
+        color: var(--text-default);
+
+        .ant-empty-image {
+            font-size: 48px;
+            opacity: 0.5;
+            height: auto;
+            margin: 0;
+        }
+
+        .ant-empty-description {
+            color: var(--text-default);
+        }
+    }
 }
 
 .quest-tabs__unauth {

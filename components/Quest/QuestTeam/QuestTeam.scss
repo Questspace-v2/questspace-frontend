@@ -1,0 +1,125 @@
+@use "../../../globals" as *;
+
+.quest-team__collapse {
+    &.ant-collapse .ant-collapse-item .ant-collapse-header {
+        padding: 0;
+        align-items: center;
+
+        & .ant-collapse-arrow>svg {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    &.ant-collapse>.ant-collapse-item >.ant-collapse-header .ant-collapse-expand-icon {
+        padding-right: 8px;
+        align-self: baseline;
+    }
+
+    &.ant-collapse  .ant-collapse-item {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid var(--stroke-secondary);
+
+        &:last-child {
+            border-radius: 8px;
+        }
+    }
+
+    &.ant-collapse.ant-collapse-ghost .ant-collapse-content .ant-collapse-content-box {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 0 0 0 28px;
+        padding-block: 0;
+
+        @media screen and (max-width: $m-breakpoint-639) {
+            padding: 0;
+        }
+    }
+
+    .ant-collapse-extra {
+        margin-top: -18px;
+    }
+
+    .quest-team__header-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        align-items: center;
+    }
+
+    .quest-team__name {
+        font-size: 18px;
+        line-height: 17px;
+    }
+
+    .quest-team__status {
+        display: flex;
+        gap: 6px;
+        flex-wrap: nowrap;
+        font-size: 14px;
+        color: var(--icon-outlined-green);
+    }
+
+    .exit-team__large-screen {
+        top: 8px;
+    }
+
+    .exit-team__small-screen {
+        display: none;
+    }
+
+    @media screen and (max-width: $xm-breakpoint-799) {
+        .exit-team__large-screen {
+            display: none;
+        }
+
+        .exit-team__small-screen {
+            display: block;
+        }
+    }
+
+    & .quest-team__members .team-member__wrapper {
+        @media screen and (max-width: $m-breakpoint-639) {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+}
+
+.quest-team__block {
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+    border: 1px solid var(--stroke-secondary);
+    border-radius: 8px;
+
+    .quest-team__name {
+        font-size: 20px;
+        line-height: 28px;
+    }
+}
+
+.quest-team__members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+
+    .team-member__wrapper {
+        display: flex;
+        column-gap: 8px;
+        width: 256px;
+        max-width: 256px;
+        align-items: center;
+        font-weight: 500;
+    }
+
+    .team-member__name {
+        word-break: break-word;
+    }
+}

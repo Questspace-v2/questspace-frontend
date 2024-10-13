@@ -1,0 +1,29 @@
+@use "../../../globals" as *;
+
+
+.content__wrapper.quest-page__admin-panel {
+    background-color: var(--background-blue-secondary);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 24px 17px 24px 32px;
+    align-items: center;
+    justify-content: space-between;
+
+    & p {
+        margin: 0;
+    }
+
+    @media screen and (max-width: $l-breakpoint-959) {
+        padding: 24px 9px 24px 24px;
+    }
+
+    @media screen and (max-width: $xm-breakpoint-799) {
+        padding: 24px;
+
+        & button span {
+            position: relative;
+            left: -15px;
+        }
+    }
+}
