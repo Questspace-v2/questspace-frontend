@@ -29,6 +29,13 @@
     font-family: $font-manrope;
     font-size: 16px;
     color: var(--text-green);
+    line-height: 24px;
+}
+
+.task-group__name-with-score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .task-group__collapse-buttons .task-group-extra__burger-button.ant-btn {
@@ -65,5 +72,11 @@
 
     .task-group__collapse-buttons.tasks__collapse-buttons .ant-btn:not(.task-group-extra__burger-button) {
         display: none;
+    }
+
+    .task-group__name-with-score {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
     }
 }
