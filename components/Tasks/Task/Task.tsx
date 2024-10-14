@@ -15,7 +15,6 @@ import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import classNames from 'classnames';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
-import {RELEASED_FEATURE} from '@/app/api/client/constants';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
 
@@ -149,7 +148,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
             setInputValidationStatus('success');
             form.setFieldValue('task-answer', answerResponse.text);
             setContextData(prevState => {
-                if (currentTaskGroupId && RELEASED_FEATURE) {
+                if (currentTaskGroupId) {
                     const taskGroups = prevState.task_groups;
                     const taskGroup = taskGroups
                         .find(item => item.id === currentTaskGroupId)!;
@@ -194,7 +193,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
             {contextHolder}
             <div className={'task__text-part'}>
                 {
-                    RELEASED_FEATURE && mode === TasksMode.PLAY ?
+                    mode === TasksMode.PLAY ?
                         <h4 className={classNames('roboto-flex-header task__name', accepted && 'task__accepted')}>
                             {name}
                             {accepted ?

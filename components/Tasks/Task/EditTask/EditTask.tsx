@@ -19,7 +19,7 @@ import {
     DeleteOutlined,
     FileImageOutlined,
     MinusOutlined,
-    PlusOutlined, ReloadOutlined, UploadOutlined,
+    PlusOutlined,
 } from '@ant-design/icons';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
@@ -37,7 +37,6 @@ import {useSession} from "next-auth/react";
 import {patchTaskGroups} from "@/app/api/api";
 import classNames from 'classnames';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
-import {RELEASED_FEATURE} from '@/app/api/client/constants';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core';
 import {
@@ -234,31 +233,20 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     };
 
     const getFileLinks = async () => {
-        const links = allFilesList.map(item => {
+        const links = allFilesList.map(async item => {
             if (!item.url) {
                 const file = (item as UploadFile<unknown>).originFileObj as File;
                 const fileType = file.type;
                 const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
-                return client.handleS3Request(key, fileType, file).then(resp => resp.url);
+                const resp = await client.handleS3Request(key, fileType, file);
+                return resp.url;
             }
             return Promise.resolve(item.url);
         });
         return Promise.all(links);
     };
 
-    const handleS3Request = async () => {
-        const file = fileList[0].originFileObj as File;
-        const fileType = file.type;
-        if (unsupportedFileType || fileIsTooBig) {
-            return;
-        }
-
-        const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
-        // eslint-disable-next-line consistent-return
-        return client.handleS3Request(key, fileType, file);
-    };
-
-    const handleValidation = async () => 
+    const handleValidation = async () =>
         form.validateFields()
             .then(values => {
                 if (!values.taskName || !values.taskText || !values.answers ||
@@ -284,9 +272,6 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             .find(group => group.id === taskGroupProps.id && group.pub_time === taskGroupProps.pub_time)!;
         const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
-        const imageValidation = fileList.length > 0;
-        const s3Response = (imageValidation && await handleS3Request()) ?? false;
-
         const fields = form.getFieldsValue();
         const {taskName, taskText, taskPoints, hints, answers} = fields;
         const pubTime = new Date();
@@ -306,14 +291,10 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             verification: 'auto'
         };
 
-        if (RELEASED_FEATURE) {
-            const fileLinks = await getFileLinks();
-            newTask.media_links = fileLinks;
-            if (fileLinks.length === 0) {
-                newTask.media_link = '';
-            }
-        } else if (s3Response || task?.media_link) {
-            newTask.media_link = (s3Response as Response).url ?? task?.media_link;
+        const fileLinks = await getFileLinks();
+        newTask.media_links = fileLinks;
+        if (fileLinks.length === 0) {
+            newTask.media_link = '';
         }
 
         if (task) {
@@ -464,7 +445,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                     </Row>
                     <Row>
                         <Col className={'edit-task__labels'}>
-                            {RELEASED_FEATURE ? <span>Файлы (max 5)</span> : <span>Картинка</span>}
+                            <span>Файлы (max 5)</span>
                         </Col>
                         <Col flex={'auto'}>
                             <Form.Item
@@ -472,46 +453,26 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                 help={fileIsTooBig || unsupportedFileType &&
                                     <p className={'edit-task__image-validation-error'}>{getImageErrorText()}</p>}
                                 colon={false}
-                                className={RELEASED_FEATURE ? 'edit-task__image-form-item-new' : 'edit-task__image-form-item'}
+                                className={'edit-task__image-form-item-new'}
                             >
-                                {
-                                    RELEASED_FEATURE ?
-                                        <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
-                                            <SortableContext items={allFilesList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
-                                                <Upload
-                                                    maxCount={5}
-                                                    fileList={allFilesList}
-                                                    onChange={handleUploadValueChange}
-                                                    className={'edit-task__drag'}
-                                                    itemRender={renderUploadListItem}
-                                                    accept={supportedFileTypes.join(',')}
-                                                >
-                                                    <Button type={'link'}
-                                                            className={'edit-task__add-file-button'}><PlusOutlined /> Добавить
-                                                        файл</Button>
-                                                    <p className={'edit-task__file-extensions'}>jpg, jpeg, png, gif,
-                                                        mp3, wav до 20Мб</p>
-                                                </Upload>
-                                            </SortableContext>
-                                        </DndContext>
-                                        :
-                                        <>
-                                            <Upload
-                                                maxCount={1}
-                                                accept={'image/*'}
-                                                showUploadList={false}
-                                                fileList={fileList}
-                                                onChange={handleUploadValueChange}
-                                            >
-                                                {fileList.length > 0 ? (
-                                                    <Button><ReloadOutlined />Заменить</Button>
-                                                ) : (
-                                                    <Button><UploadOutlined />Загрузить</Button>
-                                                )}
-                                            </Upload>
-                                            {fileList.length > 0 && <div className={'edit-task__image'}><FileImageOutlined /><p>{fileList[0].originFileObj?.name}</p></div>}
-                                        </>
-                                }
+                                <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                                    <SortableContext items={allFilesList.map((i) => i.uid)} strategy={verticalListSortingStrategy}>
+                                        <Upload
+                                            maxCount={5}
+                                            fileList={allFilesList}
+                                            onChange={handleUploadValueChange}
+                                            className={'edit-task__drag'}
+                                            itemRender={renderUploadListItem}
+                                            accept={supportedFileTypes.join(',')}
+                                        >
+                                            <Button type={'link'}
+                                                    className={'edit-task__add-file-button'}><PlusOutlined /> Добавить
+                                                файл</Button>
+                                            <p className={'edit-task__file-extensions'}>jpg, jpeg, png, gif,
+                                                mp3, wav до 20Мб</p>
+                                        </Upload>
+                                    </SortableContext>
+                                </DndContext>
                             </Form.Item>
                         </Col>
                     </Row>
