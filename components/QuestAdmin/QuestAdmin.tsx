@@ -1,6 +1,10 @@
 'use client';
 
-import {IAdminLeaderboardResponse, ITaskGroupsAdminResponse} from '@/app/types/quest-interfaces';
+import {
+    IAdminLeaderboardResponse,
+    IGetAllTeamsResponse,
+    ITaskGroupsAdminResponse,
+} from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Link from 'next/link';
@@ -132,8 +136,8 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         }
 
         if (valueTab === SelectAdminTabs.TEAMS) {
-            const data = await getQuestTeams(questData.quest.id) as ITeam[];
-            setTeamsContent(data);
+            const data = await getQuestTeams(questData.quest.id) as IGetAllTeamsResponse;
+            setTeamsContent(data?.teams ?? []);
         }
 
         setSelectedTab(valueTab);

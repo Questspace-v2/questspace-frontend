@@ -186,6 +186,10 @@ export interface IAdminTask {
     score: number
 }
 
+export interface IGetAllTeamsResponse {
+    teams: ITeam[]
+}
+
 export interface IGetTaskGroupsPlayMode {
     quest: IQuest;
     task_groups: ITaskGroupPlayMode[];
