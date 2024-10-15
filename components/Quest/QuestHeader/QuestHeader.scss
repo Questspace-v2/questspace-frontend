@@ -89,6 +89,7 @@
         }
 
         & p {
+            width: 240px;
             text-wrap: nowrap;
             color: var(--text-default);
         }
@@ -110,6 +111,10 @@
                 padding-top: 16px;
 
                 & button {
+                    width: 100%;
+                }
+
+                & p {
                     width: 100%;
                 }
             }

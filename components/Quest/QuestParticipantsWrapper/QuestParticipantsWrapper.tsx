@@ -20,6 +20,10 @@ export default async function QuestParticipantsWrapper({ status, leaderboard, te
     const questIsFinished = status as QuestStatus === QuestStatus.StatusFinished;
     const session = await getServerSession(authOptions);
 
+    if (!team && ((allTeams ?? []).length < 1 ?? (leaderboard?.rows ?? []).length < 1)) {
+        return null;
+    }
+
     return (
         <ContentWrapper className={'quest-page__content-wrapper'}>
             <h2 className={'roboto-flex-header responsive-header-h2'}>{questIsFinished ? 'Результаты квеста' : 'Участники квеста'}</h2>

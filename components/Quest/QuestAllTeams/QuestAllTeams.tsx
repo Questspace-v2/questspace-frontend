@@ -25,6 +25,10 @@ export default function QuestAllTeams({allTeams, currentTeam} : {allTeams?: ITea
         },
     ]
 
+    if (!allTeams) {
+        return null;
+    }
+
     return (
         <Table
             className={'quest-page__all-teams-table'}

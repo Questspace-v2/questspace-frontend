@@ -1,6 +1,6 @@
 'use client';
 
-import { ITeam, IUser } from '@/app/types/user-interfaces';
+import { ITeam } from '@/app/types/user-interfaces';
 import React, { useState } from 'react';
 import { TeamModalType } from '@/lib/utils/modalTypes';
 import Image from 'next/image';
@@ -13,6 +13,7 @@ import {
     getStartDateText,
 } from '@/components/Quest/QuestHeader/QuestHeader.helpers';
 import { getTimeDiff } from '@/components/Quest/Quest.helpers';
+import { IQuest } from '@/app/types/quest-interfaces';
 
 
 const DynamicCreateTeam = dynamic(() => import('@/components/Quest/QuestTeam/CreateTeam/CreateTeam'), {
@@ -23,21 +24,14 @@ const DynamicInviteModal = dynamic(() => import('@/components/Quest/QuestTeam/In
     ssr: false,
 })
 
-export interface QuestHeaderProps {
-    access: string,
-    id: string,
-    creator: IUser,
-    start_time: string | Date,
-    finish_time: string | Date,
-    media_link: string,
-    name: string,
-    registration_deadline: string | Date,
-    status: string,
-    max_team_cap?: number,
-    has_brief?: boolean
-}
+export type QuestHeaderProps = IQuest;
 
-export default function QuestHeader({props, mode, team}: {props?: QuestHeaderProps, mode: 'page' | 'edit', team?: ITeam}) {
+export default function QuestHeader({props, mode, team, teamsAccepted}: {
+    props?: QuestHeaderProps,
+    mode: 'page' | 'edit',
+    team?: ITeam,
+    teamsAccepted?: number
+}) {
     const [aspectRatio, setAspectRatio] = useState('0/1');
     const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
     if (!props) {
@@ -52,9 +46,7 @@ export default function QuestHeader({props, mode, team}: {props?: QuestHeaderPro
         registration_deadline: registrationDeadline,
         finish_time: finishTime,
         media_link: mediaLink,
-        status,
         max_team_cap: maxTeamCap,
-        has_brief: hasBrief
     } = props;
     const {username, avatar_url: avatarUrl} = creator;
 
@@ -117,7 +109,7 @@ export default function QuestHeader({props, mode, team}: {props?: QuestHeaderPro
                             </div>
                         </div>
                     </div>
-                    {getQuestStatusButton(startDate, registrationDate, finishDate, status, currentModal, setCurrentModal, id, team, hasBrief)}
+                    {getQuestStatusButton(startDate, registrationDate, finishDate, currentModal, setCurrentModal, props, team, teamsAccepted)}
                     <DynamicCreateTeam questId={id} currentModal={currentModal} setCurrentModal={setCurrentModal}/>
                     {team?.invite_link && <DynamicInviteModal inviteLink={team.invite_link} currentModal={currentModal} setCurrentModal={setCurrentModal} />}
                 </Card>

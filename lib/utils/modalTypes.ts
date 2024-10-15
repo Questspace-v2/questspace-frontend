@@ -13,5 +13,6 @@ export interface ModalProps {
     questId?: string,
     inviteLink?: string,
     setCurrentModal?:  React.Dispatch<React.SetStateAction<TeamModalType>>,
-    currentModal?: TeamModalType
+    currentModal?: TeamModalType,
+    registrationType?: 'AUTO' | 'VERIFY'
 }

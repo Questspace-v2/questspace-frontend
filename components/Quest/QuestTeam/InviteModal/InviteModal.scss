@@ -22,6 +22,10 @@
 
     .custom-modal-header-large {
         margin-bottom: 16px;
+        color: var(--text-default);
+    }
+
+    .custom-modal-header_success {
         color: var(--text-green);
     }
 
