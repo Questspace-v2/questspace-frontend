@@ -79,6 +79,14 @@
         justify-content: space-between;
     }
 
+    .ant-form-item .ant-form-item-label {
+        white-space: initial;
+
+        & >label {
+            width: 178px;
+        }
+    }
+
     .ant-form-item .ant-form-item-label label.ant-form-item-no-colon::after {
         content: '';
     }
@@ -132,6 +140,10 @@
                 .ant-col.ant-form-item-label {
                     flex: 0 1 auto;
                     max-width: unset;
+
+                    & >label {
+                        width: unset;
+                    }
                 }
 
                 .ant-col.ant-form-item-control {

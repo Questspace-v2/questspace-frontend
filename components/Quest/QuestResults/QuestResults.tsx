@@ -10,6 +10,10 @@ import React from 'react';
 export default function QuestResults({ status, leaderboard }: { status: QuestStatus | string, leaderboard?: IFinalLeaderboard }) {
     const statusQuest = status as QuestStatus;
 
+    if (!leaderboard?.rows) {
+        return null;
+    }
+
     if (statusQuest === QuestStatus.StatusFinished) {
         return (
             leaderboard && (

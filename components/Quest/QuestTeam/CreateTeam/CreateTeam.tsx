@@ -13,7 +13,7 @@ import {ModalProps, TeamModal, ValidationStatus} from '@/lib/utils/modalTypes';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 import classNames from 'classnames';
 
-export default function CreateTeam({questId, currentModal, setCurrentModal}: ModalProps) {
+export default function CreateTeam({questId, currentModal, setCurrentModal, registrationType}: ModalProps) {
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data} = useSession();
@@ -63,29 +63,72 @@ export default function CreateTeam({questId, currentModal, setCurrentModal}: Mod
         setCurrentModal!(null);
     };
 
+    if (registrationType === 'AUTO') {
+        return (
+            <CustomModal
+                classNames={{content: 'create-team-modal__content'}}
+                open={currentModal === TeamModal.CREATE_TEAM}
+                centered
+                destroyOnClose
+                onCancel={onCancel}
+                width={xs ? '100%' : 400}
+                title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Регистрация команды</h2>}
+                footer={null}
+            >
+                <span className={'create-team-content__span'}>Укажите название команды</span>
+                <Form form={form} autoComplete={'off'} preserve={false}>
+                    <FormItem
+                        help={errorMsg}
+                        name={'teamName'}
+                        rules={[{required: true, message: 'Укажите название команды'}]}
+                        validateStatus={validationStatus}>
+                        <Input
+                            type={'text'}
+                            placeholder={'Команда А'}
+                            style={{borderRadius: '2px'}}
+                            onChange={handleFieldChange}/>
+                    </FormItem>
+                    <FormItem>
+                        <Button
+                            type={'primary'}
+                            htmlType={'submit'}
+                            block
+                            onClick={handleSubmit}
+                        >Зарегистрировать команду</Button>
+                    </FormItem>
+                </Form>
+            </CustomModal>
+        );
+    }
+
     return (
         <CustomModal
-            classNames={{content: 'create-team-modal__content'}}
+            classNames={{ content: 'create-team-modal__content' }}
             open={currentModal === TeamModal.CREATE_TEAM}
             centered
             destroyOnClose
             onCancel={onCancel}
             width={xs ? '100%' : 400}
-            title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Регистрация команды</h2>}
+            title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Подать заявку на&nbsp;участие</h2>}
             footer={null}
         >
+            <span className={'create-team-content__span'}>
+                Для участия в квесте нужно подать заявку от команды.
+                Далее заявку рассмотрят организаторы.
+            </span>
+            <br/>
             <span className={'create-team-content__span'}>Укажите название команды</span>
             <Form form={form} autoComplete={'off'} preserve={false}>
                 <FormItem
                     help={errorMsg}
                     name={'teamName'}
-                    rules={[{required: true, message: 'Укажите название команды'}]}
+                    rules={[{ required: true, message: 'Укажите название команды' }]}
                     validateStatus={validationStatus}>
                     <Input
                         type={'text'}
                         placeholder={'Команда А'}
-                        style={{borderRadius: '2px'}}
-                        onChange={handleFieldChange}/>
+                        style={{ borderRadius: '2px' }}
+                        onChange={handleFieldChange} />
                 </FormItem>
                 <FormItem>
                     <Button

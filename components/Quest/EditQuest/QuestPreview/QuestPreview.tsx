@@ -36,6 +36,7 @@ export default function QuestPreview({form, file, previousImage}: QuestEditorPro
     const {name: username, image: avatarUrl, id: creatorId} = creator!;
     const props: QuestHeaderProps = {
         name,
+        description,
         start_time: startTime,
         creator: {
             avatar_url: avatarUrl!,

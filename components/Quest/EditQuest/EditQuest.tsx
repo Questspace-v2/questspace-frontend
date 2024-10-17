@@ -45,12 +45,21 @@ export default function EditQuest({ questData }: { questData?: IQuest }) {
                 access,
                 media_link: image,
                 max_team_cap: maxTeamCap,
-                registration_deadline: registrationDeadline
+                registration_deadline: registrationDeadline,
+                max_teams_amount: maxTeamsAmount = null,
+                registration_type: registrationType = 'AUTO',
             } = questData;
 
             const formProps: QuestAboutForm = {
+                name,
+                description,
                 // @ts-expect-error жалуется на dayjs
-                name, description, finishTime: dayjs(finishTime), access, startTime: dayjs(startTime), image, maxTeamCap, registrationDeadline: dayjs(registrationDeadline)
+                finishTime: dayjs(finishTime), startTime: dayjs(startTime), registrationDeadline: dayjs(registrationDeadline),
+                access,
+                image,
+                maxTeamCap,
+                maxTeamsAmount,
+                registrationType
             }
             form.setFieldsValue(formProps);
         }

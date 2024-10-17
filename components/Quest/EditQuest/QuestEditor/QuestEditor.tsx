@@ -50,7 +50,9 @@ export interface QuestAboutForm {
     startTime: Date | string,
     finishTime: Date | string,
     maxTeamCap: number,
-    access: string
+    access: string,
+    maxTeamsAmount: number | null,
+    registrationType: 'AUTO' | 'VERIFY'
 }
 
 const theme: ThemeConfig = {
@@ -87,6 +89,8 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
 
 export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage, initialTeamCapacity }: QuestEditorProps) {
     const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity ?? 3);
+    const [teamsAmount, setTeamsAmount] = useState((form.getFieldValue('maxTeamsAmount') || 3) as number);
+    const [noTeamsLimit, setNoTeamsLimit] = useState(!form.getFieldValue('maxTeamsAmount'));
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
     const { data: sessionData } = useSession();
@@ -120,6 +124,18 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const shrinkTeamCapacity = () => {
         if ((initialTeamCapacity && teamCapacity > initialTeamCapacity) ?? (!initialTeamCapacity && teamCapacity > 1))
             setTeamCapacity((prev) => prev - 1);
+    };
+
+    const expandTeamsAmount = () => {
+        if (!noTeamsLimit) {
+            setTeamsAmount((prev) => prev + 1);
+        }
+    };
+
+    const shrinkTeamsAmount = () => {
+        if (!noTeamsLimit && teamsAmount > 1) {
+            setTeamsAmount((prev) => prev - 1);
+        }
     };
 
     const handleError = (msg = 'Проверьте, что все поля заполнены') => {
@@ -193,6 +209,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         finishTime: !values.finishTime ? 'error' : prevState.finishTime,
                         access: !values.access ? 'error' : prevState.access,
                         image: !s3Response && !previousImage && !fileIsTooBig ? 'error' : prevState.image,
+                        registrationType: !values.registrationType ? 'error' : prevState.registrationType,
                     }));
                     return null;
                 }
@@ -205,7 +222,9 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     name: values.name,
                     registration_deadline: values.registrationDeadline,
                     start_time: values.startTime,
-                    media_link: (s3Response as Response).url ?? previousImage
+                    media_link: (s3Response as Response).url ?? previousImage,
+                    max_teams_amount: noTeamsLimit || teamsAmount < 1 ? -1 : teamsAmount,
+                    registration_type: values.registrationType
                 };
             })
             .catch(error => {
@@ -266,10 +285,12 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     requiredMark={false}
                     initialValues={{
                         'maxTeamCap': initialTeamCapacity ?? 3,
-                        'access': isNewQuest && 'link_only'
+                        'access': isNewQuest && 'link_only',
+                        'registrationType': isNewQuest && 'AUTO',
                     }}
                     fields={[
                         { name: 'maxTeamCap', value: teamCapacity },
+                        { name: 'maxTeamsAmount', value: teamsAmount},
                         {
                             name: 'registrationDeadline', value: registrationDeadlineChecked ?
                                 form.getFieldValue('startTime') as Date :
@@ -371,6 +392,35 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
+                        className={'quest-editor__small-field'}
+                        name={'maxTeamsAmount'}
+                        labelAlign={'left'}
+                        label={'Максимальное количество команд'}
+                        colon={false}
+                        extra={<Checkbox checked={noTeamsLimit}
+                                         onClick={() => setNoTeamsLimit((prev) => !prev)}
+                                         style={{ padding: '5px 0' }}>Без ограничений</Checkbox>}
+                    >
+                        <InputNumber
+                            addonBefore={
+                                <MinusOutlined
+                                    onClick={shrinkTeamsAmount}
+                                />}
+                            addonAfter={
+                                <PlusOutlined
+                                    onClick={expandTeamsAmount}
+                                />}
+                            controls={false}
+                            disabled={noTeamsLimit}
+                            min={1}
+                            style={{ width: '128px', textAlignLast: 'center' }}
+                            onChange={(value) => {
+                                setTeamsAmount(value ?? 1);
+                                handleValueChange('maxTeamsAmount')
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item<QuestAboutForm>
                         name={'registrationDeadline'}
                         className={'quest-editor__small-field'}
                         label={'Дедлайн регистрации'}
@@ -399,6 +449,34 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                                 }));
                             }}
                         />
+                    </Form.Item>
+                    <Form.Item<QuestAboutForm>
+                        className={'quest-editor__small-field quest-editor__access-form-item'}
+                        name={'registrationType'}
+                        labelAlign={'left'}
+                        label={'Утверждение заявок'}
+                        colon={false}
+                        help={fieldsValidationStatus.registrationType === 'error' &&
+                            <p className={'quest-editor__validation-error'}>Выберите тип регистрации</p>}
+                        validateStatus={fieldsValidationStatus.registrationType}
+                    >
+                        <Radio.Group
+                            onChange={() => {
+                                handleValueChange('registrationType');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    registrationType: 'success'
+                                }));
+                            }}>
+                            <Radio value={'VERIFY'}>
+                                Включено
+                                <p className={'light-description'}>Чтобы принять заявку команды на квест, нужно перейти на вкладку участники</p>
+                            </Radio>
+                            <Radio value={'AUTO'}>
+                                Выключено
+                                <p className={'light-description'}>Заявки команд утверждаются сразу же</p>
+                            </Radio>
+                        </Radio.Group>
                     </Form.Item>
                     <h3 className={'roboto-flex-header quest-editor__subheader'}>Время квеста</h3>
                     <Form.Item<QuestAboutForm>

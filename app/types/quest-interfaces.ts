@@ -14,6 +14,8 @@ export interface IQuest {
     status: string,
     has_brief?: boolean,
     brief?: string,
+    max_teams_amount?: number,
+    registration_type?: 'AUTO' | 'VERIFY'
 }
 
 export interface ITask {

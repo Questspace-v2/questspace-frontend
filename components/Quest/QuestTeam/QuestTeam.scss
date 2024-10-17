@@ -99,9 +99,33 @@
     border: 1px solid var(--stroke-secondary);
     border-radius: 8px;
 
+    .quest-team__header-wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: nowrap;
+    }
+
+    .quest-team__extra_footer {
+        display: none;
+        width: 100%;
+    }
+
+    @media screen and (max-width: $m-breakpoint-639) {
+        .quest-team__extra_header {
+            display: none;
+        }
+
+        .quest-team__extra_footer {
+            display: unset;
+        }
+    }
+
     .quest-team__name {
         font-size: 20px;
         line-height: 28px;
+        margin: 0;
+        word-break: break-word;
     }
 }
 

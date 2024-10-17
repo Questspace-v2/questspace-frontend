@@ -43,7 +43,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const [teamsContent, setTeamsContent] = useState<ITeam[]>([]);
     const aboutTabContent = <EditQuest questData={contextData.quest} />;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
-    const teamsTabContent = <Teams teams={teamsContent} questId={questData.quest.id} />
+    const teamsTabContent = <Teams teams={teamsContent} questId={questData.quest.id} registrationType={questData.quest.registration_type} />
     const leaderboardTabContent = <Leaderboard questId={questData.quest.id} teams={leaderboardContent}/>;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();

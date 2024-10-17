@@ -10,14 +10,15 @@ import { leaveTeam } from '@/app/api/api';
 import { uid } from '@/lib/utils/utils';
 import Image from 'next/image';
 import classNames from 'classnames';
-import React from 'react';
+import { ReactElement } from 'react';
 
 
-export default function QuestTeam({mode = 'block', team, session, status} : {
+export default function QuestTeam({mode = 'block', team, session, status, extraButtons} : {
     mode: 'collapse' | 'block',
     team?: ITeam,
     session?: Session | null,
-    status?: string
+    status?: string,
+    extraButtons?: ReactElement,
 }) {
     const router = useRouter();
     const [modal, modalContextHolder] = Modal.useModal();
@@ -149,7 +150,10 @@ export default function QuestTeam({mode = 'block', team, session, status} : {
     if (mode === 'block') {
         return (
             <div className={'quest-team__block'}>
-                <h2 className={classNames('quest-team__name', 'roboto-flex-header')}>{team.name}</h2>
+                <div className={'quest-team__header-wrapper'}>
+                    <h2 className={classNames('quest-team__name')}>{team.name}</h2>
+                    {extraButtons && <div className={'quest-team__extra_header'}>{extraButtons}</div>}
+                </div>
                 {contextHolder}
                 <div className={'quest-team__members'}>
                     {team.members.map((member) => (
@@ -160,6 +164,7 @@ export default function QuestTeam({mode = 'block', team, session, status} : {
                             </div>
                         ),
                     )}
+                    {extraButtons && <div className={'quest-team__extra_footer'}>{extraButtons}</div>}
                 </div>
             </div>
         );
