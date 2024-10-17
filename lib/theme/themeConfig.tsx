@@ -18,6 +18,9 @@ const theme: ThemeConfig = {
         screenLGMax: 1279,
         screenXL: 1280,
         screenXLMin: 1280,
+
+        colorBgContainer: 'var(--background-secondary)',
+        colorText: 'var(--text-default)',
     },
     components: {
         Input: {
@@ -66,6 +69,8 @@ const theme: ThemeConfig = {
             borderColorDisabled: 'var(--stroke-secondary)',
             colorBgContainerDisabled: 'var(--background-disabled)',
             colorTextDisabled: 'var(--text-disabled)',
+            primaryShadow: '0 2px 0 var(--background-blue)',
+            dangerShadow: '0 2px 0 var(--background-red)',
         },
         Modal: {
             contentBg: 'var(--background-primary)',
@@ -83,6 +88,7 @@ const theme: ThemeConfig = {
             borderColor: 'var(--stroke-secondary)',
             colorText: 'var(--text-default)',
             rowHoverBg: 'var(--background-secondary)',
+            colorSplit: 'var(--background-secondary)'
         },
         Collapse: {
             colorText: 'var(--text-default)',
@@ -142,6 +148,7 @@ const theme: ThemeConfig = {
             optionActiveBg: 'var(--background-secondary)'
         },
         Message: {
+            colorBgElevated: 'var(--background-primary)',
             contentBg: 'var(--background-primary)',
             colorText: 'var(--text-default)',
             colorError: 'var(--icon-filled-red)',
@@ -151,6 +158,12 @@ const theme: ThemeConfig = {
         },
         Switch: {
             colorPrimary: 'var(--text-blue)',
+        },
+        Popconfirm: {
+            colorBgElevated: 'var(--background-primary)',
+            colorWarning: 'var(--icon-filled-yellow)',
+            colorText: 'var(--text-default)',
+            colorTextHeading: 'var(--text-default)',
         }
     },
 };

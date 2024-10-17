@@ -114,6 +114,10 @@ export const deleteTeam = async (teamId: string, accessToken?: string) =>
     client.handleServerRequest(`/teams/all/${teamId}`, 'DELETE', undefined, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
 
+export const acceptTeam = async (questId: string, teamId: string, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/teams/${teamId}/accept`, 'POST', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
+
 export const changeTeamCaptain = async (teamId: string, data: {
     new_captain_id: string
 }, accessToken?: string) =>

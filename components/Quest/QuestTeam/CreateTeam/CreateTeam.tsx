@@ -109,7 +109,7 @@ export default function CreateTeam({questId, currentModal, setCurrentModal, regi
             destroyOnClose
             onCancel={onCancel}
             width={xs ? '100%' : 400}
-            title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Подать заявку на участие</h2>}
+            title={<h2 className={classNames(`${customModalClassname}-header-large`, 'roboto-flex-header')}>Подать заявку на&nbsp;участие</h2>}
             footer={null}
         >
             <span className={'create-team-content__span'}>

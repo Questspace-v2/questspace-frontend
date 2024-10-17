@@ -88,7 +88,7 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
 }
 
 export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage, initialTeamCapacity }: QuestEditorProps) {
-    const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity || 3);
+    const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity ?? 3);
     const [teamsAmount, setTeamsAmount] = useState((form.getFieldValue('maxTeamsAmount') || 3) as number);
     const [noTeamsLimit, setNoTeamsLimit] = useState(!form.getFieldValue('maxTeamsAmount'));
     const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);

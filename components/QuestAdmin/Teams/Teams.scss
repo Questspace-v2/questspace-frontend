@@ -1,5 +1,25 @@
 @use "../../../globals" as *;
 
+.empty__teams-not-found.ant-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 0;
+    color: var(--text-default);
+
+    .ant-empty-image {
+        font-size: 48px;
+        opacity: 0.5;
+        height: auto;
+        margin: 0;
+    }
+
+    .ant-empty-description {
+        color: var(--text-default);
+    }
+}
+
 .teams__content-wrapper {
     padding-top: 24px;
     padding-bottom: 24px;
@@ -17,8 +37,17 @@
     }
 
     .approved-teams__header {
+        font-family: $font-manrope;
         font-size: 24px;
         line-height: 32px;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .requested-teams__wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
 
     .ant-collapse>.ant-collapse-item:not(.ant-collapse-item-active) {
@@ -33,13 +62,39 @@
             font-size: 24px;
         }
 
-        &.requested-teams__header {
+        &.requested-teams__collapse-header {
+            padding: 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        @media screen and (max-width: $m-breakpoint-639) {
+            .ant-collapse-extra {
+                width: 100%;
+                padding: 8px 0 0;
+            }
+        }
+
+        & .requested-teams__header {
+            font-family: $font-manrope;
             padding: 0;
             font-size: 24px;
             line-height: 32px;
-            align-items: center;
+            font-weight: 700;
+            margin: 0;
         }
+    }
 
+    .ant-collapse >.ant-collapse-item >.ant-collapse-content >.ant-collapse-content-box {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 16px 0 0;
+    }
+
+    .requested-team__extra {
+        display: flex;
+        gap: 8px;
     }
 }
 
@@ -50,6 +105,17 @@
         .approved-teams__header {
             font-size: 20px;
             line-height: 28px;
+        }
+
+        .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+            .ant-collapse-expand-icon span {
+                font-size: 20px;
+            }
+
+            .requested-teams__header {
+                font-size: 20px;
+                line-height: 28px;
+            }
         }
     }
 }
