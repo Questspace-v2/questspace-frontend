@@ -8,7 +8,7 @@ import {ModalProps, TeamModal} from '@/lib/utils/modalTypes';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 import classNames from 'classnames';
 
-export default function InviteModal({inviteLink, currentModal, setCurrentModal, registrationType}: ModalProps) {
+export default function InviteModal({inviteLink, currentModal, setCurrentModal, registrationType = 'AUTO'}: ModalProps) {
     const { xs } = useBreakpoint();
     const [messageApi, contextHolder] = message.useMessage();
 
