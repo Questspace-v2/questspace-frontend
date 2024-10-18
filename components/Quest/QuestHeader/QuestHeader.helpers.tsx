@@ -47,6 +47,15 @@ const getQuestRegistrationButton = (
     const startDateHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
     const teamsRemaining = (maxTeamsAmount ?? 0) - teamsAccepted;
 
+    if (!team && maxTeamsAmount && teamsRemaining <= 0) {
+        return (
+            <div className={'quest-header__interactive'}>
+                <Button disabled size={'large'}>Места закончились</Button>
+                <p>{`Регистрация до ${registrationHourMinute}\u00A0${registrationDayMonth}`}</p>
+            </div>
+        );
+    }
+
     if (registrationType === 'AUTO') {
         if (team) {
             return (
@@ -93,7 +102,7 @@ const getQuestRegistrationButton = (
                 <div className={'quest-header__interactive quest-header__interactive_brief'}>
                     {team && (
                         <Link href={`${pathname}/play`}>
-                            <Button tabIndex={-1} ghost>
+                            <Button tabIndex={-1} ghost size={'large'}>
                                 Перейти к брифу <ArrowRightOutlined />
                             </Button>
                         </Link>
@@ -153,7 +162,7 @@ const getQuestStatusButton = (
                 <div className={'quest-header__interactive quest-header__interactive_brief'}>
                     {team && (
                         <Link href={`${pathname}/play`}>
-                            <Button tabIndex={-1} ghost>
+                            <Button tabIndex={-1} ghost size={'large'}>
                                 Перейти к брифу <ArrowRightOutlined />
                             </Button>
                         </Link>
@@ -177,7 +186,7 @@ const getQuestStatusButton = (
             <div className={'quest-header__interactive quest-header__interactive_play'}>
                 {team && (
                     <Link href={`${pathname}/play`}>
-                        <Button type={'primary'} style={{ backgroundColor: 'var(--background-green)' }} tabIndex={-1}>
+                        <Button type={'primary'} style={{ backgroundColor: 'var(--background-green)' }} tabIndex={-1} size={'large'}>
                             <PlayCircleFilled />Открыть задания
                         </Button>
                     </Link>

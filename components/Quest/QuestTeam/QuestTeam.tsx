@@ -5,7 +5,13 @@ import { Session } from 'next-auth';
 import { useRouter } from 'next/navigation';
 import { QuestStatus } from '@/components/Quest/Quest.helpers';
 import { Button, Collapse, CollapseProps, message, Modal } from 'antd';
-import { CheckCircleOutlined, CopyOutlined, ExclamationCircleOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+    CheckCircleOutlined,
+    ClockCircleOutlined,
+    CopyOutlined,
+    ExclamationCircleOutlined,
+    LogoutOutlined,
+} from '@ant-design/icons';
 import { leaveTeam } from '@/app/api/api';
 import { uid } from '@/lib/utils/utils';
 import Image from 'next/image';
@@ -82,7 +88,11 @@ export default function QuestTeam({mode = 'block', team, session, status, extraB
                 label: (
                     <div className={'quest-team__header-wrapper'}>
                         <h2 className={classNames('quest-team__name', 'roboto-flex-header')}>{`Твоя команда — ${team.name}`}</h2>
-                        <span className={'quest-team__status'}><CheckCircleOutlined /> Команда зарегистрирована</span>
+                        <span className={classNames('quest-team__status', `quest-team__status_${team.registration_status?.toLowerCase().replace('_', '-')}`)}>
+                            {team.registration_status === 'ACCEPTED' ?
+                                <><CheckCircleOutlined /> Команда зарегистрирована</> :
+                                <><ClockCircleOutlined /> Заявка отправлена</>
+                            }</span>
                     </div>
                 ),
                 children: (

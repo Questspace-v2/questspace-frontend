@@ -167,7 +167,7 @@ return (
     <ContentWrapper className={'teams__content-wrapper'}>
         <div className={'teams__wrapper'}>
             {contextHolder}
-            {registrationType === 'VERIFY' || requestedTeams?.length > 0 && (
+            {(registrationType === 'VERIFY' || requestedTeams?.length > 0) && (
                 <Collapse
                     ghost
                     items={items}
