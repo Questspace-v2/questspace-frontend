@@ -1,0 +1,32 @@
+@use "../../../globals" as *;
+
+.logs-table__table.ant-table-wrapper {
+    max-width: 1250px;
+    width: 100%;
+    font-family: $font-manrope;
+
+    .ant-table-thead tr th {
+        font-size: 12px;
+        color: var(--text-secondary);
+        line-height: 22px;
+        font-weight: 400;
+    }
+
+    .ant-table-thead tr th::before {
+        display: none;
+    }
+
+    .logs-table__answer.accepted {
+        color: var(--text-green);
+    }
+
+    .logs-table__answer.rejected {
+        color: var(--text-red);
+    }
+}
+
+.logs-table__table {
+    .ant-table-tbody > tr:last-child > td {
+        border: none
+    }
+}
