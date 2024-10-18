@@ -47,6 +47,34 @@ const getQuestRegistrationButton = (
     const startDateHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
     const teamsRemaining = (maxTeamsAmount ?? 0) - teamsAccepted;
 
+    if (team?.registration_status === 'ACCEPTED') {
+        if (hasBrief) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            const pathname = usePathname();
+            return (
+                <div className={'quest-header__interactive quest-header__interactive_brief'}>
+                    {team && (
+                        <Link href={`${pathname}/play`}>
+                            <Button tabIndex={-1} ghost size={'large'}>
+                                Перейти к брифу <ArrowRightOutlined />
+                            </Button>
+                        </Link>
+                    )}
+                </div>
+            );
+        }
+
+        return (
+            <div className={'quest-header__interactive'}>
+                <Button className={'already-have-team'} size={'large'} type={'dashed'} disabled ghost block>
+                    <CheckOutlined/>
+                    Ты уже в команде
+                </Button>
+                <p>{`Старт квеста ${startDateDayMonth} в\u00A0${startDateHourMinute}`}</p>
+            </div>
+        );
+    }
+
     if (!team && maxTeamsAmount && teamsRemaining <= 0) {
         return (
             <div className={'quest-header__interactive'}>
@@ -90,34 +118,6 @@ const getQuestRegistrationButton = (
                     Заявка отправлена
                 </Button>
                 {hasBrief && <p>После утверждения заявки откроется доступ к брифу</p>}
-            </div>
-        );
-    }
-
-    if (team?.registration_status === 'ACCEPTED') {
-        if (hasBrief) {
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-            const pathname = usePathname();
-            return (
-                <div className={'quest-header__interactive quest-header__interactive_brief'}>
-                    {team && (
-                        <Link href={`${pathname}/play`}>
-                            <Button tabIndex={-1} ghost size={'large'}>
-                                Перейти к брифу <ArrowRightOutlined />
-                            </Button>
-                        </Link>
-                    )}
-                </div>
-            );
-        }
-
-        return (
-            <div className={'quest-header__interactive'}>
-                <Button className={'already-have-team'} size={'large'} type={'dashed'} disabled ghost block>
-                    <CheckOutlined/>
-                    Ты уже в команде
-                </Button>
-                <p>{`Старт квеста ${startDateDayMonth} в\u00A0${startDateHourMinute}`}</p>
             </div>
         );
     }
