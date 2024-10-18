@@ -19,7 +19,7 @@ import { FileImageOutlined, MinusOutlined, PlusOutlined, ReloadOutlined, UploadO
 import dayjs from 'dayjs';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import 'dayjs/locale/ru';
-import { IQuest, IQuestCreate } from '@/app/types/quest-interfaces';
+import { IQuest, IQuestCreate, IQuestTaskGroups } from '@/app/types/quest-interfaces';
 import { createQuest, updateQuest } from '@/app/api/api';
 import client from '@/app/api/client/client';
 import { uid } from '@/lib/utils/utils';
@@ -39,7 +39,8 @@ interface QuestEditorProps {
     isNewQuest?: boolean,
     questId?: string,
     previousImage?: string,
-    initialTeamCapacity?: number
+    initialTeamCapacity?: number,
+    setContextData?: React.Dispatch<React.SetStateAction<IQuestTaskGroups>>
 }
 
 export interface QuestAboutForm {
@@ -87,7 +88,7 @@ function QuestEditorButtons({handleSubmit, isNewQuest}: {handleSubmit?: React.Mo
     );
 }
 
-export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage, initialTeamCapacity }: QuestEditorProps) {
+export default function QuestEditor({ form, fileList, setFileList, isNewQuest, questId, previousImage, initialTeamCapacity, setContextData }: QuestEditorProps) {
     const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity ?? 3);
     const [teamsAmount, setTeamsAmount] = useState((form.getFieldValue('maxTeamsAmount') || 3) as number);
     const [noTeamsLimit, setNoTeamsLimit] = useState(!form.getFieldValue('maxTeamsAmount'));
@@ -249,6 +250,12 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     throw err;
                 })
             if (result) {
+                if (setContextData) {
+                    setContextData(prevState => ({
+                        ...prevState,
+                        quest: result,
+                    }));
+                }
                 router.refresh();
                 success();
             }

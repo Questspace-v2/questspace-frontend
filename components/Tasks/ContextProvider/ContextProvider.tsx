@@ -10,7 +10,10 @@ export interface IContext {
 
 const TasksContext = createContext<IContext | null>(null);
 
-export default function ContextProvider({children, questData}: {children: React.ReactNode, questData: IQuestTaskGroups}) {
+export default function ContextProvider({children, questData}: {
+    children: React.ReactNode,
+    questData: IQuestTaskGroups
+}) {
     const [state, setState] = useState<IQuestTaskGroups>(questData);
 
     return (
