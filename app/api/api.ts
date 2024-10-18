@@ -156,3 +156,8 @@ export const getLeaderboardAdmin = async (questId: string, accessToken?: string)
 export const getTaskGroupsAdmin = async (questId: string, accessToken?: string) =>
     client.handleServerRequest(`/quest/${questId}/task-groups`, 'GET', undefined,
         undefined, 'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {})
+
+export const getPaginatedAnswerLogs = async (questId: string, accessToken?: string) =>
+    client.handleServerRequest(`/quest/${questId}/answer_log`, 'GET', undefined, undefined,
+        'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
+        
