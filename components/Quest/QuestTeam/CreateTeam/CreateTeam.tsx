@@ -13,7 +13,7 @@ import {ModalProps, TeamModal, ValidationStatus} from '@/lib/utils/modalTypes';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 import classNames from 'classnames';
 
-export default function CreateTeam({questId, currentModal, setCurrentModal, registrationType}: ModalProps) {
+export default function CreateTeam({questId, currentModal, setCurrentModal, registrationType = 'AUTO'}: ModalProps) {
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data} = useSession();

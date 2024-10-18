@@ -8,7 +8,7 @@ import Link from 'next/link';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import QuestPreview from '@/components/Quest/EditQuest/QuestPreview/QuestPreview';
 import QuestEditor, { QuestAboutForm } from '@/components/Quest/EditQuest/QuestEditor/QuestEditor';
-import { IQuest } from '@/app/types/quest-interfaces';
+import { IQuest, IQuestTaskGroups } from '@/app/types/quest-interfaces';
 import dayjs from 'dayjs';
 
 function EditQuestHeader({isNewQuest}: {isNewQuest: boolean}) {
@@ -27,7 +27,7 @@ function EditQuestHeader({isNewQuest}: {isNewQuest: boolean}) {
     return null;
 }
 
-export default function EditQuest({ questData }: { questData?: IQuest }) {
+export default function EditQuest({ questData, setContextData }: { questData?: IQuest, setContextData?: React.Dispatch<React.SetStateAction<IQuestTaskGroups>> }) {
     const [selectedTab, setSelectedTab] = useState<string>('editor');
     const [form] = Form.useForm<QuestAboutForm>();
     const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -75,6 +75,7 @@ export default function EditQuest({ questData }: { questData?: IQuest }) {
                      questId={questData?.id}
                      previousImage={questData?.media_link}
                      initialTeamCapacity={questData?.max_team_cap}
+                     setContextData={setContextData}
         />;
     const preview =
         <QuestPreview

@@ -62,7 +62,14 @@
         gap: 6px;
         flex-wrap: nowrap;
         font-size: 14px;
-        color: var(--icon-outlined-green);
+
+        &_accepted {
+            color: var(--text-green);
+        }
+
+        &_on-consideration {
+            color: var(--text-secondary);
+        }
     }
 
     .exit-team__large-screen {
