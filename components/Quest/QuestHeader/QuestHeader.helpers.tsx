@@ -186,7 +186,7 @@ const getQuestStatusButton = (
             <div className={'quest-header__interactive quest-header__interactive_play'}>
                 {team && (
                     <Link href={`${pathname}/play`}>
-                        <Button type={'primary'} style={{ backgroundColor: 'var(--background-green)' }} tabIndex={-1} size={'large'}>
+                        <Button type={'primary'} style={{ backgroundColor: 'var(--background-green)', boxShadow: '0 2px 0 0 var(--background-green)'}} tabIndex={-1} size={'large'}>
                             <PlayCircleFilled />Открыть задания
                         </Button>
                     </Link>

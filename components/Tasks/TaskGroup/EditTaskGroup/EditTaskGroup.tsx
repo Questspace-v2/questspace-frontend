@@ -1,7 +1,7 @@
 'use client';
 
-import {Button, Form, Input} from 'antd';
-import {Dispatch, SetStateAction, useState} from 'react';
+import { Button, Col, Form, Input, Row } from 'antd';
+import React, {Dispatch, SetStateAction, useState} from 'react';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import {ValidationStatus} from "@/lib/utils/modalTypes";
@@ -14,25 +14,29 @@ import {
     ITaskGroupsCreate,
     ITaskGroupsUpdate
 } from '@/app/types/quest-interfaces';
-import CustomModal from '@/components/CustomModal/CustomModal';
+import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
+import classNames from 'classnames';
+
+const {TextArea} = Input;
 
 interface TaskGroupModalProps {
     questId: string;
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,
-    taskGroupProps?: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
+    taskGroupProps?: Pick<ITaskGroup, 'id' | 'pub_time' | 'name' | 'description'>
 }
 
 export interface TaskGroupForm {
-    groupName: string
+    groupName: string,
+    description?: string
 }
 
 export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProps}: TaskGroupModalProps) {
-    const { xs } = useBreakpoint();
+    const {xs, md} = useBreakpoint();
     const [form] = Form.useForm<TaskGroupForm>();
 
     const {data: contextData, updater: setContextData} = useTasksContext()!;
-    const title = taskGroupProps ? 'Изменить название раздела' : 'Название раздела';
+    const title = taskGroupProps ? 'Настройки уровня' : 'Создание уровня';
 
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
     const [errorMsg, setErrorMsg] = useState<string>('');
@@ -49,6 +53,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
         const currentTaskGroup = taskGroups.find(item => item.id === taskGroupProps?.id && item.pub_time === taskGroupProps?.pub_time)!;
         const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
         const groupName = form.getFieldValue('groupName') as string;
+        const description = form.getFieldValue('description') as string;
 
         if (!groupName) {
             setValidationStatus('error');
@@ -59,6 +64,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
         if (taskGroupProps) {
             const taskGroup = taskGroups[taskGroupIndex];
             taskGroups[taskGroupIndex].name = groupName;
+            taskGroups[taskGroupIndex].description = description;
             setIsOpen(false);
 
             const updateTaskGroup: ITaskGroupsUpdate = {
@@ -66,6 +72,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 id: taskGroup.id!,
                 pub_time: taskGroup.pub_time!,
                 name: groupName,
+                description,
                 order_idx: taskGroupIndex,
                 tasks: {}
             };
@@ -82,14 +89,17 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 ...contextData,
                 task_groups: data.task_groups,
             });
+
+            form.resetFields();
             return;
         }
 
         const pubTime = new Date();
-        taskGroups.push({name: groupName, tasks: [], pub_time: pubTime.toISOString()});
+        taskGroups.push({name: groupName, description, tasks: [], pub_time: pubTime.toISOString()});
 
         const newGroup: ITaskGroupsCreate = {
             name: groupName,
+            description,
             tasks: [],
             pub_time: pubTime.toISOString(),
             order_idx: taskGroups.length - 1,
@@ -117,37 +127,68 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
     }
 
     return (
-      <CustomModal
-          open={isOpen}
-          centered
-          destroyOnClose
-          width={xs ? '100%' : 400}
-          title={<h2 className={'roboto-flex-header'}>{title}</h2>}
-          footer={null}
-          onCancel={onCancel}
-      >
-          <Form
-              form={form}
-              autoComplete={'off'}
-              preserve={false}
-              initialValues={{
-                  groupName: taskGroupProps?.name
-              }}
-          >
-              <Form.Item name={'groupName'} validateStatus={validationStatus} help={errorMsg}>
-                  <Input placeholder={'Название раздела'} onChange={handleFieldChange}/>
-              </Form.Item>
-              <Form.Item>
-                  <Button
-                      type={'primary'}
-                      htmlType={'submit'}
-                      block
-                      onClick={handleSave}
-                  >
-                      Сохранить
-                  </Button>
-              </Form.Item>
-          </Form>
-      </CustomModal>
+        <CustomModal
+            className={'edit-task-group__modal'}
+            classNames={{content: 'edit-task-group__content'}}
+            open={isOpen}
+            width={xs ?? md ? '100%': 800}
+            centered
+            destroyOnClose
+            title={<h3 className={classNames(`${customModalClassname}-header`, 'roboto-flex-header')}>{title}</h3>}
+            onCancel={onCancel}
+            footer={[
+                <Button key={'save'} type={'primary'} onClick={handleSave}>
+                    Сохранить изменения
+                </Button>,
+                <Button key={'cancel'} onClick={onCancel}>
+                    Отменить
+                </Button>
+            ]}
+            forceRender
+        >
+            <Form
+                form={form}
+                autoComplete={'off'}
+                preserve={false}
+                initialValues={{
+                    groupName: taskGroupProps?.name,
+                    description: taskGroupProps?.description
+                }}
+                noValidate
+            >
+                <Row>
+                    <Col className={'edit-task-group__labels'}>
+                        <span>Название уровня</span>
+                    </Col>
+                    <Col flex={'auto'}>
+                        <Form.Item<TaskGroupForm>
+                            name={'groupName'}
+                            validateStatus={validationStatus}
+                            help={errorMsg}
+                        >
+                            <Input
+                                type={'text'}
+                                onChange={handleFieldChange}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className={'edit-task-group__labels'}>
+                        <span>Описание <span className={'light-description'}>поддерживает&nbsp;Markdown</span></span>
+                    </Col>
+                    <Col flex={'auto'}>
+                        <Form.Item<TaskGroupForm>
+                            name={'description'}
+                            colon={false}
+                        >
+                            <TextArea
+                                style={{ resize: 'none', height: '320px' }}
+                            />
+                        </Form.Item>
+                    </Col>
+                </Row>
+            </Form>
+        </CustomModal>
     );
 }

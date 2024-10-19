@@ -1,0 +1,62 @@
+@use "globals" as *;
+
+.edit-task-group__content {
+    .edit-task-group__labels {
+        width: 184px;
+        color: var(--text-default);
+    }
+
+    .edit-task-group__file-extensions {
+        color: var(--text-secondary);
+        padding: 0 0 6px;
+        margin: 0;
+    }
+
+    .ant-input-suffix {
+        color: var(--stroke-secondary);
+        transition-behavior: normal;
+        transition-delay: 0s;
+        transition-duration: 0.2s;
+        transition-property: all;
+        transition-timing-function: ease;
+    }
+
+    .ant-input-affix-wrapper-readonly {
+        &:hover, &:focus, &:focus-within {
+            .ant-input-suffix {
+                color: var(--text-blue);
+            }
+        }
+    }
+
+    .ant-input {
+        border-radius: 2px;
+    }
+
+    .ant-form-item {
+        margin: 0;
+    }
+
+    .ant-form {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .ant-modal-body {
+        margin-bottom: 40px;
+    }
+
+    &.ant-modal-content .ant-modal-footer {
+        display: flex;
+        justify-content: flex-start;
+        margin: 0;
+        padding-top: 16px;
+        border-top: 1px solid var(--stroke-secondary);
+    }
+}
+
+.ant-modal-root .ant-modal.edit-task-group__modal {
+    margin: 0;
+    max-width: 100%;
+}

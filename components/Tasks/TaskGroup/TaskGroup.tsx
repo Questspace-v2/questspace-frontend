@@ -8,6 +8,9 @@ import { ITaskGroup } from '@/app/types/quest-interfaces';
 import TaskGroupExtra from '@/components/Tasks/TaskGroup/TaskGroupExtra/TaskGroupExtra';
 import classNames from 'classnames';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
+import remarkGfm from 'remark-gfm';
+import Markdown from 'react-markdown';
+import React from 'react';
 
 interface TaskGroupProps {
     mode: TasksMode,
@@ -16,14 +19,15 @@ interface TaskGroupProps {
 }
 
 export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
-    const { id, pub_time: pubTime, name } = props;
+    const { id, pub_time: pubTime, name, description } = props;
     const {data: contextData} = useTasksContext()!;
     const tasks = contextData.task_groups.find(item => item.id === id)?.tasks ?? [];
     const totalScore = tasks.reduce((a, b) => a + b.reward, 0);
+    const isEditMode = mode === TasksMode.EDIT;
     const isGroupClosed = tasks.length > 0 && tasks
-        .every(item => item.score !== undefined && (item.score > 0 || mode === TasksMode.EDIT));
-    const collapseExtra = mode === TasksMode.EDIT ?
-        <TaskGroupExtra questId={questId} edit={mode === TasksMode.EDIT} taskGroupProps={{id, pub_time: pubTime, name}}/> :
+        .every(item => item.score !== undefined && (item.score > 0 || isEditMode));
+    const collapseExtra = isEditMode ?
+        <TaskGroupExtra questId={questId} edit={isEditMode} taskGroupProps={{id, pub_time: pubTime, name, description}}/> :
         null;
     const totalScoreExtra = isGroupClosed ?
         <span className={'task-group__score'}>+{totalScore}</span> :
@@ -37,21 +41,53 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
         {
             key: id,
             label,
-            children: tasks &&
+            children: (
                 <>
-                    {(tasks.map((task) =>
-                        <div className={'task-group__task'} key={task.pub_time + task.id}>
-                            <Task
-                                props={task}
-                                mode={mode}
-                                questId={questId}
-                                taskGroupProps={{id, pub_time: pubTime, name}}
-                                key={task.pub_time + task.id}
-                            />
-                            {getTaskExtra(mode === TasksMode.EDIT, false, {id, pub_time: pubTime, name}, task, questId)}
+                    {isEditMode ? (
+                        <div className={'task-group__settings-wrapper'}>
+                            <div className={'task-group__settings-row'}>
+                                <span className={'task-group__setting-name'}>Описание уровня</span>
+                                {description ? (
+                                    <Markdown className={classNames('line-break', 'task-group__setting-value')}
+                                              disallowedElements={['pre', 'code']}
+                                              remarkPlugins={[remarkGfm]}>
+                                        {description?.toString()}
+                                    </Markdown>
+                                ) : (
+                                    <span className={'light-description'}>Нет</span>
+                                )}
+
+                            </div>
+                            <div className={'task-group__settings-row'}>
+                                <span className={'task-group__setting-name'}>Время на прохождение</span>
+                                <span className={'task-group__setting-value'}>Не ограничено</span>
+                            </div>
                         </div>
-                    ))}
-                </>,
+                        // eslint-disable-next-line react/jsx-no-useless-fragment
+                    ) : (<>
+                            {description && <Markdown className={classNames('line-break', 'task-group__description')} disallowedElements={['pre', 'code']}
+                                                      remarkPlugins={[remarkGfm]}>
+                                {description?.toString()}
+                            </Markdown>}
+                        </>
+                    )}
+                    {tasks &&
+                        <>
+                            {(tasks.map((task) =>
+                                <div className={'task-group__task'} key={task.pub_time + task.id}>
+                                <Task
+                                        props={task}
+                                        mode={mode}
+                                        questId={questId}
+                                        taskGroupProps={{id, pub_time: pubTime, name}}
+                                        key={task.pub_time + task.id}
+                                    />
+                                    {getTaskExtra(isEditMode, false, {id, pub_time: pubTime, name}, task, questId)}
+                                </div>
+                            ))}
+                        </>
+                    }
+                </>),
             headerClass: classNames(
                 'tasks__name',
                 'task-group__name',
@@ -69,7 +105,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                 items={items}
                 className={classNames('task-group__collapse', 'tasks__collapse')}
                 collapsible={'header'}
-                defaultActiveKey={mode === TasksMode.EDIT ? id : undefined}
+                defaultActiveKey={isEditMode ? id : undefined}
             />
         </ContentWrapper>
     );
