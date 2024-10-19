@@ -18,14 +18,14 @@ const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/
 interface ITaskGroupExtra {
     questId: string,
     edit: boolean,
-    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
+    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name' | 'description'>
 }
 
 export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGroupExtra) {
     const [open, setOpen] = useState(false);
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
-    const [isOpenNameModal, setIsOpenNameModal] = useState(false);
+    const [isOpenEditModal, setIsOpenEditModal] = useState(false);
     const {data: session} = useSession();
 
     const {updater: setContextData} = useTasksContext()!;
@@ -38,8 +38,8 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
         setOpen(flag);
     };
 
-    const handleChangeName = () => {
-        setIsOpenNameModal(true);
+    const handleEditTaskGroup = () => {
+        setIsOpenEditModal(true);
     };
 
     const handleAddTask = () => {
@@ -67,9 +67,9 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
 
     const items: MenuProps['items'] = [
         {
-            label: <><EditOutlined/>Изменить название</>,
+            label: <><EditOutlined/>Редактировать</>,
             key: '1',
-            onClick: handleChangeName,
+            onClick: handleEditTaskGroup,
         },
         {
 
@@ -92,7 +92,7 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
 
     return (
         <div className={classNames('task-group__collapse-buttons', 'tasks__collapse-buttons')}>
-                <Button onClick={handleChangeName} ghost><EditOutlined/>Изменить название</Button>
+                <Button onClick={handleEditTaskGroup} ghost><EditOutlined/>Редактировать</Button>
                 <Button onClick={handleAddTask} ghost><PlusOutlined/>Добавить задачу</Button>
                 <Button onClick={handleDeleteGroup} danger><DeleteOutlined/></Button>
             <Dropdown
@@ -121,8 +121,8 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
             <DynamicEditTaskGroup
                 questId={questId}
                 taskGroupProps={taskGroupProps}
-                isOpen={isOpenNameModal}
-                setIsOpen={setIsOpenNameModal}
+                isOpen={isOpenEditModal}
+                setIsOpen={setIsOpenEditModal}
             />
         </div>
     );

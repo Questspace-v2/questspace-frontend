@@ -34,6 +34,37 @@
     line-height: 24px;
 }
 
+.task-group__description {
+    padding: 24px 0 16px;
+    border-top: 1px solid var(--stroke-secondary);
+
+    p {
+        margin: 0;
+    }
+}
+
+.task-group__settings-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 0 16px;
+    border-top: 1px solid var(--stroke-secondary);
+
+    .task-group__settings-row {
+        display: flex;
+        flex-direction: row;
+        gap: 16px;
+
+        .task-group__setting-name {
+            width: 168px;
+        }
+
+        .task-group__setting-value p {
+            margin: 0;
+        }
+    }
+}
+
 .task-group__name-with-score {
     display: flex;
     justify-content: space-between;

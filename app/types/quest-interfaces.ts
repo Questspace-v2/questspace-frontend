@@ -42,6 +42,7 @@ export interface IHint {
 export interface ITaskGroup {
     id?: string,
     name: string,
+    description?: string,
     order_idx?: number,
     pub_time?: string,
     tasks: ITask[]
@@ -51,6 +52,7 @@ export type IQuestCreate = Omit<IQuest, 'creator' | 'status' | 'id'>
 
 export interface ITaskGroupsCreate {
     name: string,
+    description?: string,
     order_idx: number,
     pub_time: string,
     tasks: ITask[]
@@ -67,6 +69,7 @@ export interface ITaskGroupsDelete {
 export interface ITaskGroupsUpdate {
     id: string,
     name: string,
+    description?: string,
     order_idx: number,
     pub_time: string,
     tasks: ITasksUpdateRequest
