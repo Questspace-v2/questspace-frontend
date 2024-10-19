@@ -30,7 +30,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
         <TaskGroupExtra questId={questId} edit={isEditMode} taskGroupProps={{id, pub_time: pubTime, name, description}}/> :
         null;
     const totalScoreExtra = isGroupClosed ?
-        <span className={'task-group__score'}>+{totalScore}</span> :
+        <span className={'task-group__score'} suppressHydrationWarning>+{totalScore}</span> :
         null;
     const label = <div className='task-group__name-with-score'>
         <span>{name}</span>
@@ -63,13 +63,13 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                                 <span className={'task-group__setting-value'}>Не ограничено</span>
                             </div>
                         </div>
-                        // eslint-disable-next-line react/jsx-no-useless-fragment
-                    ) : (<>
+                    ) : (
+                        <div suppressHydrationWarning>
                             {description && <Markdown className={classNames('line-break', 'task-group__description')} disallowedElements={['pre', 'code']}
                                                       remarkPlugins={[remarkGfm]}>
                                 {description?.toString()}
                             </Markdown>}
-                        </>
+                        </div>
                     )}
                     {tasks &&
                         <>
