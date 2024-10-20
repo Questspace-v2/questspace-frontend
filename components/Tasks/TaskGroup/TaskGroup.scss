@@ -57,10 +57,12 @@
 
         .task-group__setting-name {
             width: 168px;
+            min-width: 168px;
         }
 
         .task-group__setting-value p {
             margin: 0;
+            word-break: break-word;
         }
     }
 }

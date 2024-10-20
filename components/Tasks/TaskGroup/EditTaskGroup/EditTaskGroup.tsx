@@ -36,6 +36,8 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
     const [form] = Form.useForm<TaskGroupForm>();
 
     const {data: contextData, updater: setContextData} = useTasksContext()!;
+    const taskGroups = contextData.task_groups ?? [];
+    const currentTaskGroup = taskGroups.find(item => item.id === taskGroupProps?.id && item.pub_time === taskGroupProps?.pub_time)!;
     const title = taskGroupProps ? 'Настройки уровня' : 'Создание уровня';
 
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
@@ -49,8 +51,6 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
     };
 
     const handleSave = async () => {
-        const taskGroups = contextData.task_groups ?? [];
-        const currentTaskGroup = taskGroups.find(item => item.id === taskGroupProps?.id && item.pub_time === taskGroupProps?.pub_time)!;
         const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
         const groupName = form.getFieldValue('groupName') as string;
         const description = form.getFieldValue('description') as string;
@@ -61,16 +61,15 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
             return;
         }
 
-        if (taskGroupProps) {
-            const taskGroup = taskGroups[taskGroupIndex];
-            taskGroups[taskGroupIndex].name = groupName;
-            taskGroups[taskGroupIndex].description = description;
+        if (currentTaskGroup) {
+            currentTaskGroup.name = groupName;
+            currentTaskGroup.description = description;
             setIsOpen(false);
 
             const updateTaskGroup: ITaskGroupsUpdate = {
-                ...taskGroup,
-                id: taskGroup.id!,
-                pub_time: taskGroup.pub_time!,
+                ...currentTaskGroup,
+                id: currentTaskGroup.id!,
+                pub_time: currentTaskGroup.pub_time!,
                 name: groupName,
                 description,
                 order_idx: taskGroupIndex,
@@ -118,6 +117,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
             task_groups: data.task_groups,
         });
         setIsOpen(false);
+        form.resetFields();
     };
 
     const onCancel = () => {
@@ -151,8 +151,8 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 autoComplete={'off'}
                 preserve={false}
                 initialValues={{
-                    groupName: taskGroupProps?.name,
-                    description: taskGroupProps?.description
+                    groupName: currentTaskGroup?.name,
+                    description: currentTaskGroup?.description
                 }}
                 noValidate
             >
