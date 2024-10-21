@@ -241,3 +241,9 @@ export interface IPaginatedAnswerLogs {
     next_page_token: number;
     total_pages: number;
 }
+
+export interface IPaginatedAnswerLogsParams {
+    page_size?: number;
+    page_id?: string;
+    page_no?: number;
+}
