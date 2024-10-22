@@ -11,6 +11,7 @@ import {
     IBulkEditTaskGroups,
     ITaskAnswer,
     ITaskGroupsCreateRequest,
+    IPaginatedAnswerLogsParams,
 } from '@/app/types/quest-interfaces';
 import client from '@/app/api/client/client';
 
@@ -157,7 +158,8 @@ export const getTaskGroupsAdmin = async (questId: string, accessToken?: string) 
     client.handleServerRequest(`/quest/${questId}/task-groups`, 'GET', undefined,
         undefined, 'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {})
 
-export const getPaginatedAnswerLogs = async (questId: string, accessToken?: string) =>
-    client.handleServerRequest(`/quest/${questId}/answer_log`, 'GET', undefined, undefined,
+export const getPaginatedAnswerLogs = async (questId: string, accessToken?: string, params?: IPaginatedAnswerLogsParams) => {
+    const paramsString = params ? new URLSearchParams(JSON.parse(JSON.stringify(params)) as Record<string, string>).toString() : '';
+    return client.handleServerRequest(`/quest/${questId}/answer_log?${paramsString}`, 'GET', undefined, undefined,
         'same-origin', accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {});
-        
+}
