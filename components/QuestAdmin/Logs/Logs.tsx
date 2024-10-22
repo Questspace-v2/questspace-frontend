@@ -1,6 +1,7 @@
 import { getPaginatedAnswerLogs } from '@/app/api/api';
 import { IAnswerLog, IPaginatedAnswerLogs, IPaginatedAnswerLogsParams } from '@/app/types/quest-interfaces';
-import { Table, TablePaginationConfig, Tooltip } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
+import { ConfigProvider, Empty, GetProp, Table, TablePaginationConfig, Tooltip } from 'antd';
 import { TableProps } from 'antd/lib';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
@@ -27,36 +28,60 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
         {
             title: 'Группа',
             dataIndex: 'task_group',
-            key: 'task_group'
+            key: 'task_group',
+            render: (_, record) =>
+                <Tooltip title={record.task_group} placement='topLeft'>
+                    {record.task_group}
+                </Tooltip>
         },
         {
             title: 'Задание',
             dataIndex: 'task',
             key: 'task',
             render: (task: string) =>
-                <Tooltip title={task}>
+                <Tooltip title={task} placement='topLeft'>
                     <span>{task}</span>
                 </Tooltip>
         },
         {
             title: 'Команда',
             dataIndex: 'team',
-            key: 'team'
+            key: 'team',
+            render: (_, record) =>
+                <Tooltip title={record.team} placement='topLeft'>
+                    {record.team}
+                </Tooltip>
         },
         {
             title: 'Пользователь',
             dataIndex: 'user',
             key: 'user',
-            render: (_, record) => record.user ?? '—'
+            render: (_, record) =>
+                <Tooltip title={record.user ?? '—'} placement='topLeft'>
+                    {record.user ?? '—'}
+                </Tooltip>
         },
         {
             title: 'Ответ',
             dataIndex: 'answer',
             key: 'answer',
             render: (_, record) =>
-                <span className={classNames('logs-table__answer', record.accepted ? 'accepted' : 'rejected')}>{record.answer}</span>
+                <Tooltip title={record.answer} placement='topLeft'>
+                    <span className={classNames('logs-table__answer', record.accepted ? 'accepted' : 'rejected')}>
+                        {record.answer}
+                    </span>
+                </Tooltip>
         }
     ];
+
+    const renderEmpty: GetProp<typeof ConfigProvider, 'renderEmpty'> = () => (
+        <Empty
+            className={'empty__logs-not-found'}
+            image={<SmileOutlined />}
+            description={<span>
+                Записей пока нет
+            </span>} />
+    );
 
     const onPaginationChange = async (pagination: TablePaginationConfig) => {
         const currentPage = pagination.current ?? 1;
@@ -72,13 +97,16 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     };
 
     return (
-        <Table<IAnswerLog> 
-            columns={columns} 
-            dataSource={logsContent} 
-            rowKey={(log) => log.answer_time}
-            pagination={{ total: 50 * paginatedLogs.total_pages, pageSize: 50, showSizeChanger: false }}
-            onChange={onPaginationChange}
-            className='logs-table__table'
-        />
+        <ConfigProvider renderEmpty={renderEmpty}>
+            <Table<IAnswerLog> 
+                columns={columns} 
+                dataSource={logsContent} 
+                rowKey={(log) => log.answer_time}
+                pagination={{ total: 50 * paginatedLogs.total_pages, pageSize: 50, showSizeChanger: false }}
+                onChange={onPaginationChange}
+                scroll={{ x: 1186 }}
+                className='logs-table__table'
+            />
+        </ConfigProvider>
     );
 }
