@@ -216,7 +216,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                         return null;
                     })}
                     <Swiper
-                        slidesPerView={1}
+                        slidesPerView={'auto'}
                         spaceBetween={30}
                         loop
                         pagination
