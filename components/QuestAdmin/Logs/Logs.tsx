@@ -13,6 +13,8 @@ interface LogsProps {
 
 export default function Logs({questId, paginatedLogs}: LogsProps) {
     const [logsContent, setLogsContent] = useState<IAnswerLog[]>(paginatedLogs.answer_logs);
+    const [nextPageToken, setNextPageToken] = useState(paginatedLogs.next_page_token);
+    const [previousPageNumber, setPreviousPageNumber] = useState(1);
     const {data: session} = useSession();
 
     const columns: TableProps<IAnswerLog>['columns'] = [
@@ -57,11 +59,16 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     ];
 
     const onPaginationChange = async (pagination: TablePaginationConfig) => {
+        const currentPage = pagination.current ?? 1;
         const params: IPaginatedAnswerLogsParams = {
-            page_no: pagination.current ? pagination.current - 1 : 0,
+            page_id: currentPage - previousPageNumber === 1 ? nextPageToken.toString() : undefined,
+            page_no: currentPage - previousPageNumber !== 1 ? currentPage - 1 : undefined,
+            desc: true,
         };
         const result = await getPaginatedAnswerLogs(questId, session?.accessToken, params) as IPaginatedAnswerLogs;
         setLogsContent(result.answer_logs);
+        setNextPageToken(result.next_page_token);
+        setPreviousPageNumber(pagination.current ?? 1);
     };
 
     return (

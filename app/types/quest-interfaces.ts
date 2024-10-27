@@ -249,4 +249,5 @@ export interface IPaginatedAnswerLogsParams {
     page_size?: number;
     page_id?: string;
     page_no?: number;
+    desc?: boolean;
 }

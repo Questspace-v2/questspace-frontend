@@ -4,6 +4,7 @@ import {
     IAdminLeaderboardResponse,
     IGetAllTeamsResponse,
     IPaginatedAnswerLogs,
+    IPaginatedAnswerLogsParams,
     ITaskGroupsAdminResponse,
 } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
@@ -150,7 +151,10 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         }
 
         if (valueTab === SelectAdminTabs.LOGS) {
-            const data = await getPaginatedAnswerLogs(questData.quest.id, session?.accessToken) as IPaginatedAnswerLogs;
+            const params: IPaginatedAnswerLogsParams = {
+                desc: true,
+            };
+            const data = await getPaginatedAnswerLogs(questData.quest.id, session?.accessToken, params) as IPaginatedAnswerLogs;
             setLogsContent(data);
         }
 
