@@ -1,9 +1,15 @@
+import { getPaginatedAnswerLogs } from '@/app/api/api';
 import { IAnswerLog, IPaginatedAnswerLogs } from '@/app/types/quest-interfaces';
 import { Table } from 'antd';
 import { TableProps } from 'antd/lib';
 import classNames from 'classnames';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
-export default function Logs({paginatedAnswerLogs}: {paginatedAnswerLogs: IPaginatedAnswerLogs}) {
+export default function Logs({questId}: {questId: string}) {
+    const [logsContent, setLogsContent] = useState<IAnswerLog[]>([]);
+    const {data: session} = useSession();
+
     const columns: TableProps<IAnswerLog>['columns'] = [
         {
             title: 'Время',
@@ -29,7 +35,8 @@ export default function Logs({paginatedAnswerLogs}: {paginatedAnswerLogs: IPagin
         {
             title: 'Пользователь',
             dataIndex: 'user',
-            key: 'user'
+            key: 'user',
+            render: (_, record) => record.user ?? '—'
         },
         {
             title: 'Ответ',
@@ -40,12 +47,22 @@ export default function Logs({paginatedAnswerLogs}: {paginatedAnswerLogs: IPagin
         }
     ];
 
-    const dataSource = paginatedAnswerLogs.answer_logs;
+    useEffect(() => {
+        const fetchTable = async () => {
+            const result = await getPaginatedAnswerLogs(questId, session?.accessToken) as IPaginatedAnswerLogs;
+            setLogsContent(result.answer_logs);
+        };
+
+        fetchTable()
+            .catch(err => {
+                throw err;
+            });
+    }, [questId, session?.accessToken]);
 
     return (
         <Table<IAnswerLog> 
             columns={columns} 
-            dataSource={dataSource} 
+            dataSource={logsContent} 
             pagination={false}
             rowKey={(log) => log.answer_time}
             className='logs-table__table'
