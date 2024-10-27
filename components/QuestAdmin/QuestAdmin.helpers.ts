@@ -2,6 +2,7 @@
 export const enum SelectAdminTabs {
     ABOUT = 'about',
     TASKS = 'tasks',
+    LOGS = 'logs',
     TEAMS = 'teams',
     LEADERBOARD = 'leaderboard',
 }

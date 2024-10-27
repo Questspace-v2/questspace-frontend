@@ -7,7 +7,7 @@ import {IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup} from 
 import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
-import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
+import {answerTaskPlayMode, getPaginatedAnswerLogs, takeHintPlayMode} from '@/app/api/api';
 import {useSession} from 'next-auth/react';
 import {useState} from 'react';
 import {useRouter} from 'next/navigation';
@@ -185,6 +185,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         const answerResponse = editMode ?
             {accepted: correctAnswers.includes(answer), text: answer, score: 0} :
             await answerTaskPlayMode(questId, data, session?.accessToken) as ITaskAnswerResponse;
+            await getPaginatedAnswerLogs(questId, session?.accessToken);
         handleAnswerValidation(answerResponse);
     };
 

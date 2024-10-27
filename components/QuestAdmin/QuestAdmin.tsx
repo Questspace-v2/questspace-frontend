@@ -2,6 +2,7 @@
 
 import {
     IAdminLeaderboardResponse,
+    IAnswerLog,
     IGetAllTeamsResponse,
     ITaskGroupsAdminResponse,
 } from '@/app/types/quest-interfaces';
@@ -30,6 +31,7 @@ import dynamic from 'next/dynamic';
 import classNames from 'classnames';
 import Teams from '@/components/QuestAdmin/Teams/Teams';
 import { ITeam } from '@/app/types/user-interfaces';
+import Logs from './Logs/Logs';
 
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
@@ -45,10 +47,60 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
     const teamsTabContent = <Teams teams={teamsContent} questId={questData.quest.id} registrationType={questData.quest.registration_type} />
     const leaderboardTabContent = <Leaderboard questId={questData.quest.id} teams={leaderboardContent}/>;
+
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
     const [isOpenModal, setIsOpenModal] = useState(false);
+
+    const stuff: IAnswerLog[] = [
+        {
+            team_id: "2e89aad5-e2c7-49a8-bda5-fca8638b2905",
+            team: "Bulk)",
+            task_group_id: "642b9132-3092-48fe-aef0-7ee0184a35b2",
+            task_group: "Parrot",
+            task_id: "77c2772e-8e8f-4358-b85f-05de9793dc91",
+            task: "gfgfgfgfg",
+            accepted: true,
+            answer: "fdsfdsfds",
+            answer_time: "2024-10-06T10:40:12.198591Z",
+            user: session?.user.name ?? 'You',
+            user_id: session?.user.id ?? 'You',
+        },
+        {
+            team_id: "2e89aad5-e2c7-49a8-bda5-fca8638b2905",
+            team: "Bulk)",
+            task_group_id: "642b9132-3092-48fe-aef0-7ee0184a35b2",
+            task_group: "Parrot",
+            task_id: "b18e5593-da06-4bf1-8e9f-36c0de3e5562",
+            task: "bgnng",
+            accepted: false,
+            answer: "оорор",
+            answer_time: "2024-10-06T10:56:48.037539Z",
+            user: session?.user.name ?? 'You',
+            user_id: session?.user.id ?? 'You',
+        },
+        {
+            team_id: "2e89aad5-e2c7-49a8-bda5-fca8638b2905",
+            team: "Bulk)",
+            task_group_id: "642b9132-3092-48fe-aef0-7ee0184a35b2",
+            task_group: "Parrot",
+            task_id: "b18e5593-da06-4bf1-8e9f-36c0de3e5562",
+            task: "bgnng",
+            accepted: true,
+            answer: "gnhvnhh",
+            answer_time: "2024-10-06T12:25:28.51756Z",
+            user: session?.user.name ?? 'You',
+            user_id: session?.user.id ?? 'You',
+        }
+    ];
+    const stuffLogs = {
+        answer_logs: stuff,
+        next_page_token: 0,
+        total_pages: 0,
+    };
+
+    const answerLogsTabContent = <Logs paginatedAnswerLogs={stuffLogs} />;
 
     const publishResults = () => finishQuest(questData.quest.id, session?.accessToken);
     const publishResultsButton =
@@ -85,6 +137,10 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         {
             key: 'tasks',
             label: 'Задания',
+        },
+        {
+            key: 'logs',
+            label: 'Логи',
         },
         {
             key: 'teams',
@@ -175,6 +231,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             {selectedTab === SelectAdminTabs.TASKS && tasksTabContent}
             {selectedTab === SelectAdminTabs.TEAMS && teamsTabContent}
             {selectedTab === SelectAdminTabs.LEADERBOARD && leaderboardTabContent}
+            {selectedTab === SelectAdminTabs.LOGS && answerLogsTabContent}
             <DynamicEditTaskGroup
                 questId={questData.quest.id}
                 isOpen={isOpenModal}
