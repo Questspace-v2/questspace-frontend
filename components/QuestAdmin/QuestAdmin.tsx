@@ -3,6 +3,7 @@
 import {
     IAdminLeaderboardResponse,
     IGetAllTeamsResponse,
+    IPaginatedAnswerLogs,
     ITaskGroupsAdminResponse,
 } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
@@ -21,7 +22,7 @@ import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Task/Task.helpers';
 import theme from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import { deleteQuest, finishQuest, getLeaderboardAdmin, getQuestTeams } from '@/app/api/api';
+import { deleteQuest, finishQuest, getLeaderboardAdmin, getPaginatedAnswerLogs, getQuestTeams } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
@@ -42,11 +43,12 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
     const [leaderboardContent, setLeaderboardContent] = useState<IAdminLeaderboardResponse>({results: []});
     const [teamsContent, setTeamsContent] = useState<ITeam[]>([]);
+    const [logsContent, setLogsContent] = useState<IPaginatedAnswerLogs>({ answer_logs: [], total_pages: 1, next_page_token: 0 });
     const aboutTabContent = <EditQuest questData={contextData.quest} setContextData={setContextData} />;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
     const teamsTabContent = <Teams teams={teamsContent} questId={questData.quest.id} registrationType={questData.quest.registration_type} />
     const leaderboardTabContent = <Leaderboard questId={questData.quest.id} teams={leaderboardContent}/>;
-    const answerLogsTabContent = <Logs questId={questData.quest.id} />;
+    const answerLogsTabContent = <Logs questId={questData.quest.id} paginatedLogs={logsContent} />;
 
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
@@ -145,6 +147,11 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
         if (valueTab === SelectAdminTabs.TEAMS) {
             const data = await getQuestTeams(questData.quest.id) as IGetAllTeamsResponse;
             setTeamsContent(data?.teams ?? []);
+        }
+
+        if (valueTab === SelectAdminTabs.LOGS) {
+            const data = await getPaginatedAnswerLogs(questData.quest.id, session?.accessToken) as IPaginatedAnswerLogs;
+            setLogsContent(data);
         }
 
         setSelectedTab(valueTab);
