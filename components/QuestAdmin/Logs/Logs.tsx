@@ -6,6 +6,7 @@ import { TableProps } from 'antd/lib';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
+import Filters, { FilterSelectOptions } from './Filters/Filters';
 
 interface LogsProps {
     questId: string;
@@ -17,6 +18,21 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     const [nextPageToken, setNextPageToken] = useState(paginatedLogs.next_page_token);
     const [previousPageNumber, setPreviousPageNumber] = useState(1);
     const {data: session} = useSession();
+
+    const getFilterOption = (logs: IAnswerLog[], field: keyof IAnswerLog) => {
+        const result = Array.from(new Set(logs.map(item => item[field].toString())));
+        return result.map(item => ({
+            value: item,
+            label: item,
+        }));
+    };
+
+    const [filterSelectOptions, setFilterSelectOptions] = useState<FilterSelectOptions>({
+        groups: getFilterOption(paginatedLogs.answer_logs, 'task_group'),
+        tasks: getFilterOption(paginatedLogs.answer_logs, 'task'),
+        teams: getFilterOption(paginatedLogs.answer_logs, 'team'),
+        users: getFilterOption(paginatedLogs.answer_logs, 'user'),
+    });
 
     const columns: TableProps<IAnswerLog>['columns'] = [
         {
@@ -94,10 +110,17 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
         setLogsContent(result.answer_logs);
         setNextPageToken(result.next_page_token);
         setPreviousPageNumber(pagination.current ?? 1);
+        setFilterSelectOptions({
+            groups: getFilterOption(result.answer_logs, 'task_group'),
+            tasks: getFilterOption(result.answer_logs, 'task'),
+            teams: getFilterOption(result.answer_logs, 'team'),
+            users: getFilterOption(result.answer_logs, 'user'),
+        });
     };
 
     return (
         <ConfigProvider renderEmpty={renderEmpty}>
+            <Filters options={filterSelectOptions} />
             <Table<IAnswerLog> 
                 columns={columns} 
                 dataSource={logsContent} 
