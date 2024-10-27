@@ -20,7 +20,7 @@ export interface IQuest {
 
 export interface ITask {
     correct_answers: string[],
-    hints: IHint[] | string[],
+    hints?: IHint[] | string[],
     id?: string,
     media_link?: string,
     media_links?: string[],
@@ -222,5 +222,4 @@ export interface ITaskPlayMode {
     reward: number;
     score: number;
     verification: string;
-    verification_type: string;
 }

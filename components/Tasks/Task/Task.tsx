@@ -61,11 +61,11 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
 
-    const transformHints = () => hints.map(hint => ({
+    const transformHints = () => hints?.map(hint => ({
         taken: false,
         text: hint as string
     }));
-    const objectHints = hints.length && typeof hints[0] === 'string' ? transformHints() : hints as {taken: boolean, text?: string}[];
+    const objectHints = hints?.length && typeof hints[0] === 'string' ? transformHints() : hints as {taken: boolean, text?: string}[];
 
     const editMode = mode === TasksMode.EDIT;
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
@@ -244,9 +244,9 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     </div>
                 )
             )}
-            {hints.length > 0 && (
+            {hints && hints?.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
-                    {objectHints.map((hint, index) =>
+                    {objectHints?.map((hint, index) =>
                         <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${takenHints[index] || hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
                             {openConfirm && index === openConfirmIndex ? (
                                 <>
