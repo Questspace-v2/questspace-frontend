@@ -50,3 +50,23 @@
         }
     }
 }
+
+.empty__logs-not-found.ant-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 0;
+    color: var(--text-default);
+
+    .ant-empty-image {
+        font-size: 48px;
+        opacity: 0.5;
+        height: auto;
+        margin: 0;
+    }
+
+    .ant-empty-description {
+        color: var(--text-default);
+    }
+}
