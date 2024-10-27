@@ -1,6 +1,6 @@
 import { getPaginatedAnswerLogs } from '@/app/api/api';
 import { IAnswerLog, IPaginatedAnswerLogs } from '@/app/types/quest-interfaces';
-import { Table } from 'antd';
+import { Table, Tooltip } from 'antd';
 import { TableProps } from 'antd/lib';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
@@ -25,7 +25,11 @@ export default function Logs({questId}: {questId: string}) {
         {
             title: 'Задание',
             dataIndex: 'task',
-            key: 'task'
+            key: 'task',
+            render: (task: string) =>
+                <Tooltip title={task}>
+                    <span>{task}</span>
+                </Tooltip>
         },
         {
             title: 'Команда',

@@ -10,6 +10,7 @@
         color: var(--text-secondary);
         line-height: 22px;
         font-weight: 400;
+        padding: 5px 16px;
     }
 
     .ant-table-thead tr th::before {
@@ -28,5 +29,24 @@
 .logs-table__table {
     .ant-table-tbody > tr:last-child > td {
         border: none
+    }
+
+    .ant-table-tbody > tr > td.ant-table-cell {
+        padding: 5px 16px;
+        max-width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+.ant-tooltip.ant-tooltip-placement-top {
+    .ant-tooltip-content {
+        .ant-tooltip-inner {
+            font-family: $font-manrope;
+            font-weight: 200;
+            font-size: 14px;
+            line-height: 22px;
+        }
     }
 }
