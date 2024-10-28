@@ -1,4 +1,29 @@
+@use "../../../../globals" as *;
+
 .answer-logs__filters {
+    width: 100%;
     display: flex;
     gap: 8px;
+    align-items: center;
+    font-family: $font-manrope;
+    padding: 8px 0 16px;
+
+    .ant-select.answer-logs__filter {
+        .ant-select-selector {
+            border-radius: 2px;
+            width: 200px;
+            background-color: transparent;
+
+            .ant-select-selection-placeholder {
+                color: var(--text-secondary);
+            }
+        }
+    }
+}
+
+.answer-logs__filters-title {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 22px;
+    width: 144px;
 }

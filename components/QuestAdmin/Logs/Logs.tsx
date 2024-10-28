@@ -6,6 +6,7 @@ import { TableProps } from 'antd/lib';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
+import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import Filters, { FilterSelectOptions } from './Filters/Filters';
 
 interface LogsProps {
@@ -119,17 +120,19 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     };
 
     return (
-        <ConfigProvider renderEmpty={renderEmpty}>
-            <Filters options={filterSelectOptions} />
-            <Table<IAnswerLog> 
-                columns={columns} 
-                dataSource={logsContent} 
-                rowKey={(log) => log.answer_time}
-                pagination={{ total: 50 * paginatedLogs.total_pages, pageSize: 50, showSizeChanger: false }}
-                onChange={onPaginationChange}
-                scroll={{ x: 1186 }}
-                className='logs-table__table'
-            />
-        </ConfigProvider>
+        <ContentWrapper>
+            <ConfigProvider renderEmpty={renderEmpty}>
+                <Filters options={filterSelectOptions} />
+                <Table<IAnswerLog> 
+                    columns={columns} 
+                    dataSource={logsContent} 
+                    rowKey={(log) => log.answer_time}
+                    pagination={{ total: 50 * paginatedLogs.total_pages, pageSize: 50, showSizeChanger: false }}
+                    onChange={onPaginationChange}
+                    scroll={{ x: 1186 }}
+                    className='logs-table__table'
+                />
+            </ConfigProvider>
+        </ContentWrapper>
     );
 }
