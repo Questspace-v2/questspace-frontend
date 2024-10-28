@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { Select, Tabs, TabsProps } from 'antd';
+import { ConfigProvider, Select, Tabs, TabsProps } from 'antd';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import {
     createQuestButton,
@@ -14,6 +14,7 @@ import QuestCardsList from '@/components/QuestTabs/QuestCardsList/QuestCardsList
 import { useInView } from 'react-intersection-observer';
 import { DownOutlined } from '@ant-design/icons';
 import { getClassnames } from '@/lib/utils/utils';
+import questTabsSelectThemeConfig from './questTabsSelectTheme';
 
 export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = true} : {fetchedAllQuests: IQuest[], nextPageId: string, isAuthorized?: boolean}) {
     const { xs} = useBreakpoint();
@@ -114,20 +115,22 @@ export default function QuestTabs({fetchedAllQuests, nextPageId, isAuthorized = 
                     <div
                         className={'quest-tabs__header'}
                     >
-                        <Select
-                            tabIndex={0}
-                            defaultValue={selectedTab}
-                            defaultActiveFirstOption={false}
-                            style={{
-                                width: 'max-content',
-                                pointerEvents: isAuthorized ? 'auto' : 'none'
-                            }}
-                            dropdownStyle={{width: 'max-content'}}
-                            suffixIcon={isAuthorized ? <DownOutlined /> : <div/>}
-                            variant={'borderless'}
-                            options={selectOptions}
-                            onSelect={handleSelectTab}
-                        />
+                        <ConfigProvider theme={questTabsSelectThemeConfig}>
+                            <Select
+                                tabIndex={0}
+                                defaultValue={selectedTab}
+                                defaultActiveFirstOption={false}
+                                style={{
+                                    width: 'max-content',
+                                    pointerEvents: isAuthorized ? 'auto' : 'none'
+                                }}
+                                dropdownStyle={{width: 'max-content'}}
+                                suffixIcon={isAuthorized ? <DownOutlined /> : <div/>}
+                                variant={'borderless'}
+                                options={selectOptions}
+                                onSelect={handleSelectTab}
+                            />
+                        </ConfigProvider>
                         {createQuestButton}
                     </div>
                     <div className={'quest-tabpane'}>
