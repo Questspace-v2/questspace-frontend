@@ -154,8 +154,13 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             const params: IPaginatedAnswerLogsParams = {
                 desc: true,
             };
+            const teamsData = await getQuestTeams(questData.quest.id) as IGetAllTeamsResponse;
             const data = await getPaginatedAnswerLogs(questData.quest.id, session?.accessToken, params) as IPaginatedAnswerLogs;
             setLogsContent(data);
+            setContextData(prevState => ({
+                ...prevState,
+                teams: teamsData.teams,
+            }));
         }
 
         setSelectedTab(valueTab);

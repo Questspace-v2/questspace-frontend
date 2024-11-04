@@ -7,7 +7,8 @@ import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
 import { useCallback, useEffect, useState } from 'react';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import Filters, { FilterSelectOptions, Option, SelectedFiltersState } from './Filters/Filters';
+import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
+import Filters, { SelectedFiltersState } from './Filters/Filters';
 
 interface LogsProps {
     questId: string;
@@ -18,65 +19,93 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     const [logsContent, setLogsContent] = useState<IAnswerLog[]>(paginatedLogs.answer_logs);
     const [nextPageToken, setNextPageToken] = useState(paginatedLogs.next_page_token);
     const [previousPageNumber, setPreviousPageNumber] = useState(1);
+    const [totalPages, setTotalPages] = useState(paginatedLogs.total_pages);
     const {data: session} = useSession();
     const [selectedFilters, setSelectedFilters] = useState<SelectedFiltersState>({});
+    const { data: contextData } = useTasksContext()!;
 
-    const getFilterId = useCallback((logField: keyof IAnswerLog, logFieldValue: string) =>
-        logsContent.filter(item => item[logField] === logFieldValue)[0][logField].toString(), [logsContent]);
+    const getFilterId = useCallback((logFieldValue: string) => {
+        const result = logFieldValue.split('_');
+        return result[result.length - 1];
+    }, []);
+
+    const queryParams: IPaginatedAnswerLogsParams = {
+        desc: true,
+        task_group: selectedFilters.group ? getFilterId(selectedFilters.group) : undefined,
+        task: selectedFilters.task ? getFilterId(selectedFilters.task) : undefined,
+        team: selectedFilters.team ? getFilterId(selectedFilters.team) : undefined,
+        user: selectedFilters.user ? getFilterId(selectedFilters.user) : undefined,
+    };
+
+    const onPaginationChange = async (pagination: TablePaginationConfig) => {
+        const currentPage = pagination.current ?? 1;
+        const params: IPaginatedAnswerLogsParams = {
+            ...queryParams,
+            page_id: currentPage - previousPageNumber === 1 ? nextPageToken.toString() : undefined,
+            page_no: currentPage - previousPageNumber !== 1 ? currentPage - 1 : undefined,
+            desc: true,
+        };
+        const result = await getPaginatedAnswerLogs(questId, session?.accessToken, params) as IPaginatedAnswerLogs;
+        setLogsContent(result.answer_logs);
+        setNextPageToken(result.next_page_token);
+        setTotalPages(result.total_pages);
+        setPreviousPageNumber(pagination.current ?? 1);
+    };
 
     useEffect(() => {
         const filterLogs = async () => {
-            const queryParams: Partial<IPaginatedAnswerLogsParams> = {};
             if (selectedFilters.group) {
-                queryParams.task_group_id = getFilterId('task_group', selectedFilters.group);
+                queryParams.task_group = getFilterId(selectedFilters.group);
             }
-            await getPaginatedAnswerLogs(questId, session?.accessToken, queryParams);
+            if (selectedFilters.task) {
+                queryParams.task = getFilterId(selectedFilters.task);
+            }
+            if (selectedFilters.team) {
+                queryParams.team = getFilterId(selectedFilters.team);
+            }
+            if (selectedFilters.user) {
+                queryParams.user = getFilterId(selectedFilters.user);
+            }
+            const result = await getPaginatedAnswerLogs(questId, session?.accessToken, queryParams) as IPaginatedAnswerLogs;
+            setLogsContent(result.answer_logs);
+            setNextPageToken(result.next_page_token);
+            setTotalPages(result.total_pages);
         };
 
         filterLogs().catch(err => {
             throw err;
         });
-    }, [selectedFilters, getFilterId, questId, session?.accessToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedFilters]);
 
-    const selectUniqueValues = (options: Option[]) => {
-        const uniqueBuffer = new Set<string>();
-        const result: Option[] = [];
-        options.forEach(item => {
-            if (!uniqueBuffer.has(item.value)) {
-                result.push(item);
-                uniqueBuffer.add(item.value);
-            }
-        });
-
-        return result;
+    const getOptions = () => {
+        const groups = contextData.task_groups.map(item => ({
+            value: `${item.name}_${item.id}`,
+            label: item.name,
+        }));
+        const tasks = contextData.task_groups.map(item =>
+            item.tasks.map(task => ({
+                value: `${task.name}_${task.id}`,
+                label: task.name,
+            }))).flat();
+        const teams = contextData.teams?.map(item => ({
+            value: `${item.name}_${item.id}`,
+            label: item.name,
+        })) ?? [];
+        const users = contextData.teams?.map(item => 
+            item.members.map(member => ({
+                value: `${member.username}_${member.id}`,
+                label: member.username,
+            }))).flat() ?? [];
+        return {
+            groups,
+            tasks,
+            teams,
+            users,
+        };
     };
 
-    const getFilterOption = (logs: IAnswerLog[], field: 'task_group' | 'task' | 'team' | 'user') => {
-        const result = logs.map(item => ({
-            task_group_id: item.task_group_id,
-            task_group: item.task_group,
-            task_id: item.task_id,
-            task: item.task,
-            team_id: item.team_id,
-            team: item.team,
-            user_id: item.user_id,
-            user: item.user,
-        }));
-        const fieldId: 'task_group_id' | 'task_id' | 'team_id' | 'user_id' = `${field}_id`
-        const options = result.map(item => ({
-            value: `${(item as IAnswerLog)[field]}_${(item as IAnswerLog)[fieldId]}`,
-            label: (item as IAnswerLog)[field].toString(),
-        }));
-        
-        return selectUniqueValues(options);
-    };
-
-    const [filterSelectOptions, setFilterSelectOptions] = useState<FilterSelectOptions>({
-        groups: getFilterOption(paginatedLogs.answer_logs, 'task_group'),
-        tasks: getFilterOption(paginatedLogs.answer_logs, 'task'),
-        teams: getFilterOption(paginatedLogs.answer_logs, 'team'),
-        users: getFilterOption(paginatedLogs.answer_logs, 'user'),
-    });
+    const filterSelectOptions = getOptions();
 
     const columns: TableProps<IAnswerLog>['columns'] = [
         {
@@ -143,25 +172,6 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
             </span>} />
     );
 
-    const onPaginationChange = async (pagination: TablePaginationConfig) => {
-        const currentPage = pagination.current ?? 1;
-        const params: IPaginatedAnswerLogsParams = {
-            page_id: currentPage - previousPageNumber === 1 ? nextPageToken.toString() : undefined,
-            page_no: currentPage - previousPageNumber !== 1 ? currentPage - 1 : undefined,
-            desc: true,
-        };
-        const result = await getPaginatedAnswerLogs(questId, session?.accessToken, params) as IPaginatedAnswerLogs;
-        setLogsContent(result.answer_logs);
-        setNextPageToken(result.next_page_token);
-        setPreviousPageNumber(pagination.current ?? 1);
-        setFilterSelectOptions({
-            groups: getFilterOption(result.answer_logs, 'task_group'),
-            tasks: getFilterOption(result.answer_logs, 'task'),
-            teams: getFilterOption(result.answer_logs, 'team'),
-            users: getFilterOption(result.answer_logs, 'user'),
-        });
-    };
-
     return (
         <ContentWrapper>
             <ConfigProvider renderEmpty={renderEmpty}>
@@ -173,7 +183,7 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
                     columns={columns} 
                     dataSource={logsContent} 
                     rowKey={(log) => log.answer_time}
-                    pagination={{ total: 50 * paginatedLogs.total_pages, pageSize: 50, showSizeChanger: false }}
+                    pagination={{ total: 50 * (totalPages + 1), pageSize: 50, showSizeChanger: false }}
                     onChange={onPaginationChange}
                     scroll={{ x: 1186 }}
                     className='logs-table__table'

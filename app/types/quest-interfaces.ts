@@ -115,7 +115,8 @@ export interface ITaskGroupsAdminResponse {
 
 export interface IQuestTaskGroups {
     quest: IQuest,
-    task_groups: ITaskGroup[]
+    task_groups: ITaskGroup[],
+    teams?: ITeam[]
 }
 
 export interface IFilteredQuests {
@@ -250,8 +251,8 @@ export interface IPaginatedAnswerLogsParams {
     page_id?: string;
     page_no?: number;
     desc?: boolean;
-    task_group_id?: string;
-    task_id?: string;
-    user_id?: string;
-    team_id?: string;
+    task_group?: string;
+    task?: string;
+    user?: string;
+    team?: string;
 }
