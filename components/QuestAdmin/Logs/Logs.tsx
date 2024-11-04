@@ -5,9 +5,9 @@ import { ConfigProvider, Empty, GetProp, Table, TablePaginationConfig, Tooltip }
 import { TableProps } from 'antd/lib';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
-import Filters, { FilterSelectOptions } from './Filters/Filters';
+import Filters, { FilterSelectOptions, Option, SelectedFiltersState } from './Filters/Filters';
 
 interface LogsProps {
     questId: string;
@@ -19,13 +19,56 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     const [nextPageToken, setNextPageToken] = useState(paginatedLogs.next_page_token);
     const [previousPageNumber, setPreviousPageNumber] = useState(1);
     const {data: session} = useSession();
+    const [selectedFilters, setSelectedFilters] = useState<SelectedFiltersState>({});
 
-    const getFilterOption = (logs: IAnswerLog[], field: keyof IAnswerLog) => {
-        const result = Array.from(new Set(logs.map(item => item[field].toString())));
-        return result.map(item => ({
-            value: item,
-            label: item,
+    const getFilterId = useCallback((logField: keyof IAnswerLog, logFieldValue: string) =>
+        logsContent.filter(item => item[logField] === logFieldValue)[0][logField].toString(), [logsContent]);
+
+    useEffect(() => {
+        const filterLogs = async () => {
+            const queryParams: Partial<IPaginatedAnswerLogsParams> = {};
+            if (selectedFilters.group) {
+                queryParams.task_group_id = getFilterId('task_group', selectedFilters.group);
+            }
+            await getPaginatedAnswerLogs(questId, session?.accessToken, queryParams);
+        };
+
+        filterLogs().catch(err => {
+            throw err;
+        });
+    }, [selectedFilters, getFilterId, questId, session?.accessToken]);
+
+    const selectUniqueValues = (options: Option[]) => {
+        const uniqueBuffer = new Set<string>();
+        const result: Option[] = [];
+        options.forEach(item => {
+            if (!uniqueBuffer.has(item.value)) {
+                result.push(item);
+                uniqueBuffer.add(item.value);
+            }
+        });
+
+        return result;
+    };
+
+    const getFilterOption = (logs: IAnswerLog[], field: 'task_group' | 'task' | 'team' | 'user') => {
+        const result = logs.map(item => ({
+            task_group_id: item.task_group_id,
+            task_group: item.task_group,
+            task_id: item.task_id,
+            task: item.task,
+            team_id: item.team_id,
+            team: item.team,
+            user_id: item.user_id,
+            user: item.user,
         }));
+        const fieldId: 'task_group_id' | 'task_id' | 'team_id' | 'user_id' = `${field}_id`
+        const options = result.map(item => ({
+            value: `${(item as IAnswerLog)[field]}_${(item as IAnswerLog)[fieldId]}`,
+            label: (item as IAnswerLog)[field].toString(),
+        }));
+        
+        return selectUniqueValues(options);
     };
 
     const [filterSelectOptions, setFilterSelectOptions] = useState<FilterSelectOptions>({
@@ -122,7 +165,10 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     return (
         <ContentWrapper>
             <ConfigProvider renderEmpty={renderEmpty}>
-                <Filters options={filterSelectOptions} />
+                <Filters 
+                    options={filterSelectOptions}
+                    setSelectedFilters={setSelectedFilters}
+                />
                 <Table<IAnswerLog> 
                     columns={columns} 
                     dataSource={logsContent} 
