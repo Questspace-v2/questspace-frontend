@@ -5,17 +5,19 @@ import { ConfigProvider, Empty, GetProp, Table, TablePaginationConfig, Tooltip }
 import { TableProps } from 'antd/lib';
 import classNames from 'classnames';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
-import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import Filters, { SelectedFiltersState } from './Filters/Filters';
+import InfoAlert from './InfoAlert/InfoAlert';
 
 interface LogsProps {
     questId: string;
     paginatedLogs: IPaginatedAnswerLogs;
+    isInfoAlertHidden: boolean;
+    setIsInfoAlertHidden: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function Logs({questId, paginatedLogs}: LogsProps) {
+export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsInfoAlertHidden}: LogsProps) {
     const [logsContent, setLogsContent] = useState<IAnswerLog[]>(paginatedLogs.answer_logs);
     const [nextPageToken, setNextPageToken] = useState(paginatedLogs.next_page_token);
     const [previousPageNumber, setPreviousPageNumber] = useState(1);
@@ -173,22 +175,21 @@ export default function Logs({questId, paginatedLogs}: LogsProps) {
     );
 
     return (
-        <ContentWrapper>
-            <ConfigProvider renderEmpty={renderEmpty}>
-                <Filters 
-                    options={filterSelectOptions}
-                    setSelectedFilters={setSelectedFilters}
-                />
-                <Table<IAnswerLog> 
-                    columns={columns} 
-                    dataSource={logsContent} 
-                    rowKey={(log) => log.answer_time}
-                    pagination={{ total: 50 * (totalPages + 1), pageSize: 50, showSizeChanger: false }}
-                    onChange={onPaginationChange}
-                    scroll={{ x: 1186 }}
-                    className='logs-table__table'
-                />
-            </ConfigProvider>
-        </ContentWrapper>
+        <ConfigProvider renderEmpty={renderEmpty}>
+            {!isInfoAlertHidden && <InfoAlert setIsInfoAlertHidden={setIsInfoAlertHidden} />}
+            <Filters 
+                options={filterSelectOptions}
+                setSelectedFilters={setSelectedFilters}
+            />
+            <Table<IAnswerLog> 
+                columns={columns} 
+                dataSource={logsContent} 
+                rowKey={(log) => log.answer_time}
+                pagination={{ total: 50 * (totalPages + 1), pageSize: 50, showSizeChanger: false }}
+                onChange={onPaginationChange}
+                scroll={{ x: 1186 }}
+                className='logs-table__table'
+            />
+        </ConfigProvider>
     );
 }

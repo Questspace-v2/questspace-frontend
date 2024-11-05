@@ -45,11 +45,17 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const [leaderboardContent, setLeaderboardContent] = useState<IAdminLeaderboardResponse>({results: []});
     const [teamsContent, setTeamsContent] = useState<ITeam[]>([]);
     const [logsContent, setLogsContent] = useState<IPaginatedAnswerLogs>({ answer_logs: [], total_pages: 1, next_page_token: 0 });
+    const [isInfoAlertHidden, setIsInfoAlertHidden] = useState(false);
     const aboutTabContent = <EditQuest questData={contextData.quest} setContextData={setContextData} />;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
     const teamsTabContent = <Teams teams={teamsContent} questId={questData.quest.id} registrationType={questData.quest.registration_type} />
     const leaderboardTabContent = <Leaderboard questId={questData.quest.id} teams={leaderboardContent}/>;
-    const answerLogsTabContent = <Logs questId={questData.quest.id} paginatedLogs={logsContent} />;
+    const answerLogsTabContent = <Logs
+        questId={questData.quest.id}
+        paginatedLogs={logsContent}
+        isInfoAlertHidden={isInfoAlertHidden}
+        setIsInfoAlertHidden={setIsInfoAlertHidden}
+    />;
 
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
@@ -193,12 +199,12 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
                     {getTabBarExtraButton()}
                 </ConfigProvider>
             </div>
+            {selectedTab === SelectAdminTabs.LOGS && answerLogsTabContent}
         </ContentWrapper>
             {selectedTab === SelectAdminTabs.ABOUT && aboutTabContent}
             {selectedTab === SelectAdminTabs.TASKS && tasksTabContent}
             {selectedTab === SelectAdminTabs.TEAMS && teamsTabContent}
             {selectedTab === SelectAdminTabs.LEADERBOARD && leaderboardTabContent}
-            {selectedTab === SelectAdminTabs.LOGS && answerLogsTabContent}
             <DynamicEditTaskGroup
                 questId={questData.quest.id}
                 isOpen={isOpenModal}
