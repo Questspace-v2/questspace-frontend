@@ -86,8 +86,8 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
             pub_time: new Date().toISOString()
         };
 
-        if (task.media_link) {
-            copiedTask.media_link = task.media_link;
+        if (task.media_links) {
+            copiedTask.media_links = task.media_links;
         }
 
         taskGroup.tasks.push(copiedTask);
