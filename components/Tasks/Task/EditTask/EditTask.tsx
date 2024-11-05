@@ -293,9 +293,6 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
         const fileLinks = await getFileLinks();
         newTask.media_links = fileLinks;
-        if (fileLinks.length === 0) {
-            newTask.media_link = '';
-        }
 
         if (task) {
             const index = taskGroup.tasks.indexOf(task);

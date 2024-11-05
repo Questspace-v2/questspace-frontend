@@ -48,7 +48,6 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         name,
         question,
         hints,
-        media_link: mediaLink,
         media_links: mediaLinks,
         correct_answers: correctAnswers,
         id: taskId,
@@ -205,7 +204,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                 {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
                 <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
             </div>
-            {mediaLinks && mediaLinks.length > 0 ? (
+            {mediaLinks && mediaLinks.length > 0 && (
                 <>
                     {mediaLinks.map(link => {
                         if (link.split('__')[1]?.endsWith('mp3') || link.split('__')[1]?.endsWith('wav')) {
@@ -237,12 +236,6 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                         })}
                     </Swiper>
                 </>
-            ) : (
-                mediaLink && (
-                    <div className={'task__image-part task-image__container'}>
-                        <Image src={mediaLink} alt={'task image'} width={300} height={300}/>
-                    </div>
-                )
             )}
             {hints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
