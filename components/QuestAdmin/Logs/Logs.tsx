@@ -185,7 +185,7 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
                 columns={columns} 
                 dataSource={logsContent} 
                 rowKey={(log) => log.answer_time}
-                pagination={{ total: 50 * (totalPages + 1), pageSize: 50, showSizeChanger: false }}
+                pagination={{ total: 50 * totalPages, pageSize: 50, showSizeChanger: false }}
                 onChange={onPaginationChange}
                 scroll={{ x: 1186 }}
                 className='logs-table__table'
