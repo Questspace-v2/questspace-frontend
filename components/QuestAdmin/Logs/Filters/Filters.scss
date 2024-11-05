@@ -27,6 +27,15 @@
     .answer-logs__filters-title {
         width: auto;
     }
+
+    .answer-logs__filters {
+        .ant-select.ant-select-outlined.answer-logs__filter {
+            width: 25%;
+            .ant-select-selector {
+                width: 100%;
+            }
+        }
+    }
 }
 
 @media screen and (max-width: $m-breakpoint-639) {
@@ -34,7 +43,7 @@
         flex-direction: column;
         align-items: flex-start;
         width: 100%;
-        .ant-select.answer-logs__filter {
+        .ant-select.ant-select-outlined.answer-logs__filter {
             width: 100%;
             .ant-select-selector {
                 width: 100%;
