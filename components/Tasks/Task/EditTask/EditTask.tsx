@@ -25,7 +25,7 @@ import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
 import {
-    IBulkEditTaskGroups,
+    IBulkEditTaskGroups, IHint,
     ITask,
     ITaskGroup,
     ITaskGroupsAdminResponse,
@@ -77,6 +77,7 @@ export interface TaskForm {
     taskName: string,
     taskText: string,
     hints: string[],
+    hintsFull: IHint[],
     answers: string[],
     taskPoints: number
 }
@@ -172,7 +173,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 question,
                 reward,
                 correct_answers: correctAnswers,
-                hints
+                hints,
+                hints_full: hintsFull,
             } = task;
 
             const formProps: TaskForm = {
@@ -180,6 +182,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 taskText: question,
                 taskPoints: reward,
                 hints: hints as string[],
+                hintsFull,
                 answers: correctAnswers
             };
 
@@ -273,7 +276,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
         const fields = form.getFieldsValue();
-        const {taskName, taskText, taskPoints, hints, answers} = fields;
+        console.log(fields)
+        const {taskName, taskText, taskPoints, hints, hintsFull, answers} = fields;
         const pubTime = new Date();
 
         const formData = await handleValidation();
@@ -287,6 +291,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             question: taskText,
             correct_answers: answers.filter(answer => answer),
             hints: hints && hints.some(item => item) ? hints.filter(hint => hint) : [],
+            hints_full: hintsFull && hintsFull.some(item => item.text) ?
+                hintsFull.filter(hint => hint?.text).map((hint => ({
+                        ...hint,
+                        penalty: {
+                            percent: 20
+                        },
+                    }))) :
+                [],
             reward: taskPoints,
             verification: 'auto'
         };
@@ -296,6 +308,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
 
         if (task) {
             const index = taskGroup.tasks.indexOf(task);
+            console.log(index)
             taskGroup.tasks[index] = newTask;
             taskGroups[taskGroupIndex] = taskGroup;
 
@@ -553,18 +566,47 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             <span>Подсказки (max 3)<span className={'light-description'}><br/>поддерживает Markdown</span></span>
                         </Col>
                         <Col flex={'auto'} className={'edit-task__hints-list'}>
-                            <Form.List name={'hints'}>
+                            <Form.List name={'hintsFull'}>
                                 {(fields, { add, remove }) => (
                                     <>
-                                        {fields.map((field) => (
-                                            <Form.Item key={field.key}>
-                                                <Form.Item key={field.key} name={field.name}>
-                                                    <Input
-                                                        placeholder={'Введите подсказку'}
-                                                        suffix={<DeleteOutlined onClick={() => remove(field.name)}/>}
+                                        {fields.map(({ key, name, ...restField }) => (
+                                            <div className={'task-hint__wrapper'} key={key}>
+                                                <div className={'task-hint__name'}>
+                                                    <Form.Item
+                                                        name={[name, 'name']}
+                                                        {...restField}
+                                                        className={classNames('task-hint__form-item')}
+                                                    >
+                                                        <Input
+                                                            placeholder={`Подсказка ${name + 1}`}
+                                                        />
+                                                    </Form.Item>
+                                                    <Button danger onClick={() => remove(name)}>
+                                                        <DeleteOutlined />
+                                                    </Button>
+                                                </div>
+                                                <Form.Item
+                                                    name={[name, 'text']}
+                                                    {...restField}
+                                                    className={classNames('task-hint__form-item')}
+                                                >
+                                                    <TextArea
+                                                        style={{resize: 'none', width: '100%'}}
+                                                        placeholder={'Текст подсказки'}
                                                     />
                                                 </Form.Item>
-                                            </Form.Item>
+                                                {/* <Form.Item */}
+                                                {/*     key={key} */}
+                                                {/*     name={[name, 'penalty']} */}
+                                                {/*     {...restField} */}
+                                                {/*     className={classNames('task-hint__form-item')} */}
+                                                {/* > */}
+                                                {/*     <Input */}
+                                                {/*         placeholder={'Введите подсказку'} */}
+                                                {/*     /> */}
+                                                {/*     {key} {name} */}
+                                                {/* </Form.Item> */}
+                                            </div>
                                         ))}
                                         <Form.Item>
                                             <Button

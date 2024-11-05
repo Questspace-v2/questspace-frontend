@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import {uid} from '@/lib/utils/utils';
 import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
-import {IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup} from '@/app/types/quest-interfaces';
+import { IHint, IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
 import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
@@ -54,17 +54,18 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         answer: teamAnswer,
         score,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        reward
+        reward,
+        hints_full: hintsFull
     } = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
 
-    const transformHints = () => hints.map(hint => ({
+    const transformHints = () => hintsFull.map(hint => ({
+        ...hint,
         taken: false,
-        text: hint as string
     }));
-    const objectHints = hints.length && typeof hints[0] === 'string' ? transformHints() : hints as {taken: boolean, text?: string}[];
+    const objectHints = hintsFull.length && hintsFull[0].text ? transformHints() : hintsFull;
 
     const editMode = mode === TasksMode.EDIT;
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
@@ -237,7 +238,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     </Swiper>
                 </>
             )}
-            {hints.length > 0 && (
+            {hintsFull && hintsFull.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
                         <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${takenHints[index] || hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
@@ -245,7 +246,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                                 <>
                                     <div className={'hint__text-part'}>
                                         <span className={'hint__title'}>Взять подсказку?</span>
-                                        <span className={'hint__text'}>Вы потеряете 20% баллов</span>
+                                        <span className={'hint__text'}>{hint.penalty?.percent ? `${hint.penalty?.percent}%` : `${hint.penalty?.score} баллов`} от стоимости задачи</span>
                                     </div>
                                     <div className={'hint__confirm-buttons'}>
                                         <Button type={'primary'} onClick={() => handleTakeHint(index)}>Да</Button>
@@ -254,7 +255,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                                 </>
                             ) : (
                                 <>
-                                    <span className={'hint__title'}>Подсказка {index + 1}</span>
+                                    <span className={'hint__title'}>{hint.name || `Подсказка ${index + 1}`}</span>
                                     {takenHints[index] || hint.taken ?
                                         <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{hint?.text}</Markdown> :
                                         <Button type={'link'} onClick={() => {

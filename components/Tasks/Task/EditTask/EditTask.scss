@@ -127,6 +127,34 @@
         padding-top: 16px;
         border-top: 1px solid var(--stroke-secondary);
     }
+
+    .task-hint__wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
+        gap: 4px;
+        border-radius: 4px;
+        background: var(--background-default);
+
+        .task-hint__name {
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            width: 100%;
+
+            .ant-form-item {
+                width: 100%;
+            }
+        }
+
+        input, button, textarea {
+            background: var(--background-primary) !important;
+        }
+
+        > .task-hint__form-item.ant-form-item:not(.ant-form-item:first-child) {
+            margin: 0;
+        }
+    }
 }
 
 .ant-modal-root .ant-modal.edit-task__modal {
