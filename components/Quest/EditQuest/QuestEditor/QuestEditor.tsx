@@ -92,7 +92,10 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const [teamCapacity, setTeamCapacity] = useState(initialTeamCapacity ?? 3);
     const [teamsAmount, setTeamsAmount] = useState((form.getFieldValue('maxTeamsAmount') || 3) as number);
     const [noTeamsLimit, setNoTeamsLimit] = useState(!form.getFieldValue('maxTeamsAmount'));
-    const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(false);
+    const registrationEqualsStart =
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+        (form.getFieldValue('registrationDeadline') ?? '').toString() === (form.getFieldValue('startTime') ?? '').toString();
+    const [registrationDeadlineChecked, setRegistrationDeadlineChecked] = useState(isNewQuest ? false : registrationEqualsStart);
     const [messageApi, contextHolder] = message.useMessage();
     const { data: sessionData } = useSession();
     const accessToken = sessionData?.accessToken;

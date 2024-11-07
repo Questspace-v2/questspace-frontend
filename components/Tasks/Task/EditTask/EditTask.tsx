@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    Button,
+    Button, Checkbox,
     Col,
     ConfigProvider,
     Form,
@@ -9,7 +9,7 @@ import {
     InputNumber,
     Row,
     Upload,
-    UploadFile, UploadProps
+    UploadFile, UploadProps,
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
 import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
@@ -182,7 +182,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 taskText: question,
                 taskPoints: reward,
                 hints: hints as string[],
-                hintsFull,
+                hintsFull: hintsFull.reduce((acc, item) => {
+                    // @ts-expect-error
+                    acc.push({
+                        ...item,
+                        defaultPenalty: item.penalty?.percent === 20
+                    })
+                    return acc
+                }, []),
                 answers: correctAnswers
             };
 
@@ -293,11 +300,12 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             hints: hints && hints.some(item => item) ? hints.filter(hint => hint) : [],
             hints_full: hintsFull && hintsFull.some(item => item.text) ?
                 hintsFull.filter(hint => hint?.text).map((hint => ({
-                        ...hint,
-                        penalty: {
-                            percent: 20
-                        },
-                    }))) :
+                    ...hint,
+                    name: hint.name?.trim(),
+                    penalty: {
+                        percent: 20
+                    },
+                }))) :
                 [],
             reward: taskPoints,
             verification: 'auto'
@@ -573,7 +581,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                             <div className={'task-hint__wrapper'} key={key}>
                                                 <div className={'task-hint__name'}>
                                                     <Form.Item
-                                                        name={[name, 'name']}
+                                                        name={[key, 'name']}
                                                         {...restField}
                                                         className={classNames('task-hint__form-item')}
                                                     >
@@ -586,7 +594,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                                     </Button>
                                                 </div>
                                                 <Form.Item
-                                                    name={[name, 'text']}
+                                                    name={[key, 'text']}
                                                     {...restField}
                                                     className={classNames('task-hint__form-item')}
                                                 >
@@ -595,23 +603,58 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                                         placeholder={'Текст подсказки'}
                                                     />
                                                 </Form.Item>
-                                                {/* <Form.Item */}
-                                                {/*     key={key} */}
-                                                {/*     name={[name, 'penalty']} */}
-                                                {/*     {...restField} */}
-                                                {/*     className={classNames('task-hint__form-item')} */}
-                                                {/* > */}
-                                                {/*     <Input */}
-                                                {/*         placeholder={'Введите подсказку'} */}
-                                                {/*     /> */}
-                                                {/*     {key} {name} */}
-                                                {/* </Form.Item> */}
+                                                <Form.Item
+                                                    name={[key, 'penalty']}
+                                                    {...restField}
+                                                    className={classNames('task-hint__form-item')}
+                                                >
+                                                    <Form.Item
+                                                        name={[key, 'penalty', 'score']}
+                                                        {...restField}
+                                                        labelAlign={'left'}
+                                                        label={'Стоимость подсказки'}
+                                                        colon={false}
+                                                        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
+                                                    >
+                                                        {(() => {
+                                                            const disabled = !!form.getFieldValue([
+                                                                "hintsFull",
+                                                                'options',
+                                                                key,
+                                                                "defaultPenalty"
+                                                            ]);
+
+                                                            console.log(disabled);
+
+                                                            return (
+                                                                <InputNumber
+                                                                    type={'number'}
+                                                                    controls={false}
+                                                                    defaultValue={60}
+                                                                    disabled={disabled}
+                                                                    min={1}
+                                                                    style={{ width: '128px', maxWidth: '128px', textAlignLast: 'center' }}
+                                                                />
+                                                            );
+                                                        })()}
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name={['options', key, 'defaultPenalty']}
+                                                        valuePropName={'checked'}
+                                                        {...restField}
+                                                        className={classNames('task-hint__form-item')}
+                                                    >
+                                                        <Checkbox>20% от стоимости задания</Checkbox>
+                                                    </Form.Item>
+                                                </Form.Item>
                                             </div>
                                         ))}
                                         <Form.Item>
                                             <Button
                                                 className={'edit-task__add-button'}
-                                                onClick={() => add()}
+                                                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                                                onClick={() => add({penalty: {score: 60}, defaultPenalty: true}, (form.getFieldValue('hintsFull') ?? []).length)}
                                                 disabled={fields.length >= 3}
                                                 type={'link'}
                                             >

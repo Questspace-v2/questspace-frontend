@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import {uid} from '@/lib/utils/utils';
 import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
-import { IHint, IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
+import { IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
 import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
@@ -255,7 +255,8 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                                 </>
                             ) : (
                                 <>
-                                    <span className={'hint__title'}>{hint.name || `Подсказка ${index + 1}`}</span>
+                                    <span className={'hint__title'}>{hint.name ? hint.name
+                                        : `Подсказка ${index + 1}`}</span>
                                     {takenHints[index] || hint.taken ?
                                         <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{hint?.text}</Markdown> :
                                         <Button type={'link'} onClick={() => {
