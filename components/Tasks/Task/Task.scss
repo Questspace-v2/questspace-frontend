@@ -10,6 +10,7 @@
         max-width: 100%;
         background-color: var(--background-secondary);
         border-radius: 8px;
+        margin: 0;
 
         .swiper-button-prev, .swiper-button-next {
             color: var(--icon-outlined-default);
@@ -67,7 +68,7 @@
         font-weight: 400;
         line-height: 24px;
     }
-    
+
     .task__reward-accepted {
         color: var(--text-green);
     }
@@ -239,7 +240,7 @@
     padding: 0;
 }
 
-@media (max-width: 959px) {
+@media (max-width: $l-breakpoint-959) {
     .admin-page__content {
         .task__text-part .task__name {
             font-size: 18px;
@@ -266,7 +267,7 @@
     }
 }
 
-@media (max-width: 799px) {
+@media (max-width: $xm-breakpoint-799) {
     .task__text-part .task__name {
         font-size: 18px;
     }
@@ -299,7 +300,7 @@
     }
 }
 
-@media (max-width: 525px) {
+@media (max-width: $s-breakpoint-525) {
     .task__name {
         flex-direction: column;
         gap: 8px;
@@ -324,7 +325,7 @@
     }
 }
 
-@media (max-width: 374px) {
+@media (max-width: $xs-breakpoint-374) {
     .task__answer-part.ant-form {
     }
 }

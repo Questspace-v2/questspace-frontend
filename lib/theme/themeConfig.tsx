@@ -34,6 +34,7 @@ const theme: ThemeConfig = {
             colorText: 'var(--text-default)'
         },
         InputNumber: {
+            borderRadius: 0,
             borderRadiusSM: 2,
             borderRadiusXS: 2,
             borderRadiusLG: 2,
@@ -127,7 +128,6 @@ const theme: ThemeConfig = {
         Radio: {
             colorPrimary: 'var(--icon-filled-blue)',
             colorText: 'var(--text-default)',
-            buttonSolidCheckedBg: 'var(--text-default)',
         },
         Checkbox: {
             colorText: 'var(--text-default)',

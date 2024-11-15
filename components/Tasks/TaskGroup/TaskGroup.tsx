@@ -33,7 +33,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
         <span className={'task-group__score'} suppressHydrationWarning>+{totalScore}</span> :
         null;
     const label = <div className='task-group__name-with-score'>
-        <span>{name}</span>
+        <span className={'task-group__name-text'}>{name}</span>
         {totalScoreExtra}
     </div>
 
@@ -45,6 +45,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                 <>
                     {isEditMode ? (
                         <div className={'task-group__settings-wrapper'}>
+                            <h2 className={classNames('roboto-flex-header', 'task-group__settings-header')}>Настройки уровня</h2>
                             <div className={'task-group__settings-row'}>
                                 <span className={'task-group__setting-name'}>Описание уровня</span>
                                 {description ? (

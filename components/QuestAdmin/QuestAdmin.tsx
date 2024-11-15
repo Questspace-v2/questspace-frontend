@@ -38,7 +38,7 @@ import Logs from './Logs/Logs';
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
     {ssr: false})
 
-export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminResponse}) {
+export default function QuestAdmin() {
     const router = useRouter();
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
@@ -48,21 +48,21 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
     const [isInfoAlertHidden, setIsInfoAlertHidden] = useState(false);
     const aboutTabContent = <EditQuest questData={contextData.quest} setContextData={setContextData} />;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
-    const teamsTabContent = <Teams teams={teamsContent} questId={questData.quest.id} registrationType={questData.quest.registration_type} />
-    const leaderboardTabContent = <Leaderboard questId={questData.quest.id} teams={leaderboardContent}/>;
+  
+    const teamsTabContent = <Teams teams={teamsContent} questId={contextData.quest.id} registrationType={contextData.quest.registration_type} />
+    const leaderboardTabContent = <Leaderboard questId={contextData.quest.id} teams={leaderboardContent}/>;
     const answerLogsTabContent = <Logs
         questId={questData.quest.id}
         paginatedLogs={logsContent}
         isInfoAlertHidden={isInfoAlertHidden}
         setIsInfoAlertHidden={setIsInfoAlertHidden}
     />;
-
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
     const [isOpenModal, setIsOpenModal] = useState(false);
 
-    const publishResults = () => finishQuest(questData.quest.id, session?.accessToken);
+    const publishResults = () => finishQuest(contextData.quest.id, session?.accessToken);
     const publishResultsButton =
         <Button type={'primary'} className={classNames('quest-admin__extra-button', 'publish-results__button')} onClick={publishResults}>
             <NotificationOutlined />Опубликовать результаты
@@ -78,7 +78,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
 
     const getTabBarExtraButton = () => {
         if (selectedTab === SelectAdminTabs.LEADERBOARD &&
-            questData.quest.status === 'WAIT_RESULTS') {
+            contextData.quest.status === 'WAIT_RESULTS') {
             return publishResultsButton;
         }
 
@@ -132,7 +132,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             centered: true,
             async onOk() {
                 try {
-                    await deleteQuest(questData.quest.id, session?.accessToken)
+                    await deleteQuest(contextData.quest.id, session?.accessToken)
                         .then(() => router.push(`${FRONTEND_URL}`, {scroll: false}));
                 } catch (err) {
                     error();
@@ -147,12 +147,12 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             return;
         }
         if (valueTab === SelectAdminTabs.LEADERBOARD) {
-            const data = await getLeaderboardAdmin(questData.quest.id, session?.accessToken) as IAdminLeaderboardResponse;
+            const data = await getLeaderboardAdmin(contextData.quest.id, session?.accessToken) as IAdminLeaderboardResponse;
             setLeaderboardContent(data);
         }
 
         if (valueTab === SelectAdminTabs.TEAMS) {
-            const data = await getQuestTeams(questData.quest.id) as IGetAllTeamsResponse;
+            const data = await getQuestTeams(contextData.quest.id) as IGetAllTeamsResponse;
             setTeamsContent(data?.teams ?? []);
         }
 
@@ -179,9 +179,9 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             {contextHolder}
             <div className={'quest-admin__header__content'}>
                 <div className={'quest-admin__upper-wrapper'}>
-                    <Link href={`/quest/${questData.quest.id}`} style={{textDecoration: 'none', width: 'min-content', maxWidth: '50%'}} >
+                    <Link href={`/quest/${contextData.quest.id}`} style={{textDecoration: 'none', width: 'min-content', maxWidth: '50%'}} prefetch>
                         <Button className={'return__button'} type={'link'} size={'middle'}>
-                            <ArrowLeftOutlined />{questData.quest.name}
+                            <ArrowLeftOutlined />{contextData.quest.name}
                         </Button>
                     </Link>
                     <Button className={'delete-quest__button'} onClick={handleDelete} danger><DeleteOutlined/>Удалить квест</Button>
@@ -206,7 +206,7 @@ export default function QuestAdmin({questData} : {questData: ITaskGroupsAdminRes
             {selectedTab === SelectAdminTabs.TEAMS && teamsTabContent}
             {selectedTab === SelectAdminTabs.LEADERBOARD && leaderboardTabContent}
             <DynamicEditTaskGroup
-                questId={questData.quest.id}
+                questId={contextData.quest.id}
                 isOpen={isOpenModal}
                 setIsOpen={setIsOpenModal}
             />

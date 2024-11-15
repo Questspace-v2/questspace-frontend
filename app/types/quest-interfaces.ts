@@ -20,9 +20,9 @@ export interface IQuest {
 
 export interface ITask {
     correct_answers: string[],
-    hints: IHint[] | string[],
+    hints?: IHint[] | string[],
+    hints_full: IHint[],
     id?: string,
-    media_link?: string,
     media_links?: string[],
     name: string,
     order_idx?: number,
@@ -35,8 +35,14 @@ export interface ITask {
 }
 
 export interface IHint {
+    order_idx?: number,
+    name?: string,
     taken: boolean,
-    text: string
+    text: string,
+    penalty?: {
+        percent?: number,
+        score?: number
+    }
 }
 
 export interface ITaskGroup {
@@ -215,7 +221,6 @@ export interface ITaskPlayMode {
     answer: string;
     hints: IHint[];
     id: string;
-    media_link: string;
     name: string;
     order_idx: number;
     pub_time: string;
