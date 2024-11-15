@@ -366,9 +366,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         newTask.media_links = await getFileLinks();
 
         if (task) {
-            console.log(taskGroup)
             const taskIds = taskGroup.tasks.map(curTask => curTask.id)
-            console.log(taskIds)
             const index = taskIds.indexOf(task.id);
             taskGroup.tasks[index] = newTask;
             taskGroups[taskGroupIndex] = taskGroup;

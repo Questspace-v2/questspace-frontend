@@ -47,13 +47,11 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     const {
         name,
         question,
-        hints,
         media_links: mediaLinks,
         correct_answers: correctAnswers,
         id: taskId,
         answer: teamAnswer,
         score,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         reward,
         hints_full: hintsFull
     } = props;

@@ -64,7 +64,6 @@ export function HintsForm({hintsForm, hintsValidationStatus, setHintsValidationS
                                             </Form.Item>
                                             <Button danger onClick={() => {
                                                 remove(name);
-                                                console.log(hintsForm.getFieldValue(['hintsFull']));
                                             }}>
                                                 <DeleteOutlined />
                                             </Button>
@@ -153,8 +152,6 @@ export function HintsForm({hintsForm, hintsValidationStatus, setHintsValidationS
                                                 penalty: { score: 60 },
                                                 defaultPenalty: true
                                             });
-
-                                            console.log(hintsForm.getFieldValue(['hintsFull']));
                                         }}
                                         disabled={fields.length >= 3}
                                         type={'link'}
