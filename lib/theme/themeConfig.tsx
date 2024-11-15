@@ -23,6 +23,12 @@ const theme: ThemeConfig = {
         colorText: 'var(--text-default)',
     },
     components: {
+        Alert: {
+            colorInfoBg: 'var(--background-blue-secondary)',
+            colorIcon: 'var(--icon-outlined-default)',
+            colorText: 'var(--text-default)',
+            colorInfoBorder: 'var(--stroke-blue)',
+        },
         Input: {
             borderRadiusSM: 2,
             borderRadiusXS: 2,
@@ -139,11 +145,13 @@ const theme: ThemeConfig = {
             colorBgContainer: 'transparent',
             colorPrimary: 'var(--text-blue)',
             colorTextQuaternary: 'var(--text-secondary)',
+            colorTextTertiary: 'var(--text-default)',
             fontWeightStrong: 400,
             colorBgElevated: 'var(--background-primary)',
             colorText: 'var(--text-default)',
             optionSelectedBg: 'var(--background-blue)',
-            optionActiveBg: 'var(--background-secondary)'
+            optionActiveBg: 'var(--background-secondary)',
+            colorBorder: 'var(--stroke-secondary)',
         },
         Message: {
             colorBgElevated: 'var(--background-primary)',

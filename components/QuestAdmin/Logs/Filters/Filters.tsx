@@ -38,24 +38,28 @@ export default function Filters({ options, setSelectedFilters }: FiltersProps) {
             <span className='answer-logs__filters-title'>Фильтры</span>
             <Select
                 placeholder='Группа'
+                allowClear
                 options={options.groups}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('group', value)}
             />
             <Select
                 placeholder='Задание'
+                allowClear
                 options={options.tasks}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('task', value)}
             />
             <Select
                 placeholder='Команда'
+                allowClear
                 options={options.teams}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('team', value)}
             />
             <Select
                 placeholder='Пользователь'
+                allowClear
                 options={options.users}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('user', value)}
