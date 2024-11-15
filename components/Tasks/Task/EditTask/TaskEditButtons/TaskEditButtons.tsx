@@ -78,7 +78,7 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
     const handleCopyTask = async () => {
         const copiedTask: ITask = {
             correct_answers: task.correct_answers,
-            hints: task.hints,
+            hints_full: task.hints_full,
             name: task.name,
             question: task.question,
             reward: task.reward,

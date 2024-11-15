@@ -1,6 +1,17 @@
 @use "globals" as *;
 
 .edit-task__content {
+    form + form {
+      margin-top: 16px;
+    }
+
+    .ant-row {
+        @media screen and (max-width: $m-breakpoint-639) {
+            flex-wrap: wrap;
+            row-gap: 10px;
+        }
+    }
+
     .edit-task__labels {
         width: 184px;
         color: var(--text-default);
@@ -126,6 +137,34 @@
         margin: 0;
         padding-top: 16px;
         border-top: 1px solid var(--stroke-secondary);
+    }
+
+    .task-hint__wrapper {
+        display: flex;
+        flex-direction: column;
+        padding: 8px;
+        gap: 4px;
+        border-radius: 4px;
+        background: var(--background-disabled);
+
+        .task-hint__name {
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            width: 100%;
+
+            .ant-form-item {
+                width: 100%;
+            }
+        }
+
+        input, button, textarea {
+            background: var(--background-primary) !important;
+        }
+
+        > .task-hint__form-item.ant-form-item:not(.ant-form-item:first-child) {
+            margin: 0;
+        }
     }
 }
 

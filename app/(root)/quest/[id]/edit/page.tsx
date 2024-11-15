@@ -29,7 +29,7 @@ export default async function EditQuestPage({params}: {params: {id: string}}) {
 
     return (
         <ContextProvider questData={questData}>
-            <QuestAdmin questData={questData}/>
+            <QuestAdmin />
         </ContextProvider>
     );
 }

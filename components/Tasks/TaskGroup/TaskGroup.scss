@@ -50,6 +50,14 @@
     padding: 24px 0 16px;
     border-top: 1px solid var(--stroke-secondary);
 
+    .task-group__settings-header {
+        font-size: 24px;
+
+        @media screen and (max-width: $xm-breakpoint-799) {
+            font-size: 20px;
+        }
+    }
+
     .task-group__settings-row {
         display: flex;
         flex-direction: row;
@@ -71,6 +79,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-right: 12px;
+
+    .task-group__name-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+        width: 100%;
+    }
 }
 
 .task-group__collapse-buttons .task-group-extra__burger-button.ant-btn {
