@@ -1,6 +1,17 @@
 @use "globals" as *;
 
 .edit-task__content {
+    form + form {
+      margin-top: 16px;
+    }
+
+    .ant-row {
+        @media screen and (max-width: $m-breakpoint-639) {
+            flex-wrap: wrap;
+            row-gap: 10px;
+        }
+    }
+
     .edit-task__labels {
         width: 184px;
         color: var(--text-default);

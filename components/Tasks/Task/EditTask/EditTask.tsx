@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    Button, Checkbox,
+    Button,
     Col,
     ConfigProvider,
     Form,
@@ -9,44 +9,37 @@ import {
     InputNumber,
     Row,
     Upload,
-    UploadFile, UploadProps,
+    UploadFile,
+    UploadProps,
 } from 'antd';
 import FormItem from 'antd/lib/form/FormItem';
-import React, {Dispatch, SetStateAction, useEffect, useState} from 'react';
-import {uid} from '@/lib/utils/utils';
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { uid } from '@/lib/utils/utils';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
-import {
-    DeleteOutlined,
-    FileImageOutlined,
-    MinusOutlined,
-    PlusOutlined,
-} from '@ant-design/icons';
+import { DeleteOutlined, FileImageOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import theme from '@/lib/theme/themeConfig';
 import ru_RU from 'antd/lib/locale/ru_RU';
-import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
+import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import {
-    IBulkEditTaskGroups, IHint,
+    IBulkEditTaskGroups,
+    IHint,
     ITask,
     ITaskGroup,
     ITaskGroupsAdminResponse,
     ITaskGroupsUpdate,
 } from '@/app/types/quest-interfaces';
-import client from "@/app/api/client/client";
-import {ValidationStatus} from "@/lib/utils/modalTypes";
-import {useSession} from "next-auth/react";
-import {patchTaskGroups} from "@/app/api/api";
+import client from '@/app/api/client/client';
+import { ValidationStatus } from '@/lib/utils/modalTypes';
+import { useSession } from 'next-auth/react';
+import { patchTaskGroups } from '@/app/api/api';
 import classNames from 'classnames';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core';
-import {
-    arrayMove,
-    SortableContext,
-    useSortable,
-    verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { ItemRender } from 'antd/es/upload/interface';
+import { HintsForm, HintsFormProps } from '@/components/Tasks/Task/EditTask/HintsForm/HintsForm';
 
 interface DraggableUploadListItemProps {
     remove: () => void;
@@ -76,11 +69,13 @@ interface TaskCreateModalProps {
 export interface TaskForm {
     taskName: string,
     taskText: string,
-    hints: string[],
-    hintsFull: IHint[],
+    hints?: string[],
+    hintsFull?: IHint[],
     answers: string[],
     taskPoints: number
 }
+
+
 
 interface FileObject {
     uid: string;
@@ -121,6 +116,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const [pointsAmount, setPointsAmount] = useState(task?.reward ?? 100);
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [form] = Form.useForm<TaskForm>();
+    const [hints] = Form.useForm<HintsFormProps>();
 
     const taskNameError = 'Введите название задания';
     const taskTextError = 'Введите текст задания';
@@ -164,7 +160,12 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         answers: 'success',
         files: 'success',
     };
+
+    const defaultHintsValidationStatus: Record<string, ValidationStatus> = {
+        hintsFull: 'success'
+    };
     const [fieldsValidationStatus, setFieldsValidationStatus] = useState(defaultFieldsValidationStatus);
+    const [hintsValidationStatus, setHintsValidationStatus] = useState(defaultHintsValidationStatus);
 
     useEffect(() => {
         if (task) {
@@ -173,7 +174,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 question,
                 reward,
                 correct_answers: correctAnswers,
-                hints,
+                // hints,
                 hints_full: hintsFull,
             } = task;
 
@@ -181,21 +182,28 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 taskName: name,
                 taskText: question,
                 taskPoints: reward,
-                hints: hints as string[],
+                // hints: hints as string[],
+                answers: correctAnswers
+            };
+
+            const hintsProps: HintsFormProps = {
                 hintsFull: hintsFull.reduce((acc, item) => {
-                    // @ts-expect-error
+                    // @ts-expect-error я знаю!!!!
                     acc.push({
                         ...item,
+                        penalty: {
+                            score: item?.penalty?.score ?? 60,
+                        },
                         defaultPenalty: item.penalty?.percent === 20
                     })
                     return acc
                 }, []),
-                answers: correctAnswers
-            };
+            }
 
             form.setFieldsValue(formProps);
+            hints.setFieldsValue(hintsProps);
         }
-    }, [form, task, isOpen]);
+    }, [hints, form, task, isOpen]);
 
     useEffect(() => {
         setAllFilesList(() => [...defaultFileList, ...fileList]);
@@ -256,25 +264,68 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         return Promise.all(links);
     };
 
-    const handleValidation = async () =>
-        form.validateFields()
+    const handleValidation = async () => {
+        const formValues = await form.validateFields()
             .then(values => {
                 if (!values.taskName || !values.taskText || !values.answers ||
                     !values.answers.some(item => item) || fileIsTooBig || unsupportedFileType) {
-                        setFieldsValidationStatus(prevState => ({
-                            ...prevState,
-                            taskName: !values.taskName ? 'error' : prevState.taskName,
-                            taskText: !values.taskText ? 'error' : prevState.taskText,
-                            answers: (!values.answers || !values.answers.some(item => item)) ? 'error' : prevState.answers,
-                            files: (fileIsTooBig || unsupportedFileType) ? 'error' : prevState.files,
-                        }));
-                        return null;
+                    setFieldsValidationStatus(prevState => ({
+                        ...prevState,
+                        taskName: !values.taskName ? 'error' : prevState.taskName,
+                        taskText: !values.taskText ? 'error' : prevState.taskText,
+                        answers: (!values.answers || !values.answers.some(item => item)) ? 'error' : prevState.answers,
+                        files: (fileIsTooBig || unsupportedFileType) ? 'error' : prevState.files,
+                    }));
+
+                    return null;
                 }
                 return values;
             })
             .catch(err => {
                 throw err
             });
+
+        if (!formValues) {
+            return null;
+        }
+
+        const hintValues = await hints.validateFields()
+            .then((values) => {
+                let initialValue = formValues.taskPoints;
+                values.hintsFull.map((value) => {
+                    if (value.defaultPenalty) {
+                        initialValue -= formValues.taskPoints * 0.2;
+                    } else {
+                        initialValue -= value.penalty.score ?? 0;
+                    }
+
+                    return value;
+                });
+
+                if (initialValue <= 0) {
+                    setHintsValidationStatus({
+                        hintsFull: 'error',
+                    });
+
+                    return null;
+                }
+
+                return values;
+            })
+            .catch(err => {
+                throw err
+            });
+
+        if (!hintValues) {
+            return null;
+        }
+
+        return {
+            ...formValues,
+            ...hintValues
+        }
+    }
+
 
     const handleSaveTask = async () => {
         const taskGroups = contextData.task_groups;
@@ -283,8 +334,9 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
         const fields = form.getFieldsValue();
-        console.log(fields)
-        const {taskName, taskText, taskPoints, hints, hintsFull, answers} = fields;
+        const hintsFields = hints.getFieldsValue();
+        const {taskName, taskText, taskPoints, answers} = fields;
+        const {hintsFull} = hintsFields;
         const pubTime = new Date();
 
         const formData = await handleValidation();
@@ -297,26 +349,27 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             pub_time: pubTime.toISOString(),
             question: taskText,
             correct_answers: answers.filter(answer => answer),
-            hints: hints && hints.some(item => item) ? hints.filter(hint => hint) : [],
-            hints_full: hintsFull && hintsFull.some(item => item.text) ?
+            hints_full: hintsFull?.some(item => item.text) ?
                 hintsFull.filter(hint => hint?.text).map((hint => ({
-                    ...hint,
-                    name: hint.name?.trim(),
+                    text: hint.text,
+                    ...(hint?.name) && {name: hint.name?.trim()},
                     penalty: {
-                        percent: 20
+                        ...(hint.defaultPenalty) ? {percent: 20} : {score: hint?.penalty?.score ?? 60}
                     },
+                    taken: false
                 }))) :
                 [],
             reward: taskPoints,
             verification: 'auto'
         };
 
-        const fileLinks = await getFileLinks();
-        newTask.media_links = fileLinks;
+        newTask.media_links = await getFileLinks();
 
         if (task) {
-            const index = taskGroup.tasks.indexOf(task);
-            console.log(index)
+            console.log(taskGroup)
+            const taskIds = taskGroup.tasks.map(curTask => curTask.id)
+            console.log(taskIds)
+            const index = taskIds.indexOf(task.id);
             taskGroup.tasks[index] = newTask;
             taskGroups[taskGroupIndex] = taskGroup;
 
@@ -340,11 +393,13 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 questId, requestData, session?.accessToken
             ) as ITaskGroupsAdminResponse;
 
-            setContextData({
-                ...contextData,
-                task_groups: data.task_groups,
-            });
-            setIsOpen(false);
+            if (data?.task_groups) {
+                setContextData({
+                    ...contextData,
+                    task_groups: data.task_groups,
+                });
+                setIsOpen(false);
+            }
             return;
         }
 
@@ -381,6 +436,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             task_groups: data.task_groups,
         });
         form.resetFields();
+        hints.resetFields();
         setFileList([]);
         setIsOpen(false);
     };
@@ -569,104 +625,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             </FormItem>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col className={'edit-task__labels'}>
-                            <span>Подсказки (max 3)<span className={'light-description'}><br/>поддерживает Markdown</span></span>
-                        </Col>
-                        <Col flex={'auto'} className={'edit-task__hints-list'}>
-                            <Form.List name={'hintsFull'}>
-                                {(fields, { add, remove }) => (
-                                    <>
-                                        {fields.map(({ key, name, ...restField }) => (
-                                            <div className={'task-hint__wrapper'} key={key}>
-                                                <div className={'task-hint__name'}>
-                                                    <Form.Item
-                                                        name={[key, 'name']}
-                                                        {...restField}
-                                                        className={classNames('task-hint__form-item')}
-                                                    >
-                                                        <Input
-                                                            placeholder={`Подсказка ${name + 1}`}
-                                                        />
-                                                    </Form.Item>
-                                                    <Button danger onClick={() => remove(name)}>
-                                                        <DeleteOutlined />
-                                                    </Button>
-                                                </div>
-                                                <Form.Item
-                                                    name={[key, 'text']}
-                                                    {...restField}
-                                                    className={classNames('task-hint__form-item')}
-                                                >
-                                                    <TextArea
-                                                        style={{resize: 'none', width: '100%'}}
-                                                        placeholder={'Текст подсказки'}
-                                                    />
-                                                </Form.Item>
-                                                <Form.Item
-                                                    name={[key, 'penalty']}
-                                                    {...restField}
-                                                    className={classNames('task-hint__form-item')}
-                                                >
-                                                    <Form.Item
-                                                        name={[key, 'penalty', 'score']}
-                                                        {...restField}
-                                                        labelAlign={'left'}
-                                                        label={'Стоимость подсказки'}
-                                                        colon={false}
-                                                        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-
-                                                    >
-                                                        {(() => {
-                                                            const disabled = !!form.getFieldValue([
-                                                                "hintsFull",
-                                                                'options',
-                                                                key,
-                                                                "defaultPenalty"
-                                                            ]);
-
-                                                            console.log(disabled);
-
-                                                            return (
-                                                                <InputNumber
-                                                                    type={'number'}
-                                                                    controls={false}
-                                                                    defaultValue={60}
-                                                                    disabled={disabled}
-                                                                    min={1}
-                                                                    style={{ width: '128px', maxWidth: '128px', textAlignLast: 'center' }}
-                                                                />
-                                                            );
-                                                        })()}
-                                                    </Form.Item>
-                                                    <Form.Item
-                                                        name={['options', key, 'defaultPenalty']}
-                                                        valuePropName={'checked'}
-                                                        {...restField}
-                                                        className={classNames('task-hint__form-item')}
-                                                    >
-                                                        <Checkbox>20% от стоимости задания</Checkbox>
-                                                    </Form.Item>
-                                                </Form.Item>
-                                            </div>
-                                        ))}
-                                        <Form.Item>
-                                            <Button
-                                                className={'edit-task__add-button'}
-                                                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                                                onClick={() => add({penalty: {score: 60}, defaultPenalty: true}, (form.getFieldValue('hintsFull') ?? []).length)}
-                                                disabled={fields.length >= 3}
-                                                type={'link'}
-                                            >
-                                                <PlusOutlined/> Добавить подсказку
-                                            </Button>
-                                        </Form.Item>
-                                    </>
-                                )}
-                            </Form.List>
-                        </Col>
-                    </Row>
                 </Form>
+                <HintsForm hintsForm={hints} hintsValidationStatus={hintsValidationStatus} setHintsValidationStatus={setHintsValidationStatus}/>
             </CustomModal>
         </ConfigProvider>
     );
