@@ -5,7 +5,6 @@ import {
     IGetAllTeamsResponse,
     IPaginatedAnswerLogs,
     IPaginatedAnswerLogsParams,
-    ITaskGroupsAdminResponse,
 } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
@@ -48,11 +47,11 @@ export default function QuestAdmin() {
     const [isInfoAlertHidden, setIsInfoAlertHidden] = useState(false);
     const aboutTabContent = <EditQuest questData={contextData.quest} setContextData={setContextData} />;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
-  
+
     const teamsTabContent = <Teams teams={teamsContent} questId={contextData.quest.id} registrationType={contextData.quest.registration_type} />
     const leaderboardTabContent = <Leaderboard questId={contextData.quest.id} teams={leaderboardContent}/>;
     const answerLogsTabContent = <Logs
-        questId={questData.quest.id}
+        questId={contextData.quest.id}
         paginatedLogs={logsContent}
         isInfoAlertHidden={isInfoAlertHidden}
         setIsInfoAlertHidden={setIsInfoAlertHidden}
@@ -160,8 +159,8 @@ export default function QuestAdmin() {
             const params: IPaginatedAnswerLogsParams = {
                 desc: true,
             };
-            const teamsData = await getQuestTeams(questData.quest.id) as IGetAllTeamsResponse;
-            const data = await getPaginatedAnswerLogs(questData.quest.id, session?.accessToken, params) as IPaginatedAnswerLogs;
+            const teamsData = await getQuestTeams(contextData.quest.id) as IGetAllTeamsResponse;
+            const data = await getPaginatedAnswerLogs(contextData.quest.id, session?.accessToken, params) as IPaginatedAnswerLogs;
             setLogsContent(data);
             setContextData(prevState => ({
                 ...prevState,
