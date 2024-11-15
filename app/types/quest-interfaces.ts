@@ -121,7 +121,8 @@ export interface ITaskGroupsAdminResponse {
 
 export interface IQuestTaskGroups {
     quest: IQuest,
-    task_groups: ITaskGroup[]
+    task_groups: ITaskGroup[],
+    teams?: ITeam[]
 }
 
 export interface IFilteredQuests {
@@ -228,4 +229,35 @@ export interface ITaskPlayMode {
     score: number;
     verification: string;
     verification_type: string;
+}
+
+export interface IAnswerLog {
+    accepted: boolean;
+    answer: string;
+    answer_time: string;
+    task: string;
+    task_group: string;
+    task_group_id: string;
+    task_id: string;
+    team: string;
+    team_id: string;
+    user: string;
+    user_id: string;
+}
+
+export interface IPaginatedAnswerLogs {
+    answer_logs: IAnswerLog[];
+    next_page_token: number;
+    total_pages: number;
+}
+
+export interface IPaginatedAnswerLogsParams {
+    page_size?: number;
+    page_id?: string;
+    page_no?: number;
+    desc?: boolean;
+    task_group?: string;
+    task?: string;
+    user?: string;
+    team?: string;
 }

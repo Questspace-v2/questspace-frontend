@@ -3,6 +3,8 @@
 import {
     IAdminLeaderboardResponse,
     IGetAllTeamsResponse,
+    IPaginatedAnswerLogs,
+    IPaginatedAnswerLogsParams,
 } from '@/app/types/quest-interfaces';
 import EditQuest from '@/components/Quest/EditQuest/EditQuest';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
@@ -20,7 +22,7 @@ import Tasks from '@/components/Tasks/Tasks';
 import { TasksMode } from '@/components/Tasks/Task/Task.helpers';
 import theme from '@/lib/theme/themeConfig';
 import Leaderboard from '@/components/QuestAdmin/Leaderboard/Leaderboard';
-import { deleteQuest, finishQuest, getLeaderboardAdmin, getQuestTeams } from '@/app/api/api';
+import { deleteQuest, finishQuest, getLeaderboardAdmin, getPaginatedAnswerLogs, getQuestTeams } from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { FRONTEND_URL } from '@/app/api/client/constants';
@@ -29,6 +31,7 @@ import dynamic from 'next/dynamic';
 import classNames from 'classnames';
 import Teams from '@/components/QuestAdmin/Teams/Teams';
 import { ITeam } from '@/app/types/user-interfaces';
+import Logs from './Logs/Logs';
 
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
@@ -40,10 +43,19 @@ export default function QuestAdmin() {
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);
     const [leaderboardContent, setLeaderboardContent] = useState<IAdminLeaderboardResponse>({results: []});
     const [teamsContent, setTeamsContent] = useState<ITeam[]>([]);
+    const [logsContent, setLogsContent] = useState<IPaginatedAnswerLogs>({ answer_logs: [], total_pages: 1, next_page_token: 0 });
+    const [isInfoAlertHidden, setIsInfoAlertHidden] = useState(false);
     const aboutTabContent = <EditQuest questData={contextData.quest} setContextData={setContextData} />;
     const tasksTabContent = <Tasks mode={TasksMode.EDIT} props={contextData} />;
+
     const teamsTabContent = <Teams teams={teamsContent} questId={contextData.quest.id} registrationType={contextData.quest.registration_type} />
     const leaderboardTabContent = <Leaderboard questId={contextData.quest.id} teams={leaderboardContent}/>;
+    const answerLogsTabContent = <Logs
+        questId={contextData.quest.id}
+        paginatedLogs={logsContent}
+        isInfoAlertHidden={isInfoAlertHidden}
+        setIsInfoAlertHidden={setIsInfoAlertHidden}
+    />;
     const {data: session} = useSession();
     const [modal, modalContextHolder] = Modal.useModal();
     const [messageApi, contextHolder] = message.useMessage();
@@ -84,6 +96,10 @@ export default function QuestAdmin() {
         {
             key: 'tasks',
             label: 'Задания',
+        },
+        {
+            key: 'logs',
+            label: 'Логи',
         },
         {
             key: 'teams',
@@ -139,6 +155,19 @@ export default function QuestAdmin() {
             setTeamsContent(data?.teams ?? []);
         }
 
+        if (valueTab === SelectAdminTabs.LOGS) {
+            const params: IPaginatedAnswerLogsParams = {
+                desc: true,
+            };
+            const teamsData = await getQuestTeams(contextData.quest.id) as IGetAllTeamsResponse;
+            const data = await getPaginatedAnswerLogs(contextData.quest.id, session?.accessToken, params) as IPaginatedAnswerLogs;
+            setLogsContent(data);
+            setContextData(prevState => ({
+                ...prevState,
+                teams: teamsData.teams,
+            }));
+        }
+
         setSelectedTab(valueTab);
     }
 
@@ -169,6 +198,7 @@ export default function QuestAdmin() {
                     {getTabBarExtraButton()}
                 </ConfigProvider>
             </div>
+            {selectedTab === SelectAdminTabs.LOGS && answerLogsTabContent}
         </ContentWrapper>
             {selectedTab === SelectAdminTabs.ABOUT && aboutTabContent}
             {selectedTab === SelectAdminTabs.TASKS && tasksTabContent}

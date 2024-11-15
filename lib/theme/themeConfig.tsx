@@ -135,13 +135,11 @@ const theme: ThemeConfig = {
             colorBorder: 'var(--stroke-secondary)'
         },
         Select: {
-            colorTextPlaceholder: 'var(--text-blue)',
+            colorTextPlaceholder: 'var(--text-secondary)',
+            colorBgContainer: 'transparent',
             colorPrimary: 'var(--text-blue)',
-            colorPrimaryTextActive: 'var(--text-blue)',
-            colorTextHeading: 'var(--text-blue)',
+            colorTextQuaternary: 'var(--text-secondary)',
             fontWeightStrong: 400,
-            colorIcon: 'var(--icon-outlined-blue)',
-            colorIconHover: 'var(--icon-outlined-blue)',
             colorBgElevated: 'var(--background-primary)',
             colorText: 'var(--text-default)',
             optionSelectedBg: 'var(--background-blue)',
