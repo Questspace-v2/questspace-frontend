@@ -2,14 +2,14 @@
 
 import Image from 'next/image';
 import {uid} from '@/lib/utils/utils';
-import { Button, CountdownProps, Form, Input, message, Statistic } from 'antd';
-import { IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
+import { Button, CountdownProps, Form, Input, message, Statistic, Tooltip } from 'antd';
+import { IHint, IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
 import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
 import {useSession} from 'next-auth/react';
-import {useState} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {useRouter} from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -53,19 +53,28 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
         answer: teamAnswer,
         score,
         reward,
-        hints_full: hintsFull
     } = props;
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
+    const editMode = mode === TasksMode.EDIT;
+    const hintsFull = editMode ? props.hints_full : props.hints as unknown as IHint[];
 
     const transformHints = () => hintsFull.map(hint => ({
         ...hint,
-        taken: false,
+        taken: hint?.taken || false,
     }));
-    const objectHints = hintsFull.length && hintsFull[0].text ? transformHints() : hintsFull;
 
-    const editMode = mode === TasksMode.EDIT;
+    const objectHints = hintsFull?.length && hintsFull[0].text ? transformHints() : hintsFull;
+
+    const calcCurrentScore = useCallback(() => objectHints.reduce((acc, curr) => {
+        if (curr?.taken) {
+            return acc - (curr?.penalty?.score ?? (curr?.penalty?.percent ?? 0) * 0.01 * reward ?? 0)
+        }
+
+        return acc
+    }, reward), [objectHints, reward])
+
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
     const [form] = Form.useForm();
     const {data: session} = useSession();
@@ -81,11 +90,19 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     const [inputValidationStatus, setInputValidationStatus] = useState<'success' | 'error' | ''>(teamAnswer ? 'success' : '');
 
     const [accepted, setAccepted] = useState(Boolean(score && score > 0));
+    const [scoreText, setScoreText] = useState([reward, ...objectHints.map((hint) =>
+        hint.taken ? ` - ${(hint?.penalty?.percent ?? 0) * 0.01 * reward || hint?.penalty?.score}` : ''
+    )].join(' '));
+    const [currentScore, setCurrentScore] = useState(calcCurrentScore())
 
     const onFinish: CountdownProps['onFinish'] = () => {
         setSendButtonContent(<SendOutlined/>);
         setSendButtonState(SendButtonStates.BASIC);
     };
+
+    useEffect(() => {
+        setCurrentScore(calcCurrentScore())
+    }, [calcCurrentScore, objectHints]);
 
     const success = () => {
         // eslint-disable-next-line no-void
@@ -110,7 +127,16 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
 
         setOpenConfirm(false);
         setOpenConfirmIndex(null);
-        await takeHintPlayMode(questId, data, session?.accessToken);
+        const response = await takeHintPlayMode(questId, data, session?.accessToken) as IHint;
+        if (response?.text) {
+            setTakenHints([...takenHints.slice(0, index), true, ...takenHints.slice(index + 1)]);
+            objectHints[index] = {
+                ...objectHints[index],
+                ...response
+            }
+            const {penalty} = objectHints[index];
+            setScoreText((prevState) => `${prevState} - ${penalty?.percent ? penalty.percent / 100 * reward : penalty?.score}`)
+        }
         router.refresh();
     };
 
@@ -195,8 +221,14 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                         <h4 className={classNames('roboto-flex-header task__name', accepted && 'task__accepted')}>
                             {name}
                             {accepted ?
-                                <span className='task__reward-accepted'>+{reward}</span> :
-                                <span className='task__reward'>{reward}</span>}
+                                <Tooltip title={scoreText} placement={'bottom'}>
+                                    <span className="task__reward-accepted">+{score}</span>
+                                </Tooltip>
+                                :
+                                <Tooltip title={scoreText} placement={'bottom'}>
+                                    <span className="task__reward">{score && score > 0 ? score : currentScore}</span>
+                                </Tooltip>
+                            }
                         </h4> :
                         <h4 className={'roboto-flex-header task__name'}>{name}</h4>
                 }
@@ -236,7 +268,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     </Swiper>
                 </>
             )}
-            {hintsFull && hintsFull.length > 0 && (
+            {objectHints && objectHints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
                         <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${takenHints[index] || hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>

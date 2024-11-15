@@ -69,9 +69,9 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
                 queryParams.user = getFilterId(selectedFilters.user);
             }
             const result = await getPaginatedAnswerLogs(questId, session?.accessToken, queryParams) as IPaginatedAnswerLogs;
-            setLogsContent(result.answer_logs);
-            setNextPageToken(result.next_page_token);
-            setTotalPages(result.total_pages);
+            setLogsContent(result?.answer_logs);
+            setNextPageToken(result?.next_page_token);
+            setTotalPages(result?.total_pages);
         };
 
         filterLogs().catch(err => {
@@ -81,20 +81,20 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
     }, [selectedFilters]);
 
     const getOptions = () => {
-        const groups = contextData.task_groups.map(item => ({
+        const groups = contextData?.task_groups?.map(item => ({
             value: `${item.name}_${item.id}`,
             label: item.name,
         }));
-        const tasks = contextData.task_groups.map(item =>
+        const tasks = contextData?.task_groups?.map(item =>
             item.tasks.map(task => ({
                 value: `${task.name}_${task.id}`,
                 label: task.name,
             }))).flat();
-        const teams = contextData.teams?.map(item => ({
+        const teams = contextData?.teams?.map(item => ({
             value: `${item.name}_${item.id}`,
             label: item.name,
         })) ?? [];
-        const users = contextData.teams?.map(item => 
+        const users = contextData?.teams?.map(item =>
             item.members.map(member => ({
                 value: `${member.username}_${member.id}`,
                 label: member.username,
@@ -177,13 +177,13 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
     return (
         <ConfigProvider renderEmpty={renderEmpty}>
             {!isInfoAlertHidden && <InfoAlert setIsInfoAlertHidden={setIsInfoAlertHidden} />}
-            <Filters 
+            <Filters
                 options={filterSelectOptions}
                 setSelectedFilters={setSelectedFilters}
             />
-            <Table<IAnswerLog> 
-                columns={columns} 
-                dataSource={logsContent} 
+            <Table<IAnswerLog>
+                columns={columns}
+                dataSource={logsContent}
                 rowKey={(log) => log.answer_time}
                 pagination={{ total: 50 * totalPages, pageSize: 50, showSizeChanger: false }}
                 onChange={onPaginationChange}

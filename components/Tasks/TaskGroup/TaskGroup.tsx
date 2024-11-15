@@ -22,7 +22,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
     const { id, pub_time: pubTime, name, description } = props;
     const {data: contextData} = useTasksContext()!;
     const tasks = contextData.task_groups.find(item => item.id === id)?.tasks ?? [];
-    const totalScore = tasks.reduce((a, b) => a + b.reward, 0);
+    const totalScore = tasks.reduce((a, b) => a + (b.score ?? 0), 0);
     const isEditMode = mode === TasksMode.EDIT;
     const isGroupClosed = tasks.length > 0 && tasks
         .every(item => item.score !== undefined && (item.score > 0 || isEditMode));
