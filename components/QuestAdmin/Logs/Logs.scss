@@ -7,10 +7,11 @@
 
     .ant-table-thead tr th {
         font-size: 12px;
+        transition: unset !important;
         color: var(--text-secondary);
         line-height: 22px;
         font-weight: 400;
-        padding: 5px 16px;
+        padding: 5px 8px 5px 0;
     }
 
     .ant-table-thead tr th::before {
@@ -32,7 +33,7 @@
     }
 
     .ant-table-tbody > tr > td.ant-table-cell {
-        padding: 5px 16px;
+        padding: 5px 8px 5px 0;
         max-width: 200px;
         text-overflow: ellipsis;
         white-space: nowrap;

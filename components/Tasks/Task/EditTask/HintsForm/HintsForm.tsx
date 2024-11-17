@@ -126,7 +126,7 @@ export function HintsForm({hintsForm, hintsValidationStatus, setHintsValidationS
                                                             handleFieldChange('hintsFull');
                                                         }}
                                                     >
-                                                        20% от стоимости задания
+                                                        20% от стоимости задачи
                                                     </Checkbox>
                                                 </Form.Item>
                                             </Col>

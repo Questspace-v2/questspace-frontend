@@ -118,8 +118,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const [form] = Form.useForm<TaskForm>();
     const [hints] = Form.useForm<HintsFormProps>();
 
-    const taskNameError = 'Введите название задания';
-    const taskTextError = 'Введите текст задания';
+    const taskNameError = 'Введите название задачи';
+    const taskTextError = 'Введите текст задачи';
     const answersError = 'Добавьте хотя бы один вариант ответа';
     const fileIsTooBigError = 'Файл слишком большой';
     const unsupportedFileTypeError = 'Неподдерживаемый тип файла';
@@ -292,7 +292,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         const hintValues = await hints.validateFields()
             .then((values) => {
                 let initialValue = formValues.taskPoints;
-                values.hintsFull.map((value) => {
+                values?.hintsFull?.map((value) => {
                     if (value.defaultPenalty) {
                         initialValue -= formValues.taskPoints * 0.2;
                     } else {
@@ -491,7 +491,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                             >
                                 <Input
                                     type={'text'}
-                                    placeholder={'Название задания'}
+                                    placeholder={'Название задачи'}
                                     onChange={() => handleFieldChange('taskName')}
                                 />
                             </Form.Item>
@@ -508,7 +508,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                                 validateStatus={fieldsValidationStatus.taskText}
                             >
                                 <TextArea
-                                    placeholder={'Текст задания'}
+                                    placeholder={'Текст задачи'}
                                     style={{resize: 'none', height: '320px'}}
                                     onChange={() => handleFieldChange('taskText')}
                                 />
@@ -598,7 +598,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                     </Row>
                     <Row>
                         <Col className={'edit-task__labels'}>
-                            <span>Баллы за задание</span>
+                            <span>Баллы за задачу</span>
                         </Col>
                         <Col flex={'auto'}>
                             <FormItem name={'taskPoints'}>

@@ -47,3 +47,11 @@
     border-color: var(--text-blue);
   }
 }
+
+// потому что меня искренне заебало моргание при смене темы. решает 90% морганий.
+[class^="ant"] {
+  transition: unset !important;
+  * {
+    transition: unset !important;
+  }
+}

@@ -17,9 +17,12 @@ interface LogsProps {
     setIsInfoAlertHidden: Dispatch<SetStateAction<boolean>>;
 }
 
+export const LOGS_PAGE_SIZE = 50;
+
 export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsInfoAlertHidden}: LogsProps) {
     const [logsContent, setLogsContent] = useState<IAnswerLog[]>(paginatedLogs.answer_logs);
     const [nextPageToken, setNextPageToken] = useState(paginatedLogs.next_page_token);
+    const [currentPage, setCurrentPage] = useState(1);
     const [previousPageNumber, setPreviousPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(paginatedLogs.total_pages);
     const {data: session} = useSession();
@@ -33,18 +36,21 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
 
     const queryParams: IPaginatedAnswerLogsParams = {
         desc: true,
+        page_size: LOGS_PAGE_SIZE,
         task_group: selectedFilters.group ? getFilterId(selectedFilters.group) : undefined,
         task: selectedFilters.task ? getFilterId(selectedFilters.task) : undefined,
         team: selectedFilters.team ? getFilterId(selectedFilters.team) : undefined,
         user: selectedFilters.user ? getFilterId(selectedFilters.user) : undefined,
+        accepted_only: selectedFilters.accepted_only ? selectedFilters.accepted_only : undefined,
     };
 
     const onPaginationChange = async (pagination: TablePaginationConfig) => {
-        const currentPage = pagination.current ?? 1;
+        const currPage = pagination.current ?? 1;
+        setCurrentPage(currPage);
         const params: IPaginatedAnswerLogsParams = {
             ...queryParams,
-            page_id: currentPage - previousPageNumber === 1 ? nextPageToken.toString() : undefined,
-            page_no: currentPage - previousPageNumber !== 1 ? currentPage - 1 : undefined,
+            page_id: currPage - previousPageNumber === 1 ? nextPageToken.toString() : undefined,
+            page_no: currPage - previousPageNumber !== 1 ? currPage - 1 : undefined,
             desc: true,
         };
         const result = await getPaginatedAnswerLogs(questId, session?.accessToken, params) as IPaginatedAnswerLogs;
@@ -68,7 +74,16 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
             if (selectedFilters.user) {
                 queryParams.user = getFilterId(selectedFilters.user);
             }
-            const result = await getPaginatedAnswerLogs(questId, session?.accessToken, queryParams) as IPaginatedAnswerLogs;
+            if (selectedFilters.accepted_only) {
+                queryParams.accepted_only = true
+            }
+            const params: IPaginatedAnswerLogsParams = {
+                ...queryParams,
+                page_id: currentPage - previousPageNumber === 1 ? nextPageToken.toString() : undefined,
+                page_no: currentPage - previousPageNumber !== 1 ? currentPage - 1 : undefined,
+                desc: true,
+            };
+            const result = await getPaginatedAnswerLogs(questId, session?.accessToken, params) as IPaginatedAnswerLogs;
             setLogsContent(result?.answer_logs);
             setNextPageToken(result?.next_page_token);
             setTotalPages(result?.total_pages);
@@ -81,29 +96,30 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
     }, [selectedFilters]);
 
     const getOptions = () => {
-        const groups = contextData?.task_groups?.map(item => ({
-            value: `${item.name}_${item.id}`,
-            label: item.name,
+        const groups = (contextData?.task_groups ?? []).map(item => ({
+            value: `${item?.name}_${item?.id}`,
+            label: item?.name,
         }));
-        const tasks = contextData?.task_groups?.map(item =>
-            item.tasks.map(task => ({
+        const tasks = (contextData?.task_groups ?? []).map(item =>
+            (item?.tasks ?? [])?.map(task => ({
                 value: `${task.name}_${task.id}`,
                 label: task.name,
+        }))).flat();
+        const teams = (contextData?.teams ?? []).map(item => ({
+            value: `${item?.name}_${item.id}`,
+            label: item?.name,
+        }));
+        const users = (contextData?.teams ?? []).map(item =>
+            (item?.members ?? []).map(member => ({
+                value: `${member?.username}_${member?.id}`,
+                label: member?.username,
             }))).flat();
-        const teams = contextData?.teams?.map(item => ({
-            value: `${item.name}_${item.id}`,
-            label: item.name,
-        })) ?? [];
-        const users = contextData?.teams?.map(item =>
-            item.members.map(member => ({
-                value: `${member.username}_${member.id}`,
-                label: member.username,
-            }))).flat() ?? [];
         return {
             groups,
             tasks,
             teams,
             users,
+            accepted_only: selectedFilters.accepted_only ?? false
         };
     };
 
@@ -114,7 +130,8 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
             title: 'Время',
             dataIndex: 'answer_time',
             key: 'answer_time',
-            render: (time: string) => new Date(time).toLocaleString().replace(',', ''),
+            render: (time: string) => new Date(time).toLocaleString('ru-RU').replace(',', ''),
+            width: '152px'
         },
         {
             title: 'Группа',
@@ -123,16 +140,18 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
             render: (_, record) =>
                 <Tooltip title={record.task_group} placement='topLeft'>
                     {record.task_group}
-                </Tooltip>
+                </Tooltip>,
+            width: '208px'
         },
         {
-            title: 'Задание',
+            title: 'Задача',
             dataIndex: 'task',
             key: 'task',
             render: (task: string) =>
                 <Tooltip title={task} placement='topLeft'>
                     <span>{task}</span>
-                </Tooltip>
+                </Tooltip>,
+            width: '208px'
         },
         {
             title: 'Команда',
@@ -141,7 +160,8 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
             render: (_, record) =>
                 <Tooltip title={record.team} placement='topLeft'>
                     {record.team}
-                </Tooltip>
+                </Tooltip>,
+            width: '208px'
         },
         {
             title: 'Пользователь',
@@ -150,7 +170,8 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
             render: (_, record) =>
                 <Tooltip title={record.user ?? '—'} placement='topLeft'>
                     {record.user ?? '—'}
-                </Tooltip>
+                </Tooltip>,
+            width: '208px'
         },
         {
             title: 'Ответ',
@@ -185,7 +206,7 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
                 columns={columns}
                 dataSource={logsContent}
                 rowKey={(log) => log.answer_time}
-                pagination={{ total: 50 * totalPages, pageSize: 50, showSizeChanger: false }}
+                pagination={{ total: LOGS_PAGE_SIZE * totalPages, pageSize: LOGS_PAGE_SIZE, showSizeChanger: false }}
                 onChange={onPaginationChange}
                 scroll={{ x: 1186 }}
                 className='logs-table__table'

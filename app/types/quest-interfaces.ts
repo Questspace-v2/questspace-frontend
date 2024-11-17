@@ -260,4 +260,5 @@ export interface IPaginatedAnswerLogsParams {
     task?: string;
     user?: string;
     team?: string;
+    accepted_only?: boolean;
 }

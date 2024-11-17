@@ -33,7 +33,7 @@ export default function PlayPageContent({props}: {props: IQuestTaskGroupsRespons
                             <ArrowLeftOutlined />На страницу квеста
                         </Button>
                     </Link>
-                    <h1 className={'roboto-flex-header responsive-header-h1'}>{questName}: Задания</h1>
+                    <h1 className={'roboto-flex-header responsive-header-h1'}>{questName}: Задачи</h1>
                     <div className={'play-page__information'}>
                         <div className={'information__block'}>
                             <TeamOutlined />

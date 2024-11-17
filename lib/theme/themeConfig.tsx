@@ -76,8 +76,8 @@ const theme: ThemeConfig = {
             borderColorDisabled: 'var(--stroke-secondary)',
             colorBgContainerDisabled: 'var(--background-disabled)',
             colorTextDisabled: 'var(--text-disabled)',
-            primaryShadow: '0 2px 0 var(--background-blue)',
-            dangerShadow: '0 2px 0 var(--background-red)',
+            primaryShadow: '0',
+            dangerShadow: '0',
         },
         Modal: {
             contentBg: 'var(--background-primary)',

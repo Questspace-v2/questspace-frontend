@@ -31,7 +31,7 @@ import dynamic from 'next/dynamic';
 import classNames from 'classnames';
 import Teams from '@/components/QuestAdmin/Teams/Teams';
 import { ITeam } from '@/app/types/user-interfaces';
-import Logs from './Logs/Logs';
+import Logs, { LOGS_PAGE_SIZE } from './Logs/Logs';
 
 
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
@@ -95,7 +95,7 @@ export default function QuestAdmin() {
         },
         {
             key: 'tasks',
-            label: 'Задания',
+            label: 'Задачи',
         },
         {
             key: 'logs',
@@ -158,6 +158,7 @@ export default function QuestAdmin() {
         if (valueTab === SelectAdminTabs.LOGS) {
             const params: IPaginatedAnswerLogsParams = {
                 desc: true,
+                page_size: LOGS_PAGE_SIZE
             };
             const teamsData = await getQuestTeams(contextData.quest.id) as IGetAllTeamsResponse;
             const data = await getPaginatedAnswerLogs(contextData.quest.id, session?.accessToken, params) as IPaginatedAnswerLogs;

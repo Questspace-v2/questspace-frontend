@@ -187,7 +187,7 @@ const getQuestStatusButton = (
                 {team && (
                     <Link href={`${pathname}/play`}>
                         <Button type={'primary'} style={{ backgroundColor: 'var(--background-green)', boxShadow: '0 2px 0 0 var(--background-green)'}} tabIndex={-1} size={'large'}>
-                            <PlayCircleFilled />Открыть задания
+                            <PlayCircleFilled />Открыть задачи
                         </Button>
                     </Link>
                 )}
