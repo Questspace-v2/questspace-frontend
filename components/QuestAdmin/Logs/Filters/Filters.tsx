@@ -1,4 +1,4 @@
-import { Select } from 'antd';
+import { Checkbox, Select } from 'antd';
 import { Dispatch, SetStateAction } from 'react';
 
 export interface Option {
@@ -11,6 +11,7 @@ export interface FilterSelectOptions {
     tasks: Option[];
     teams: Option[];
     users: Option[];
+    accepted_only: boolean;
 }
 
 export interface SelectedFiltersState {
@@ -18,6 +19,7 @@ export interface SelectedFiltersState {
     task?: string;
     team?: string;
     user?: string;
+    accepted_only?: boolean;
 }
 
 interface FiltersProps {
@@ -26,7 +28,7 @@ interface FiltersProps {
 }
 
 export default function Filters({ options, setSelectedFilters }: FiltersProps) {
-    const onFilterChange = (filterName: keyof SelectedFiltersState, value: string) => {
+    const onFilterChange = (filterName: keyof SelectedFiltersState, value: string | boolean) => {
         setSelectedFilters(prevState => ({
             ...prevState,
             [filterName]: value,
@@ -39,31 +41,38 @@ export default function Filters({ options, setSelectedFilters }: FiltersProps) {
             <Select
                 placeholder='Группа'
                 allowClear
-                options={options.groups}
+                options={options?.groups}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('group', value)}
             />
             <Select
-                placeholder='Задание'
+                placeholder='Задача'
                 allowClear
-                options={options.tasks}
+                options={options?.tasks}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('task', value)}
             />
             <Select
                 placeholder='Команда'
                 allowClear
-                options={options.teams}
+                options={options?.teams}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('team', value)}
             />
             <Select
                 placeholder='Пользователь'
                 allowClear
-                options={options.users}
+                options={options?.users}
                 className='answer-logs__filter'
                 onChange={(value: string) => onFilterChange('user', value)}
             />
+            <Checkbox
+                value={options?.accepted_only}
+                className='answer-logs__filter'
+                onChange={(e) => onFilterChange('accepted_only', e.target.checked)}
+            >
+                Только правильные
+            </Checkbox>
         </div>
     )
 }

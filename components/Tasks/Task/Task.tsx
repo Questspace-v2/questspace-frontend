@@ -198,6 +198,9 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     };
 
     const handleSendAnswer = async () => {
+        if (sendButtonState === SendButtonStates.DISABLED || sendButtonState === SendButtonStates.TIMER) {
+            return;
+        }
         const answer = form.getFieldValue('task-answer') as string;
         const data: ITaskAnswer = {
             taskID: taskId!,
