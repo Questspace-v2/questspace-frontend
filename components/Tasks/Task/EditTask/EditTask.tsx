@@ -330,8 +330,11 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const handleSaveTask = async () => {
         const taskGroups = contextData.task_groups;
         const taskGroup = taskGroups
-            .find(group => group.id === taskGroupProps.id && group.pub_time === taskGroupProps.pub_time)!;
-        const taskGroupIndex = taskGroups.indexOf(taskGroup);
+            .find(group => group.id === taskGroupProps.id && group.pub_time === taskGroupProps.pub_time);
+
+        if (!taskGroup?.id || taskGroup?.order_idx == null || !taskGroup?.pub_time) {
+            return;
+        }
 
         const fields = form.getFieldsValue();
         const hintsFields = hints.getFieldsValue();
@@ -368,17 +371,15 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         if (task) {
             const taskIds = taskGroup.tasks.map(curTask => curTask.id)
             const index = taskIds.indexOf(task.id);
-            taskGroup.tasks[index] = newTask;
-            taskGroups[taskGroupIndex] = taskGroup;
 
             const updateTaskGroup: ITaskGroupsUpdate = {
-                id: taskGroup.id!,
+                id: taskGroup.id,
                 name: taskGroup.name,
-                order_idx: taskGroup.order_idx!,
-                pub_time: taskGroup.pub_time!,
+                order_idx: taskGroup.order_idx,
+                pub_time: taskGroup.pub_time,
                 tasks: {
                     update: [
-                        {...newTask, group_id: taskGroup.id!, order_idx: index, id: task.id}
+                        {...newTask, group_id: taskGroup.id, order_idx: index, id: task.id}
                     ]
                 }
             };
@@ -401,22 +402,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             return;
         }
 
-        if (taskGroup.tasks) {
-            taskGroup.tasks.push(newTask);
-        } else {
-            taskGroup.tasks = [newTask];
-        }
-
-        taskGroups[taskGroupIndex] = taskGroup;
-
         const updateTaskGroup: ITaskGroupsUpdate = {
-            id: taskGroup.id!,
+            id: taskGroup.id,
             name: taskGroup.name,
-            order_idx: taskGroup.order_idx!,
-            pub_time: taskGroup.pub_time!,
+            order_idx: taskGroup.order_idx,
+            pub_time: taskGroup.pub_time,
             tasks: {
                 create: [
-                    {...newTask, group_id: taskGroup.id!, order_idx: taskGroup.tasks.length - 1}
+                    {...newTask, group_id: taskGroup.id, order_idx: taskGroup.tasks?.length}
                 ]
             }
         };
@@ -429,14 +422,16 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             questId, requestData, session?.accessToken
         ) as ITaskGroupsAdminResponse;
 
-        setContextData({
-            ...contextData,
-            task_groups: data.task_groups,
-        });
-        form.resetFields();
-        hints.resetFields();
-        setFileList([]);
-        setIsOpen(false);
+        if (data?.task_groups) {
+            setContextData({
+                ...contextData,
+                task_groups: data.task_groups,
+            });
+            form.resetFields();
+            hints.resetFields();
+            setFileList([]);
+            setIsOpen(false);
+        }
     };
 
     const getImageErrorText = () => {
