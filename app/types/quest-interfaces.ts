@@ -46,26 +46,31 @@ export interface IHint {
     }
 }
 
-export interface ITaskGroup {
+export interface ITaskGroupDuration {
+    has_time_limit?: boolean,
+    time_limit?: number | null,
+    team_info?: {
+        opening_time: string,
+        closing_time?: string,
+    }
+}
+
+export interface ITaskGroup extends ITaskGroupDuration {
     id?: string,
     name: string,
     description?: string,
     order_idx?: number,
     pub_time?: string,
-    has_time_limit?: boolean,
-    time_limit?: number | null,
     tasks: ITask[]
 }
 
 export type IQuestCreate = Omit<IQuest, 'creator' | 'status' | 'id'>
 
-export interface ITaskGroupsCreate {
+export interface ITaskGroupsCreate extends ITaskGroupDuration {
     name: string,
     description?: string,
     order_idx: number,
     pub_time: string,
-    has_time_limit?: boolean,
-    time_limit?: number | null,
     tasks: ITask[]
 }
 
@@ -77,14 +82,12 @@ export interface ITaskGroupsDelete {
     id: string
 }
 
-export interface ITaskGroupsUpdate {
+export interface ITaskGroupsUpdate extends ITaskGroupDuration {
     id: string,
     name: string,
     description?: string,
     order_idx: number,
     pub_time: string,
-    has_time_limit?: boolean,
-    time_limit?: number | null,
     tasks: ITasksUpdateRequest
 }
 

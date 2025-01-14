@@ -34,6 +34,13 @@
     line-height: 24px;
 }
 
+.task-group__name .task-group__countdown {
+    display: block;
+    font-family: $font-manrope;
+    font-size: 16px;
+    line-height: 24px;
+}
+
 .task-group__description {
     padding: 24px 0 16px;
     border-top: 1px solid var(--stroke-secondary);

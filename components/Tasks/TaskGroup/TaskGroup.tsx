@@ -12,7 +12,13 @@ import remarkGfm from 'remark-gfm';
 import Markdown from 'react-markdown';
 import React, { useState } from 'react';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
-import { getLongTimeDiff, getTimeDiff } from '@/components/Quest/Quest.helpers';
+import { getLongTimeDiff } from '@/components/Quest/Quest.helpers';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+
+const Countdown = dynamic(() => import('../../CustomCountdown/CustomCountdown'), {
+    ssr: false
+})
 
 interface TaskGroupProps {
     mode: TasksMode,
@@ -21,27 +27,54 @@ interface TaskGroupProps {
 }
 
 export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
-    const { id, pub_time: pubTime, name, description, time_limit: timeLimit, has_time_limit: hasTimeLimit } = props;
+    const router = useRouter();
+    const isEditMode = mode === TasksMode.EDIT;
     const dateNow = new Date();
+    const { id, pub_time: pubTime, name, description, time_limit: timeLimit, has_time_limit: hasTimeLimit } = props;
     const {data: contextData} = useTasksContext()!;
+    const currentTaskGroup = contextData?.task_groups?.find((group) => group.id === id);
+    const expirationDate = (
+        currentTaskGroup?.has_time_limit &&
+        currentTaskGroup?.time_limit &&
+        currentTaskGroup?.team_info
+    ) ?
+        new Date(new Date(currentTaskGroup.team_info.opening_time).getTime() + currentTaskGroup.time_limit * 1000) : null;
     const isLinear = contextData.quest.quest_type === 'LINEAR';
     const [showSolvedTasks, setShowSolvedTasks] = useState<boolean>(false);
     const tasks = contextData.task_groups.find(item => item.id === id)?.tasks ?? [];
-    const solvedTasksFirst = tasks.sort((a, b) => +!!b.score - +!!a.score);
-    const totalScore = tasks.reduce((a, b) => a + (b.score ?? 0), 0);
-    const isEditMode = mode === TasksMode.EDIT;
     const isGroupClosed = tasks.length > 0 && tasks
         .every(item => item.score !== undefined && (item.score > 0 || isEditMode));
+    const solvedTasksFirst = tasks.sort((a, b) => +!!b.score - +!!a.score);
+    const totalScore = tasks.reduce((a, b) => a + (b.score ?? 0), 0);
+
+    const [showCountdown, setShowCountdown] = useState(!isGroupClosed && expirationDate && dateNow < expirationDate);
+    const onTimerCompete = () => {
+        router.refresh();
+        setShowCountdown(false);
+    };
+
     const collapseExtra = isEditMode ?
         <TaskGroupExtra questId={questId} edit={isEditMode} taskGroupProps={{id, pub_time: pubTime, name, description}}/> :
         null;
     const totalScoreExtra = isGroupClosed ?
         <span className={'task-group__score'} suppressHydrationWarning>+{totalScore}</span> :
         null;
-    const label = <div className='task-group__name-with-score'>
-        <span className={'task-group__name-text'}>{name}</span>
-        {totalScoreExtra}
-    </div>
+    const label = (
+        <div className="task-group__name-with-score" suppressHydrationWarning>
+            <span className={'task-group__name-text'}>{name}</span>
+            {showCountdown && expirationDate ? (
+                <span className={'task-group__countdown'}>
+                    <Countdown
+                        date={expirationDate}
+                        daysInHours
+                        onComplete={onTimerCompete}
+                    />
+                </span>
+            ) : (
+                totalScoreExtra
+            )}
+        </div>
+    );
 
     const items: CollapseProps['items'] = [
         {
@@ -51,69 +84,128 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                 <>
                     {isEditMode ? (
                         <div className={'task-group__settings-wrapper'}>
-                            <h2 className={classNames('roboto-flex-header', 'task-group__settings-header')}>Настройки уровня</h2>
+                            <h2
+                                className={classNames(
+                                    'roboto-flex-header',
+                                    'task-group__settings-header',
+                                )}
+                            >
+                                Настройки уровня
+                            </h2>
                             <div className={'task-group__settings-row'}>
-                                <span className={'task-group__setting-name'}>Описание уровня</span>
+                                <span className={'task-group__setting-name'}>
+                                    Описание уровня
+                                </span>
                                 {description ? (
-                                    <Markdown className={classNames('line-break', 'task-group__setting-value')}
-                                              disallowedElements={['pre', 'code']}
-                                              remarkPlugins={[remarkGfm]}>
+                                    <Markdown
+                                        className={classNames(
+                                            'line-break',
+                                            'task-group__setting-value',
+                                        )}
+                                        disallowedElements={['pre', 'code']}
+                                        remarkPlugins={[remarkGfm]}
+                                    >
                                         {description?.toString()}
                                     </Markdown>
                                 ) : (
-                                    <span className={'light-description'}>Нет</span>
+                                    <span className={'light-description'}>
+                                        Нет
+                                    </span>
                                 )}
-
                             </div>
                             <div className={'task-group__settings-row'}>
-                                <span className={'task-group__setting-name'}>Время на прохождение</span>
-                                <span className={'task-group__setting-value'}>{
-                                    isLinear && hasTimeLimit && timeLimit ?
-                                        getLongTimeDiff(dateNow, new Date(dateNow.getTime() + timeLimit * 1000)) :
-                                        'Не ограничено'
-                                }</span>
+                                <span className={'task-group__setting-name'}>
+                                    Время на прохождение
+                                </span>
+                                <span className={'task-group__setting-value'}>
+                                    {isLinear && hasTimeLimit && timeLimit
+                                        ? getLongTimeDiff(
+                                              dateNow,
+                                              new Date(
+                                                  dateNow.getTime() +
+                                                      timeLimit * 1000,
+                                              ),
+                                          )
+                                        : 'Не ограничено'}
+                                </span>
                             </div>
                         </div>
                     ) : (
                         <div suppressHydrationWarning>
-                            {description && <Markdown className={classNames('line-break', 'task-group__description')} disallowedElements={['pre', 'code']}
-                                                      remarkPlugins={[remarkGfm]}>
-                                {description?.toString()}
-                            </Markdown>}
+                            {description && (
+                                <Markdown
+                                    className={classNames(
+                                        'line-break',
+                                        'task-group__description',
+                                    )}
+                                    disallowedElements={['pre', 'code']}
+                                    remarkPlugins={[remarkGfm]}
+                                >
+                                    {description?.toString()}
+                                </Markdown>
+                            )}
                         </div>
                     )}
                     {totalScore && totalScore > 0 ? (
                         <Button
                             block
                             ghost
-                            style={{border: 'none', borderTop: '1px solid var(--stroke-secondary)'}}
-                            onClick={() => setShowSolvedTasks(prevState => !prevState)}
+                            style={{
+                                border: 'none',
+                                borderTop: '1px solid var(--stroke-secondary)',
+                            }}
+                            onClick={() =>
+                                setShowSolvedTasks(prevState => !prevState)
+                            }
                         >
-                            {showSolvedTasks ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                            {showSolvedTasks ? 'Скрыть ' : 'Показать '}решенные задачи
+                            {showSolvedTasks ? (
+                                <EyeInvisibleOutlined />
+                            ) : (
+                                <EyeOutlined />
+                            )}
+                            {showSolvedTasks ? 'Скрыть ' : 'Показать '}решенные
+                            задачи
                         </Button>
                     ) : null}
-                    {solvedTasksFirst &&
+                    {solvedTasksFirst && (
                         <>
-                            {solvedTasksFirst.map((task) => (!task.score || task.score && showSolvedTasks) && (
-                                    <div className={'task-group__task'} key={task.pub_time + task.id}>
-                                        <Task
-                                            props={task}
-                                            mode={mode}
-                                            questId={questId}
-                                            taskGroupProps={{ id, pub_time: pubTime, name }}
+                            {solvedTasksFirst.map(
+                                task =>
+                                    (!task.score ||
+                                        (task.score && showSolvedTasks)) && (
+                                        <div
+                                            className={'task-group__task'}
                                             key={task.pub_time + task.id}
-                                        />
-                                        {getTaskExtra(isEditMode, false, {
-                                            id,
-                                            pub_time: pubTime,
-                                            name,
-                                        }, task, questId)}
-                                    </div>))
-                            }
+                                        >
+                                            <Task
+                                                props={task}
+                                                mode={mode}
+                                                questId={questId}
+                                                taskGroupProps={{
+                                                    id,
+                                                    pub_time: pubTime,
+                                                    name,
+                                                }}
+                                                key={task.pub_time + task.id}
+                                            />
+                                            {getTaskExtra(
+                                                isEditMode,
+                                                false,
+                                                {
+                                                    id,
+                                                    pub_time: pubTime,
+                                                    name,
+                                                },
+                                                task,
+                                                questId,
+                                            )}
+                                        </div>
+                                    ),
+                            )}
                         </>
-                    }
-                </>),
+                    )}
+                </>
+            ),
             headerClass: classNames(
                 'tasks__name',
                 'task-group__name',
