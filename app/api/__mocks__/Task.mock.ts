@@ -4,7 +4,7 @@ export const taskMock1: ITask = {
     correct_answers: [
         "string"
     ],
-    hints: [
+    hints_full: [
         {
             taken: false,
             text: "string"
@@ -15,7 +15,7 @@ export const taskMock1: ITask = {
         }
     ],
     id: "string",
-    media_link: "https://api.dicebear.com/7.x/thumbs/svg?seed=591f6fe1-d6cd-479b-a327-35f6b12a08fc",
+    media_links: ["https://api.dicebear.com/7.x/thumbs/svg?seed=591f6fe1-d6cd-479b-a327-35f6b12a08fc"],
     name: "Канатная дорога",
     order_idx: 0,
     pub_time: "string",
@@ -28,7 +28,7 @@ export const taskMock2: ITask = {
     correct_answers: [
         "строка", "возможно"
     ],
-    hints: [
+    hints_full: [
         {
             taken: false,
             text: "string"
@@ -43,7 +43,7 @@ export const taskMock2: ITask = {
         }
     ],
     id: "string1337",
-    media_link: "",
+    media_links: [""],
     name: "Кто-то рождается, кто-то умирает",
     order_idx: 1,
     pub_time: "string",

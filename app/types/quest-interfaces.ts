@@ -12,6 +12,7 @@ export interface IQuest {
     registration_deadline: string | Date,
     start_time: string | Date,
     status: string,
+    quest_type: 'ASSAULT' | 'LINEAR',
     has_brief?: boolean,
     brief?: string,
     max_teams_amount?: number,
@@ -45,7 +46,16 @@ export interface IHint {
     }
 }
 
-export interface ITaskGroup {
+export interface ITaskGroupDuration {
+    has_time_limit?: boolean,
+    time_limit?: number | null,
+    team_info?: {
+        opening_time: string,
+        closing_time?: string,
+    }
+}
+
+export interface ITaskGroup extends ITaskGroupDuration {
     id?: string,
     name: string,
     description?: string,
@@ -56,7 +66,7 @@ export interface ITaskGroup {
 
 export type IQuestCreate = Omit<IQuest, 'creator' | 'status' | 'id'>
 
-export interface ITaskGroupsCreate {
+export interface ITaskGroupsCreate extends ITaskGroupDuration {
     name: string,
     description?: string,
     order_idx: number,
@@ -72,7 +82,7 @@ export interface ITaskGroupsDelete {
     id: string
 }
 
-export interface ITaskGroupsUpdate {
+export interface ITaskGroupsUpdate extends ITaskGroupDuration {
     id: string,
     name: string,
     description?: string,

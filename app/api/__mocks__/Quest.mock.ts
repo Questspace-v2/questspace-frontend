@@ -18,7 +18,8 @@ const questMock: IQuest = {
     name: "Городской квест ДПММ",
     registration_deadline: "2021-02-11T21:54:42.123Z",
     start_time: "2021-02-18T11:54:42.123Z",
-    status: QuestStatus.StatusWaitResults
+    status: QuestStatus.StatusWaitResults,
+    quest_type: 'ASSAULT'
 }
 
 export default questMock;

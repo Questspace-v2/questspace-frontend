@@ -1,9 +1,22 @@
 @use "globals" as *;
 
 .edit-task-group__content {
+    .ant-row {
+        row-gap: 5px;
+        flex-flow: unset;
+
+        @media screen and (max-width: $m-breakpoint-639) {
+            flex-direction: column;
+        }
+    }
     .edit-task-group__labels {
         width: 184px;
+        min-width: 184px;
         color: var(--text-default);
+
+        @media screen and (max-width: $m-breakpoint-639) {
+            width: unset;
+        }
     }
 
     .edit-task-group__file-extensions {

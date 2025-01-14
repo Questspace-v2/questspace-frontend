@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Col, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Form, Input, InputNumber, Row } from 'antd';
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
@@ -16,6 +16,7 @@ import {
 } from '@/app/types/quest-interfaces';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 import classNames from 'classnames';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
 const {TextArea} = Input;
 
@@ -28,7 +29,8 @@ interface TaskGroupModalProps {
 
 export interface TaskGroupForm {
     groupName: string,
-    description?: string
+    description?: string,
+    timeLimit?: number,
 }
 
 export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProps}: TaskGroupModalProps) {
@@ -37,7 +39,10 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
 
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const taskGroups = contextData.task_groups ?? [];
+    const isLinear = contextData.quest.quest_type === 'LINEAR';
     const currentTaskGroup = taskGroups.find(item => item.id === taskGroupProps?.id && item.pub_time === taskGroupProps?.pub_time)!;
+    const [noTimeLimit, setNoTimeLimit] = useState<boolean>(currentTaskGroup && !currentTaskGroup?.has_time_limit || currentTaskGroup?.time_limit === null);
+    const [timeLimit, setTimeLimit] = useState(currentTaskGroup?.has_time_limit && currentTaskGroup?.time_limit ? currentTaskGroup.time_limit / 60 : 3);
     const title = taskGroupProps ? 'Настройки уровня' : 'Создание уровня';
 
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
@@ -54,6 +59,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
         const taskGroupIndex = taskGroups.indexOf(currentTaskGroup);
         const groupName = form.getFieldValue('groupName') as string;
         const description = form.getFieldValue('description') as string;
+        const finalTimeLimit = !isLinear || noTimeLimit ? null : timeLimit * 60;
 
         if (!groupName) {
             setValidationStatus('error');
@@ -73,6 +79,8 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 name: groupName,
                 description,
                 order_idx: taskGroupIndex,
+                has_time_limit: !noTimeLimit,
+                time_limit: finalTimeLimit,
                 tasks: {}
             };
 
@@ -94,13 +102,22 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
         }
 
         const pubTime = new Date();
-        taskGroups.push({name: groupName, description, tasks: [], pub_time: pubTime.toISOString()});
+        taskGroups.push({
+            name: groupName,
+            description,
+            tasks: [],
+            pub_time: pubTime.toISOString(),
+            has_time_limit: !noTimeLimit,
+            time_limit: finalTimeLimit
+        });
 
         const newGroup: ITaskGroupsCreate = {
             name: groupName,
             description,
             tasks: [],
             pub_time: pubTime.toISOString(),
+            has_time_limit: !noTimeLimit,
+            time_limit: finalTimeLimit,
             order_idx: taskGroups.length - 1,
         };
 
@@ -129,12 +146,21 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
     return (
         <CustomModal
             className={'edit-task-group__modal'}
-            classNames={{content: 'edit-task-group__content'}}
+            classNames={{ content: 'edit-task-group__content' }}
             open={isOpen}
-            width={xs ?? md ? '100%': 800}
+            width={xs ?? md ? '100%' : 800}
             centered
             destroyOnClose
-            title={<h3 className={classNames(`${customModalClassname}-header`, 'roboto-flex-header')}>{title}</h3>}
+            title={
+                <h3
+                    className={classNames(
+                        `${customModalClassname}-header`,
+                        'roboto-flex-header',
+                    )}
+                >
+                    {title}
+                </h3>
+            }
             onCancel={onCancel}
             footer={[
                 <Button key={'save'} type={'primary'} onClick={handleSave}>
@@ -142,7 +168,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 </Button>,
                 <Button key={'cancel'} onClick={onCancel}>
                     Отменить
-                </Button>
+                </Button>,
             ]}
             forceRender
         >
@@ -152,8 +178,12 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 preserve={false}
                 initialValues={{
                     groupName: currentTaskGroup?.name,
-                    description: currentTaskGroup?.description
+                    description: currentTaskGroup?.description,
+                    timeLimit: currentTaskGroup?.time_limit ? currentTaskGroup.time_limit / 60 : 3,
                 }}
+                fields={[
+                    { name: 'timeLimit', value: timeLimit },
+                ]}
                 noValidate
             >
                 <Row>
@@ -166,16 +196,18 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                             validateStatus={validationStatus}
                             help={errorMsg}
                         >
-                            <Input
-                                type={'text'}
-                                onChange={handleFieldChange}
-                            />
+                            <Input type={'text'} onChange={handleFieldChange} />
                         </Form.Item>
                     </Col>
                 </Row>
                 <Row>
                     <Col className={'edit-task-group__labels'}>
-                        <span>Описание <span className={'light-description'}>поддерживает&nbsp;Markdown</span></span>
+                        <span>
+                            Описание{' '}
+                            <span className={'light-description'}>
+                                поддерживает&nbsp;Markdown
+                            </span>
+                        </span>
                     </Col>
                     <Col flex={'auto'}>
                         <Form.Item<TaskGroupForm>
@@ -186,6 +218,72 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                                 style={{ resize: 'none', height: '320px' }}
                             />
                         </Form.Item>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col className={'edit-task-group__labels'}>
+                        <span
+                            className={classNames(
+                                !isLinear && 'light-description',
+                            )}
+                        >
+                            Время на прохождение
+                        </span>
+                    </Col>
+                    <Col flex={'auto'}>
+                        <Form.Item<TaskGroupForm>
+                            name={'timeLimit'}
+                            colon={false}
+                            extra={
+                                <Checkbox
+                                    checked={noTimeLimit}
+                                    disabled={!isLinear}
+                                    onClick={() => setNoTimeLimit((prev) => !prev)}
+                                    style={{ padding: '5px 0' }}
+                                >
+                                    Без ограничений
+                                </Checkbox>
+                            }
+                        >
+                            <InputNumber
+                            addonBefore={
+                                <MinusOutlined
+                                    onClick={() => {
+                                        if (!noTimeLimit && timeLimit > 1) {
+                                            setTimeLimit((prev) => prev - 1);
+                                        }
+                                    }}
+                                />}
+                            addonAfter={
+                                <PlusOutlined
+                                    onClick={() => {
+                                        if (!noTimeLimit) {
+                                            setTimeLimit((prev) => prev + 1);
+                                        }
+                                    }}
+                                />}
+                            controls={false}
+                            disabled={!isLinear || noTimeLimit}
+                            min={1}
+                            style={{ width: '128px', textAlignLast: 'center' }}
+                            onChange={(value) => {
+                                setTimeLimit(value ?? 1);
+                            }}
+                        />
+                        </Form.Item>
+                        {isLinear ? (
+                            <span className={'light-description'}>
+                        Если ограничить время на прохождение, то после
+                        указанного времени уровень заблокируется и прием задач
+                        на уровне закроется
+                        </span>
+                        ) : (
+                            <span className={'light-description'}>
+                                Чтобы ограничивать время на прохождения уровня,
+                                выберите порядок выдачи заданий «Линейка»
+                                в настройках квеста
+                            </span>
+                        )}
                     </Col>
                 </Row>
             </Form>

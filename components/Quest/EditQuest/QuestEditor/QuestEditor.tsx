@@ -53,7 +53,8 @@ export interface QuestAboutForm {
     maxTeamCap: number,
     access: string,
     maxTeamsAmount: number | null,
-    registrationType: 'AUTO' | 'VERIFY'
+    registrationType: 'AUTO' | 'VERIFY',
+    questType: 'ASSAULT' | 'LINEAR',
 }
 
 const theme: ThemeConfig = {
@@ -110,7 +111,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         registrationDeadline: 'success',
         startTime: 'success',
         finishTime: 'success',
-        access: 'success'
+        access: 'success',
+        questType: 'success'
     };
     const [fieldsValidationStatus, setFieldsValidationStatus] = useState(defaultFieldsValidationStatus);
 
@@ -214,6 +216,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         access: !values.access ? 'error' : prevState.access,
                         image: !s3Response && !previousImage && !fileIsTooBig ? 'error' : prevState.image,
                         registrationType: !values.registrationType ? 'error' : prevState.registrationType,
+                        questType: !values.questType ? 'error' : prevState.questType,
                     }));
                     return null;
                 }
@@ -228,7 +231,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     start_time: values.startTime,
                     media_link: (s3Response as Response).url ?? previousImage,
                     max_teams_amount: noTeamsLimit || teamsAmount < 1 ? -1 : teamsAmount,
-                    registration_type: values.registrationType
+                    registration_type: values.registrationType,
+                    quest_type: values.questType
                 };
             })
             .catch(error => {
@@ -297,6 +301,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         'maxTeamCap': initialTeamCapacity ?? 3,
                         'access': isNewQuest && 'link_only',
                         'registrationType': isNewQuest && 'AUTO',
+                        'questType': isNewQuest && 'ASSAULT',
                     }}
                     fields={[
                         { name: 'maxTeamCap', value: teamCapacity },
@@ -532,6 +537,39 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         />
                     </Form.Item>
                     <h3 className={'roboto-flex-header quest-editor__subheader'}>Другие настройки</h3>
+                    <Form.Item<QuestAboutForm>
+                        className={'quest-editor__small-field quest-editor__access-form-item'}
+                        name={'questType'}
+                        labelAlign={'left'}
+                        label={'Порядок выдачи заданий'}
+                        colon={false}
+                        required
+                        help={fieldsValidationStatus.access === 'error' &&
+                            <p className={'quest-editor__validation-error'}>Выберите тип доступа</p>}
+                        validateStatus={fieldsValidationStatus.access}
+                    >
+                        <Radio.Group
+                            onChange={() => {
+                                handleValueChange('questType');
+                                setFieldsValidationStatus((prevState) => ({
+                                    ...prevState,
+                                    access: 'success'
+                                }));
+                            }}>
+                            <Radio value={'ASSAULT'}>
+                                Штурм
+                                <p className={'light-description'}>
+                                    Все уровни и задания доступны сразу же после старта
+                                </p>
+                            </Radio>
+                            <Radio value={'LINEAR'}>
+                                Линейка
+                                <p className={'light-description'}>
+                                    Каждый новый уровень открывается через какое-то время или после закрытия предыдущего
+                                </p>
+                            </Radio>
+                        </Radio.Group>
+                    </Form.Item>
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__access-form-item'}
                         name={'access'}

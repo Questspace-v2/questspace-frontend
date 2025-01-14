@@ -3,7 +3,15 @@
 import Image from 'next/image';
 import {uid} from '@/lib/utils/utils';
 import { Button, CountdownProps, Form, Input, message, Statistic, Tooltip } from 'antd';
-import { IHint, IHintRequest, ITask, ITaskAnswer, ITaskAnswerResponse, ITaskGroup } from '@/app/types/quest-interfaces';
+import {
+    IHint,
+    IHintRequest,
+    ITask,
+    ITaskAnswer,
+    ITaskAnswerResponse,
+    ITaskGroup,
+    ITaskGroupDuration,
+} from '@/app/types/quest-interfaces';
 import {SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
@@ -40,7 +48,7 @@ interface TaskProps {
     mode: TasksMode,
     props: ITask,
     questId: string,
-    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'>
+    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'> & ITaskGroupDuration
 }
 
 export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
@@ -86,7 +94,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
 
     const [sendButtonState, setSendButtonState] = useState<SendButtonStates>(teamAnswer ? SendButtonStates.DISABLED : SendButtonStates.BASIC);
     const [inputState, setInputState] = useState<InputStates>(teamAnswer ? InputStates.ACCEPTED : InputStates.BASIC);
-    const [sendButtonContent, setSendButtonContent] = useState<JSX.Element | null>(<SendOutlined/>);
+    const [sendButtonContent, setSendButtonContent] = useState<React.JSX.Element | null>(<SendOutlined/>);
     const [inputValidationStatus, setInputValidationStatus] = useState<'success' | 'error' | ''>(teamAnswer ? 'success' : '');
 
     const [accepted, setAccepted] = useState(Boolean(score && score > 0));
@@ -168,7 +176,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
     };
 
     const handleAnswerValidation = (answerResponse: ITaskAnswerResponse) => {
-        if (answerResponse.accepted) {
+        if (answerResponse?.accepted) {
             setInputValidationStatus('success');
             form.setFieldValue('task-answer', answerResponse.text);
             setContextData(prevState => {
