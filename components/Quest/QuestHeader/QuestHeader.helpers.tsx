@@ -16,7 +16,8 @@ import { IQuest } from '@/app/types/quest-interfaces';
 
 
 const getStartDateText = (startDate: Date) => {
-    const startDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'});
+    const nowDateYearBefore = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+    const startDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long', ...(startDate < nowDateYearBefore) && {year: 'numeric'}});
     const startHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
 
     return `${startDayMonth} в ${startHourMinute}`;
