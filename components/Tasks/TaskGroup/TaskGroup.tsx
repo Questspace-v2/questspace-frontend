@@ -12,6 +12,7 @@ import remarkGfm from 'remark-gfm';
 import Markdown from 'react-markdown';
 import React, { useState } from 'react';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+import { getLongTimeDiff, getTimeDiff } from '@/components/Quest/Quest.helpers';
 
 interface TaskGroupProps {
     mode: TasksMode,
@@ -20,8 +21,10 @@ interface TaskGroupProps {
 }
 
 export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
-    const { id, pub_time: pubTime, name, description } = props;
+    const { id, pub_time: pubTime, name, description, time_limit: timeLimit, has_time_limit: hasTimeLimit } = props;
+    const dateNow = new Date();
     const {data: contextData} = useTasksContext()!;
+    const isLinear = contextData.quest.quest_type === 'LINEAR';
     const [showSolvedTasks, setShowSolvedTasks] = useState<boolean>(false);
     const tasks = contextData.task_groups.find(item => item.id === id)?.tasks ?? [];
     const solvedTasksFirst = tasks.sort((a, b) => +!!b.score - +!!a.score);
@@ -64,7 +67,11 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                             </div>
                             <div className={'task-group__settings-row'}>
                                 <span className={'task-group__setting-name'}>Время на прохождение</span>
-                                <span className={'task-group__setting-value'}>Не ограничено</span>
+                                <span className={'task-group__setting-value'}>{
+                                    isLinear && hasTimeLimit && timeLimit ?
+                                        getLongTimeDiff(dateNow, new Date(dateNow.getTime() + timeLimit * 1000)) :
+                                        'Не ограничено'
+                                }</span>
                             </div>
                         </div>
                     ) : (

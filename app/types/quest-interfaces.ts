@@ -52,6 +52,8 @@ export interface ITaskGroup {
     description?: string,
     order_idx?: number,
     pub_time?: string,
+    has_time_limit?: boolean,
+    time_limit?: number | null,
     tasks: ITask[]
 }
 
@@ -62,6 +64,8 @@ export interface ITaskGroupsCreate {
     description?: string,
     order_idx: number,
     pub_time: string,
+    has_time_limit?: boolean,
+    time_limit?: number | null,
     tasks: ITask[]
 }
 
@@ -79,6 +83,8 @@ export interface ITaskGroupsUpdate {
     description?: string,
     order_idx: number,
     pub_time: string,
+    has_time_limit?: boolean,
+    time_limit?: number | null,
     tasks: ITasksUpdateRequest
 }
 
