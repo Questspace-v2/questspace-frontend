@@ -12,6 +12,7 @@ export interface IQuest {
     registration_deadline: string | Date,
     start_time: string | Date,
     status: string,
+    quest_type: 'ASSAULT' | 'LINEAR',
     has_brief?: boolean,
     brief?: string,
     max_teams_amount?: number,

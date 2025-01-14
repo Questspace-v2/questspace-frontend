@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import HeaderAvatar from '@/components/Header/HeaderAvatar/HeaderAvatar';
 import Logotype from '@/components/Logotype/Logotype';
