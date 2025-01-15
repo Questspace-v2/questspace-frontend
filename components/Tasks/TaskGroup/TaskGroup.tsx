@@ -184,8 +184,9 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                                                 taskGroupProps={{
                                                     id,
                                                     pub_time: pubTime,
-                                                    name,
+                                                    name
                                                 }}
+                                                isExpired={expirationDate !== null && dateNow >= expirationDate}
                                                 key={task.pub_time + task.id}
                                             />
                                             {getTaskExtra(

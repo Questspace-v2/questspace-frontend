@@ -48,10 +48,11 @@ interface TaskProps {
     mode: TasksMode,
     props: ITask,
     questId: string,
-    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'> & ITaskGroupDuration
+    taskGroupProps: Pick<ITaskGroup, 'id' | 'pub_time' | 'name'> & ITaskGroupDuration,
+    isExpired?: boolean,
 }
 
-export default function Task({mode, props, questId, taskGroupProps}: TaskProps) {
+export default function Task({mode, props, questId, taskGroupProps, isExpired}: TaskProps) {
     const {
         name,
         question,
@@ -231,14 +232,20 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     mode === TasksMode.PLAY ?
                         <h4 className={classNames('roboto-flex-header task__name', accepted && 'task__accepted')}>
                             {name}
+                            {/* Да простит меня Бог */}
+                            {/* eslint-disable-next-line no-nested-ternary */}
                             {accepted ?
                                 <Tooltip title={scoreText} placement={'bottom'}>
                                     <span className="task__reward-accepted">+{score}</span>
                                 </Tooltip>
                                 :
-                                <Tooltip title={scoreText} placement={'bottom'}>
-                                    <span className="task__reward">{score && score > 0 ? score : currentScore}</span>
-                                </Tooltip>
+                                isExpired ?
+                                    <Tooltip title={0} placement={'bottom'}>
+                                    <span className="task__reward">0</span>
+                                    </Tooltip> :
+                                    <Tooltip title={scoreText} placement={'bottom'}>
+                                        <span className="task__reward">{score && score > 0 ? score : currentScore}</span>
+                                    </Tooltip>
                             }
                         </h4> :
                         <h4 className={'roboto-flex-header task__name'}>{name}</h4>
@@ -279,7 +286,7 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                     </Swiper>
                 </>
             )}
-            {objectHints && objectHints.length > 0 && (
+            {!isExpired && objectHints && objectHints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
                     {objectHints.map((hint, index) =>
                         <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${takenHints[index] || hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
@@ -326,14 +333,14 @@ export default function Task({mode, props, questId, taskGroupProps}: TaskProps) 
                         className={classNames(inputState === InputStates.ACCEPTED && 'task__answer-part_right')}
                         placeholder={'Ответ'}
                         onChange={handleValueChange}
-                        disabled={inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
+                        disabled={isExpired ?? inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
                 </Form.Item>
                 <FormItem>
                     <Button
                         type={'primary'}
                         onClick={handleSendAnswer}
                         loading={sendButtonState === SendButtonStates.LOADING}
-                        disabled={sendButtonState !== SendButtonStates.BASIC}
+                        disabled={isExpired ?? sendButtonState !== SendButtonStates.BASIC}
                     >{sendButtonContent}</Button>
                 </FormItem>
             </Form>
