@@ -104,6 +104,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const [errorMsg, setErrorMsg] = useState('');
     const [changedFields, setChangedFields] = useState<string[]>([]);
 
+    // Состояния для ошибок валидации дат
+    const [registrationDeadlineError, setRegistrationDeadlineError] = useState<string | null>(null);
+    const [startTimeError, setStartTimeError] = useState<string | null>(null);
+    const [finishTimeError, setFinishTimeError] = useState<string | null>(null);
+
     const defaultFieldsValidationStatus: Record<string, ValidationStatus> = {
         name: 'success',
         description: 'success',
@@ -163,6 +168,58 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         });
     };
 
+    const validateDates = () => {
+        const now = dayjs();
+
+        const registrationStr = form.getFieldValue('registrationDeadline') as string;
+        const registrationDeadline = registrationStr ? dayjs(registrationStr) : null;
+
+        const startStr = form.getFieldValue('startTime') as string
+        const startTime = startStr ? dayjs(startStr) : null;
+
+        const finishStr = form.getFieldValue('finishTime') as string;
+        const finishTime = finishStr ? dayjs(finishStr) : null;
+
+        // Сброс ошибок
+        setRegistrationDeadlineError(null);
+        setStartTimeError(null);
+        setFinishTimeError(null);
+
+        let isValid = true;
+
+        // Проверка registrationDeadline
+        if (registrationDeadline?.isBefore(now)) {
+            setRegistrationDeadlineError('Дедлайн регистрации не должен быть в прошлом');
+            isValid = false;
+        }
+
+        // Проверка startTime
+        if (startTime?.isBefore(now)) {
+            setStartTimeError('Время начала не должно быть в прошлом');
+            isValid = false;
+        }
+
+        // Проверка finishTime
+        if (finishTime?.isBefore(now)) {
+            setFinishTimeError('Время финиша не должно быть в прошлом');
+            isValid = false;
+        }
+
+        // Проверка registrationDeadline <= startTime
+        if (!registrationDeadlineChecked && registrationDeadline && startTime && registrationDeadline.isAfter(startTime)) {
+            setRegistrationDeadlineError('Дедлайн регистрации не должен быть позже начала');
+            isValid = false;
+        }
+
+        // Проверка startTime < finishTime
+        if (startTime && finishTime && startTime.isAfter(finishTime)) {
+            setFinishTimeError('Время финиша не должно быть раньше начала');
+            isValid = false;
+        }
+
+        return isValid;
+    };
+
     const handleUploadValueChange: UploadProps['onChange'] = (info) => {
         const isMoreThan5Mb = Boolean(info.file.size && info.file.size / 1024 / 1024 >= 5);
         const isFileTypeUnsupported = !info.file.type?.startsWith('image/');
@@ -199,6 +256,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     const handleValidation = async () => {
         const imageValidation = fileList.length > 0;
         const s3Response = imageValidation && await handleS3Response();
+        const datesValidation = validateDates();
+
+        if (!datesValidation) {
+            return null;
+        }
 
         // eslint-disable-next-line consistent-return
         return form.validateFields()
@@ -436,32 +498,45 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         />
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
+                        shouldUpdate
                         name={'registrationDeadline'}
                         className={'quest-editor__small-field'}
                         label={'Дедлайн регистрации'}
                         colon={false}
-                        extra={<Checkbox checked={registrationDeadlineChecked}
-                                         onClick={() => setRegistrationDeadlineChecked((prev) => !prev)}
-                                         style={{ padding: '5px 0' }}>Совпадает с началом квеста</Checkbox>}
+                        extra={<>
+                            <Checkbox checked={registrationDeadlineChecked}
+                                onClick={() => {
+                                    setRegistrationDeadlineChecked((prev) => {
+                                        if (!prev) {
+                                            form.setFieldValue('registrationDeadline', form.getFieldValue('startTime'))
+                                        }
+                                        return !prev
+                                    });
+                                }}
+                                onChange={validateDates}
+                                style={{ padding: '5px 0' }}>Совпадает с началом квеста
+                            </Checkbox>
+                            {registrationDeadlineError &&
+                                <p className={'quest-editor__validation-error'}>{registrationDeadlineError}</p>
+                            }
+                        </>}
                         validateStatus={fieldsValidationStatus.registrationDeadline}
                     >
                         <DatePicker
-                            disabledDate={
-                                (value) =>
-                                    value.isBefore(dayjs(), 'day') ||
-                                    value > form.getFieldValue('startTime') ||
-                                    value > form.getFieldValue('finishTime')
-                            }
                             disabled={registrationDeadlineChecked}
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={() => {
+                            onChange={(date) => {
+                                if (date === null) {
+                                    form.setFieldValue('registrationDeadline', date);
+                                }
                                 handleValueChange('registrationDeadline');
                                 setFieldsValidationStatus((prevState) => ({
                                     ...prevState,
                                     registrationDeadline: 'success'
                                 }));
+                                validateDates();
                             }}
                         />
                     </Form.Item>
@@ -499,19 +574,26 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         className={'quest-editor__small-field'}
                         label={'Старт'}
                         colon={false}
+                        extra={startTimeError && <p className={'quest-editor__validation-error'}>{startTimeError}</p>}
                         validateStatus={fieldsValidationStatus.startTime}
                     >
                         <DatePicker
-                            disabledDate={(value) => value.isBefore(dayjs(), 'day') || value > form.getFieldValue('finishTime')}
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={() => {
+                            onChange={(date) => {
+                                if (date === null) {
+                                    form.setFieldValue('startTime', date);
+                                }
+                                if (registrationDeadlineChecked) {
+                                    form.setFieldValue('registrationDeadline', date)
+                                }
                                 handleValueChange('startTime');
                                 setFieldsValidationStatus((prevState) => ({
                                     ...prevState,
                                     startTime: 'success'
                                 }));
+                                validateDates();
                             }}
                         />
                     </Form.Item>
@@ -520,19 +602,23 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         className={'quest-editor__small-field'}
                         label={'Завершение'}
                         colon={false}
+                        extra={finishTimeError && <p className={'quest-editor__validation-error'}>{finishTimeError}</p>}
                         validateStatus={fieldsValidationStatus.finishTime}
                     >
                         <DatePicker
-                            disabledDate={(value) => value.isBefore(dayjs(), 'day') || value < form.getFieldValue('startTime')}
                             format="DD MMMM YYYY HH:mm"
                             showTime={{ defaultValue: dayjs('00:00', 'HH:mm') }}
                             needConfirm={false}
-                            onChange={() => {
+                            onChange={(date) => {
+                                if (date === null) {
+                                    form.setFieldValue('finishTime', date);
+                                }
                                 handleValueChange('finishTime');
                                 setFieldsValidationStatus((prevState) => ({
                                     ...prevState,
                                     finishTime: 'success'
                                 }));
+                                validateDates();
                             }}
                         />
                     </Form.Item>
