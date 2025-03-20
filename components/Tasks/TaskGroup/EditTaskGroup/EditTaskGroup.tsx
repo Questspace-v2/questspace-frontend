@@ -41,7 +41,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
     const taskGroups = contextData.task_groups ?? [];
     const isLinear = contextData.quest.quest_type === 'LINEAR';
     const currentTaskGroup = taskGroups.find(item => item.id === taskGroupProps?.id && item.pub_time === taskGroupProps?.pub_time)!;
-    const [noTimeLimit, setNoTimeLimit] = useState<boolean>(currentTaskGroup && !currentTaskGroup?.has_time_limit || currentTaskGroup?.time_limit === null);
+    const [noTimeLimit, setNoTimeLimit] = useState<boolean>(!isLinear || currentTaskGroup && !currentTaskGroup?.has_time_limit || currentTaskGroup?.time_limit === null);
     const [timeLimit, setTimeLimit] = useState(currentTaskGroup?.has_time_limit && currentTaskGroup?.time_limit ? currentTaskGroup.time_limit / 60 : 3);
     const title = taskGroupProps ? 'Настройки уровня' : 'Создание уровня';
 
@@ -107,8 +107,10 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
             description,
             tasks: [],
             pub_time: pubTime.toISOString(),
-            has_time_limit: !noTimeLimit,
-            time_limit: finalTimeLimit
+            ...(isLinear) && {
+                has_time_limit: !noTimeLimit,
+                time_limit: finalTimeLimit
+            },
         });
 
         const newGroup: ITaskGroupsCreate = {
@@ -116,8 +118,10 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
             description,
             tasks: [],
             pub_time: pubTime.toISOString(),
-            has_time_limit: !noTimeLimit,
-            time_limit: finalTimeLimit,
+            ...(isLinear) && {
+                has_time_limit: !noTimeLimit,
+                time_limit: finalTimeLimit
+            },
             order_idx: taskGroups.length - 1,
         };
 
@@ -224,7 +228,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                     <Col className={'edit-task-group__labels'}>
                         <span
                             className={classNames(
-                                !isLinear && 'light-description',
+                                !isLinear && 'text-disabled',
                             )}
                         >
                             Время на прохождение
@@ -269,16 +273,24 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                             onChange={(value) => {
                                 setTimeLimit(value ?? 1);
                             }}
+                            value={timeLimit}
                         />
+                        <span
+                            className={classNames(
+                                !isLinear && 'text-disabled',
+                            )}
+                        >
+                            минут
+                        </span>
                         </Form.Item>
                         {isLinear ? (
-                            <span className={'light-description'}>
+                            <span className={'text-secondary'}>
                         Если ограничить время на прохождение, то после
                         указанного времени уровень заблокируется и прием задач
                         на уровне закроется
                         </span>
                         ) : (
-                            <span className={'light-description'}>
+                            <span className={'text-secondary'}>
                                 Чтобы ограничивать время на прохождения уровня,
                                 выберите порядок выдачи заданий «Линейка»
                                 в настройках квеста

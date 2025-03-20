@@ -67,6 +67,14 @@
         padding-top: 16px;
         border-top: 1px solid var(--stroke-secondary);
     }
+
+    .text-disabled {
+        color: var(--text-disabled);
+    }
+
+    .text-secondary {
+        color: var(--text-secondary);
+    }
 }
 
 .ant-modal-root .ant-modal.edit-task-group__modal {
