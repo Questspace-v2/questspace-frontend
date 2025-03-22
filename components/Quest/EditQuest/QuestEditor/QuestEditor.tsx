@@ -149,7 +149,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         }
     };
 
-    const handleError = (msg = 'Проверьте, что все поля заполнены') => {
+    const handleError = (msg = 'Проверьте, что все поля заполнены корректно') => {
         setErrorMsg(msg);
     };
 
@@ -419,10 +419,11 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
                         className={'quest-editor__small-field quest-editor__image-form-item'}
+                        name={'image'}
                         label={<>Обложка<span className={'light-description'}>&nbsp;(до 5 МБ)</span></>}
                         colon={false}
                         help={
-                            fieldsValidationStatus.image === 'error' || fileIsTooBig || unsupportedFileType &&
+                            (fieldsValidationStatus.image === 'error' || fileIsTooBig || unsupportedFileType) &&
                             <p className={'quest-editor__validation-error'}>{getImageErrorText()}</p>
                         }
                         validateStatus={fileIsTooBig ? 'error' : fieldsValidationStatus.image}
