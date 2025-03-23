@@ -12,6 +12,7 @@ import Markdown from 'react-markdown';
 import { updateQuest } from '@/app/api/api';
 import { IQuest } from '@/app/types/quest-interfaces';
 import { useSession } from 'next-auth/react';
+import { QuestStatus } from '@/components/Quest/Quest.helpers';
 
 
 interface BriefProps {
@@ -25,11 +26,9 @@ export default function Brief({mode} : BriefProps) {
     const accessToken = sessionData?.accessToken;
     // если опираться на чистый has_brief в свитче, то будет лаг интерфейса из-за передачи по сети
     const [ switchValue, setSwitchValue ] = useState<boolean>(contextData?.quest?.has_brief ?? false);
-    const [ isOpen, setIsOpen ] = useState(
-        isEditMode ?
-            Boolean(contextData?.quest?.has_brief) :
-            contextData?.quest?.status === 'REGISTRATION_DONE'
-    );
+    const isBeforeQuestStart = contextData?.quest?.status === QuestStatus.StatusRegistrationDone as string ||
+        contextData?.quest?.status === QuestStatus.StatusOnRegistration as string
+    const [ isOpen, setIsOpen ] = useState(isEditMode ? Boolean(contextData?.quest?.has_brief) : isBeforeQuestStart);
 
     if (!isEditMode && (!contextData?.quest?.has_brief || !contextData?.quest?.brief)) {
         return null;
@@ -116,7 +115,7 @@ export default function Brief({mode} : BriefProps) {
                 className={classNames('brief__collapse', 'tasks__collapse')}
                 onChange={() => setIsOpen(!isOpen)}
                 collapsible={'header'}
-                defaultActiveKey={contextData?.quest?.status === 'REGISTRATION_DONE' ? contextData?.quest?.id : undefined}
+                defaultActiveKey={isBeforeQuestStart ? contextData?.quest?.id : undefined}
             />
         </ContentWrapper>
     );

@@ -8,7 +8,7 @@ import { TasksMode } from '@/components/Tasks/Task/Task.helpers';
 import { IQuestTaskGroupsResponse} from '@/app/types/quest-interfaces';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import { ArrowLeftOutlined, HourglassOutlined, TeamOutlined } from '@ant-design/icons';
-import { getLongTimeDiff, getRemainingVerb } from '@/components/Quest/Quest.helpers';
+import { getLongTimeDiff, getRemainingVerb, QuestStatus } from '@/components/Quest/Quest.helpers';
 import classNames from 'classnames';
 import dynamic from 'next/dynamic';
 
@@ -23,6 +23,8 @@ export default function PlayPageContent({props}: {props: IQuestTaskGroupsRespons
     const nowDate = new Date();
     const timeLabel = getLongTimeDiff(nowDate, new Date(finishTime));
     const remainingVerb = getRemainingVerb(nowDate, new Date(finishTime));
+    const isBeforeQuestStart = status === QuestStatus.StatusOnRegistration as string ||
+        status === QuestStatus.StatusRegistrationDone as string;
 
     return (
         <div className={'play-page'}>
@@ -51,7 +53,7 @@ export default function PlayPageContent({props}: {props: IQuestTaskGroupsRespons
                 </div>
             </ContentWrapper>
             <div className={`play-page__tasks`}>
-                {status === 'REGISTRATION_DONE' && (
+                {isBeforeQuestStart && (
                     <ContentWrapper className={classNames('tasks__content-wrapper')}>
                         <div className={'before-start__wrapper'}>
                             <h2 className={classNames('before-start__text', 'roboto-flex-header', 'responsive-header-h2')}>До старта</h2>
