@@ -22,8 +22,6 @@ export default async function PlayQuestPage({params}: {params: {id: string}}) {
         redirect('/auth');
     }
 
-    console.dir(questData, {depth: 100})
-
     return (
         <ContextProvider questData={questData}>
             <PlayPageContent props={questData}/>
