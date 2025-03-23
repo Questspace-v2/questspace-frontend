@@ -55,11 +55,14 @@ const getQuestRegistrationButton = (
             return (
                 <div className={'quest-header__interactive quest-header__interactive_brief'}>
                     {team && (
-                        <Link href={`${pathname}/play`}>
-                            <Button tabIndex={-1} ghost size={'large'}>
-                                Перейти к брифу <ArrowRightOutlined />
-                            </Button>
-                        </Link>
+                        <>
+                            <Link href={`${pathname}/play`}>
+                                <Button tabIndex={-1} ghost size={'large'}>
+                                    Перейти к брифу <ArrowRightOutlined />
+                                </Button>
+                            </Link>
+                            <p>{`Старт квеста ${startDateDayMonth} в\u00A0${startDateHourMinute}`}</p>
+                        </>
                     )}
                 </div>
             );
@@ -151,6 +154,9 @@ const getQuestStatusButton = (
     } = props;
     const statusQuest = status as QuestStatus;
 
+    const startDateDayMonth = startDate.toLocaleString('ru', {day: 'numeric', month: 'long'}).replace(' ', '\u00A0');
+    const startDateHourMinute = startDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
+
     if (statusQuest === QuestStatus.StatusOnRegistration) {
         return getQuestRegistrationButton(startDate, registrationDate, setCurrentModal, props, team, teamsAccepted);
     }
@@ -162,11 +168,14 @@ const getQuestStatusButton = (
             return (
                 <div className={'quest-header__interactive quest-header__interactive_brief'}>
                     {team && (
-                        <Link href={`${pathname}/play`}>
-                            <Button tabIndex={-1} ghost size={'large'}>
-                                Перейти к брифу <ArrowRightOutlined />
-                            </Button>
-                        </Link>
+                        <>
+                            <Link href={`${pathname}/play`}>
+                                <Button tabIndex={-1} ghost size={'large'}>
+                                    Перейти к брифу <ArrowRightOutlined />
+                                </Button>
+                            </Link>
+                            <p>{`Старт квеста ${startDateDayMonth} в\u00A0${startDateHourMinute}`}</p>
+                        </>
                     )}
                 </div>
             );
