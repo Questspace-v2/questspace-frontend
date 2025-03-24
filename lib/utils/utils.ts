@@ -1,3 +1,5 @@
+'use client';
+
 import { ALLOWED_USERS_ID } from '@/app/api/client/constants';
 import { usePathname } from 'next/navigation';
 

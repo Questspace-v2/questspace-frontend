@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useMemo } from 'react';
 import { parseToMarkdown } from '@/lib/utils/utils';
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
