@@ -188,7 +188,7 @@ const getQuestStatusButton = (
         );
     }
 
-    if (statusQuest === QuestStatus.StatusRunning) {
+    if (statusQuest === QuestStatus.StatusRunning && team?.registration_status === 'ACCEPTED') {
         const finishHourMinute = finishDate.toLocaleString('ru', {hour: 'numeric', minute: '2-digit'});
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const pathname = usePathname();

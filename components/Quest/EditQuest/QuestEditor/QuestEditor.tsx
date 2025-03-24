@@ -169,7 +169,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
     };
 
     const validateDates = () => {
-        const now = dayjs();
+        // const now = dayjs();
 
         const registrationStr = form.getFieldValue('registrationDeadline') as string;
         const registrationDeadline = registrationStr ? dayjs(registrationStr) : null;
@@ -187,23 +187,23 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
 
         let isValid = true;
 
-        // Проверка registrationDeadline
-        if (registrationDeadline?.isBefore(now)) {
-            setRegistrationDeadlineError('Дедлайн регистрации не должен быть в прошлом');
-            isValid = false;
-        }
-
-        // Проверка startTime
-        if (startTime?.isBefore(now)) {
-            setStartTimeError('Время начала не должно быть в прошлом');
-            isValid = false;
-        }
-
-        // Проверка finishTime
-        if (finishTime?.isBefore(now)) {
-            setFinishTimeError('Время финиша не должно быть в прошлом');
-            isValid = false;
-        }
+        // // Проверка registrationDeadline
+        // if (registrationDeadline?.isBefore(now)) {
+        //     setRegistrationDeadlineError('Дедлайн регистрации не должен быть в прошлом');
+        //     isValid = false;
+        // }
+        //
+        // // Проверка startTime
+        // if (startTime?.isBefore(now)) {
+        //     setStartTimeError('Время начала не должно быть в прошлом');
+        //     isValid = false;
+        // }
+        //
+        // // Проверка finishTime
+        // if (finishTime?.isBefore(now)) {
+        //     setFinishTimeError('Время финиша не должно быть в прошлом');
+        //     isValid = false;
+        // }
 
         // Проверка registrationDeadline <= startTime
         if (!registrationDeadlineChecked && registrationDeadline && startTime && registrationDeadline.isAfter(startTime)) {
@@ -325,6 +325,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         quest: result,
                     }));
                 }
+                setErrorMsg('');
                 router.refresh();
                 success();
             }
