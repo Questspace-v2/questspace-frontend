@@ -3,10 +3,6 @@
 .quest-page__all-teams-table .ant-table-content {
     column-count: 3;
 
-    .ant-table-tbody {
-        break-inside: avoid-column;
-    }
-
     @media screen and (max-width: $l-breakpoint-959) {
         column-count: 2;
     }
