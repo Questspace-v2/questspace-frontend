@@ -157,7 +157,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         setSendButtonContent(<Countdown
             value={deadline}
             format={'ss'}
-            valueStyle={{fontSize: '14px', color: 'var(--text-blue)'}}
+            valueStyle={{fontSize: '14px', color: 'var(--text-default)'}}
             onFinish={onFinish}/>)
     };
 
@@ -228,38 +228,67 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         <div className={'task__wrapper'}>
             {contextHolder}
             <div className={'task__text-part'}>
-                {
-                    mode === TasksMode.PLAY ?
-                        <h4 className={classNames('roboto-flex-header task__name', accepted && 'task__accepted')}>
-                            {name}
-                            {/* Да простит меня Бог */}
-                            {/* eslint-disable-next-line no-nested-ternary */}
-                            {accepted ?
-                                <Tooltip title={scoreText} placement={'bottom'}>
-                                    <span className="task__reward-accepted">+{score}</span>
-                                </Tooltip>
-                                :
-                                isExpired ?
-                                    <Tooltip title={0} placement={'bottom'}>
-                                    <span className="task__reward">0</span>
-                                    </Tooltip> :
-                                    <Tooltip title={scoreText} placement={'bottom'}>
-                                        <span className="task__reward">{score && score > 0 ? score : currentScore}</span>
-                                    </Tooltip>
-                            }
-                        </h4> :
-                        <h4 className={'roboto-flex-header task__name'}>{name}</h4>
-                }
-                {getTaskExtra(mode === TasksMode.EDIT, true, taskGroupProps, props, questId)}
-                <Markdown className={'task__question line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{question}</Markdown>
+                {mode === TasksMode.PLAY ? (
+                    <h4
+                        className={classNames(
+                            'roboto-flex-header task__name',
+                            accepted && 'task__accepted',
+                        )}
+                    >
+                        {name}
+                        {/* Да простит меня Бог */}
+                        {/* eslint-disable-next-line no-nested-ternary */}
+                        {accepted ? (
+                            <Tooltip title={scoreText} placement={'bottom'}>
+                                <span className="task__reward-accepted">
+                                    +{score}
+                                </span>
+                            </Tooltip>
+                        ) : isExpired ? (
+                            <Tooltip title={0} placement={'bottom'}>
+                                <span className="task__reward">0</span>
+                            </Tooltip>
+                        ) : (
+                            <Tooltip title={scoreText} placement={'bottom'}>
+                                <span className="task__reward">
+                                    {score && score > 0 ? score : currentScore}
+                                </span>
+                            </Tooltip>
+                        )}
+                    </h4>
+                ) : (
+                    <h4 className={'roboto-flex-header task__name'}>{name}</h4>
+                )}
+                {getTaskExtra(
+                    mode === TasksMode.EDIT,
+                    true,
+                    taskGroupProps,
+                    props,
+                    questId,
+                )}
+                <Markdown
+                    className={'task__question line-break'}
+                    disallowedElements={['pre', 'code']}
+                    remarkPlugins={[remarkGfm]}
+                >
+                    {question}
+                </Markdown>
             </div>
             {mediaLinks && mediaLinks.length > 0 && (
                 <>
                     {mediaLinks.map(link => {
-                        if (link.split('__')[1]?.endsWith('mp3') || link.split('__')[1]?.endsWith('wav')) {
+                        if (
+                            link.split('__')[1]?.endsWith('mp3') ||
+                            link.split('__')[1]?.endsWith('wav')
+                        ) {
                             return (
                                 // eslint-disable-next-line jsx-a11y/media-has-caption
-                                <audio key={link} controls src={link} style={{width: '100%'}}/>
+                                <audio
+                                    key={link}
+                                    controls
+                                    src={link}
+                                    style={{ width: '100%' }}
+                                />
                             );
                         }
                         return null;
@@ -273,12 +302,20 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         modules={[Pagination, Navigation]}
                     >
                         {mediaLinks.map((link, index) => {
-                            if (!link.split('__')[1]?.endsWith('mp3') && !link.split('__')[1]?.endsWith('wav')) {
+                            if (
+                                !link.split('__')[1]?.endsWith('mp3') &&
+                                !link.split('__')[1]?.endsWith('wav')
+                            ) {
                                 return (
                                     <SwiperSlide key={`${link + index}`}>
-                                        <Image src={link} alt={'task image'} width={300} height={300} />
+                                        <Image
+                                            src={link}
+                                            alt={'task image'}
+                                            width={300}
+                                            height={300}
+                                        />
                                     </SwiperSlide>
-                                )
+                                );
                             }
 
                             return null;
@@ -288,63 +325,132 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
             )}
             {!isExpired && objectHints && objectHints.length > 0 && (
                 <div className={'task__hints-part task-hints__container'}>
-                    {objectHints.map((hint, index) =>
-                        <div className={`task-hint__container ${openConfirm && index === openConfirmIndex ? 'task-hint__container_confirm' : ''} ${takenHints[index] || hint.taken ? 'task-hint__container_taken' : ''}`} key={uid()}>
+                    {objectHints.map((hint, index) => (
+                        <div
+                            className={`task-hint__container ${
+                                openConfirm && index === openConfirmIndex
+                                    ? 'task-hint__container_confirm'
+                                    : ''
+                            } ${
+                                takenHints[index] || hint.taken
+                                    ? 'task-hint__container_taken'
+                                    : ''
+                            }`}
+                            key={uid()}
+                        >
                             {openConfirm && index === openConfirmIndex ? (
                                 <>
                                     <div className={'hint__text-part'}>
-                                        <span className={'hint__title'}>Взять подсказку?</span>
-                                        <span className={'hint__text'}>{hint.penalty?.percent ? `${hint.penalty?.percent}%` : `${hint.penalty?.score} баллов`} от стоимости задачи</span>
+                                        <span className={'hint__title'}>
+                                            Взять подсказку?
+                                        </span>
+                                        <span className={'hint__text'}>
+                                            {hint.penalty?.percent
+                                                ? `${hint.penalty?.percent}%`
+                                                : `${hint.penalty?.score} баллов`}{' '}
+                                            от стоимости задачи
+                                        </span>
                                     </div>
                                     <div className={'hint__confirm-buttons'}>
-                                        <Button type={'primary'} onClick={() => handleTakeHint(index)}>Да</Button>
-                                        <Button type={'default'} onClick={() => {setOpenConfirm(false); setOpenConfirmIndex(null)}}>Нет</Button>
+                                        <Button
+                                            type={'primary'}
+                                            onClick={() =>
+                                                handleTakeHint(index)
+                                            }
+                                        >
+                                            Да
+                                        </Button>
+                                        <Button
+                                            type={'default'}
+                                            onClick={() => {
+                                                setOpenConfirm(false);
+                                                setOpenConfirmIndex(null);
+                                            }}
+                                        >
+                                            Нет
+                                        </Button>
                                     </div>
                                 </>
                             ) : (
                                 <>
-                                    <span className={'hint__title'}>{hint.name ? hint.name
-                                        : `Подсказка ${index + 1}`}</span>
-                                    {takenHints[index] || hint.taken ?
-                                        <Markdown className={'hint__text line-break'} disallowedElements={['pre', 'code']} remarkPlugins={[remarkGfm]}>{hint?.text}</Markdown> :
-                                        <Button type={'link'} onClick={() => {
-                                            setOpenConfirm(true);
-                                            // @ts-expect-error мы знаем индекс
-                                            setOpenConfirmIndex(index)
-                                        }}>Открыть</Button>
-                                    }
+                                    <span className={'hint__title'}>
+                                        {hint.name
+                                            ? hint.name
+                                            : `Подсказка ${index + 1}`}
+                                    </span>
+                                    {takenHints[index] || hint.taken ? (
+                                        <Markdown
+                                            className={'hint__text line-break'}
+                                            disallowedElements={['pre', 'code']}
+                                            remarkPlugins={[remarkGfm]}
+                                        >
+                                            {hint?.text}
+                                        </Markdown>
+                                    ) : (
+                                        <Button
+                                            type={'link'}
+                                            onClick={() => {
+                                                setOpenConfirm(true);
+                                                // @ts-expect-error мы знаем индекс
+                                                setOpenConfirmIndex(index);
+                                            }}
+                                        >
+                                            Открыть
+                                        </Button>
+                                    )}
                                 </>
                             )}
                         </div>
-                    )}
+                    ))}
                 </div>
             )}
             <Form
                 className={'task__answer-part'}
                 layout={'inline'}
                 form={form}
-                initialValues={{'task-answer': teamAnswer ?? ''}}
+                initialValues={{ 'task-answer': teamAnswer ?? '' }}
             >
-                <Form.Item required
-                           name={'task-answer'}
-                           validateStatus={inputValidationStatus}
-                           hasFeedback>
+                <Form.Item
+                    required
+                    name={'task-answer'}
+                    validateStatus={inputValidationStatus}
+                    hasFeedback
+                >
                     <Input
-                        className={classNames(inputState === InputStates.ACCEPTED && 'task__answer-part_right')}
+                        className={classNames(
+                            inputState === InputStates.ACCEPTED &&
+                                'task__answer-part_right',
+                        )}
                         placeholder={'Ответ'}
                         onChange={handleValueChange}
-                        disabled={isExpired ?? inputState === InputStates.ACCEPTED} onPressEnter={handleSendAnswer}/>
+                        disabled={
+                            inputState === InputStates.ACCEPTED || isExpired
+                        }
+                        onPressEnter={handleSendAnswer}
+                    />
                 </Form.Item>
                 <FormItem>
                     <Button
                         type={'primary'}
                         onClick={handleSendAnswer}
                         loading={sendButtonState === SendButtonStates.LOADING}
-                        disabled={isExpired ?? sendButtonState !== SendButtonStates.BASIC}
-                    >{sendButtonContent}</Button>
+                        disabled={
+                            sendButtonState !== SendButtonStates.BASIC ||
+                            isExpired
+                        }
+                    >
+                        {sendButtonContent}
+                    </Button>
                 </FormItem>
             </Form>
-            {editMode && (<span>{severalAnswers ? 'Правильные ответы:' : 'Правильный ответ:'} {correctAnswers.join('; ')}</span>)}
+            {editMode && (
+                <span>
+                    {severalAnswers
+                        ? 'Правильные ответы:'
+                        : 'Правильный ответ:'}{' '}
+                    {correctAnswers.join('; ')}
+                </span>
+            )}
         </div>
     );
 }
