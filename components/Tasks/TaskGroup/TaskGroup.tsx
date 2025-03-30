@@ -10,7 +10,7 @@ import classNames from 'classnames';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 import remarkGfm from 'remark-gfm';
 import Markdown from 'react-markdown';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { getLongTimeDiff } from '@/components/Quest/Quest.helpers';
 import dynamic from 'next/dynamic';
@@ -28,6 +28,7 @@ interface TaskGroupProps {
 
 export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
     const router = useRouter();
+    const collapseRef = useRef<HTMLDivElement>(null);
     const isEditMode = mode === TasksMode.EDIT;
     const dateNow = new Date();
     const { id, pub_time: pubTime, name, description, time_limit: timeLimit, has_time_limit: hasTimeLimit } = props;
@@ -217,9 +218,26 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
         },
     ];
 
+    useEffect(() => {
+        if (!collapseRef.current) return;
+
+        const header = collapseRef.current.querySelector(".ant-collapse-header");
+        if (!header) return;
+
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            header.classList.toggle("sticky-header", entry.intersectionRatio < 1);
+          },
+          { threshold: [1], rootMargin: "-64px 0px 0px 0px" }
+        );
+
+        observer.observe(header);
+    }, []);
+
     return (
         <ContentWrapper className={'tasks__content-wrapper'}>
             <Collapse
+                ref={collapseRef}
                 ghost
                 items={items}
                 className={classNames('task-group__collapse', 'tasks__collapse')}

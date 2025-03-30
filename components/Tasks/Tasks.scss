@@ -3,6 +3,10 @@
 .tasks__content-wrapper {
     padding-top: 24px;
     padding-bottom: 24px;
+
+    &:has(.sticky-header) {
+        position: relative;
+    }
 }
 
 .tasks__collapse {
@@ -24,6 +28,17 @@
     .tasks__collapse-buttons {
         display: flex;
         gap: 8px;
+    }
+
+    &.ant-collapse > .ant-collapse-item > .ant-collapse-header.sticky-header {
+        position: sticky;
+        top: 40px;
+        background: var(--background-primary); /* фон всегда (но будет заметен только при sticky) */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* тень для визуального разделения */
+        border: 1px solid var(--stroke-secondary);
+        z-index: 10;
+        padding: 24px 16px 12px 16px;
+        margin: -24px -16px -12px -16px; /* компенсируем padding родителя */
     }
 }
 
