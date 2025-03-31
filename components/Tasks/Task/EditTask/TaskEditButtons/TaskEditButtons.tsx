@@ -1,8 +1,8 @@
 'use client';
 
-import {Button, UploadFile} from "antd";
+import { Button, Popconfirm, UploadFile } from 'antd';
 import {CopyOutlined, DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import {useState} from "react";
+import React, {useState} from "react";
 import {
     IBulkEditTaskGroups,
     ITask, ITaskDelete,
@@ -125,14 +125,22 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
                 <EditOutlined/>
                 <span className={'tasks__edit-buttons__text'}>Редактировать задачу</span>
             </Button>
-                <Button onClick={handleCopyTask} ghost>
-                    <CopyOutlined/>
-                    <span className={'tasks__edit-buttons__text'}>Создать копию задачи</span>
-                </Button>
-            <Button onClick={handleDeleteTask} danger>
-                <DeleteOutlined />
-                <span className={'tasks__edit-buttons__text'}>Удалить задачу</span>
+            <Button onClick={handleCopyTask} ghost>
+                <CopyOutlined/>
+                <span className={'tasks__edit-buttons__text'}>Создать копию задачи</span>
             </Button>
+            <Popconfirm
+                placement="bottomRight"
+                title="Удалить задачу?"
+                onConfirm={handleDeleteTask}
+                okText="Да"
+                cancelText="Нет"
+            >
+                <Button danger>
+                    <DeleteOutlined />
+                    <span className={'tasks__edit-buttons__text'}>Удалить задачу</span>
+                </Button>
+            </Popconfirm>
             <DynamicEditTask
                 questId={questId}
                 isOpen={isOpenModal}
