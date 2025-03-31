@@ -113,11 +113,19 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         setCurrentScore(calcCurrentScore())
     }, [calcCurrentScore, objectHints]);
 
-    const success = () => {
+    const success = () => 
+         messageApi.open({
+            type: 'success',
+            content: `Ответ принят! +${currentScore}`,
+            duration: 1.5,
+        });
+    ;
+
+    const error = () => {
         // eslint-disable-next-line no-void
         void messageApi.open({
-            type: 'success',
-            content: 'Принято!',
+            type: 'error',
+            content: 'Неправильный ответ',
         });
     };
 
@@ -152,6 +160,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
     const handleError = () => {
         setInputState(InputStates.ERROR);
         setSendButtonState(SendButtonStates.TIMER);
+        error();
 
         const deadline = Date.now() + 11000;
         setSendButtonContent(<Countdown
@@ -166,7 +175,6 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         setSendButtonContent(<SendOutlined/>);
         setSendButtonState(SendButtonStates.DISABLED);
         setAccepted(true);
-        success();
     };
 
     const handleValueChange = () => {
@@ -180,26 +188,30 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         if (answerResponse?.accepted) {
             setInputValidationStatus('success');
             form.setFieldValue('task-answer', answerResponse.text);
-            setContextData(prevState => {
-                if (currentTaskGroupId) {
-                    const taskGroups = prevState.task_groups;
-                    const taskGroup = taskGroups
-                        .find(item => item.id === currentTaskGroupId)!;
-                    const taskGroupIndex = taskGroups.indexOf(taskGroup);
-                    const currentTaskIndex = taskGroup.tasks.indexOf(props);
-                    taskGroup.tasks[currentTaskIndex] = {
-                        ...props,
-                        score: answerResponse.score,
-                    };
-                    taskGroups[taskGroupIndex] = taskGroup;
-                    return {
-                        ...prevState,
-                        task_groups: taskGroups,
-                    };
-                }
-                return prevState;
-            })
-            handleAccept();
+            // eslint-disable-next-line no-void
+            void success().then(() => {
+                setContextData(prevState => {
+                    if (currentTaskGroupId) {
+                        const taskGroups = prevState.task_groups;
+                        const taskGroup = taskGroups
+                            .find(item => item.id === currentTaskGroupId)!;
+                        const taskGroupIndex = taskGroups.indexOf(taskGroup);
+                        const currentTaskIndex = taskGroup.tasks.indexOf(props);
+                        taskGroup.tasks[currentTaskIndex] = {
+                            ...props,
+                            score: answerResponse.score,
+                        };
+                        taskGroups[taskGroupIndex] = taskGroup;
+                        return {
+                            ...prevState,
+                            task_groups: taskGroups,
+                        };
+                    }
+                    return prevState;
+                });
+                handleAccept();
+                return undefined;
+            });
         } else {
             setInputValidationStatus('error');
             handleError();
@@ -226,7 +238,6 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
 
     return (
         <div className={'task__wrapper'}>
-            {contextHolder}
             <div className={'task__text-part'}>
                 {mode === TasksMode.PLAY ? (
                     <h4
@@ -430,6 +441,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                     />
                 </Form.Item>
                 <FormItem>
+                    {contextHolder}
                     <Button
                         type={'primary'}
                         onClick={handleSendAnswer}
