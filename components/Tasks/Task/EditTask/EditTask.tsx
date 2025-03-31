@@ -220,10 +220,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     };
 
     const onCancel = () => {
-        if (!task) {
-            form.resetFields();
-            setFileList([]);
-        }
+        form.resetFields();
+        setFileList([]);
         setFieldsValidationStatus(() => defaultFieldsValidationStatus);
         setIsOpen(false);
     };
@@ -467,6 +465,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             >
                 <Form
                     form={form}
+                    onKeyDown={(e) => e.stopPropagation()}
                     fields={[
                         {name: 'taskPoints', value: pointsAmount}
                     ]}
