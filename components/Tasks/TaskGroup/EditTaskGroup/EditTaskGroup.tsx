@@ -142,6 +142,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
     };
 
     const onCancel = () => {
+        form.resetFields();
         setErrorMsg('');
         setValidationStatus('success');
         setIsOpen(false);
@@ -180,6 +181,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                 form={form}
                 autoComplete={'off'}
                 preserve={false}
+                onKeyDown={(e) => e.stopPropagation()}
                 initialValues={{
                     groupName: currentTaskGroup?.name,
                     description: currentTaskGroup?.description,
