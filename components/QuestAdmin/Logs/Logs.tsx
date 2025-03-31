@@ -197,7 +197,8 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
 
     return (
         <ConfigProvider renderEmpty={renderEmpty}>
-            {!isInfoAlertHidden && <InfoAlert setIsInfoAlertHidden={setIsInfoAlertHidden} />}
+            {/* Пока что вырубили */}
+            {false && !isInfoAlertHidden && <InfoAlert setIsInfoAlertHidden={setIsInfoAlertHidden} />}
             <Filters
                 options={filterSelectOptions}
                 setSelectedFilters={setSelectedFilters}
