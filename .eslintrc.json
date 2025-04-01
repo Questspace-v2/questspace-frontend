@@ -27,6 +27,7 @@
         "react/prop-types": "off",
         "react/require-default-props": "off",
         "react/jsx-props-no-spreading": "off",
+        "@typescript-eslint/prefer-nullish-coalescing": "warn",
         "@typescript-eslint/no-misused-promises": [
             "error",
             {

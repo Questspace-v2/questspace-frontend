@@ -17,7 +17,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
 import {useSession} from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {useRouter} from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -29,6 +29,12 @@ import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+
+import Lightbox from "yet-another-react-lightbox";
+import { Zoom, Thumbnails, Counter } from "yet-another-react-lightbox/plugins";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/counter.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -66,6 +72,8 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
+    const [openLightBox, setOpenLightBox] = useState<boolean>(false);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const editMode = mode === TasksMode.EDIT;
     const hintsFull = editMode ? props.hints_full : props.hints as unknown as IHint[];
 
@@ -74,7 +82,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         taken: hint?.taken || false,
     }));
 
-    const objectHints = hintsFull?.length && hintsFull[0].text ? transformHints() : hintsFull;
+    const [objectHints, setObjectHints] = useState(hintsFull?.length && hintsFull[0].text ? transformHints() : hintsFull);
 
     const calcCurrentScore = useCallback(() => objectHints.reduce((acc, curr) => {
         if (curr?.taken) {
@@ -83,6 +91,13 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
 
         return acc
     }, reward), [objectHints, reward])
+
+    const slides = mediaLinks
+        ?.filter(link => {
+            const extension = link.split('__')[1]?.split('.').pop();
+            return extension && ['jpg', 'jpeg', 'png', 'gif'].includes(extension);
+        })
+        .map(link => ({ src: link })) || [];
 
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
     const [form] = Form.useForm();
@@ -108,10 +123,6 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         setSendButtonContent(<SendOutlined/>);
         setSendButtonState(SendButtonStates.BASIC);
     };
-
-    useEffect(() => {
-        setCurrentScore(calcCurrentScore())
-    }, [calcCurrentScore, objectHints]);
 
     const success = () => 
          messageApi.open({
@@ -148,13 +159,22 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         setOpenConfirmIndex(null);
         const response = await takeHintPlayMode(questId, data, session?.accessToken) as IHint;
         if (response?.text) {
-            setTakenHints([...takenHints.slice(0, index), true, ...takenHints.slice(index + 1)]);
-            objectHints[index] = {
-                ...objectHints[index],
-                ...response
-            }
-            const {penalty} = objectHints[index];
-            setScoreText((prevState) => `${prevState} - ${penalty?.percent ? penalty.percent / 100 * reward : penalty?.score}`)
+            setTakenHints(prevState => {
+                const newState = [...prevState];
+                newState[index] = true;
+                return newState;
+            });
+            setObjectHints(prevState => {
+                const newState = [...prevState];
+                newState[index] = {
+                    ...prevState[index],
+                ...response,
+                };
+                return newState;
+            });
+            const { penalty } = objectHints[index];
+            setScoreText((prevState) => `${prevState} - ${penalty?.percent ? penalty.percent / 100 * reward : penalty?.score}`);
+            setCurrentScore(prevState => prevState - (penalty?.percent ? penalty.percent / 100 * reward : penalty?.score ?? 0));
         }
         router.refresh();
     };
@@ -254,7 +274,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         {accepted ? (
                             <Tooltip title={scoreText} placement={'bottom'}>
                                 <span className="task__reward-accepted">
-                                    +{score}
+                                    +{currentScore}
                                 </span>
                             </Tooltip>
                         ) : isExpired ? (
@@ -264,7 +284,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         ) : (
                             <Tooltip title={scoreText} placement={'bottom'}>
                                 <span className="task__reward">
-                                    {score && score > 0 ? score : currentScore}
+                                    {currentScore}
                                 </span>
                             </Tooltip>
                         )}
@@ -312,6 +332,16 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         loop
                         pagination
                         navigation
+                        observer
+                        observeParents
+                        onNavigationNext={(swiper) => {
+                            const count = swiper.slides.length;
+                            swiper.slideTo((swiper.activeIndex + 1) % count);
+                        }}
+                        onNavigationPrev={(swiper) => {
+                            const count = swiper.slides.length;
+                            swiper.slideTo(((swiper.activeIndex - 1) % count + count) % count)
+                        }}
                         modules={[Pagination, Navigation]}
                     >
                         {mediaLinks.map((link, index) => {
@@ -320,20 +350,55 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                                 !link.split('__')[1]?.endsWith('wav')
                             ) {
                                 return (
-                                    <SwiperSlide key={`${link + index}`}>
-                                        <Image
-                                            src={link}
-                                            alt={'task image'}
-                                            width={300}
-                                            height={300}
-                                        />
+                                    <SwiperSlide
+                                        key={`${link + index}`}
+                                        onClick={() => {
+                                            setCurrentSlideIndex(index);
+                                            setOpenLightBox(true);
+                                        }}
+                                    >
+                                        <button
+                                            type={'button'}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                padding: 0,
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <Image
+                                                style={{userSelect: 'none'}}
+                                                src={link}
+                                                alt={'task image'}
+                                                width={300}
+                                                height={300}
+                                            />
+                                        </button>
                                     </SwiperSlide>
                                 );
                             }
-
                             return null;
                         })}
                     </Swiper>
+                    <Lightbox
+                        open={openLightBox}
+                        close={() => setOpenLightBox(false)}
+                        slides={slides}
+                        index={currentSlideIndex}
+                        plugins={[Zoom, Thumbnails, Counter]}
+                        animation={{ zoom: 500 }}
+                        zoom={{
+                            maxZoomPixelRatio: 1,
+                            zoomInMultiplier: 3,
+                            doubleTapDelay: 200,
+                            doubleClickDelay: 200,
+                            doubleClickMaxStops: 3,
+                            keyboardMoveDistance: 50,
+                            wheelZoomDistanceFactor: 100,
+                            pinchZoomDistanceFactor: 100,
+                            scrollToZoom: false,
+                        }}
+                    />
                 </>
             )}
             {!isExpired && objectHints && objectHints.length > 0 && (

@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import {Button, Dropdown, MenuProps, UploadFile} from 'antd';
+import { Button, Dropdown, MenuProps, Popconfirm, UploadFile } from 'antd';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import dynamic from 'next/dynamic';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
@@ -30,12 +30,17 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
 
     const {updater: setContextData} = useTasksContext()!;
 
-    const handleMenuClick: MenuProps['onClick'] = () => {
-        setOpen(false);
+    const handleMenuClick: MenuProps['onClick'] = (menu) => {
+        console.log(menu?.key === '3')
+        if (menu?.key !== '3') {
+            setOpen(false);
+        }
     };
 
-    const handleOpenChange = (flag: boolean) => {
-        setOpen(flag);
+    const handleOpenChange = (flag: boolean, info: { source: 'trigger' | 'menu'}) => {
+        if (info?.source === 'trigger') {
+            setOpen(flag);
+        }
     };
 
     const handleEditTaskGroup = () => {
@@ -78,11 +83,22 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
             onClick: handleAddTask,
         },
         {
-
-            label: <><DeleteOutlined/>Удалить раздел</>,
+            label:
+                <Popconfirm
+                    placement="bottomRight"
+                    title="Удалить уровень?"
+                    onConfirm={async () => {
+                        setOpen(false)
+                        await handleDeleteGroup()
+                    }}
+                    onCancel={() => setOpen(false)}
+                    okText="Да"
+                    cancelText="Нет"
+                >
+                    <><DeleteOutlined/>Удалить уровень</>
+                </Popconfirm>,
             key: '3',
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onClick: handleDeleteGroup
+            // onClick: () => setOpen(true)
         },
     ];
 
@@ -92,17 +108,25 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
 
     return (
         <div className={classNames('task-group__collapse-buttons', 'tasks__collapse-buttons')}>
-                <Button onClick={handleEditTaskGroup} ghost><EditOutlined/>Редактировать</Button>
-                <Button onClick={handleAddTask} ghost><PlusOutlined/>Добавить задачу</Button>
-                <Button onClick={handleDeleteGroup} danger><DeleteOutlined/></Button>
+            <Button onClick={handleEditTaskGroup} ghost><EditOutlined/>Редактировать</Button>
+            <Button onClick={handleAddTask} ghost><PlusOutlined/>Добавить задачу</Button>
+            <Popconfirm
+                placement="bottomRight"
+                title="Удалить уровень?"
+                onConfirm={handleDeleteGroup}
+                okText="Да"
+                cancelText="Нет"
+            >
+                <Button danger><DeleteOutlined/></Button>
+            </Popconfirm>
             <Dropdown
                 rootClassName={'task-group-extra__dropdown'}
                 className={'task-group-extra__burger-button'}
                 menu={{
                     items,
-                    onClick: handleMenuClick,
+                    onClick: (menu) => handleMenuClick(menu),
                 }}
-                onOpenChange={handleOpenChange}
+                onOpenChange={(op, info) => handleOpenChange(op, info)}
                 open={open}
                 placement={'bottomRight'}
                 destroyPopupOnHide
