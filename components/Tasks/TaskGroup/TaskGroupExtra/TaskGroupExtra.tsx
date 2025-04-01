@@ -31,7 +31,6 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
     const {updater: setContextData} = useTasksContext()!;
 
     const handleMenuClick: MenuProps['onClick'] = (menu) => {
-        console.log(menu?.key === '3')
         if (menu?.key !== '3') {
             setOpen(false);
         }
