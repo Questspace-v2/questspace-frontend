@@ -30,7 +30,6 @@
     "classnames": "2.5.1",
     "dayjs": "1.11.10",
     "http-errors": "2.0.0",
-    "lightgallery": "2.8.3",
     "next": "14.2.25",
     "next-auth": "4.24.7",
     "next-themes": "0.3.0",
@@ -44,7 +43,8 @@
     "react-window": "1.8.10",
     "react-window-infinite-loader": "1.0.9",
     "remark-gfm": "4.0.0",
-    "swiper": "11.1.14"
+    "swiper": "11.1.14",
+    "yet-another-react-lightbox": "3.21.9"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "6.4.2",
