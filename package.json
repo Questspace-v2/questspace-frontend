@@ -30,6 +30,7 @@
     "classnames": "2.5.1",
     "dayjs": "1.11.10",
     "http-errors": "2.0.0",
+    "lightgallery": "2.8.3",
     "next": "14.2.25",
     "next-auth": "4.24.7",
     "next-themes": "0.3.0",

@@ -26,7 +26,7 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
 
     const handleSubmit = async () => {
         form.validateFields().catch(err => {throw err});
-        const username = form.getFieldValue('username') as string;
+        const username = (form.getFieldValue('username') as string).trim();
         if (!username) {
             handleError('Логин не может быть пустым');
             return;
@@ -44,6 +44,7 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
     };
 
     const onCancel = () => {
+        form.resetFields();
         setValidationStatus('success');
         setErrorMsg('');
         setCurrentModal!(ModalEnum.EDIT_PROFILE);

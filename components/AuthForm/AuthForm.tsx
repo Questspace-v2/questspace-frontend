@@ -88,7 +88,7 @@ export default function AuthForm() {
 
     const onFinish = (values: AuthFormItems) => {
         const data: SignInAuthorizationParams = {
-            username: values.username,
+            username: values.username.trim(),
             password: values.password
         };
 
@@ -106,7 +106,6 @@ export default function AuthForm() {
                     <Logotype width={64} type={'icon'}/>
                     <h1 className={'auth-form__title roboto-flex-header'}>{dictionary.pageHeader}</h1>
                 </div>
-
                 <Form
                     name={'auth-form'}
                     className={'auth-form__body'}
