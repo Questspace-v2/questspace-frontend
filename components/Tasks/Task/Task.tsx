@@ -17,7 +17,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
 import {useSession} from 'next-auth/react';
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState } from 'react';
 import {useRouter} from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -30,16 +30,11 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
-import LightGallery from 'lightgallery/react';
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-zoom.css';
-import 'lightgallery/css/lg-thumbnail.css';
-import 'lightgallery/scss/lightgallery.scss';
-import 'lightgallery/scss/lg-zoom.scss';
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import lgZoom from 'lightgallery/plugins/zoom';
-import { LightGallery as LightGalleryType } from 'lightgallery/lightgallery';
-
+import Lightbox from "yet-another-react-lightbox";
+import { Zoom, Thumbnails, Counter } from "yet-another-react-lightbox/plugins";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/counter.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -77,9 +72,10 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openConfirmIndex, setOpenConfirmIndex] = useState<0 | 1 | 2 | null>(null);
     const [takenHints, setTakenHints] = useState([false, false, false]);
+    const [openLightBox, setOpenLightBox] = useState<boolean>(false);
+    const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const editMode = mode === TasksMode.EDIT;
     const hintsFull = editMode ? props.hints_full : props.hints as unknown as IHint[];
-    const lightGalleryRef = useRef<LightGalleryType | null>(null);
 
     const transformHints = () => hintsFull.map(hint => ({
         ...hint,
@@ -95,6 +91,13 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
 
         return acc
     }, reward), [objectHints, reward])
+
+    const slides = mediaLinks
+        ?.filter(link => {
+            const extension = link.split('__')[1]?.split('.').pop();
+            return extension && ['jpg', 'jpeg', 'png', 'gif'].includes(extension);
+        })
+        .map(link => ({ src: link })) || [];
 
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
     const [form] = Form.useForm();
@@ -334,10 +337,15 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                                 !link.split('__')[1]?.endsWith('wav')
                             ) {
                                 return (
-                                    <SwiperSlide key={`${link + index}`}>
+                                    <SwiperSlide
+                                        key={`${link + index}`}
+                                        onClick={() => {
+                                            setCurrentSlideIndex(index);
+                                            setOpenLightBox(true);
+                                        }}
+                                    >
                                         <button
                                             type={'button'}
-                                            onClick={() => lightGalleryRef.current?.openGallery(index)}
                                             style={{
                                                 background: 'none',
                                                 border: 'none',
@@ -359,25 +367,23 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                             return null;
                         })}
                     </Swiper>
-
-                    <LightGallery
-                        speed={500}
-                        plugins={[lgThumbnail, lgZoom]}
-                        showZoomInOutIcons
-                        actualSize={false}
-                        download={false}
-                        dynamic
-                        dynamicEl={mediaLinks
-                            .filter(link =>
-                                !link.split('__')[1]?.endsWith('mp3') &&
-                                !link.split('__')[1]?.endsWith('wav'))
-                            .map((link) => ({
-                                src: link,
-                                thumb: link
-                            }))
-                        }
-                        onInit={(detail) => {
-                            lightGalleryRef.current = detail.instance;
+                    <Lightbox
+                        open={openLightBox}
+                        close={() => setOpenLightBox(false)}
+                        slides={slides}
+                        index={currentSlideIndex}
+                        plugins={[Zoom, Thumbnails, Counter]}
+                        animation={{ zoom: 500 }}
+                        zoom={{
+                            maxZoomPixelRatio: 1,
+                            zoomInMultiplier: 3,
+                            doubleTapDelay: 200,
+                            doubleClickDelay: 200,
+                            doubleClickMaxStops: 3,
+                            keyboardMoveDistance: 50,
+                            wheelZoomDistanceFactor: 100,
+                            pinchZoomDistanceFactor: 100,
+                            scrollToZoom: false,
                         }}
                     />
                 </>
