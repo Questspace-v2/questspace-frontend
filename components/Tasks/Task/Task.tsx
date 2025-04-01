@@ -17,7 +17,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
 import {useSession} from 'next-auth/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import {useRouter} from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -29,6 +29,17 @@ import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+
+import LightGallery from 'lightgallery/react';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/scss/lightgallery.scss';
+import 'lightgallery/scss/lg-zoom.scss';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+import { LightGallery as LightGalleryType } from 'lightgallery/lightgallery';
+
 
 const { Countdown } = Statistic;
 const enum SendButtonStates {
@@ -68,6 +79,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
     const [takenHints, setTakenHints] = useState([false, false, false]);
     const editMode = mode === TasksMode.EDIT;
     const hintsFull = editMode ? props.hints_full : props.hints as unknown as IHint[];
+    const lightGalleryRef = useRef<LightGalleryType | null>(null);
 
     const transformHints = () => hintsFull.map(hint => ({
         ...hint,
@@ -299,6 +311,16 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         loop
                         pagination
                         navigation
+                        observer
+                        observeParents
+                        onNavigationNext={(swiper) => {
+                            const count = swiper.slides.length;
+                            swiper.slideTo((swiper.activeIndex + 1) % count);
+                        }}
+                        onNavigationPrev={(swiper) => {
+                            const count = swiper.slides.length;
+                            swiper.slideTo(((swiper.activeIndex - 1) % count + count) % count)
+                        }}
                         modules={[Pagination, Navigation]}
                     >
                         {mediaLinks.map((link, index) => {
@@ -308,19 +330,51 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                             ) {
                                 return (
                                     <SwiperSlide key={`${link + index}`}>
-                                        <Image
-                                            src={link}
-                                            alt={'task image'}
-                                            width={300}
-                                            height={300}
-                                        />
+                                        <button
+                                            type={'button'}
+                                            onClick={() => lightGalleryRef.current?.openGallery(index)}
+                                            style={{
+                                                background: 'none',
+                                                border: 'none',
+                                                padding: 0,
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <Image
+                                                style={{userSelect: 'none'}}
+                                                src={link}
+                                                alt={'task image'}
+                                                width={300}
+                                                height={300}
+                                            />
+                                        </button>
                                     </SwiperSlide>
                                 );
                             }
-
                             return null;
                         })}
                     </Swiper>
+
+                    <LightGallery
+                        speed={500}
+                        plugins={[lgThumbnail, lgZoom]}
+                        showZoomInOutIcons
+                        actualSize={false}
+                        download={false}
+                        dynamic
+                        dynamicEl={mediaLinks
+                            .filter(link =>
+                                !link.split('__')[1]?.endsWith('mp3') &&
+                                !link.split('__')[1]?.endsWith('wav'))
+                            .map((link) => ({
+                                src: link,
+                                thumb: link
+                            }))
+                        }
+                        onInit={(detail) => {
+                            lightGalleryRef.current = detail.instance;
+                        }}
+                    />
                 </>
             )}
             {!isExpired && objectHints && objectHints.length > 0 && (
