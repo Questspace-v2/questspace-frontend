@@ -12,7 +12,7 @@ import {
     ITaskGroup,
     ITaskGroupDuration,
 } from '@/app/types/quest-interfaces';
-import {SendOutlined} from '@ant-design/icons';
+import {CheckCircleOutlined, SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
@@ -116,8 +116,10 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
     const success = () => 
          messageApi.open({
             type: 'success',
-            content: `Ответ принят! +${currentScore}`,
+            content: `Ответ принят! (+${currentScore})`,
             duration: 1.5,
+            className: 'success-toast',
+            icon: <CheckCircleOutlined />
         });
     ;
 

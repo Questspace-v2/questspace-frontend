@@ -241,6 +241,15 @@
     padding: 0;
 }
 
+.success-toast {
+    color: var(--text-green);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
 @media (max-width: $l-breakpoint-959) {
     .admin-page__content {
         .task__text-part .task__name {
