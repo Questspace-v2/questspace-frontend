@@ -375,17 +375,17 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         plugins={[Zoom, Thumbnails, Counter]}
                         animation={{ zoom: 500 }}
                         zoom={{
-                          maxZoomPixelRatio: 1,
-                          zoomInMultiplier: 3,
-                          doubleTapDelay: 200,
-                          doubleClickDelay: 200,
-                          doubleClickMaxStops: 3,
-                          keyboardMoveDistance: 50,
-                          wheelZoomDistanceFactor: 100,
-                          pinchZoomDistanceFactor: 100,
-                          scrollToZoom: false,
+                            maxZoomPixelRatio: 1,
+                            zoomInMultiplier: 3,
+                            doubleTapDelay: 200,
+                            doubleClickDelay: 200,
+                            doubleClickMaxStops: 3,
+                            keyboardMoveDistance: 50,
+                            wheelZoomDistanceFactor: 100,
+                            pinchZoomDistanceFactor: 100,
+                            scrollToZoom: false,
                         }}
-                      />
+                    />
                 </>
             )}
             {!isExpired && objectHints && objectHints.length > 0 && (
