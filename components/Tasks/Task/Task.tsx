@@ -12,7 +12,7 @@ import {
     ITaskGroup,
     ITaskGroupDuration,
 } from '@/app/types/quest-interfaces';
-import {CheckCircleOutlined, SendOutlined} from '@ant-design/icons';
+import {CheckCircleOutlined, CloseCircleOutlined, SendOutlined} from '@ant-design/icons';
 import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
@@ -139,6 +139,8 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         void messageApi.open({
             type: 'error',
             content: 'Неправильный ответ',
+            className: 'error-toast',
+            icon: <CloseCircleOutlined />
         });
     };
 

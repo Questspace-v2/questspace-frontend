@@ -243,11 +243,18 @@
 
 .success-toast {
     color: var(--text-green);
+}
+
+.success-toast, .error-toast {
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
+}
+
+.error-toast {
+    color: var(--text-red);
 }
 
 @media (max-width: $l-breakpoint-959) {
