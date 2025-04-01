@@ -97,6 +97,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
             const extension = link.split('__')[1]?.split('.').pop();
             return extension && ['jpg', 'jpeg', 'png', 'gif'].includes(extension);
         })
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         .map(link => ({ src: link })) || [];
 
     const severalAnswers = editMode ? correctAnswers.length > 1 : false;
