@@ -17,7 +17,7 @@ import FormItem from 'antd/lib/form/FormItem';
 import {getTaskExtra, TasksMode} from '@/components/Tasks/Task/Task.helpers';
 import {answerTaskPlayMode, takeHintPlayMode} from '@/app/api/api';
 import {useSession} from 'next-auth/react';
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import {useRouter} from 'next/navigation';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -86,7 +86,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         taken: hint?.taken || false,
     }));
 
-    const objectHints = hintsFull?.length && hintsFull[0].text ? transformHints() : hintsFull;
+    const [objectHints, setObjectHints] = useState(hintsFull?.length && hintsFull[0].text ? transformHints() : hintsFull);
 
     const calcCurrentScore = useCallback(() => objectHints.reduce((acc, curr) => {
         if (curr?.taken) {
@@ -121,10 +121,6 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         setSendButtonState(SendButtonStates.BASIC);
     };
 
-    useEffect(() => {
-        setCurrentScore(calcCurrentScore())
-    }, [calcCurrentScore, objectHints]);
-
     const success = () => {
         // eslint-disable-next-line no-void
         void messageApi.open({
@@ -150,13 +146,22 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
         setOpenConfirmIndex(null);
         const response = await takeHintPlayMode(questId, data, session?.accessToken) as IHint;
         if (response?.text) {
-            setTakenHints([...takenHints.slice(0, index), true, ...takenHints.slice(index + 1)]);
-            objectHints[index] = {
-                ...objectHints[index],
-                ...response
-            }
-            const {penalty} = objectHints[index];
-            setScoreText((prevState) => `${prevState} - ${penalty?.percent ? penalty.percent / 100 * reward : penalty?.score}`)
+            setTakenHints(prevState => {
+                const newState = [...prevState];
+                newState[index] = true;
+                return newState;
+            });
+            setObjectHints(prevState => {
+                const newState = [...prevState];
+                newState[index] = {
+                    ...prevState[index],
+                ...response,
+                };
+                return newState;
+            });
+            const { penalty } = objectHints[index];
+            setScoreText((prevState) => `${prevState} - ${penalty?.percent ? penalty.percent / 100 * reward : penalty?.score}`);
+            setCurrentScore(prevState => prevState - (penalty?.percent ? penalty.percent / 100 * reward : penalty?.score ?? 0));
         }
         router.refresh();
     };
@@ -253,7 +258,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         {accepted ? (
                             <Tooltip title={scoreText} placement={'bottom'}>
                                 <span className="task__reward-accepted">
-                                    +{score}
+                                    +{currentScore}
                                 </span>
                             </Tooltip>
                         ) : isExpired ? (
@@ -263,7 +268,7 @@ export default function Task({mode, props, questId, taskGroupProps, isExpired}: 
                         ) : (
                             <Tooltip title={scoreText} placement={'bottom'}>
                                 <span className="task__reward">
-                                    {score && score > 0 ? score : currentScore}
+                                    {currentScore}
                                 </span>
                             </Tooltip>
                         )}
