@@ -56,7 +56,7 @@ const supportedFileTypes = [
     'audio/mpeg'
 ];
 
-interface TaskCreateModalProps {
+export interface TaskCreateModalProps {
     questId: string,
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,

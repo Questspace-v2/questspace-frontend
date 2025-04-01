@@ -12,6 +12,7 @@ import {
 } from '@ant-design/icons';
 import { useSession } from 'next-auth/react';
 import { acceptTeam, deleteTeam } from '@/app/api/api';
+import { useTasksContext } from '@/components/Tasks/ContextProvider/ContextProvider';
 
 
 const emptyAcceptedTeams = (
@@ -29,6 +30,7 @@ const emptyAcceptedTeams = (
 
 export default function Teams({teams, questId, registrationType = 'AUTO'}: {teams: ITeam[], questId: string, registrationType?: 'AUTO' | 'VERIFY'}) {
     const [messageApi, contextHolder] = message.useMessage();
+    const {updater: setContextData} = useTasksContext()!;
 
     const [acceptedTeams, setAcceptedTeams] = useState(
         teams?.filter((team) => team.registration_status === 'ACCEPTED')
@@ -56,7 +58,7 @@ export default function Teams({teams, questId, registrationType = 'AUTO'}: {team
             const response = await deleteTeam(targetTeam.id, accessToken) as number;
 
             if (response === 200) {
-                setRequestedTeams(prevState => [...prevState, targetTeam]);
+                setRequestedTeams(prevState => prevState.filter((team) => team.id !== targetTeam.id));
                 return response;
             }
         }

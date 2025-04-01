@@ -20,7 +20,7 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
 const {TextArea} = Input;
 
-interface TaskGroupModalProps {
+export interface TaskGroupModalProps {
     questId: string;
     isOpen: boolean,
     setIsOpen: Dispatch<SetStateAction<boolean>>,
@@ -238,7 +238,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                     </Col>
                     <Col flex={'auto'}>
                         <Form.Item<TaskGroupForm>
-                            name={'timeLimit'}
+                            // name={'timeLimit'}
                             colon={false}
                             extra={
                                 <Checkbox
@@ -252,6 +252,7 @@ export default function EditTaskGroup({questId, isOpen, setIsOpen, taskGroupProp
                             }
                         >
                             <InputNumber
+                            name="timeLimit"
                             addonBefore={
                                 <MinusOutlined
                                     onClick={() => {
