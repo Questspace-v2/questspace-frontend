@@ -1,3 +1,5 @@
+'use client';
+
 import { getPaginatedAnswerLogs } from '@/app/api/api';
 import { IAnswerLog, IPaginatedAnswerLogs, IPaginatedAnswerLogsParams } from '@/app/types/quest-interfaces';
 import { SmileOutlined } from '@ant-design/icons';
@@ -20,11 +22,11 @@ interface LogsProps {
 export const LOGS_PAGE_SIZE = 50;
 
 export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsInfoAlertHidden}: LogsProps) {
-    const [logsContent, setLogsContent] = useState<IAnswerLog[]>(paginatedLogs.answer_logs);
-    const [nextPageToken, setNextPageToken] = useState(paginatedLogs.next_page_token);
+    const [logsContent, setLogsContent] = useState<IAnswerLog[]>(paginatedLogs?.answer_logs);
+    const [nextPageToken, setNextPageToken] = useState(paginatedLogs?.next_page_token);
     const [currentPage, setCurrentPage] = useState(1);
     const [previousPageNumber, setPreviousPageNumber] = useState(1);
-    const [totalPages, setTotalPages] = useState(paginatedLogs.total_pages);
+    const [totalPages, setTotalPages] = useState(paginatedLogs?.total_pages);
     const {data: session} = useSession();
     const [selectedFilters, setSelectedFilters] = useState<SelectedFiltersState>({});
     const { data: contextData } = useTasksContext()!;

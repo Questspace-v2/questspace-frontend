@@ -131,7 +131,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                             </div>
                         </div>
                     ) : (
-                        <div suppressHydrationWarning>
+                        <div>
                             {description && (
                                 <Markdown
                                     className={classNames(

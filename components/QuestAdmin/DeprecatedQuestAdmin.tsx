@@ -37,7 +37,7 @@ import Logs, { LOGS_PAGE_SIZE } from './Logs/Logs';
 const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
     {ssr: false})
 
-export default function QuestAdmin() {
+export default function DeprecatedQuestAdmin() {
     const router = useRouter();
     const {data: contextData, updater: setContextData} = useTasksContext()!;
     const [selectedTab, setSelectedTab] = useState<SelectAdminTabs>(SelectAdminTabs.ABOUT);

@@ -3,17 +3,13 @@
 import React, {useState} from 'react';
 import { Button, Dropdown, MenuProps, Popconfirm, UploadFile } from 'antd';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
-import dynamic from 'next/dynamic';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 import {patchTaskGroups} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import {IBulkEditTaskGroups, ITaskGroup, ITaskGroupsAdminResponse, ITaskGroupsDelete} from '@/app/types/quest-interfaces';
 import classNames from 'classnames';
-
-const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
-    {ssr: false});
-const DynamicEditTaskGroup = dynamic(() => import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup'),
-    {ssr: false});
+import { TaskCreateModalProps } from '@/components/Tasks/Task/EditTask/EditTask';
+import { TaskGroupModalProps } from '@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup';
 
 interface ITaskGroupExtra {
     questId: string,
@@ -26,12 +22,13 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
     const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [isOpenEditModal, setIsOpenEditModal] = useState(false);
+    const [EditTaskComponent, setEditTaskComponent] = useState<React.ComponentType<TaskCreateModalProps> | null>(null);
+    const [EditTaskGroupComponent, setEditTaskGroupComponent] = useState<React.ComponentType<TaskGroupModalProps> | null>(null);
     const {data: session} = useSession();
 
     const {updater: setContextData} = useTasksContext()!;
 
     const handleMenuClick: MenuProps['onClick'] = (menu) => {
-        console.log(menu?.key === '3')
         if (menu?.key !== '3') {
             setOpen(false);
         }
@@ -43,11 +40,19 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
         }
     };
 
-    const handleEditTaskGroup = () => {
+    const handleEditTaskGroup = async () => {
+        if (!EditTaskGroupComponent) {
+            const DynamicEditTaskGroup = (await import('@/components/Tasks/TaskGroup/EditTaskGroup/EditTaskGroup')).default;
+            setEditTaskGroupComponent(() => DynamicEditTaskGroup);
+        }
         setIsOpenEditModal(true);
     };
 
-    const handleAddTask = () => {
+    const handleAddTask = async () => {
+        if (!EditTaskComponent) {
+            const DynamicEditTask = (await import('@/components/Tasks/Task/EditTask/EditTask')).default;
+            setEditTaskComponent(() => DynamicEditTask);
+        }
         setIsOpenCreateModal(true);
     };
 
@@ -74,13 +79,12 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
         {
             label: <><EditOutlined/>Редактировать</>,
             key: '1',
-            onClick: handleEditTaskGroup,
+            onClick: () => handleEditTaskGroup,
         },
         {
-
             label: <><PlusOutlined/>Добавить задачу</>,
             key: '2',
-            onClick: handleAddTask,
+            onClick: () => handleAddTask,
         },
         {
             label:
@@ -98,7 +102,6 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
                     <><DeleteOutlined/>Удалить уровень</>
                 </Popconfirm>,
             key: '3',
-            // onClick: () => setOpen(true)
         },
     ];
 
@@ -134,20 +137,24 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
             >
                 <Button><MenuOutlined/></Button>
             </Dropdown>
-            <DynamicEditTask
-                questId={questId}
-                isOpen={isOpenCreateModal}
-                setIsOpen={setIsOpenCreateModal}
-                taskGroupProps={taskGroupProps}
-                fileList={fileList}
-                setFileList={setFileList}
-            />
-            <DynamicEditTaskGroup
-                questId={questId}
-                taskGroupProps={taskGroupProps}
-                isOpen={isOpenEditModal}
-                setIsOpen={setIsOpenEditModal}
-            />
+            {EditTaskComponent && isOpenCreateModal && (
+                <EditTaskComponent
+                    questId={questId}
+                    isOpen={isOpenCreateModal}
+                    setIsOpen={setIsOpenCreateModal}
+                    taskGroupProps={taskGroupProps}
+                    fileList={fileList}
+                    setFileList={setFileList}
+                />
+            )}
+            {EditTaskGroupComponent && isOpenEditModal && (
+                <EditTaskGroupComponent
+                    questId={questId}
+                    taskGroupProps={taskGroupProps}
+                    isOpen={isOpenEditModal}
+                    setIsOpen={setIsOpenEditModal}
+                />
+            )}
         </div>
     );
 }

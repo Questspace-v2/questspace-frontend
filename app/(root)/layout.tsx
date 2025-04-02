@@ -20,7 +20,7 @@ import '../main.scss';
 export const metadata: Metadata = mainMetadata;
 
 const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
-    ssr: false,
+    ssr: true,
 })
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {

@@ -56,7 +56,7 @@ export default function Teams({teams, questId, registrationType = 'AUTO'}: {team
             const response = await deleteTeam(targetTeam.id, accessToken) as number;
 
             if (response === 200) {
-                setRequestedTeams(prevState => [...prevState, targetTeam]);
+                setRequestedTeams(prevState => prevState.filter((team) => team.id !== targetTeam.id));
                 return response;
             }
         }

@@ -11,10 +11,10 @@ import {
     ITaskGroupsUpdate
 } from '@/app/types/quest-interfaces';
 import {useTasksContext} from "@/components/Tasks/ContextProvider/ContextProvider";
-import dynamic from "next/dynamic";
 import {patchTaskGroups} from '@/app/api/api';
 import { useSession } from 'next-auth/react';
 import classNames from 'classnames';
+import { TaskCreateModalProps } from '@/components/Tasks/Task/EditTask/EditTask';
 
 interface TaskEditButtonsProps {
     questId: string,
@@ -23,13 +23,11 @@ interface TaskEditButtonsProps {
     task: ITask
 }
 
-const DynamicEditTask = dynamic(() => import('@/components/Tasks/Task/EditTask/EditTask'),
-    {ssr: false});
-
 export default function TaskEditButtons({questId, mobile526, taskGroupProps, task}: TaskEditButtonsProps) {
     const classname = mobile526 ? 'task-extra_small' : 'task-extra_large';
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [fileList, setFileList] = useState<UploadFile[]>([]);
+    const [EditTaskComponent, setEditTaskComponent] = useState<React.ComponentType<TaskCreateModalProps> | null>(null);
     const {data: session} = useSession();
 
     const {data: contextData, updater: setContextData} = useTasksContext()!;
@@ -38,7 +36,12 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
         .find(group => group.id === taskGroupProps.id && group.pub_time === taskGroupProps.pub_time)!;
     const taskGroupIndex = taskGroups.indexOf(taskGroup);
 
-    const handleEditTask = () => {
+    const handleEditTask = async () => {
+        // Динамически загружаем компонент только при первом открытии
+        if (!EditTaskComponent) {
+            const DynamicEditTask = (await import('@/components/Tasks/Task/EditTask/EditTask')).default;
+            setEditTaskComponent(() => DynamicEditTask);
+        }
         setIsOpenModal(true);
     };
 
@@ -141,15 +144,17 @@ export default function TaskEditButtons({questId, mobile526, taskGroupProps, tas
                     <span className={'tasks__edit-buttons__text'}>Удалить задачу</span>
                 </Button>
             </Popconfirm>
-            <DynamicEditTask
-                questId={questId}
-                isOpen={isOpenModal}
-                setIsOpen={setIsOpenModal}
-                taskGroupProps={taskGroupProps}
-                fileList={fileList}
-                setFileList={setFileList}
-                task={task}
-            />
+            {EditTaskComponent && isOpenModal && (
+                <EditTaskComponent
+                    questId={questId}
+                    isOpen={isOpenModal}
+                    setIsOpen={setIsOpenModal}
+                    taskGroupProps={taskGroupProps}
+                    fileList={fileList}
+                    setFileList={setFileList}
+                    task={task}
+                />
+            )}
         </div>
     );
 }

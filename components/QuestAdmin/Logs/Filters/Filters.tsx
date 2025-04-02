@@ -91,7 +91,7 @@ export default function Filters({ options, setSelectedFilters }: FiltersProps) {
                 onChange={(value: string) => onFilterChange('user', value)}
             />
             <Checkbox
-                value={options?.accepted_only}
+                checked={options?.accepted_only}
                 className='answer-logs__filter'
                 onChange={(e) => onFilterChange('accepted_only', e.target.checked)}
             >
