@@ -53,7 +53,6 @@
 
     .task__name {
         font-size: 24px;
-        word-break: break-word;
         display: flex;
         justify-content: space-between;
     }
@@ -65,9 +64,13 @@
     .task__reward, .task__reward-accepted {
         font-size: 16px;
         font-family: $font-manrope;
-        font-weight: 400;
+        font-weight: 700;
         line-height: 24px;
         width: max-content;
+    }
+
+    .task__reward {
+        color: var(--text-secondary);
     }
 
     .task__reward-accepted {
@@ -269,6 +272,12 @@
 }
 
 @media (max-width: $xm-breakpoint-799) {
+    .task__text-part {
+        .task__reward, .task__reward-accepted {
+            line-height: 18px;
+        }
+    }
+    
     .task__text-part .task__name {
         font-size: 18px;
     }
@@ -302,6 +311,13 @@
 }
 
 @media (max-width: $s-breakpoint-525) {
+    .task__wrapper {
+        padding: 16px 0;
+    }
+    .task__text-part {
+        gap: 12px;
+    }
+
     .task__name {
         flex-direction: column;
         gap: 8px;
