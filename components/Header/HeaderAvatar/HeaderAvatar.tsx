@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Image from 'next/image';
@@ -10,8 +10,31 @@ import ThemeChanger from '@/components/ThemeChanger/ThemeChanger';
 
 
 export default function HeaderAvatar() {
-    const {image: avatarUrl} = useSession().data!.user;
+    const { data: session, update } = useSession();
     const [open, setOpen] = useState(false);
+
+    useEffect(() => {
+        const handleVisibilityChange = async () => {
+            if (document.visibilityState === 'visible') {
+                await update();
+            }
+        }
+        window.addEventListener('visibilitychange', handleVisibilityChange);
+        return () =>
+            window.removeEventListener("visibilitychange", handleVisibilityChange, false);
+    }, [update]);
+
+    useEffect(() => {
+        const handleOnline = async () => {
+            await update();
+        }
+        window.addEventListener('online', handleOnline);
+    }, [update]);
+
+    if (!session || !session.user) {
+        return <div>Session is expired</div>;
+    }
+    const {image: avatarUrl} = session.user;
     const openClassName: string = open ? 'header-dropdown_open' : '';
 
     const handleMenuClick: MenuProps['onClick'] = () => {
