@@ -25,6 +25,14 @@
     .logs-table__answer.rejected {
         color: var(--text-red);
     }
+
+    .logs-table__score.accepted {
+        color: var(--text-green);
+    }
+
+    .logs-table__score.rejected {
+        color: var(--text-secondary);
+    }
 }
 
 .logs-table__table {

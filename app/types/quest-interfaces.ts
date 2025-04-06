@@ -253,6 +253,7 @@ export interface IAnswerLog {
     team_id: string;
     user: string;
     user_id: string;
+    score: number;
 }
 
 export interface IPaginatedAnswerLogs {
