@@ -426,6 +426,12 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                             fieldsValidationStatus.image === 'error' || fileIsTooBig || unsupportedFileType &&
                             <p className={'quest-editor__validation-error'}>{getImageErrorText()}</p>
                         }
+                        extra={
+                            <p className={'light-description'}>
+                                {/* eslint-disable-next-line no-irregular-whitespace */}
+                                Рекомендуемый размер обложки — 1400×400px, в карточке на списке обложка обрежется до 800×400px
+                            </p>
+                        }
                         validateStatus={fileIsTooBig ? 'error' : fieldsValidationStatus.image}
                     >
                         <Upload maxCount={1}

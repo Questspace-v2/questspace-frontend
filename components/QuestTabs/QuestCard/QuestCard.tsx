@@ -31,14 +31,15 @@ export default function QuestCard({props} : {props?: QuestHeaderProps}) {
                 className={'quest-card quest-card__mode_preview'}
                 cover={<Image
                     src={src}
-                    fill
-                    sizes={'100% 128px'}
-                    style={{ objectFit: 'cover' }}
+                    width={1000}
+                    height={500}
+                    style={{ objectFit: 'cover', aspectRatio: '2/1', width: '100%', height: 'auto' }}
                     alt={''}
                     placeholder={'empty'}
                     priority
                     onError={() => setSrc('https://storage.yandexcloud.net/questspace-img/assets/error-src.png')}
                 />}
+                styles={{cover: {aspectRatio: '2/1'}}}
             >
                 <h3 className={'quest-card__name'}>{name}</h3>
                 <p className={'quest-card__start'}>{startDateLabel}</p>

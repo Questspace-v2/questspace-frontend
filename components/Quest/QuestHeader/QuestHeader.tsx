@@ -32,7 +32,7 @@ export default function QuestHeader({props, mode, team, teamsAccepted}: {
     team?: ITeam,
     teamsAccepted?: number
 }) {
-    const [aspectRatio, setAspectRatio] = useState('0/1');
+    const aspectRatio = '7/2';
     const [currentModal, setCurrentModal] = useState<TeamModalType>(null);
     if (!props) {
         return null;
@@ -59,21 +59,21 @@ export default function QuestHeader({props, mode, team, teamsAccepted}: {
     if (mode === 'page') {
         const imageNode = <Image
             src={mediaLink}
-            width={1000}
-            height={0}
-            style={{ width: '100%', objectFit: 'contain', height: 'auto', userSelect: 'none' }}
+            width={1400}
+            height={400}
+            style={{ width: '100%', objectFit: 'cover', height: 'auto', userSelect: 'none', aspectRatio }}
             alt={''}
             aria-hidden
             loading={'eager'}
             fetchPriority={'high'}
-            onLoad={({ target }) => {
-                const { naturalWidth, naturalHeight } = target as HTMLImageElement;
-                if (naturalWidth > naturalHeight * 2) {
-                    setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
-                } else {
-                    setAspectRatio(`2/1`);
-                }
-            }}
+            // onLoad={({ target }) => {
+            //     const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+            //     if (naturalWidth > naturalHeight * 2) {
+            //         setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+            //     } else {
+            //         setAspectRatio(`2/1`);
+            //     }
+            // }}
         />;
 
 
@@ -125,17 +125,17 @@ export default function QuestHeader({props, mode, team, teamsAccepted}: {
                         <Image
                             className={'quest-image__image'}
                             src={mediaLink}
-                            width={1000}
-                            height={1000}
+                            width={1400}
+                            height={400}
                             alt={'quest image'}
-                            onLoad={({ target }) => {
-                                const { naturalWidth, naturalHeight } = target as HTMLImageElement;
-                                if (naturalWidth > naturalHeight * 2) {
-                                    setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
-                                } else {
-                                    setAspectRatio(`2/1`);
-                                }
-                            }}
+                            // onLoad={({ target }) => {
+                            //     const { naturalWidth, naturalHeight } = target as HTMLImageElement;
+                            //     if (naturalWidth > naturalHeight * 2) {
+                            //         setAspectRatio(`${naturalWidth} / ${naturalHeight}`);
+                            //     } else {
+                            //         setAspectRatio(`2/1`);
+                            //     }
+                            // }}
                         />
                     </div>
                 }
