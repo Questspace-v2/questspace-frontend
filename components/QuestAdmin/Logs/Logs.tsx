@@ -31,9 +31,6 @@ export default function Logs({ questId, paginatedLogs, isInfoAlertHidden, setIsI
     const [selectedFilters, setSelectedFilters] = useState<SelectedFiltersState>({});
     const { data: contextData } = useTasksContext()!;
 
-    // Временное решение, пока нет score в респонсе
-    const score = 10;
-
     const getFilterId = useCallback((logFieldValue: string) => {
         const result = logFieldValue.split('_');
         return result[result.length - 1];
@@ -227,13 +224,9 @@ export default function Logs({ questId, paginatedLogs, isInfoAlertHidden, setIsI
                 options={filterSelectOptions}
                 setSelectedFilters={setSelectedFilters}
             />
-            {/* Не забыть убрать map, когда в респонсе будет score */}
             <Table<IAnswerLog>
                 columns={columns}
-                dataSource={logsContent?.map(log => ({
-                    ...log,
-                    score,
-                }))}
+                dataSource={logsContent}
                 rowKey={(log) => log.answer_time}
                 pagination={{ total: LOGS_PAGE_SIZE * totalPages, pageSize: LOGS_PAGE_SIZE, showSizeChanger: false }}
                 onChange={onPaginationChange}
