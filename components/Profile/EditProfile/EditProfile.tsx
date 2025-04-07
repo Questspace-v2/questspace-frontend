@@ -2,7 +2,6 @@
 
 import { Button } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { EditOutlined } from '@ant-design/icons';
 import ExitButton from '@/components/ExitButton/ExitButton';
@@ -12,12 +11,19 @@ import EditAvatar from '@/components/Profile/EditProfile/EditAvatar/EditAvatar';
 import EditName from '@/components/Profile/EditProfile/EditName/EditName';
 import EditPassword from '@/components/Profile/EditProfile/EditPassword/EditPassword';
 import CustomModal from '@/components/CustomModal/CustomModal';
+import { Session } from 'next-auth';
 
+const ERROR_SRC = 'https://storage.yandexcloud.net/questspace-img/assets/error-src.png';
 
-export default function EditProfile() {
-    const {data: session} = useSession();
+interface EditProfileProps {
+    session: Session | null;
+}
+
+export default function EditProfile({ session }: EditProfileProps) {
     const isOAuth = session?.isOAuthProvider;
-    const {name: username, image: avatarUrl} = session!.user;
+    const username = session?.user.name ?? 'Аноним';
+    const [src, setSrc] = useState<string>(session?.user.image ?? ERROR_SRC);
+
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
 
@@ -69,12 +75,13 @@ export default function EditProfile() {
 
                 <div className={'edit-profile__avatar'}>
                     <Image className={'avatar__image'}
-                           src={avatarUrl!}
+                           src={src}
                            alt={'avatar'}
                            width={128}
                            height={128}
                            draggable={false}
                            style={{borderRadius: '50%'}}
+                           onError={() => setSrc(ERROR_SRC)}
                     />
                     <EditAvatar setCurrentModal={setCurrentModal}>
                         <Button className={'edit-profile__change-button'}

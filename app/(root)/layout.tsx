@@ -25,7 +25,6 @@ const DynamicFooter = dynamic(() => import('@/components/Footer/Footer'), {
 
 export default async function RootLayout({ children }: React.PropsWithChildren) {
     const session = await getServerSession(authOptions);
-    const isAuthorized = Boolean(session?.user);
 
     return (
         <html lang="ru" suppressHydrationWarning>
@@ -35,7 +34,7 @@ export default async function RootLayout({ children }: React.PropsWithChildren) 
                 <AntdRegistry>
                     <ConfigProvider theme={theme}>
                         <div className={'App'}>
-                            <Header isAuthorized={isAuthorized}/>
+                            <Header session={session}/>
                             <Body>
                                 {children}
                             </Body>

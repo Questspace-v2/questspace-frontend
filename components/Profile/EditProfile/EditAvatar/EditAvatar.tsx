@@ -11,13 +11,13 @@ import { RcFile } from 'antd/es/upload';
 import { getCenter, uid } from '@/lib/utils/utils';
 import { IUserUpdateResponse } from '@/app/types/user-interfaces';
 
-export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
+export default function EditAvatar({children, setCurrentModal, session}: SubModalProps) {
     const [messageApi, contextHolder] = message.useMessage();
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
-    const {data, update} = useSession();
-    const {id} = data!.user;
-    const {accessToken} = data!;
+    const { update } = useSession();
+    const id = session?.user.id ?? '';
+    const accessToken = session?.accessToken ?? '';
     const { xs } = useBreakpoint();
 
     const error = () => {

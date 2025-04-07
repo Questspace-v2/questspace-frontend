@@ -9,12 +9,12 @@ import {ValidationStatus} from '@/lib/utils/modalTypes';
 import CustomModal, { customModalClassname } from '@/components/CustomModal/CustomModal';
 import classNames from 'classnames';
 
-export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
+export default function EditName({currentModal, setCurrentModal, session}: SubModalProps) {
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
-    const {data, update} = useSession();
-    const {id} = data!.user;
-    const {accessToken} = data!;
+    const {update} = useSession();
+    const id = session?.user.id ?? '';
+    const accessToken = session?.accessToken ?? '';
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');

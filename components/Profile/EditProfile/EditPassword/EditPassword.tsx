@@ -6,16 +6,14 @@ import React, { useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updatePassword } from '@/app/api/api';
 import { IUser } from '@/app/types/user-interfaces';
-import { useSession } from 'next-auth/react';
 import {ValidationStatus} from '@/lib/utils/modalTypes';
 import CustomModal from '@/components/CustomModal/CustomModal';
 
-export default function EditPassword({currentModal, setCurrentModal}: SubModalProps) {
+export default function EditPassword({currentModal, setCurrentModal, session}: SubModalProps) {
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
-    const {data} = useSession();
-    const {id} = data!.user;
-    const {accessToken} = data!;
+    const id = session?.user.id ?? '';
+    const accessToken = session?.accessToken ?? '';
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');

@@ -5,37 +5,21 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import EditProfile from '@/components/Profile/EditProfile/EditProfile';
 import ExitButton from '@/components/ExitButton/ExitButton';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { Session } from 'next-auth';
+import { useState } from 'react';
 
-export default function Profile() {
-    const { data: session, update } = useSession();
+interface ProfileProps {
+    session: Session | null;
+}
+
+const ERROR_SRC = 'https://storage.yandexcloud.net/questspace-img/assets/error-src.png';
+
+export default function Profile({ session }: ProfileProps) {
     const { xs } = useBreakpoint();
+    const username = session?.user.name ?? 'Аноним';
+    const [src, setSrc] = useState<string>(session?.user.image ?? ERROR_SRC);
 
-    useEffect(() => {
-        const handleVisibilityChange = async () => {
-            if (document.visibilityState === 'visible') {
-                await update();
-            }
-        }
-        window.addEventListener('visibilitychange', handleVisibilityChange);
-        return () =>
-            window.removeEventListener("visibilitychange", handleVisibilityChange, false);
-    }, [update]);
-
-    useEffect(() => {
-        const handleOnline = async () => {
-            await update();
-        }
-        window.addEventListener('online', handleOnline);
-    }, [update]);
-
-    if (!session || !session.user) {
-        return <div>Session is expired</div>;
-    }
-
-    const { name: username, image: avatarUrl } = session.user;
     const greetings = `Привет, @${username}!`;
 
     return (
@@ -43,16 +27,17 @@ export default function Profile() {
             <div className={'profile__content-wrapper'}>
                 <Image className={'avatar__image'}
                     alt={'avatar'}
-                    src={avatarUrl!}
+                    src={src}
                     width={xs ? 96 : 160}
                     height={xs ? 96 : 160}
                     style={{ borderRadius: '80px' }}
                     draggable={'false'}
+                    onError={() => setSrc(ERROR_SRC)}
                 />
                 <div className={'profile-information'}>
                     <h1 className={'roboto-flex-header responsive-header-h1'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>
-                        <EditProfile />
+                        {session?.user && <EditProfile session={session} />}
                         <ExitButton />
                     </div>
                 </div>

@@ -1,40 +1,24 @@
 'use client'
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dropdown, MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import Image from 'next/image';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import ThemeChanger from '@/components/ThemeChanger/ThemeChanger';
+import { Session } from 'next-auth';
 
+interface HeaderAvatarProps {
+    session: Session | null;
+}
 
-export default function HeaderAvatar() {
-    const { data: session, update } = useSession();
+const ERROR_SRC = 'https://storage.yandexcloud.net/questspace-img/assets/error-src.png';
+
+export default function HeaderAvatar({ session }: HeaderAvatarProps) {
     const [open, setOpen] = useState(false);
+    const [src, setSrc] = useState<string>(session?.user.image ?? ERROR_SRC);
 
-    useEffect(() => {
-        const handleVisibilityChange = async () => {
-            if (document.visibilityState === 'visible') {
-                await update();
-            }
-        }
-        window.addEventListener('visibilitychange', handleVisibilityChange);
-        return () =>
-            window.removeEventListener("visibilitychange", handleVisibilityChange, false);
-    }, [update]);
-
-    useEffect(() => {
-        const handleOnline = async () => {
-            await update();
-        }
-        window.addEventListener('online', handleOnline);
-    }, [update]);
-
-    if (!session || !session.user) {
-        return <div>Session is expired</div>;
-    }
-    const {image: avatarUrl} = session.user;
     const openClassName: string = open ? 'header-dropdown_open' : '';
 
     const handleMenuClick: MenuProps['onClick'] = () => {
@@ -87,8 +71,9 @@ export default function HeaderAvatar() {
                         width={32}
                         height={32}
                         style={{borderRadius: '16px'}}
-                        src={avatarUrl!}
+                        src={src}
                         priority
+                        onError={() => setSrc(ERROR_SRC)}
                     />
                     <DownOutlined />
                 </button>

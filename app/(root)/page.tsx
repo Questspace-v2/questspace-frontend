@@ -24,7 +24,7 @@ async function HomePage() {
 
     return (
         <>
-            {isAuthorized && <DynamicProfile />}
+            {isAuthorized && <DynamicProfile session={session} />}
             <DynamicQuestTabs fetchedAllQuests={fetchedAllQuests ?? []} nextPageId={nextPageId ?? ''} isAuthorized={isAuthorized} />
         </>
     );

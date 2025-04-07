@@ -1,3 +1,4 @@
+import { Session } from 'next-auth';
 import React from 'react';
 
 export const enum ModalEnum {
@@ -13,4 +14,5 @@ export interface SubModalProps {
     children?: JSX.Element,
     setCurrentModal?:  React.Dispatch<React.SetStateAction<ModalType>>,
     currentModal?: ModalType,
+    session?: Session,
 }
