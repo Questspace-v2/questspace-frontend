@@ -17,10 +17,10 @@ const ERROR_SRC = 'https://storage.yandexcloud.net/questspace-img/assets/error-s
 
 export default function Profile({ session }: ProfileProps) {
     const { xs } = useBreakpoint();
-    const username = session?.user.name ?? 'Аноним';
+    const username = session?.user.name;
     const [src, setSrc] = useState<string>(session?.user.image ?? ERROR_SRC);
 
-    const greetings = `Привет, @${username}!`;
+    const greetings = `Привет, ${username ? `@${username}` : 'Аноним'}!`;
 
     return (
         <ContentWrapper>
