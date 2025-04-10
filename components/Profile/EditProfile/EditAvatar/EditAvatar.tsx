@@ -16,6 +16,7 @@ export default function EditAvatar({children, setCurrentModal, session}: SubModa
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const { update } = useSession();
+    console.log(session);
     const id = session?.user.id ?? '';
     const accessToken = session?.accessToken ?? '';
     const { xs } = useBreakpoint();

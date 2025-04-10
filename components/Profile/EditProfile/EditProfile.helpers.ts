@@ -14,5 +14,5 @@ export interface SubModalProps {
     children?: JSX.Element,
     setCurrentModal?:  React.Dispatch<React.SetStateAction<ModalType>>,
     currentModal?: ModalType,
-    session?: Session,
+    session?: Session | null,
 }

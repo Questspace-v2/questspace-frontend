@@ -83,7 +83,7 @@ export default function EditProfile({ session }: EditProfileProps) {
                            style={{borderRadius: '50%'}}
                            onError={() => setSrc(ERROR_SRC)}
                     />
-                    <EditAvatar setCurrentModal={setCurrentModal}>
+                    <EditAvatar setCurrentModal={setCurrentModal} session={session}>
                         <Button className={'edit-profile__change-button'}
                                 type={'link'}
                                 block
@@ -105,8 +105,8 @@ export default function EditProfile({ session }: EditProfileProps) {
                     </Button>
                 }
             </CustomModal>
-            <EditName setCurrentModal={setCurrentModal} currentModal={currentModal}/>
-            <EditPassword setCurrentModal={setCurrentModal} currentModal={currentModal}/>
+            <EditName setCurrentModal={setCurrentModal} currentModal={currentModal} session={session} />
+            <EditPassword setCurrentModal={setCurrentModal} currentModal={currentModal} session={session} />
         </>
     );
 }

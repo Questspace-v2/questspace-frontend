@@ -37,7 +37,7 @@ export default function Profile({ session }: ProfileProps) {
                 <div className={'profile-information'}>
                     <h1 className={'roboto-flex-header responsive-header-h1'}>{greetings}</h1>
                     <div className={'profile-information__buttons'}>
-                        {session?.user && <EditProfile session={session} />}
+                        <EditProfile session={session} />
                         <ExitButton />
                     </div>
                 </div>
