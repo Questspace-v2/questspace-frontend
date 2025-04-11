@@ -21,13 +21,13 @@ interface LogsProps {
 
 export const LOGS_PAGE_SIZE = 50;
 
-export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsInfoAlertHidden}: LogsProps) {
+export default function Logs({ questId, paginatedLogs, isInfoAlertHidden, setIsInfoAlertHidden }: LogsProps) {
     const [logsContent, setLogsContent] = useState<IAnswerLog[]>(paginatedLogs?.answer_logs);
     const [nextPageToken, setNextPageToken] = useState(paginatedLogs?.next_page_token);
     const [currentPage, setCurrentPage] = useState(1);
     const [previousPageNumber, setPreviousPageNumber] = useState(1);
     const [totalPages, setTotalPages] = useState(paginatedLogs?.total_pages);
-    const {data: session} = useSession();
+    const { data: session } = useSession();
     const [selectedFilters, setSelectedFilters] = useState<SelectedFiltersState>({});
     const { data: contextData } = useTasksContext()!;
 
@@ -94,7 +94,7 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
         filterLogs().catch(err => {
             throw err;
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedFilters]);
 
     const getOptions = () => {
@@ -106,7 +106,7 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
             (item?.tasks ?? [])?.map(task => ({
                 value: `${task.name}_${task.id}`,
                 label: task.name,
-        }))).flat();
+            }))).flat();
         const teams = (contextData?.teams ?? []).map(item => ({
             value: `${item?.name}_${item.id}`,
             label: item?.name,
@@ -185,6 +185,25 @@ export default function Logs({questId, paginatedLogs, isInfoAlertHidden, setIsIn
                         {record.answer}
                     </span>
                 </Tooltip>
+        },
+        {
+            title: 'Балл',
+            dataIndex: 'score',
+            key: 'score',
+            render: (_, record) => {
+                if (record.accepted) {
+                    return <Tooltip title={record.score} placement='topLeft'>
+                        <span className={classNames('logs-table__score', record.score > 0 ? 'accepted' : 'rejected')}>
+                            {record.score > 0 ? `+${record.score}` : record.score}
+                        </span>
+                    </Tooltip>
+                }
+                return <Tooltip title={'—'} placement='topLeft'>
+                    <span className={classNames('logs-table__score', 'rejected')}>
+                        —
+                    </span>
+                </Tooltip>
+            }
         }
     ];
 
