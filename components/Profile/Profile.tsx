@@ -11,7 +11,7 @@ import AvatarStub from './AvatarStub/AvatarStub';
 
 export default function Profile() {
     const {data: session} = useSession();
-    const username = session?.user.name;
+    const {name: username, image: avatarUrl} = session?.user ?? {};
     const greetings = `Привет, ${username ? `@${username}` : 'Аноним'}!`;
     const { xs } = useBreakpoint();
 
@@ -19,10 +19,10 @@ export default function Profile() {
         <ContentWrapper>
             <div className={'profile__content-wrapper'}>
                 {
-                    session?.user.image ?
+                    avatarUrl ?
                     <Image className={'avatar__image'}
                         alt={'avatar'}
-                        src={session.user.image}
+                        src={avatarUrl}
                         width={xs ? 96 : 160}
                         height={xs ? 96 : 160}
                         style={{borderRadius: '80px'}}

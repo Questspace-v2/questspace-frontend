@@ -12,6 +12,7 @@ import AvatarStub from '@/components/Profile/AvatarStub/AvatarStub';
 
 export default function HeaderAvatar() {
     const {data: session} = useSession();
+    const {image: avatarUrl} = session?.user ?? {};
     const [open, setOpen] = useState(false);
     const openClassName: string = open ? 'header-dropdown_open' : '';
 
@@ -60,14 +61,14 @@ export default function HeaderAvatar() {
             >
                 <button type={'button'} className={'header-avatar__button'}>
                     {
-                        session?.user.image ?
+                        avatarUrl ?
                         <Image
                             className={'header-avatar__image'}
                             alt={'avatar'}
                             width={32}
                             height={32}
                             style={{borderRadius: '16px'}}
-                            src={session.user.image}
+                            src={avatarUrl}
                             priority
                         /> :
                         <AvatarStub width={32} height={32}/>

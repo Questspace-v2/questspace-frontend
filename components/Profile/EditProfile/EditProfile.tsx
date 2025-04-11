@@ -17,6 +17,7 @@ import AvatarStub from '../AvatarStub/AvatarStub';
 
 export default function EditProfile() {
     const {data: session} = useSession();
+    const {name: username, image: avatarUrl} = session?.user ?? {};
     const isOAuth = session?.isOAuthProvider;
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
@@ -69,9 +70,9 @@ export default function EditProfile() {
 
                 <div className={'edit-profile__avatar'}>
                     {
-                        session?.user.image ?
+                        avatarUrl ?
                         <Image className={'avatar__image'}
-                            src={session.user.image}
+                            src={avatarUrl}
                             alt={'avatar'}
                             width={128}
                             height={128}
@@ -90,7 +91,7 @@ export default function EditProfile() {
                     </EditAvatar>
                 </div>
                 <h4 className={'edit-profile-subheader'}>Логин</h4>
-                <p className={'edit-profile-paragraph'}>{session?.user.name ?? 'Аноним'}</p>
+                <p className={'edit-profile-paragraph'}>{username ?? 'Аноним'}</p>
                 <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_NAME)}>
                     Изменить логин
                 </Button>

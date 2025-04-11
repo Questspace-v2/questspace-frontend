@@ -1,5 +1,5 @@
 import { ModalEnum, SubModalProps } from '@/components/Profile/EditProfile/EditProfile.helpers';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, message } from 'antd';
 import React, { useState } from 'react';
 import useBreakpoint from 'antd/es/grid/hooks/useBreakpoint';
 import { updateUser } from '@/app/api/api';
@@ -10,9 +10,12 @@ import CustomModal, { customModalClassname } from '@/components/CustomModal/Cust
 import classNames from 'classnames';
 
 export default function EditName({currentModal, setCurrentModal}: SubModalProps) {
+    const [messageApi, contextHolder] = message.useMessage();
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data, update} = useSession();
+    const {id} = data?.user ?? {};
+    const {accessToken} = data ?? {};
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
@@ -22,14 +25,28 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
         setErrorMsg(msg);
     };
 
+    const networkError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Обновите страницу',
+        });
+    };
+
     const handleSubmit = async () => {
         form.validateFields().catch(err => {throw err});
+
+        if (!id || !accessToken) {
+            networkError();
+            return;
+        }
+
         const username = (form.getFieldValue('username') as string).trim();
         if (!username) {
             handleError('Логин не может быть пустым');
             return;
         }
-        const resp = await updateUser(data?.user.id ?? '', { username }, data?.accessToken ?? '')
+        const resp = await updateUser(id, { username }, accessToken)
             .then(response => response as IUserUpdateResponse)
             .catch((error) => {
                 throw error;
@@ -64,6 +81,7 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
                    логин</h2>}
                footer={null}
         >
+            {contextHolder}
             <Form form={form} autoComplete={'off'} preserve={false}>
                 <Form.Item name={'username'}
                            rules={[{required: true, message: 'Введите новый логин'}]}

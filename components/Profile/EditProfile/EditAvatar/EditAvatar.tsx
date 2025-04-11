@@ -16,6 +16,8 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const {data, update} = useSession();
+    const {id} = data?.user ?? {};
+    const {accessToken} = data ?? {};
     const { xs } = useBreakpoint();
 
     const error = () => {
@@ -23,6 +25,14 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
         void messageApi.open({
             type: 'error',
             content: 'Неправильный формат',
+        });
+    };
+
+    const networkError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Обновите страницу',
         });
     };
 
@@ -41,6 +51,11 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
     };
 
     const customRequest = async ({file}: UploadRequestOption) => {
+        if (!id || !accessToken) {
+            networkError();
+            return;
+        }
+
         const fileType = (file as File).type;
         if (!fileType.startsWith('image/')) {
             return;
@@ -52,12 +67,12 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
 
         if (s3Response.ok) {
             const resp = await updateUser(
-                data?.user.id ?? '',
+                id,
                 {avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}`},
-                data?.accessToken ?? '')
-                .catch((err) => {
-                    throw err;
-                }) as IUserUpdateResponse;
+                accessToken
+            ).catch((err) => {
+                throw err;
+            }) as IUserUpdateResponse;
             await update({image: resp.user.avatar_url, accessToken: resp.access_token});
         }
 
