@@ -16,8 +16,6 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
     const {clientWidth, clientHeight} = document.body;
     const centerPosition = useMemo(() => getCenter(clientWidth, clientHeight), [clientWidth, clientHeight]);
     const {data, update} = useSession();
-    const {id} = data!.user;
-    const {accessToken} = data!;
     const { xs } = useBreakpoint();
 
     const error = () => {
@@ -54,9 +52,9 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
 
         if (s3Response.ok) {
             const resp = await updateUser(
-                id,
+                data?.user.id ?? '',
                 {avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}`},
-                accessToken)
+                data?.accessToken ?? '')
                 .catch((err) => {
                     throw err;
                 }) as IUserUpdateResponse;

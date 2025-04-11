@@ -14,8 +14,6 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data} = useSession();
-    const {id} = data!.user;
-    const {accessToken} = data!;
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
@@ -30,9 +28,9 @@ export default function EditPassword({currentModal, setCurrentModal}: SubModalPr
         const oldPassword = form.getFieldValue('oldPassword') as string;
         const newPassword = form.getFieldValue('password') as string;
         const resp = await updatePassword(
-            id,
+            data?.user.id ?? '',
             {old_password: oldPassword, new_password: newPassword},
-            accessToken)
+            data?.accessToken ?? '')
             .then(response => response as IUser)
             .catch((error) => {
                 handleError();

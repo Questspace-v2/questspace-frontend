@@ -13,8 +13,6 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
     const [form] = Form.useForm();
     const { xs } = useBreakpoint();
     const {data, update} = useSession();
-    const {id} = data!.user;
-    const {accessToken} = data!;
 
     const [errorMsg, setErrorMsg] = useState('');
     const [validationStatus, setValidationStatus] = useState<ValidationStatus>('success');
@@ -31,7 +29,7 @@ export default function EditName({currentModal, setCurrentModal}: SubModalProps)
             handleError('Логин не может быть пустым');
             return;
         }
-        const resp = await updateUser(id, { username }, accessToken)
+        const resp = await updateUser(data?.user.id ?? '', { username }, data?.accessToken ?? '')
             .then(response => response as IUserUpdateResponse)
             .catch((error) => {
                 throw error;
