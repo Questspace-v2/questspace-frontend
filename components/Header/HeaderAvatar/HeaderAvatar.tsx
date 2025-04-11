@@ -7,10 +7,12 @@ import Image from 'next/image';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import ThemeChanger from '@/components/ThemeChanger/ThemeChanger';
+import AvatarStub from '@/components/Profile/AvatarStub/AvatarStub';
 
 
 export default function HeaderAvatar() {
-    const {image: avatarUrl} = useSession().data!.user;
+    const {data: session} = useSession();
+    const {image: avatarUrl} = session?.user ?? {};
     const [open, setOpen] = useState(false);
     const openClassName: string = open ? 'header-dropdown_open' : '';
 
@@ -58,15 +60,19 @@ export default function HeaderAvatar() {
                 openClassName={openClassName}
             >
                 <button type={'button'} className={'header-avatar__button'}>
-                    <Image
-                        className={'header-avatar__image'}
-                        alt={'avatar'}
-                        width={32}
-                        height={32}
-                        style={{borderRadius: '16px'}}
-                        src={avatarUrl!}
-                        priority
-                    />
+                    {
+                        avatarUrl ?
+                        <Image
+                            className={'header-avatar__image'}
+                            alt={'avatar'}
+                            width={32}
+                            height={32}
+                            style={{borderRadius: '16px'}}
+                            src={avatarUrl}
+                            priority
+                        /> :
+                        <AvatarStub width={32} height={32}/>
+                    }
                     <DownOutlined />
                 </button>
             </Dropdown>

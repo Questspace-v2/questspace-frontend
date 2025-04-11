@@ -12,12 +12,13 @@ import EditAvatar from '@/components/Profile/EditProfile/EditAvatar/EditAvatar';
 import EditName from '@/components/Profile/EditProfile/EditName/EditName';
 import EditPassword from '@/components/Profile/EditProfile/EditPassword/EditPassword';
 import CustomModal from '@/components/CustomModal/CustomModal';
+import AvatarStub from '../AvatarStub/AvatarStub';
 
 
 export default function EditProfile() {
     const {data: session} = useSession();
+    const {name: username, image: avatarUrl} = session?.user ?? {};
     const isOAuth = session?.isOAuthProvider;
-    const {name: username, image: avatarUrl} = session!.user;
     const { xs } = useBreakpoint();
     const [currentModal, setCurrentModal] = useState<ModalType>(null);
 
@@ -68,14 +69,18 @@ export default function EditProfile() {
             >
 
                 <div className={'edit-profile__avatar'}>
-                    <Image className={'avatar__image'}
-                           src={avatarUrl!}
-                           alt={'avatar'}
-                           width={128}
-                           height={128}
-                           draggable={false}
-                           style={{borderRadius: '50%'}}
-                    />
+                    {
+                        avatarUrl ?
+                        <Image className={'avatar__image'}
+                            src={avatarUrl}
+                            alt={'avatar'}
+                            width={128}
+                            height={128}
+                            draggable={false}
+                            style={{borderRadius: '50%'}}
+                        /> :
+                        <AvatarStub width={128} height={128} />
+                    }
                     <EditAvatar setCurrentModal={setCurrentModal}>
                         <Button className={'edit-profile__change-button'}
                                 type={'link'}
@@ -86,7 +91,7 @@ export default function EditProfile() {
                     </EditAvatar>
                 </div>
                 <h4 className={'edit-profile-subheader'}>Логин</h4>
-                <p className={'edit-profile-paragraph'}>{username}</p>
+                <p className={'edit-profile-paragraph'}>{username ?? 'Аноним'}</p>
                 <Button className={'edit-profile__change-button'} type={'link'} onClick={() => setCurrentModal(ModalEnum.EDIT_NAME)}>
                     Изменить логин
                 </Button>
