@@ -13,6 +13,7 @@ export interface IQuest {
     start_time: string | Date,
     status: string,
     quest_type: 'ASSAULT' | 'LINEAR',
+    feedback_link: string;
     has_brief?: boolean,
     brief?: string,
     max_teams_amount?: number,
