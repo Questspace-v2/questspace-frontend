@@ -162,7 +162,7 @@ const getQuestStatusButton = (
     }
 
     if (statusQuest === QuestStatus.StatusRegistrationDone) {
-        if (hasBrief) {
+        if (hasBrief && team?.registration_status === 'ACCEPTED') {
             // eslint-disable-next-line react-hooks/rules-of-hooks
             const pathname = usePathname();
             return (
