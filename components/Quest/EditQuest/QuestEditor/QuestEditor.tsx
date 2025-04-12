@@ -697,6 +697,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         </Radio.Group>
                     </Form.Item>
                     <Form.Item<QuestAboutForm>
+                        className={'quest-editor__small-field quest-editor__access-form-item'}
                         colon={false}
                         name={'feedback'}
                         labelAlign={'left'}
