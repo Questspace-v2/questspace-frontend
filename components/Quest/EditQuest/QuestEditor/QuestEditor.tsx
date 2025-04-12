@@ -296,7 +296,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     max_teams_amount: noTeamsLimit || teamsAmount < 1 ? -1 : teamsAmount,
                     registration_type: values.registrationType,
                     quest_type: values.questType,
-                    feedback_link: values.feedback ?? '',
+                    feedback_link: values.feedback?.trim() ?? '',
                 };
             })
             .catch(error => {
