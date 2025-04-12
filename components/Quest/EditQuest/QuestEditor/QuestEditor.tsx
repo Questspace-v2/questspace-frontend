@@ -367,6 +367,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         'access': isNewQuest && 'link_only',
                         'registrationType': isNewQuest && 'AUTO',
                         'questType': isNewQuest && 'ASSAULT',
+                        'feedback': isNewQuest ? '' : form.getFieldValue('feedback') as string,
                     }}
                     fields={[
                         { name: 'maxTeamCap', value: teamCapacity },
