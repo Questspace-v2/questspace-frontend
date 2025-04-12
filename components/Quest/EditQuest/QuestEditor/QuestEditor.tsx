@@ -55,6 +55,7 @@ export interface QuestAboutForm {
     maxTeamsAmount: number | null,
     registrationType: 'AUTO' | 'VERIFY',
     questType: 'ASSAULT' | 'LINEAR',
+    feedback: string | null;
 }
 
 const theme: ThemeConfig = {
@@ -294,7 +295,8 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     media_link: (s3Response as Response).url ?? previousImage,
                     max_teams_amount: noTeamsLimit || teamsAmount < 1 ? -1 : teamsAmount,
                     registration_type: values.registrationType,
-                    quest_type: values.questType
+                    quest_type: values.questType,
+                    feedback_link: values.feedback?.trim() ?? '',
                 };
             })
             .catch(error => {
@@ -365,6 +367,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         'access': isNewQuest && 'link_only',
                         'registrationType': isNewQuest && 'AUTO',
                         'questType': isNewQuest && 'ASSAULT',
+                        'feedback': isNewQuest ? '' : form.getFieldValue('feedback') as string,
                     }}
                     fields={[
                         { name: 'maxTeamCap', value: teamCapacity },
@@ -692,6 +695,22 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                                     зарегистрировались на него</p>
                             </Radio>
                         </Radio.Group>
+                    </Form.Item>
+                    <Form.Item<QuestAboutForm>
+                        className={'quest-editor__small-field quest-editor__access-form-item'}
+                        colon={false}
+                        name={'feedback'}
+                        labelAlign={'left'}
+                        label={'Ссылка на форму обратной связи'}
+                        extra={
+                            <p className={'light-description'}>Форма обратной связи будет доступна
+                                на странице квеста после его завершения</p>
+                        }
+                    >
+                        <Input
+                            type={'text'}
+                            onChange={() => handleValueChange('feedback')}
+                        />
                     </Form.Item>
                     <Form.Item className={'quest-editor__controls'}>
                         {contextHolder}

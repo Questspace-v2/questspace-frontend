@@ -50,7 +50,8 @@ export default function QuestPreview({form, file, previousImage}: QuestEditorPro
         finish_time: finishTime,
         access: 'public',
         quest_type: questType,
-        max_team_cap: maxTeamCap ?? 0
+        max_team_cap: maxTeamCap ?? 0,
+        feedback_link: '',
     };
 
     return (

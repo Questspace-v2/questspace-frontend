@@ -129,6 +129,10 @@
         gap: 8px;
         justify-content: center;
     }
+
+    .ant-form-item-extra .light-description {
+        margin-top: 4px;
+    }
 }
 
 @media (max-width: $m-breakpoint-639) {

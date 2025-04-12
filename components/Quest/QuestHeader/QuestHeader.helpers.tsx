@@ -9,6 +9,7 @@ import {
     ClockCircleOutlined,
     FlagFilled,
     PlayCircleFilled,
+    StarOutlined,
 } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -150,7 +151,8 @@ const getQuestStatusButton = (
 ) => {
     const {
         status,
-        has_brief: hasBrief
+        has_brief: hasBrief,
+        feedback_link: feedbackLink,
     } = props;
     const statusQuest = status as QuestStatus;
 
@@ -206,7 +208,20 @@ const getQuestStatusButton = (
         );
     }
 
-    if (statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished) {
+    const isFinished = statusQuest === QuestStatus.StatusWaitResults || statusQuest === QuestStatus.StatusFinished;
+
+    if (isFinished) {
+        if (feedbackLink && team?.registration_status === 'ACCEPTED') {
+            return (
+                <div className={'quest-header__interactive quest-header__interactive_finished'}>
+                    <Link href={feedbackLink} target='blank'>
+                        <Button size={'large'} type={'primary'}>
+                            <StarOutlined />Оценить квест
+                        </Button>
+                    </Link>
+                </div>
+            );
+        }
         return (
             <div className={'quest-header__interactive quest-header__interactive_finished'}>
                 <Button disabled size={'large'}><FlagFilled />Квест завершен</Button>

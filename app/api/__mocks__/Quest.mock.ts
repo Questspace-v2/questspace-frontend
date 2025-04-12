@@ -19,7 +19,8 @@ const questMock: IQuest = {
     registration_deadline: "2021-02-11T21:54:42.123Z",
     start_time: "2021-02-18T11:54:42.123Z",
     status: QuestStatus.StatusWaitResults,
-    quest_type: 'ASSAULT'
+    quest_type: 'ASSAULT',
+    feedback_link: '',
 }
 
 export default questMock;

@@ -49,6 +49,7 @@ export default function EditQuest({ questData, setContextData }: { questData?: I
                 max_teams_amount: maxTeamsAmount = null,
                 registration_type: registrationType = 'AUTO',
                 quest_type: questType = 'ASSAULT',
+                feedback_link: feedbackLink,
             } = questData;
 
             const formProps: QuestAboutForm = {
@@ -61,7 +62,8 @@ export default function EditQuest({ questData, setContextData }: { questData?: I
                 maxTeamCap,
                 maxTeamsAmount,
                 registrationType,
-                questType
+                questType,
+                feedback: feedbackLink,
             }
             form.setFieldsValue(formProps);
         }
