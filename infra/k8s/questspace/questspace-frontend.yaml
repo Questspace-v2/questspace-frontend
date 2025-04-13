@@ -41,3 +41,13 @@ spec:
                 secretKeyRef:
                   name: questspace-google-secret
                   key: google-oauth-secret
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: questspace-s3-secret
+                  key: access-key-id
+            - name: AWS_SECRET_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: questspace-s3-secret
+                  key: secret-key-id
