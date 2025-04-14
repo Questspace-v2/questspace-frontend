@@ -60,6 +60,7 @@ body {
     margin: 0;
     font-family: $font-manrope;
     color: var(--text-default);
+    //padding-top: 40px;
 }
 
 .App {
@@ -70,6 +71,7 @@ body {
     width: 100%;
     min-height: 100%;
     gap: $main-gap;
+    padding-top: 64px;
 }
 
 .roboto-flex-header {
