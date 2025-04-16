@@ -125,12 +125,12 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
                                 <span className={'task-group__setting-value'}>
                                     {isLinear && hasTimeLimit && timeLimit
                                         ? getLongTimeDiff(
-                                              dateNow,
-                                              new Date(
-                                                  dateNow.getTime() +
-                                                      timeLimit * 1000,
-                                              ),
-                                          )
+                                            dateNow,
+                                            new Date(
+                                                dateNow.getTime() +
+                                                timeLimit * 1000,
+                                            ),
+                                        )
                                         : 'Не ограничено'}
                                 </span>
                             </div>
@@ -226,13 +226,18 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
         if (!collapseRef.current) return;
 
         const header = collapseRef.current.querySelector(".ant-collapse-header");
+        const collapseItem = collapseRef.current.querySelector(".ant-collapse-item");
         if (!header) return;
 
         const observer = new IntersectionObserver(
-          ([entry]) => {
-            header.classList.toggle("sticky-header", entry.intersectionRatio < 1);
-          },
-          { threshold: [1], rootMargin: "-60px 0px 0px 0px" }
+            ([entry]) => {
+                if (collapseItem?.classList?.contains("ant-collapse-item-active")) {
+                    header.classList.toggle("sticky-header", entry.intersectionRatio < 1);
+                } else {
+                    header.classList.toggle("sticky-header", false);
+                }
+            },
+            { threshold: [1], rootMargin: "-60px 0px 0px 0px" }
         );
 
         observer.observe(header);
