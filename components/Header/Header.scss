@@ -1,7 +1,7 @@
 @use '../../globals' as *;
 
 .page-header {
-    position: fixed;
+    position: sticky;
     transition: top 0.3s ease-in-out;
     top: 0;
     z-index: 1000;
@@ -11,6 +11,10 @@
     height: 48px;
     background-color: var(--background-primary);
     box-sizing: content-box;
+
+    &.page-header__hidden {
+        top: -48px;
+    }
 }
 
 .page-header__items {

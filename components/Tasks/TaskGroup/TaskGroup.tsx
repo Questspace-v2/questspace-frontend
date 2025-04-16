@@ -62,7 +62,11 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
         null;
     const label = (
         <div className="task-group__name-with-score" suppressHydrationWarning>
-            <span className={'task-group__name-text'}>{name}</span>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className={'task-group__name-text'}>{name}</span>
+                <span className={'task-group__task-name task-group__task-name_hidden'} />
+            </div>
+
             {showCountdown && expirationDate ? (
                 <span className={'task-group__countdown'}>
                     <Countdown
@@ -228,7 +232,7 @@ export default function TaskGroup({mode, props, questId} : TaskGroupProps) {
           ([entry]) => {
             header.classList.toggle("sticky-header", entry.intersectionRatio < 1);
           },
-          { threshold: [1], rootMargin: "-64px 0px 0px 0px" }
+          { threshold: [1], rootMargin: "-60px 0px 0px 0px" }
         );
 
         observer.observe(header);

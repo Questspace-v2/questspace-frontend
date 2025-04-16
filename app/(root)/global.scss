@@ -71,7 +71,12 @@ body {
     width: 100%;
     min-height: 100%;
     gap: $main-gap;
-    padding-top: 64px;
+}
+
+.App:has(.page-header__hidden) {
+    .tasks__collapse.ant-collapse > .ant-collapse-item > .ant-collapse-header.sticky-header {
+        top: 0;
+    }
 }
 
 .roboto-flex-header {

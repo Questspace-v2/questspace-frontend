@@ -19,7 +19,6 @@ interface HeaderProps {
 export default function Header({isAuthorized} : HeaderProps) {
     const redirectParams = getRedirectParams();
     const isValidRedirect = redirectParams.get('route') === 'quest';
-    const [isVisible, setIsVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
     const headerRef = useRef<HTMLElement>(null);
     const [headerHeight, setHeaderHeight] = useState(0);
@@ -42,10 +41,10 @@ export default function Header({isAuthorized} : HeaderProps) {
             // 2. Мы в самом верху страницы
             // 3. Мы еще не проскроллили высоту хэдера
             if (!scrollingDown || currentScrollY < headerHeight || currentScrollY <= 0) {
-                setIsVisible(true);
+                headerRef?.current?.classList.remove('page-header__hidden');
             } else {
                 // Скрываем только если скроллим вниз И проскроллили больше чем высота хэдера
-                setIsVisible(false);
+                headerRef?.current?.classList.add('page-header__hidden');
             }
 
             setLastScrollY(currentScrollY);
@@ -58,12 +57,8 @@ export default function Header({isAuthorized} : HeaderProps) {
         };
     }, [lastScrollY, headerHeight]);
 
-    const headerStyle: CSSProperties = {
-        top: isVisible ? '0' : `-${headerHeight}px`,
-    };
-
     return (
-        <header className={'page-header'} ref={headerRef} style={headerStyle}>
+        <header className={'page-header'} ref={headerRef}>
             <div className={'page-header__items'}>
                 <Link href={'/'}>
                     <Logotype width={146} type={'text'} style={pointerCursor} />
