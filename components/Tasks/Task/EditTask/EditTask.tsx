@@ -255,7 +255,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 const fileType = file.type;
                 const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
                 const resp = await client.handleS3Request(key, fileType, file);
-                return resp.url;
+                return resp;
             }
             return Promise.resolve(item.url);
         });

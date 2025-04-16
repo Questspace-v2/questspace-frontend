@@ -292,7 +292,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                     name: values.name,
                     registration_deadline: values.registrationDeadline,
                     start_time: values.startTime,
-                    media_link: (s3Response as Response).url ?? previousImage,
+                    media_link: (!s3Response ? previousImage : s3Response) ?? '',
                     max_teams_amount: noTeamsLimit || teamsAmount < 1 ? -1 : teamsAmount,
                     registration_type: values.registrationType,
                     quest_type: values.questType,

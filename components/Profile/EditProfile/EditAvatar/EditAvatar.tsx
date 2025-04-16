@@ -63,19 +63,13 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
 
         const key = `users/${uid()}`;
 
-        const s3Response = await client.handleS3Request(key, fileType, file);
-
-        if (s3Response.ok) {
-            const resp = await updateUser(
-                id,
-                {avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}`},
-                accessToken
-            ).catch((err) => {
-                throw err;
-            }) as IUserUpdateResponse;
-            await update({image: resp.user.avatar_url, accessToken: resp.access_token});
-        }
-
+        await client.handleS3Request(key, fileType, file);
+        const resp = await updateUser(
+            id,
+            {avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}`},
+            accessToken
+        ) as IUserUpdateResponse;
+        await update({image: resp.user.avatar_url, accessToken: resp.access_token});
     }
 
     return (
