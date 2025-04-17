@@ -31,6 +31,10 @@ export default async function uploadToS3(
     };
 
     const command = new PutObjectCommand(params);
-    await s3Client.send(command);
-    return `https://storage.yandexcloud.net/${bucketName}/${key}`;
+    try {
+        await s3Client.send(command);
+        return `https://storage.yandexcloud.net/${bucketName}/${key}`;
+    } catch (err) {
+        throw new Error('An error occurred during image upload');
+    }
 }

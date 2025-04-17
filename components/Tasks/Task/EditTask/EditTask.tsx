@@ -254,8 +254,12 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 const file = (item as UploadFile<unknown>).originFileObj as File;
                 const fileType = file.type;
                 const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
-                const resp = await client.handleS3Request(key, fileType, file);
-                return resp;
+                try {
+                    const resp = await client.handleS3Request(key, fileType, file);
+                    return resp;
+                } catch (err) {
+                    throw new Error('An error occurred during attachments upload');
+                }
             }
             return Promise.resolve(item.url);
         });
