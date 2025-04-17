@@ -40,7 +40,7 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
         // eslint-disable-next-line no-void
         void messageApi.open({
             type: 'error',
-            content: 'Произошла ошибка при смене аватара',
+            content: 'Произошла ошибка при загрузке медиа',
         });
     };
 
@@ -81,7 +81,6 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
             await update({image: resp.user.avatar_url, accessToken: resp.access_token});
         } catch (err) {
             avatarError();
-            throw new Error('An error occurred during avatar image upload');
         }
     }
 

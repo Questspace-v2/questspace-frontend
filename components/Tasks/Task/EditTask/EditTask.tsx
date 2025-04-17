@@ -233,7 +233,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         // eslint-disable-next-line no-void
         void messageApi.open({
             type: 'error',
-            content: 'Произошла ошибка при добавлении картинок',
+            content: 'Произошла ошибка при загрузке медиа',
         });
     };
 
@@ -265,13 +265,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 const file = (item as UploadFile<unknown>).originFileObj as File;
                 const fileType = file.type;
                 const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
-                try {
-                    const resp = await client.handleS3Request(key, fileType, file);
-                    return resp;
-                } catch (err) {
-                    imageError();
-                    throw new Error('An error occurred during attachments upload');
-                }
+                const resp = await client.handleS3Request(key, fileType, file);
+                return resp;
             }
             return Promise.resolve(item.url);
         });
@@ -379,8 +374,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             reward: taskPoints,
             verification: 'auto'
         };
-
-        newTask.media_links = await getFileLinks();
+        
+        try {
+            newTask.media_links = await getFileLinks();
+        } catch (error) {
+            imageError();
+            console.log(error);
+            return;
+        }
 
         if (task) {
             const taskIds = taskGroup.tasks.map(curTask => curTask.id)
