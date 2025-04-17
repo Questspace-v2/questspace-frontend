@@ -45,10 +45,10 @@
         &:not(:has(.task-group__task-name_hidden)) {
             padding: 4px 16px;
             margin: -4px -16px;
-        }
 
-        .ant-collapse-expand-icon {
-            align-self: baseline;
+            .ant-collapse-expand-icon {
+                align-self: baseline;
+            }
         }
     }
 }
