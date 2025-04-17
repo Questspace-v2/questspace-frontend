@@ -7,6 +7,7 @@ import {
     Form,
     Input,
     InputNumber,
+    message,
     Row,
     Upload,
     UploadFile,
@@ -118,6 +119,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const [form] = Form.useForm<TaskForm>();
     const [hints] = Form.useForm<HintsFormProps>();
 
+    const [messageApi, contextHolder] = message.useMessage();
+
     const taskNameError = 'Введите название задачи';
     const taskTextError = 'Введите текст задачи';
     const answersError = 'Добавьте хотя бы один вариант ответа';
@@ -226,6 +229,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         setIsOpen(false);
     };
 
+    const imageError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Произошла ошибка при добавлении картинок',
+        });
+    };
+
     const handleFieldChange = (fieldName: string) => {
         setFieldsValidationStatus(prevState => ({
             ...prevState,
@@ -258,6 +269,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                     const resp = await client.handleS3Request(key, fileType, file);
                     return resp;
                 } catch (err) {
+                    imageError();
                     throw new Error('An error occurred during attachments upload');
                 }
             }
@@ -467,6 +479,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 ]}
                 forceRender
             >
+                {contextHolder}
                 <Form
                     form={form}
                     onKeyDown={(e) => e.stopPropagation()}

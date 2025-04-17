@@ -169,6 +169,14 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         });
     };
 
+    const imageError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Произошла ошибка при добавлении обложки',
+        });
+    };
+
     const validateDates = () => {
         // const now = dayjs();
 
@@ -250,6 +258,7 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         return client.handleS3Request(key, fileType, file)
             .then(res => res)
             .catch(error => {
+                imageError();
                 throw error;
             });
     };

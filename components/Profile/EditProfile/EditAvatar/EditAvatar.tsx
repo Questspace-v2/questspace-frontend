@@ -36,6 +36,14 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
         });
     };
 
+    const avatarError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Произошла ошибка при смене аватара',
+        });
+    };
+
     const handleEditAvatarClose = () => {
         setCurrentModal!(ModalEnum.EDIT_PROFILE)
     };
@@ -72,6 +80,7 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
             ) as IUserUpdateResponse;
             await update({image: resp.user.avatar_url, accessToken: resp.access_token});
         } catch (err) {
+            avatarError();
             throw new Error('An error occurred during avatar image upload');
         }
     }
