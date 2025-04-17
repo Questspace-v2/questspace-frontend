@@ -19,6 +19,7 @@ import {
     ITaskGroupsCreateRequest,
 } from '@/app/types/quest-interfaces';
 import { RcFile } from 'antd/es/upload';
+import uploadToS3 from '../uploadToS3';
 
 interface IBaseInit {
     method: string,
@@ -126,30 +127,28 @@ class Client {
         key: string,
         fileType: string,
         body: string | Blob | RcFile,
-        method = 'PUT'
     ) {
-        const headers: Record<string, string> = {
-            'Content-Type': fileType
-        };
+        const formData = new FormData();
+        if (typeof body === 'string') {
+            const response = await fetch(body);
+            const blob = await response.blob();
+            formData.append('file', blob, 'filename.jpg');
+        } else if (body instanceof Blob) {
+            formData.append('file', body, 'filename.jpg');
+        } else {
+            formData.append('file', body);
+        }
 
-        const s3Config = {
-            method,
-            headers,
-            body
-        };
-
-        return fetch(
-            `https://storage.yandexcloud.net/questspace-img/${key}`,
-            {...s3Config}
-        )
-            .then(res => res)
-            .catch((err: HttpError) => {
-                this.handleError(err);
-                if (this.error) {
-                    throw this.error;
-                }
-                throw createHttpError('Unknown error');
-            });
+        try {
+            const result = await uploadToS3(key, fileType, formData);
+            return result;
+        } catch (err) {
+            this.handleError(err as HttpError);
+            if (this.error) {
+                throw this.error;
+            }
+            throw createHttpError('Unknown error');
+        }
     }
 }
 

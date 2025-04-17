@@ -36,6 +36,14 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
         });
     };
 
+    const avatarError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Произошла ошибка при загрузке медиа',
+        });
+    };
+
     const handleEditAvatarClose = () => {
         setCurrentModal!(ModalEnum.EDIT_PROFILE)
     };
@@ -63,19 +71,17 @@ export default function EditAvatar({children, setCurrentModal}: SubModalProps) {
 
         const key = `users/${uid()}`;
 
-        const s3Response = await client.handleS3Request(key, fileType, file);
-
-        if (s3Response.ok) {
+        try {
+            await client.handleS3Request(key, fileType, file);
             const resp = await updateUser(
                 id,
                 {avatar_url: `https://storage.yandexcloud.net/questspace-img/${key}`},
                 accessToken
-            ).catch((err) => {
-                throw err;
-            }) as IUserUpdateResponse;
+            ) as IUserUpdateResponse;
             await update({image: resp.user.avatar_url, accessToken: resp.access_token});
+        } catch (err) {
+            avatarError();
         }
-
     }
 
     return (

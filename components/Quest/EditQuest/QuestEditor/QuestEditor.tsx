@@ -169,6 +169,14 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         });
     };
 
+    const imageError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Произошла ошибка при загрузке медиа',
+        });
+    };
+
     const validateDates = () => {
         // const now = dayjs();
 
@@ -250,58 +258,63 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
         return client.handleS3Request(key, fileType, file)
             .then(res => res)
             .catch(error => {
+                imageError();
                 throw error;
             });
     };
 
     const handleValidation = async () => {
-        const imageValidation = fileList.length > 0;
-        const s3Response = imageValidation && await handleS3Response();
-        const datesValidation = validateDates();
+        try {
+            const imageValidation = fileList.length > 0;
+            const s3Response = imageValidation && await handleS3Response();
+            const datesValidation = validateDates();
 
-        if (!datesValidation) {
+            if (!datesValidation) {
+                return null;
+            }
+
+            return await form.validateFields()
+                .then(values => {
+                    if (!values.name || !values.description || !values.registrationDeadline
+                        || !values.startTime || !values.finishTime || !values.access
+                        || !s3Response && !previousImage) {
+                        setFieldsValidationStatus((prevState) => ({
+                            ...prevState,
+                            name: !values.name ? 'error' : prevState.name,
+                            description: !values.description ? 'error' : prevState.description,
+                            registrationDeadline: !values.registrationDeadline ? 'error' : prevState.registrationDeadline,
+                            startTime: !values.startTime ? 'error' : prevState.startTime,
+                            finishTime: !values.finishTime ? 'error' : prevState.finishTime,
+                            access: !values.access ? 'error' : prevState.access,
+                            image: !s3Response && !previousImage && !fileIsTooBig ? 'error' : prevState.image,
+                            registrationType: !values.registrationType ? 'error' : prevState.registrationType,
+                            questType: !values.questType ? 'error' : prevState.questType,
+                        }));
+                        return null;
+                    }
+
+                    return {
+                        access: values.access,
+                        description: values.description,
+                        finish_time: values.finishTime,
+                        max_team_cap: values.maxTeamCap,
+                        name: values.name,
+                        registration_deadline: values.registrationDeadline,
+                        start_time: values.startTime,
+                        media_link: (!s3Response ? previousImage : s3Response) ?? '',
+                        max_teams_amount: noTeamsLimit || teamsAmount < 1 ? -1 : teamsAmount,
+                        registration_type: values.registrationType,
+                        quest_type: values.questType,
+                        feedback_link: values.feedback?.trim() ?? '',
+                    };
+                })
+                .catch(error => {
+                    throw error;
+                });
+        } catch (error) {
+            console.log(error);
             return null;
         }
-
-        // eslint-disable-next-line consistent-return
-        return form.validateFields()
-            .then(values => {
-                if (!values.name || !values.description || !values.registrationDeadline
-                    || !values.startTime || !values.finishTime || !values.access
-                    || !s3Response && !previousImage) {
-                    setFieldsValidationStatus((prevState) => ({
-                        ...prevState,
-                        name: !values.name ? 'error' : prevState.name,
-                        description: !values.description ? 'error' : prevState.description,
-                        registrationDeadline: !values.registrationDeadline ? 'error' : prevState.registrationDeadline,
-                        startTime: !values.startTime ? 'error' : prevState.startTime,
-                        finishTime: !values.finishTime ? 'error' : prevState.finishTime,
-                        access: !values.access ? 'error' : prevState.access,
-                        image: !s3Response && !previousImage && !fileIsTooBig ? 'error' : prevState.image,
-                        registrationType: !values.registrationType ? 'error' : prevState.registrationType,
-                        questType: !values.questType ? 'error' : prevState.questType,
-                    }));
-                    return null;
-                }
-
-                return {
-                    access: values.access,
-                    description: values.description,
-                    finish_time: values.finishTime,
-                    max_team_cap: values.maxTeamCap,
-                    name: values.name,
-                    registration_deadline: values.registrationDeadline,
-                    start_time: values.startTime,
-                    media_link: (s3Response as Response).url ?? previousImage,
-                    max_teams_amount: noTeamsLimit || teamsAmount < 1 ? -1 : teamsAmount,
-                    registration_type: values.registrationType,
-                    quest_type: values.questType,
-                    feedback_link: values.feedback?.trim() ?? '',
-                };
-            })
-            .catch(error => {
-                throw error;
-            });
     };
 
     const handleRequest = async (data: IQuestCreate) => {
@@ -515,16 +528,16 @@ export default function QuestEditor({ form, fileList, setFileList, isNewQuest, q
                         colon={false}
                         extra={<>
                             <Checkbox checked={registrationDeadlineChecked}
-                                onClick={() => {
-                                    setRegistrationDeadlineChecked((prev) => {
-                                        if (!prev) {
-                                            form.setFieldValue('registrationDeadline', form.getFieldValue('startTime'))
-                                        }
-                                        return !prev
-                                    });
-                                }}
-                                onChange={validateDates}
-                                style={{ padding: '5px 0' }}>Совпадает с началом квеста
+                                      onClick={() => {
+                                          setRegistrationDeadlineChecked((prev) => {
+                                              if (!prev) {
+                                                  form.setFieldValue('registrationDeadline', form.getFieldValue('startTime'))
+                                              }
+                                              return !prev
+                                          });
+                                      }}
+                                      onChange={validateDates}
+                                      style={{ padding: '5px 0' }}>Совпадает с началом квеста
                             </Checkbox>
                             {registrationDeadlineError &&
                                 <p className={'quest-editor__validation-error'}>{registrationDeadlineError}</p>

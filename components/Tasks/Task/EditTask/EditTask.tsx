@@ -7,6 +7,7 @@ import {
     Form,
     Input,
     InputNumber,
+    message,
     Row,
     Upload,
     UploadFile,
@@ -118,6 +119,8 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
     const [form] = Form.useForm<TaskForm>();
     const [hints] = Form.useForm<HintsFormProps>();
 
+    const [messageApi, contextHolder] = message.useMessage();
+
     const taskNameError = 'Введите название задачи';
     const taskTextError = 'Введите текст задачи';
     const answersError = 'Добавьте хотя бы один вариант ответа';
@@ -226,6 +229,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
         setIsOpen(false);
     };
 
+    const imageError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Произошла ошибка при загрузке медиа',
+        });
+    };
+
     const handleFieldChange = (fieldName: string) => {
         setFieldsValidationStatus(prevState => ({
             ...prevState,
@@ -255,7 +266,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 const fileType = file.type;
                 const key = `tasks/${uid()}__${encodeURIComponent(file.name)}`;
                 const resp = await client.handleS3Request(key, fileType, file);
-                return resp.url;
+                return resp;
             }
             return Promise.resolve(item.url);
         });
@@ -363,8 +374,14 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
             reward: taskPoints,
             verification: 'auto'
         };
-
-        newTask.media_links = await getFileLinks();
+        
+        try {
+            newTask.media_links = await getFileLinks();
+        } catch (error) {
+            imageError();
+            console.log(error);
+            return;
+        }
 
         if (task) {
             const taskIds = taskGroup.tasks.map(curTask => curTask.id)
@@ -463,6 +480,7 @@ export default function EditTask({questId, isOpen, setIsOpen, taskGroupProps, fi
                 ]}
                 forceRender
             >
+                {contextHolder}
                 <Form
                     form={form}
                     onKeyDown={(e) => e.stopPropagation()}
