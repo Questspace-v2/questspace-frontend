@@ -60,6 +60,7 @@ body {
     margin: 0;
     font-family: $font-manrope;
     color: var(--text-default);
+    //padding-top: 40px;
 }
 
 .App {
@@ -70,6 +71,12 @@ body {
     width: 100%;
     min-height: 100%;
     gap: $main-gap;
+}
+
+.App:has(.page-header__hidden) {
+    .tasks__collapse.ant-collapse > .ant-collapse-item > .ant-collapse-header.sticky-header {
+        top: 0;
+    }
 }
 
 .roboto-flex-header {

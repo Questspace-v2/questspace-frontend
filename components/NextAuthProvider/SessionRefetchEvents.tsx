@@ -8,14 +8,14 @@ export default function SessionRefetchEvents() {
 
     useEffect(() => {
         const refetchSession = async () => {
-            console.log("Refetching session due to focus or reconnect...");
+            // console.log("Refetching session due to focus or reconnect...");
             const session = await getSession();
             if (update) {
                 await update(session);
             }
 
 
-            console.log(session);
+            // console.log(session);
         };
 
         window.addEventListener("online", refetchSession);
