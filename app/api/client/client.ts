@@ -140,7 +140,7 @@ class Client {
         }
 
         try {
-            const result = await uploadToS3(key, fileType, formData);
+            const result = await uploadToS3(decodeURIComponent(key), fileType, formData);
             return result;
         } catch (err) {
             this.handleError(err as HttpError);
