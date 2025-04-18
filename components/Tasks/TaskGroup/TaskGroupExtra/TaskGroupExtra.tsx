@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState} from 'react';
-import { Button, Dropdown, MenuProps, Popconfirm, UploadFile } from 'antd';
+import { Button, Dropdown, MenuProps, message, Popconfirm, UploadFile } from 'antd';
 import { DeleteOutlined, EditOutlined, MenuOutlined, PlusOutlined } from '@ant-design/icons';
 import {useTasksContext} from '@/components/Tasks/ContextProvider/ContextProvider';
 import {patchTaskGroups} from '@/app/api/api';
@@ -25,8 +25,17 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
     const [EditTaskComponent, setEditTaskComponent] = useState<React.ComponentType<TaskCreateModalProps> | null>(null);
     const [EditTaskGroupComponent, setEditTaskGroupComponent] = useState<React.ComponentType<TaskGroupModalProps> | null>(null);
     const {data: session} = useSession();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const {updater: setContextData} = useTasksContext()!;
+
+    const editError = () => {
+        // eslint-disable-next-line no-void
+        void messageApi.open({
+            type: 'error',
+            content: 'Что-то пошло не так при открытии окна редактирования',
+        });
+    };
 
     const handleMenuClick: MenuProps['onClick'] = (menu) => {
         if (menu?.key !== '3') {
@@ -79,12 +88,20 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
         {
             label: <><EditOutlined/>Редактировать</>,
             key: '1',
-            onClick: () => handleEditTaskGroup,
+            onClick: () => {
+                handleEditTaskGroup().catch(() => {
+                    editError();
+                });
+            },
         },
         {
             label: <><PlusOutlined/>Добавить задачу</>,
             key: '2',
-            onClick: () => handleAddTask,
+            onClick: () => {
+                handleAddTask().catch(() => {
+                    editError();
+                });
+            },
         },
         {
             label:
@@ -111,6 +128,7 @@ export default function TaskGroupExtra({questId, edit, taskGroupProps}: ITaskGro
 
     return (
         <div className={classNames('task-group__collapse-buttons', 'tasks__collapse-buttons')}>
+            {contextHolder}
             <Button onClick={handleEditTaskGroup} ghost><EditOutlined/>Редактировать</Button>
             <Button onClick={handleAddTask} ghost><PlusOutlined/>Добавить задачу</Button>
             <Popconfirm
